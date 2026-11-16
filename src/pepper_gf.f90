@@ -4361,6 +4361,9 @@ contains
                   svustl => ctx%zzgffvu_state%svustl, &
                   svxmag => ctx%zzgffvu_state%svxmag, &
                   svxmit => ctx%zzgffvu_state%svxmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5233,6 +5236,9 @@ contains
                   svustl => ctx%zzgffvu_state%svustl, &
                   svxmag => ctx%zzgffvu_state%svxmag, &
                   svxmit => ctx%zzgffvu_state%svxmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -32163,51 +32169,6 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0  23-FEB-2009 (NJB) (EDW)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Entry points in the coordinate utility package.
-      !>     We have the usual GF entry points for the coordinate, plus
-      !>     utilities for the cosine and sine of the coordinate.
-      !>
-      !>     Names and meanings:
-      !>
-      !>        ZZGFCODC      Is coordinate decreasing?
-      !>        ZZGFCOG       Get coordinate value.
-      !>        ZZGFCOCD      Is cosine of the coordinate decreasing?
-      !>        ZZGFCOCG      Get cosine of the coordinate value.
-      !>        ZZGFCOSD      Is sine of the coordinate decreasing?
-      !>        ZZGFCOSG      Get sine of the coordinate value.
-      !>
-      !>    The routine to test UDFUNC < REFVAL.
-      !>
-      !>     Local parameters
-      !>
-      !>     Margin for branch cut avoidance. Units are radians:
-      !>
-      !>     Margin for local extrema search. Units are radians:
-      !>
-      !>     Short alias for LBCELL:
-      !>
-      !>     Number of supported comparison operators:
-      !>
-      !>     Assorted string lengths:
-      !>
-      !>     Maximum body name length:
-      !>
-      !>     NAMLEN is the maximum length of both a frame name and of
-      !>     any kernel pool variable name.
-      !>
-      !>     OPLEN is the maximum string length for comparison operators.
-      !>     OPLEN may grow if new comparisons are added.
-      !>
-      !>     FUNLEN is the length of the function name string.
-      !>
-      !>     CRDLEN is the maximum length of a coordinate name.
-      !>
-      !>     SYSLEN is the maximum length of a coordinate system name.
-      !>
-      !>     RPTLEN is the maximum length of a progress reporter message.
       module subroutine zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, &
             crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, &
             udrepf, bail, udbail, mw, nw, work, cnfine, result )
@@ -32218,15 +32179,46 @@ contains
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
+!
+!     Local parameters
+!
+!     Margin for branch cut avoidance. Units are radians:
+!
       real(wp), parameter :: bcamrg = 1.0e-11_wp
+!
+!     Margin for local extrema search. Units are radians:
+!
       real(wp), parameter :: lcxmrg = 1.0e-12_wp
+!
+!     Short alias for LBCELL:
+!
       integer(ip), parameter :: lb = lbcell
       integer(ip), parameter :: lbpool = lbcell
+!
+!     NAMLEN is the maximum length of both a frame name and of
+!     any kernel pool variable name.
+!
       integer(ip), parameter :: namlen = 32
+!
+!     OPLEN is the maximum string length for comparison operators.
+!     OPLEN may grow if new comparisons are added.
+!
       integer(ip), parameter :: oplen = 6
+!
+!     FUNLEN is the length of the function name string.
+!
       integer(ip), parameter :: funlen = 50
+!
+!     SYSLEN is the maximum length of a coordinate system name.
+!
       integer(ip), parameter :: syslen = 32
+!
+!     RPTLEN is the maximum length of a progress reporter message.
+!
       integer(ip), parameter :: rptlen = 80
+!
+!     Local variables
+!
       character(crdlen) :: nrmcrd
       character(syslen) :: nrmsys
       character(crdlen) :: prxcrd
@@ -32320,6 +32312,9 @@ contains
       if ( .not. allocated ( ctx%zzgflong_state ) ) allocate ( ctx%zzgflong_state )
       associate ( ops => ctx%zzgflong_state%ops, &
                   y => ctx%zzgflong_state%y )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

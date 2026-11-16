@@ -2099,6 +2099,9 @@ contains
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
       integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = ipsize
 
       character(cnamsz) :: column
@@ -2487,6 +2490,9 @@ contains
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
       integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = dpsize
 
       character(cnamsz) :: column
@@ -2860,6 +2866,9 @@ contains
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
       integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = cpsize
 
       character(cnamsz) :: column
@@ -3382,6 +3391,9 @@ contains
       integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
       integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = ipsize
 
       character(cnamsz) :: column
@@ -3850,6 +3862,9 @@ contains
       real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
       integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = dpsize
 
       character(cnamsz) :: column
@@ -4317,6 +4332,9 @@ contains
       character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
       integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = cpsize
 
       character(cnamsz) :: column
@@ -4879,6 +4897,9 @@ contains
       integer(ip), intent(in) :: nvals  !! Number of values to add to column.
       integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
       logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: lastw
@@ -5223,6 +5244,9 @@ contains
       integer(ip), intent(in) :: nvals  !! Number of values to add to column.
       real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
       logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: lastw
@@ -5569,7 +5593,13 @@ contains
       integer(ip), intent(in) :: nvals  !! Number of values to add to column.
       character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
       logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local parameters
+!
       integer(ip), parameter :: maxpad = 100
+!
+!     Local variables
+!
       integer(ip) :: mbase
       integer(ip) :: nwrite
       integer(ip) :: cvlen
@@ -6008,6 +6038,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpnelt
 
       integer(ip) :: base
@@ -6485,6 +6518,9 @@ contains
       integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -6648,6 +6684,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(out) :: datptr  !! Data pointer of column entry.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: ncols
       integer(ip) :: ptrloc
@@ -6768,6 +6807,9 @@ contains
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: segno  !! Segment number.
       integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: i
       integer(ip) :: j
@@ -6939,6 +6981,9 @@ contains
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: segno  !! Segment number.
       integer(ip) :: class_1(1)  !! one-element copy of class (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: class
       integer(ip) :: dscbas
@@ -7530,6 +7575,9 @@ contains
       character(*), intent(out) :: cval  !! Character value in column entry.
       logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: avail
@@ -8148,6 +8196,9 @@ contains
       logical, intent(out) :: found  !! Flag indicating whether elements were found.
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpnelt
 
       integer(ip) :: base
@@ -8486,6 +8537,9 @@ contains
       logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       logical, intent(out) :: found  !! Flag indicating whether elements were found.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: avail
@@ -8889,6 +8943,9 @@ contains
       integer(ip), intent(out) :: ival  !! Integer value in column entry.
       logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
+!
+!     Local variables
+!
       character(1) :: cflag
 
       integer(ip) :: addrss
@@ -9074,6 +9131,9 @@ contains
       real(wp), intent(out) :: dval  !! Double precision value in column entry.
       logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
+!
+!     Local variables
+!
       character(1) :: cflag
 
       integer(ip) :: addrss
@@ -9259,6 +9319,9 @@ contains
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(in) :: datptr  !! Data pointer of column entry.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: ncols
       integer(ip) :: ptrloc
@@ -9419,6 +9482,9 @@ contains
       character(*), intent(in) :: cvals  ( * )  !! Character values.
       integer(ip), intent(out) :: p  !! Number of first page containing array.
       integer(ip), intent(out) :: base  !! Base address of first page.
+!
+!     Local variables
+!
       character(pgsizc) :: page
 
       integer(ip) :: from
@@ -9591,6 +9657,9 @@ contains
       integer(ip), intent(in) :: ivals  ( * )  !! Integer values.
       integer(ip), intent(out) :: p  !! Number of first page containing array.
       integer(ip), intent(out) :: base  !! Base address of first page.
+!
+!     Local variables
+!
       integer(ip) :: from
       integer(ip) :: npage
       integer(ip) :: page   ( pgsizi )
@@ -9743,6 +9812,9 @@ contains
       logical, intent(in) :: lvals  ( * )  !! Logical values.
       integer(ip), intent(out) :: p  !! Number of first page containing array.
       integer(ip), intent(out) :: base  !! Base address of first page.
+!
+!     Local variables
+!
       character(pgsizc) :: page
 
       integer(ip) :: from
@@ -12024,6 +12096,9 @@ contains
       integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -12311,6 +12386,9 @@ contains
       real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       real(wp) :: page   ( pgsizd )
@@ -12599,6 +12677,9 @@ contains
       character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
       logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local variables
+!
       character(cnamsz) :: column
       character(pgsizc) :: page
 
@@ -12926,6 +13007,9 @@ contains
       character(*), intent(out) :: cval  !! Character value in column entry.
       logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       logical, intent(out) :: found  !! Flag indicting whether entry element was found.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -13525,6 +13609,9 @@ contains
       integer(ip), intent(in) :: nvals  !! Number of values.
       integer(ip), intent(in) :: ivals ( * )  !! Integer values.
       logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -13632,6 +13719,9 @@ contains
       integer(ip), intent(in) :: nvals  !! Number of values.
       real(wp), intent(in) :: dvals ( * )  !! Double precision values.
       logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -13742,6 +13832,9 @@ contains
       integer(ip), intent(in) :: nvals  !! Number of values.
       character(*), intent(in) :: cvals ( * )  !! Character string values.
       logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -15344,6 +15437,9 @@ contains
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
+!
+!     Local variables
+!
       real(wp) :: dval   ( 2 )
 
       integer(ip) :: cvlen  ( 2 )
@@ -16353,6 +16449,9 @@ contains
       logical, intent(in) :: null  !! Null flag.
       integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
       integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+!
+!     Local variables
+!
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16676,6 +16775,9 @@ contains
       logical, intent(in) :: null  !! Null flag.
       integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
+!
+!     Local variables
+!
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16999,6 +17101,9 @@ contains
       logical, intent(in) :: null  !! Null flag.
       integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+!
+!     Local variables
+!
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -17306,6 +17411,9 @@ contains
       character(*), intent(in) :: ckey  !! Character key.
       integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
       integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17553,6 +17661,9 @@ contains
       real(wp), intent(in) :: dkey  !! Double precision key.
       integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
       integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of DKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17800,6 +17911,9 @@ contains
       integer(ip), intent(in) :: ikey  !! Integer key.
       integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of IKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18043,6 +18157,9 @@ contains
       character(*), intent(in) :: ckey  !! Character key.
       integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of CKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18286,6 +18403,9 @@ contains
       real(wp), intent(in) :: dkey  !! Double precision key.
       integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of DKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18530,6 +18650,9 @@ contains
       integer(ip), intent(in) :: ikey  !! Integer key.
       integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18860,6 +18983,9 @@ contains
       integer(ip), intent(in) :: cdlst2 ( cdscsz, * )  !! List of column descriptors for second row.
       integer(ip), intent(in) :: row2  !! Number of second row (relative to segment).
       integer(ip), intent(in) :: elts2  ( * )  !! List of element indices for second row.
+!
+!     Local variables
+!
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: col
       integer(ip) :: elts   ( 2 )
@@ -19753,6 +19879,9 @@ contains
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
+!
+!     Local variables
+!
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: cmplen ( 2 )
       integer(ip) :: cvlen  ( 2 )
@@ -20056,6 +20185,9 @@ contains
       character(*), intent(in) :: cval  !! Character string value.
       real(wp), intent(in) :: dval  !! Double precision value.
       integer(ip), intent(in) :: ival  !! Integer value.
+!
+!     Local variables
+!
       real(wp) :: dnum
 
       integer(ip) :: coltyp
@@ -20233,6 +20365,9 @@ contains
       character(*), intent(in) :: cval  !! Character string value.
       real(wp), intent(in) :: dval  !! Double precision value.
       integer(ip), intent(in) :: ival  !! Integer value.
+!
+!     Local variables
+!
       real(wp) :: dnum
 
       integer(ip) :: coltyp
@@ -20501,28 +20636,6 @@ contains
       !>          IDAT
       !>          NF
       !>          ORDVEC
-      !>
-      !>     Saved variables
-      !>
-      !>     The following variables are saved in order to prevent
-      !>     memory errors under Cygwin and in shared object libraries
-      !>     under various Unix systems.
-      !>
-      !>     Statement functions
-      !>
-      !>     The following functions test whether two column entries
-      !>     are equal.  In the integer and d.p. cases, the test is conclusive.
-      !>     In the character case, the test indicates whether the initial
-      !>     substrings consisting of the first INISUB characters of each of
-      !>     the two entries are equal.
-      !>
-      !>     The following functions indicate whether the first of two column
-      !>     entries is less than or equal to the second.  In the integer and
-      !>     d.p. cases, the test is conclusive.  In the character case, the
-      !>     test indicates whether the initial substring consisting of the
-      !>     first INISUB characters of the first entry is less than or equal
-      !>     to the corresponding initial substring of length INISUB of the
-      !>     second entry.
       module subroutine zzekjsrt ( ctx, njrs, ubases, norder, otabs, ocols, oelts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, ordbas )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
@@ -20554,8 +20667,18 @@ contains
       integer(ip) :: rj_1(1)  !! one-element copy of rj (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
       integer(ip) :: nr_1(1)  !! one-element copy of nr (array argument)
+!
+!     Other local parameters
+!
       integer(ip), parameter :: inisub = 32
       integer(ip), parameter :: limit1 = 250000
+!
+!     The following variables are saved in order to prevent
+!     memory errors under Cygwin and in shared object libraries
+!     under various Unix systems.
+!
+!     Local variables
+!
       character(inisub), allocatable :: cdat ( : )  !! first INISUB characters of the primary order-by column's entry in each row
       real(wp), allocatable :: ddat ( : )  !! d.p. entry of the primary order-by column in each row
       integer(ip), allocatable :: idat ( : )  !! integer entry of the primary order-by column in each row
@@ -20610,6 +20733,15 @@ contains
       logical :: nfjg
       logical :: null
       logical :: trunc
+!
+!     Statement functions
+!
+!     The following functions test whether two column entries
+!     are equal.  In the integer and d.p. cases, the test is conclusive.
+!     In the character case, the test indicates whether the initial
+!     substrings consisting of the first INISUB characters of each of
+!     the two entries are equal.
+!
       logical :: inteq
       logical :: dpeq
       logical :: chreq
@@ -20669,6 +20801,9 @@ contains
 
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
                        .and. (         c1 <= c2    )    )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -21360,6 +21495,9 @@ contains
       logical, intent(in) :: null  !! Null flag.
       integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
       integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21553,6 +21691,9 @@ contains
       logical, intent(in) :: null  !! Null flag.
       integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21746,6 +21887,9 @@ contains
       logical, intent(in) :: null  !! Null flag.
       integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
       integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21903,6 +22047,9 @@ contains
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip), intent(in) :: recptr  !! Pointer to record to locate.
       integer(ip), intent(out) :: pos  !! Ordinal position of record.
+!
+!     Local variables
+!
       character(:), allocatable :: cval  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
       real(wp) :: dval
@@ -22144,6 +22291,9 @@ contains
       character(*), intent(in) :: ckey  !! Character key.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       logical, intent(in) :: null  !! Null flag.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -22332,6 +22482,9 @@ contains
       real(wp), intent(in) :: dkey  !! Double precision key.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       logical, intent(in) :: null  !! Null flag.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -22516,6 +22669,9 @@ contains
       integer(ip), intent(in) :: ikey  !! Integer key.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       logical, intent(in) :: null  !! Null flag.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -23368,8 +23524,6 @@ contains
       !>        first pass when CASE is EMPTY.
       !>
       !>-    Beta Version 1.0.0, 08-AUG-1995 (NJB)
-      !>
-      !>     No row vector found to start with.
       module subroutine zzekjnxt ( ctx, found, rowvec )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
@@ -23436,6 +23590,9 @@ contains
                   svrb2 => ctx%zzekjtst_state%svrb2, &
                   done => ctx%zzekjtst_state%done, &
                   lsmall => ctx%zzekjtst_state%lsmall )
+!
+!     No row vector found to start with.
+!
       found = .false.
 
 !
@@ -24584,6 +24741,9 @@ contains
       integer(ip), intent(in) :: ival  !! Integer value.
       logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: itype
@@ -24878,6 +25038,9 @@ contains
       real(wp), intent(in) :: dval  !! Double precision value.
       logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: itype
@@ -25166,6 +25329,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       character(*), intent(in) :: cval  !! Character string value.
       logical, intent(in) :: isnull  !! Null flag.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: itype
@@ -25487,6 +25653,9 @@ contains
       integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip), intent(in) :: recptr  !! Record pointer to locate.
+!
+!     Local variables
+!
       integer(ip) :: idx
       integer(ip) :: idxtyp
       integer(ip) :: recno
@@ -36265,6 +36434,9 @@ contains
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: datptr
       integer(ip) :: idxtyp
@@ -36803,6 +36975,9 @@ contains
       real(wp), intent(in) :: dval  !! Double precision value.
       logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: datptr
       integer(ip) :: idxtyp
       integer(ip) :: nlinks
@@ -39137,6 +39312,9 @@ contains
       logical, intent(out) :: error  !! Error flag.
       character(*), intent(out) :: errmsg  !! Semantic error message.
       integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
+!
+!     Local variables
+!
       character(tnamsz) :: alias
       character(cnamsz) :: colnam
       character(tnamsz) :: lhstab
@@ -39823,6 +40001,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       character(*), intent(in) :: cval  !! Character string value.
       logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

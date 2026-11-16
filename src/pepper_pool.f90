@@ -2550,15 +2550,6 @@ contains
       !>        function FAILED was deleted. Finally, all internal references
       !>        to the entry point WRTEXT (which was dropped when the routine
       !>        left OPTLIB) were removed.
-      !>
-      !>     Local variables
-      !>
-      !>     Save the names of the files, their associated logical units, and
-      !>     the number of files opened.
-      !>
-      !>     Initial values
-      !>
-      !>     Set up the error processing.
       module subroutine rdtext ( ctx, file, line, eof )
       use pepper_kinds, only: ip
       implicit none
@@ -2567,6 +2558,9 @@ contains
       character(*), intent(out) :: line  !! Next line from the text file.
       logical, intent(out) :: eof  !! End-of-file indicator.
       integer(ip), parameter :: maxopn = 96  !! maximum number of text files open at once
+!
+!     Local variables
+!
       integer(ip) :: unit
       integer(ip) :: number
       integer(ip) :: iostat
@@ -2577,6 +2571,9 @@ contains
                   n => ctx%spice%rdtext%n, &
                   lstunt => ctx%spice%rdtext%lstunt, &
                   index => ctx%spice%rdtext%index )
+!
+!     Set up the error processing.
+!
       if ( ctx%failed() ) return
 
 !
@@ -2942,10 +2939,6 @@ contains
       !>-    Beta Version 1.1.0, 8-JAN-1989 (IMU)
       !>
       !>        References to WRTEXT removed.
-      !>
-      !>     Set up the error processing.
-      !>
-      !>     Which file?
       module subroutine cltext ( ctx, file )
       use pepper_kinds, only: ip
       implicit none
@@ -2962,6 +2955,9 @@ contains
                   n => ctx%spice%rdtext%n, &
                   lstunt => ctx%spice%rdtext%lstunt, &
                   index => ctx%spice%rdtext%index )
+!
+!     Which file?
+!
       number = 0
 
       inquire (  file    =  file, &
@@ -3408,6 +3404,9 @@ contains
                   status => ctx%spice%rdker%status, &
                   begdat => ctx%spice%rdker%begdat, &
                   begtxt => ctx%spice%rdker%begtxt )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6743,8 +6742,6 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     So far we haven't combined anything.
       module logical function zzcmbt ( ctx, string, letter, l2r )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr, zzrepsub_inplace
@@ -6769,6 +6766,9 @@ contains
                   pbegs => ctx%zztime%pbegs, &
                   pends => ctx%zztime%pends, &
                   to => ctx%zztime%to )
+!
+!     So far we haven't combined anything.
+!
       did = no
 !
 !     Look for the substring either looking from the
@@ -7482,8 +7482,6 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     So far we haven't combined anything.
       module logical function zzsubt ( ctx, string, transl, l2r )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr
@@ -7502,6 +7500,9 @@ contains
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   to => ctx%zztime%to )
+!
+!     So far we haven't combined anything.
+!
       did = no
       k   = len ( string )
 
@@ -7689,9 +7690,6 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     The first time in this routine we initialize our "tokenizing"
-      !>     table.
       module logical function zztokns ( ctx, string, error )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lx4uns, prefix, rtrim, samchi, samsbi, suffix, ucase, &
@@ -7752,6 +7750,10 @@ contains
                   l => ctx%zztime%l, &
                   ampm => ctx%zztime%ampm, &
                   first => ctx%zztime%first )
+!
+!     The first time in this routine we initialize our "tokenizing"
+!     table.
+!
       zztokns = no
 
       if ( first ) then
@@ -9472,8 +9474,6 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     So far no translations have been performed.
       module logical function zzvalt ( ctx, string, b, e, letter )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsi
@@ -9500,6 +9500,9 @@ contains
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
                   ends => ctx%zztime%ends )
+!
+!     So far no translations have been performed.
+!
       did = no
 !
 !     Examine each token to see if it is an integer.
@@ -12501,6 +12504,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -12881,6 +12887,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -13090,6 +13099,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       i     = ps%find ( name )
@@ -13381,6 +13393,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       i     = ps%find ( name )
@@ -13670,6 +13685,9 @@ contains
 !     read back whole: text kernel lines are limited to 132 characters.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       write ( unit, '(1X,A)', iostat=iostat ) ps%begdat
       write ( unit, '(1X,A)', iostat=iostat )
@@ -14019,6 +14037,8 @@ contains
       integer(ip), intent(in) :: nnames  !! The number of variables to associate with AGENT.
       character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
 !
+!     Standard SPICE error handling.
+!
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
 !     swpool_context in pepper_instance_module): contexts do not take each
@@ -14299,6 +14319,8 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: agent  !! Name of the agent to check for notices.
       logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated.
+!
+!     Standard SPICE error handling.
 !
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
@@ -16864,6 +16886,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )

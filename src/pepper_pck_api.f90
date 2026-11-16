@@ -1593,10 +1593,6 @@ contains
       !>
       !>        $Examples section completed. Declarations of unused variables
       !>        HALFPI and N removed.
-      !>
-      !>     Local parameters
-      !>
-      !>     Maximum number of coefficients per phase angle polynomial.
       module subroutine bodeul ( ctx, body, et, ra, dec, w, lambda )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
@@ -1612,11 +1608,17 @@ contains
       real(wp), intent(out) :: lambda  !! Angle between the prime meridian and longitude of longest axis.
       ! PEPPER: work arrays of the kernel variables' sizes (SPICELIB: saved
       ! arrays of MAXANG, 200, values)
+!
+!     Local variables
+!
       real(wp), allocatable :: ac(:), dc(:), wc(:), tcoef(:), sinth(:), costh(:)
       real(wp) :: dpval_1(1)  !! one-element copy of dpval (array argument)
       integer(ip) :: ref_1(1)  !! one-element copy of ref (array argument)
       real(wp) :: conepc_1(1)  !! one-element copy of conepc (array argument)
       real(wp) :: lambda_1(1)  !! one-element copy of lambda (array argument)
+!
+!     Maximum number of coefficients per phase angle polynomial.
+!
       integer(ip), parameter :: mxphas = 4
       integer(ip), parameter :: mxpoly = 3
       integer(ip), parameter :: namlen = 32
@@ -1659,6 +1661,9 @@ contains
                   nphase => ctx%bodeul_state%nphase, &
                   nphsco => ctx%bodeul_state%nphsco, &
                   first => ctx%bodeul_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

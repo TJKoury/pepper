@@ -1008,6 +1008,9 @@ contains
       integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
       character(*), intent(in) :: column  !! Name of column.
       integer(ip), intent(out) :: coldsc ( cdscsz )  !! Descriptor for specified column.
+!
+!     Local variables
+!
       character(cnamsz) :: cname
 
       integer(ip) :: dscbas
@@ -1139,6 +1142,9 @@ contains
       integer(ip), intent(in) :: handle  !! EK file handle.
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       character(*), intent(out) :: column  !! Column name.
+!
+!     Local variables
+!
       integer(ip) :: nambas
 
 !
@@ -1238,6 +1244,9 @@ contains
       integer(ip), intent(in) :: handle  !! EK file handle.
       integer(ip), intent(in) :: addrss  !! DAS character address to read encoded value from.
       integer(ip), intent(out) :: ival  !! Decoded integer value.
+!
+!     Local variables
+!
       character(encsiz) :: cval
 
 !
@@ -1317,6 +1326,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(out) :: status  !! Status of specified EK record.
       integer(ip) :: status_1(1)  !! one-element copy of status (array argument)
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -1695,6 +1707,9 @@ contains
       logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
       integer(ip), intent(in) :: nvals  !! Dimension of DVALS.
       integer(ip), intent(out) :: iorder ( * )  !! Order vector for DVALS.
+!
+!     Local variables
+!
       real(wp) :: d1
       real(wp) :: d2
 
@@ -1930,6 +1945,9 @@ contains
       logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
       integer(ip), intent(in) :: nvals  !! Dimension of IVALS.
       integer(ip), intent(out) :: iorder ( * )  !! Order vector for IVALS.
+!
+!     Local variables
+!
       integer(ip) :: i1
       integer(ip) :: i2
       integer(ip) :: i3
@@ -2265,11 +2283,6 @@ contains
       !>        This has been corrected.
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     Local parameters
-      !>
-      !>     Parameters naming indices of keywords in the attribute list
-      !>     ATTKEY:
       module subroutine zzekpdec ( ctx, decl, pardsc )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, lparsm, nparsi, cmprss_inplace, ucase_inplace
@@ -2280,16 +2293,26 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: decl  !! String containing column declaration.
       integer(ip), intent(out) :: pardsc ( * )  !! Partial column descriptor.
+!
+!     Local parameters
+!
       integer(ip), parameter :: nattr = 5
       integer(ip), parameter :: maxtok = 20
       integer(ip), parameter :: toklen = 32
       integer(ip), parameter :: msglen = 320
       integer(ip), parameter :: nrkey = 1
+!
+!     Parameters naming indices of keywords in the attribute list
+!     ATTKEY:
+!
       integer(ip), parameter :: typpos = 1
       integer(ip), parameter :: sizpos = typpos + 1
       integer(ip), parameter :: idxpos = sizpos + 1
       integer(ip), parameter :: nflpos = idxpos + 1
       integer(ip), parameter :: fxcpos = nflpos + 1
+!
+!     Local variables
+!
       character(msglen) :: msg
       character(toklen) :: tokens ( maxtok )
       integer(ip) :: attloc ( cdscsz )
@@ -2303,6 +2326,9 @@ contains
       if ( .not. allocated ( ctx%zzekpdec_state ) ) allocate ( ctx%zzekpdec_state )
       associate ( attkey => ctx%zzekpdec_state%attkey, &
                   reqkey => ctx%zzekpdec_state%reqkey )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -2893,6 +2919,9 @@ contains
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npc_1(1)  !! one-element copy of npc (array argument)
       integer(ip) :: id_1(1)  !! one-element copy of id (array argument)
+!
+!     Local variables
+!
       integer(ip) :: id
       integer(ip) :: lastc
       integer(ip) :: lastd
@@ -3410,10 +3439,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     Initial values
-      !>
-      !>     Find the location of the named item.
       module subroutine zzekreqi ( ctx, eqryi, name, value )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
@@ -3423,6 +3448,9 @@ contains
       integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
       character(*), intent(in) :: name  !! Name of scalar item to read.
       integer(ip), intent(out) :: value  !! Value of item.
+!
+!     Initial values
+!
       character(namlen), parameter :: namlst ( maxnam ) = [ character(namlen) :: &
          'ARCHITECTURE', 'INITIALIZED', 'PARSED', 'NAMES_RESOLVED',&
          'TIMES_RESOLVED', 'SEM_CHECKED', 'NUM_TABLES', 'NUM_CONJUNCTIONS',&
@@ -3433,9 +3461,15 @@ contains
          eqtres, eqschk, eqntab, eqncnj,&
          eqncns, eqnsel, eqnord, eqnsiz,&
          eqnptr, eqcsiz, eqcptr ]
+!
+!     Local variables
+!
       character(namlen) :: tmpnam
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekreqi_state ) ) allocate ( ctx%zzekreqi_state )
+!
+!     Find the location of the named item.
+!
       tmpnam = adjustl(name)
       call ucase_inplace ( tmpnam )
 
@@ -4612,23 +4646,6 @@ contains
       !>-    Beta Version 3.0.0, 14-NOV-1995 (NJB)
       !>
       !>        Complete re-write for architecture 3.
-      !>
-      !>     Local parameters
-      !>
-      !>     Number of tokens made up of special characters:
-      !>
-      !>     Max length of any such token:
-      !>
-      !>     Initial values
-      !>
-      !>     These keyword declarations must be made in alphabetical order!
-      !>
-      !>     The following tokens are sequences of special characters.  Some
-      !>     of these are synonyms for keywords; some have other meanings.  In
-      !>     this data statement, the longer sequences must precede the shorter
-      !>     ones, in order for the matching algorithm to work properly.
-      !>
-      !>     Statement Function Definitions
       module subroutine zzekscan ( ctx, query, maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, numvls, chrbuf, chbegs, chends, scnerr, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
@@ -4652,6 +4669,9 @@ contains
       integer(ip), intent(out) :: chends ( * )  !! End locations of string tokens in CHRBUF.
       logical, intent(out) :: scnerr  !! Flag indicating whether query parsed correctly.
       character(*), intent(out) :: errmsg  !! Scan error description.
+!
+!     Local parameters
+!
       character(*), parameter :: dquote = '"'
       character(*), parameter :: squote = ''''
       integer(ip), parameter :: nxttok = 1
@@ -4663,9 +4683,24 @@ contains
       integer(ip), parameter :: ident = number + 1
       integer(ip), parameter :: spcial = ident + 1
       integer(ip), parameter :: mxspec = 512
+!
+!     Number of tokens made up of special characters:
+!
       integer(ip), parameter :: nspec = 13
+!
+!     Max length of any such token:
+!
       integer(ip), parameter :: spclen = 2
+!
+!     Local variables
+!
       character(1) :: chr
+!
+!     The following tokens are sequences of special characters.  Some
+!     of these are synonyms for keywords; some have other meanings.  In
+!     this data statement, the longer sequences must precede the shorter
+!     ones, in order for the matching algorithm to work properly.
+!
       character(spclen), parameter :: spcstr ( nspec ) = [ character(spclen) :: &
          '!=', '^=', '<>', '<=',&
          '>=', '<', '>', '=',&
@@ -4740,6 +4775,9 @@ contains
       if ( .not. allocated ( ctx%zzekscan_state ) ) allocate ( ctx%zzekscan_state )
       associate ( idspec => ctx%zzekscan_state%idspec, &
                   pass1 => ctx%zzekscan_state%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5343,6 +5381,9 @@ contains
       integer(ip), intent(in) :: handle  !! EK file handle.
       integer(ip), intent(in) :: addrss  !! DAS character address.
       integer(ip), intent(in) :: ival  !! Integer value to write.
+!
+!     Local variables
+!
       character(encsiz) :: cval
 
 !
@@ -5431,6 +5472,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
       integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
+!
+!     Local variables
+!
       integer(ip) :: i
 
       logical :: fixed
@@ -5727,6 +5771,9 @@ contains
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       real(wp) :: dpcnt_1(1)  !! one-element copy of dpcnt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpcnt
 
       integer(ip) :: colidx
@@ -5923,6 +5970,9 @@ contains
       logical, intent(out) :: error  !! Error flag.
       character(*), intent(out) :: errmsg  !! Error message.
 
+!
+!     Local parameters
+!
       integer(ip), parameter :: msglen = 160
 
       integer(ip), parameter :: ncomp = 10
@@ -6158,8 +6208,6 @@ contains
       !>        Corrected typo in comment.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     Error free.
       module subroutine zzektloc ( ctx, tokid, kwcode, ntoken, tokens, values, loc, found )
       use pepper_kinds, only: ip
       use pepper_inc_ektokn
@@ -6172,6 +6220,9 @@ contains
       integer(ip), intent(in) :: values ( * )  !! Pointers to numeric and string token values.
       integer(ip), intent(out) :: loc  !! Location of first occurrence of token.
       logical, intent(out) :: found  !! Flag indicating whether token was found.
+!
+!     Error free.
+!
       found  = .false.
       loc    =  1
 
@@ -6290,10 +6341,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 01-AUG-1995 (NJB)
-      !>
-      !>     Initial values
-      !>
-      !>     Find the location of the named item.
       module subroutine zzekweqi ( ctx, name, value, eqryi )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
@@ -6303,6 +6350,9 @@ contains
       character(*), intent(in) :: name  !! Name of scalar item to write.
       integer(ip), intent(in) :: value  !! Value to write.
       integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+!
+!     Initial values
+!
       character(namlen), parameter :: namlst ( maxnam ) = [ character(namlen) :: &
          'ARCHITECTURE', 'INITIALIZED', 'PARSED', 'NAMES_RESOLVED',&
          'TIMES_RESOLVED', 'SEM_CHECKED', 'NUM_TABLES', 'NUM_CONJUNCTIONS',&
@@ -6313,9 +6363,15 @@ contains
          eqtres, eqschk, eqntab, eqncnj,&
          eqncns, eqnsel, eqnord, eqnsiz,&
          eqnptr, eqcsiz, eqcptr ]
+!
+!     Local variables
+!
       character(namlen) :: tmpnam
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekweqi_state ) ) allocate ( ctx%zzekweqi_state )
+!
+!     Find the location of the named item.
+!
       tmpnam = adjustl(name)
       call ucase_inplace ( tmpnam )
 
@@ -6994,6 +7050,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(out) :: ptr  !! Pointer to companion of specified EK record.
       integer(ip) :: ptr_1(1)  !! one-element copy of ptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -7465,6 +7524,9 @@ contains
       integer(ip) :: nsv_1(1)  !! one-element copy of nsv (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
       integer(ip) :: size_1(1)  !! one-element copy of size (array argument)
+!
+!     Local variables
+!
       integer(ip) :: cntloc
       integer(ip) :: delta
       integer(ip) :: i
@@ -7840,8 +7902,6 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     The file must be open for write access.
       module subroutine zzekpgin ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -7856,6 +7916,9 @@ contains
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
+!
+!     The file must be open for write access.
+!
       call dassih ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -7997,8 +8060,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Validate the file.
       module subroutine zzekpgan ( ctx, handle, type, p, base )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -8019,6 +8080,9 @@ contains
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -8153,8 +8217,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Validate the file.
       module subroutine zzekpgal ( ctx, handle, type, p, base )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -8192,6 +8254,9 @@ contains
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -8451,8 +8516,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Check the file.
       module subroutine zzekpgfr ( ctx, handle, type, p )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -8483,6 +8546,9 @@ contains
       integer(ip) :: nfreed
       integer(ip) :: nfreec
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Check the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -8692,10 +8758,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Find out how many character pages are in use.
       module subroutine zzekpgrc ( ctx, handle, p, pagec )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -8711,6 +8773,11 @@ contains
       integer(ip) :: npc
       integer(ip) :: l
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Find out how many character pages are in use.
+!
       call dasrdi ( ctx, handle, epnpc, epnpc, npc_1 )
       npc = npc_1(1)
 
@@ -8802,10 +8869,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Find out how many d.p. pages are in use.
       module subroutine zzekpgrd ( ctx, handle, p, paged )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -8819,6 +8882,11 @@ contains
       integer(ip) :: npd
       integer(ip) :: addr
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Find out how many d.p. pages are in use.
+!
       call dasrdi ( ctx, handle, epnpd, epnpd, npd_1 )
       npd = npd_1(1)
 
@@ -8903,10 +8971,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Find out how many integer pages are in use.
       module subroutine zzekpgri ( ctx, handle, p, pagei )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -8920,6 +8984,11 @@ contains
       integer(ip) :: addr
       integer(ip) :: npi
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Find out how many integer pages are in use.
+!
       call dasrdi ( ctx, handle, epnpi, epnpi, npi_1 )
       npi = npi_1(1)
 
@@ -9013,10 +9082,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Validate the file.
       module subroutine zzekpgwc ( ctx, handle, p, pagec )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -9031,6 +9096,11 @@ contains
       integer(ip) :: npc
       integer(ip) :: l
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -9140,10 +9210,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Validate the file.
       module subroutine zzekpgwd ( ctx, handle, p, paged )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -9157,6 +9223,11 @@ contains
       integer(ip) :: npd
       integer(ip) :: addr
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -9254,10 +9325,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Validate the file.
       module subroutine zzekpgwi ( ctx, handle, p, pagei )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
@@ -9271,6 +9338,11 @@ contains
       integer(ip) :: addr
       integer(ip) :: npi
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -11007,6 +11079,9 @@ contains
       integer(ip), intent(out) :: cvlen  !! Length of returned character value.
       character(*), intent(out) :: cval  !! Character value in column entry.
       logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local variables
+!
       character(1) :: cflag
       character(cnamsz) :: column
 
@@ -11212,6 +11287,9 @@ contains
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(in) :: recno  !! Record number of companion of specified EK record.
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -11296,6 +11374,9 @@ contains
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(in) :: status  !! Status of specified EK record.
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -11399,6 +11480,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: ncols
@@ -11934,6 +12018,9 @@ contains
       integer(ip), intent(out) :: fward  !! Forward data pointer.
       integer(ip) :: fward_1(1)  !! one-element copy of fward (array argument)
       real(wp) :: dpptr_1(1)  !! one-element copy of dpptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpptr
       integer(ip) :: base
 
@@ -12043,6 +12130,9 @@ contains
       integer(ip), intent(out) :: nlinks  !! Number of links to page.
       integer(ip) :: nlinks_1(1)  !! one-element copy of nlinks (array argument)
       real(wp) :: dplnk_1(1)  !! one-element copy of dplnk (array argument)
+!
+!     Local variables
+!
       real(wp) :: dplnk
       integer(ip) :: base
 
@@ -12326,95 +12416,6 @@ contains
       !>-    Beta Version 3.0.0, 17-NOV-1995 (NJB)
       !>
       !>        Significantly re-written for architecture 3.
-      !>
-      !>     Local parameters
-      !>
-      !>     Data structure bounds:
-      !>
-      !>     MAXREL is the maximum number of relations that can be handled
-      !>     by this routine.
-      !>
-      !>     MAXMET is the maximum number of meta-tokens making up any
-      !>     expression.
-      !>
-      !>     LBPOOL is the lower bound of the second index of a linked list
-      !>     pool array.
-      !>
-      !>     Stack parameters:
-      !>
-      !>     Operator parameters:
-      !>
-      !>     NLOGOP is the number of recognized logical operators.  These
-      !>     are AND, OR, and NOT.
-      !>
-      !>     NRELOP is the number of arithmetic and character comparison
-      !>     operators.
-      !>
-      !>     Meta-token codes, excluding codes for relational operators:
-      !>
-      !>     Number of keywords that can terminate a WHERE clause.
-      !>
-      !>     State parameters:
-      !>
-      !>     'Pop condition' codes:
-      !>
-      !>     Token descriptor size:
-      !>
-      !>     Local variables
-      !>
-      !>     Each comparison relation is expressed by three tokens, so the
-      !>     comparison relations are represented by a 3 x MAXREL array.  The
-      !>     first and third elements of each row of RELS are array indices
-      !>     that point into the input array TOKENS; the middle element
-      !>     of each row is an operator code.  The set of triples representing
-      !>     comparison relations is indexed by a doubly linked list pool.
-      !>     Each conjunction of comparison relations is represented by a
-      !>     linked list of pointers to entries in the RELS array.  These
-      !>     pointers are contained in the CJPTRS array.  The pointers are
-      !>     linked via entries in the double linked list pool CJPOOL.
-      !>
-      !>     Each normalized expression is a disjunction of conjunctions.  Each
-      !>     such disjunction is represented by a linked list of nodes
-      !>     associated with pointers to entries in the CJPOOL array.  DJPTRS
-      !>     is the parallel array used to associate each node of a disjunction
-      !>     with the head node of a conjunction list in CJPOOL.
-      !>
-      !>     Meta-tokens are groups of tokens that comprise syntactic units
-      !>     in a query.  Each symbol that appears on the left hand side of
-      !>     a production rule in the grammar corresponds to a type of
-      !>     meta-token.
-      !>
-      !>     Throughout the parsing process, the meta-tokens representing the
-      !>     query are organized as a linked list.  Each meta-token is also
-      !>     associated with a more detailed classification MTCODE.
-      !>
-      !>     For each meta-token that represents an identifier, a value,
-      !>     a name, or an expression, there is a corresponding element of
-      !>     MTEXPR.  This element contains a pointer to a token or to a
-      !>     normalized expression.  In the latter case, the pointer is the
-      !>     head node of a list in the disjunction table.
-      !>
-      !>     Stack variables
-      !>
-      !>     These variables have the following meanings:
-      !>
-      !>        MSTART is the node number of the first meta-token of
-      !>        the current expression being parsed.
-      !>
-      !>        NMETA is the number of meta-tokens in the query.
-      !>
-      !>        POPCND is the `pop condition'.  This is a code indicating
-      !>        what event must occur to trigger popping the current state.
-      !>        The two events that can cause the state to be popped are
-      !>        the execution of a reduction and encountering a right grouper.
-      !>
-      !>     Initial values
-      !>
-      !>     Note:  there is no "UNLIKE" keyword, but there is an UNLIKE
-      !>     operator, which is the complement of the LIKE operator.
-      !>
-      !>     PEPPER: the tables of the comparison operators (CMPOPS, CMPCDE,
-      !>     CMPNEG) are parameters, declared above.
       module subroutine zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc_inplace, repmi_inplace
@@ -12442,10 +12443,30 @@ contains
       logical, intent(out) :: error  !! Parse error flag.
       character(*), intent(out) :: prserr  !! Parse error message.
       integer(ip), parameter :: lbcell = -5
+!
+!     Local parameters
+!
       integer(ip), parameter :: nil = 0
+!
+!     LBPOOL is the lower bound of the second index of a linked list
+!     pool array.
+!
       integer(ip), parameter :: lbpool = -5
+!
+!     Operator parameters:
+!
+!     NLOGOP is the number of recognized logical operators.  These
+!     are AND, OR, and NOT.
+!
       integer(ip), parameter :: nlogop = 3
+!
+!     NRELOP is the number of arithmetic and character comparison
+!     operators.
+!
       integer(ip), parameter :: nrelop = 8
+!
+!     Meta-token codes, excluding codes for relational operators:
+!
       integer(ip), parameter :: rgroup = -1
       integer(ip), parameter :: lgroup = rgroup - 1
       integer(ip), parameter :: btween = lgroup - 1
@@ -12459,24 +12480,46 @@ contains
       integer(ip), parameter :: or = and    - 1
       integer(ip), parameter :: not = or     - 1
       integer(ip), parameter :: expr = not    - 1
+!
+!     Number of keywords that can terminate a WHERE clause.
+!
       integer(ip), parameter :: nendkw = 3
+!
+!     State parameters:
+!
       integer(ip), parameter :: push = 0
       integer(ip), parameter :: pop = push   + 1
       integer(ip), parameter :: parse = pop    + 1
       integer(ip), parameter :: reducd = parse  + 1
       integer(ip), parameter :: term = reducd + 1
+!
+!     'Pop condition' codes:
+!
       integer(ip), parameter :: none = 0
       integer(ip), parameter :: reduce = 1
       integer(ip), parameter :: endgrp = reduce + 1
+!
+!     Token descriptor size:
+!
       integer(ip), parameter :: dscsiz = eqvdsz + 1
+!
+!     Note:  there is no "UNLIKE" keyword, but there is an UNLIKE
+!     operator, which is the complement of the LIKE operator.
+!
       integer(ip), parameter :: endkw  ( nendkw ) = [ kwfrom, kwordr, kwsel ]
       integer(ip), parameter :: cmpcde ( nrelop     ) = [ eq, ge, gt, le, lt, ne, like, unlike ]
       integer(ip), parameter :: cmpneg ( nrelop     ) = [ ne, lt, le, gt, ge, eq, unlike, like ]
       integer(ip), parameter :: cmpops ( nrelop - 1 ) = [ kweq, kwge, kwgt, kwle, kwlt, kwne, kwlike ]
+!
+!     Initial values
+!
       integer(ip), parameter :: logcde ( nlogop     ) = [ &
          and, or, not ]
       integer(ip), parameter :: logops ( nlogop     ) = [ &
          kwand, kwor, kwnot ]
+!
+!     Other local variables
+!
       integer(ip) :: colptr
       integer(ip) :: metahd
       logical :: donow
@@ -12507,6 +12550,21 @@ contains
       integer(ip) :: type
       integer(ip) :: nconj
       integer(ip) :: next
+!
+!     Stack variables
+!
+!     These variables have the following meanings:
+!
+!        MSTART is the node number of the first meta-token of
+!        the current expression being parsed.
+!
+!        NMETA is the number of meta-tokens in the query.
+!
+!        POPCND is the `pop condition'.  This is a code indicating
+!        what event must occur to trigger popping the current state.
+!        The two events that can cause the state to be popped are
+!        the execution of a reduction and encountering a right grouper.
+!
       integer(ip) :: nmeta
       integer(ip) :: lxb
       logical :: qual
@@ -12516,6 +12574,17 @@ contains
       logical :: fnd
       integer(ip) :: exprhd
       integer(ip) :: skip
+!
+!     Each comparison relation is expressed by three tokens, so the
+!     comparison relations are represented by a 3 x MAXREL array.  The
+!     first and third elements of each row of RELS are array indices
+!     that point into the input array TOKENS; the middle element
+!     of each row is an operator code.  The set of triples representing
+!     comparison relations is indexed by a doubly linked list pool.
+!     Each conjunction of comparison relations is represented by a
+!     linked list of pointers to entries in the RELS array.  These
+!     pointers are contained in the CJPTRS array.  The pointers are
+!     linked via entries in the double linked list pool CJPOOL.
 !
 !     PEPPER: the work arrays are local and sized from the number of
 !     tokens (SPICELIB: saved arrays for MAXTOK = 500 tokens and 10*MAXTOK
@@ -12529,8 +12598,31 @@ contains
       integer(ip), allocatable :: rlpool ( :, : )  !! linked list pool of the relations (rels)
       integer(ip), allocatable :: cjpool ( :, : )  !! linked list pool of the conjunctions (one list per conjunction)
       integer(ip), allocatable :: cjptrs ( : )  !! relation (index in rels) of each conjunction list node
+!
+!     Each normalized expression is a disjunction of conjunctions.  Each
+!     such disjunction is represented by a linked list of nodes
+!     associated with pointers to entries in the CJPOOL array.  DJPTRS
+!     is the parallel array used to associate each node of a disjunction
+!     with the head node of a conjunction list in CJPOOL.
+!
       integer(ip), allocatable :: djpool ( :, : )  !! linked list pool of the disjunctions (one per expression)
       integer(ip), allocatable :: djptrs ( : )  !! head of the conjunction list (cjpool) of each disjunction node
+!
+!     Meta-tokens are groups of tokens that comprise syntactic units
+!     in a query.  Each symbol that appears on the left hand side of
+!     a production rule in the grammar corresponds to a type of
+!     meta-token.
+!
+!     Throughout the parsing process, the meta-tokens representing the
+!     query are organized as a linked list.  Each meta-token is also
+!     associated with a more detailed classification MTCODE.
+!
+!     For each meta-token that represents an identifier, a value,
+!     a name, or an expression, there is a corresponding element of
+!     MTEXPR.  This element contains a pointer to a token or to a
+!     normalized expression.  In the latter case, the pointer is the
+!     head node of a list in the disjunction table.
+!
       integer(ip), allocatable :: mtpool ( :, : )  !! linked list pool of the meta-tokens of the query
       integer(ip), allocatable :: mtcode ( : )  !! classification code of each meta-token
       integer(ip), allocatable :: mtexpr ( : )  !! token, descriptor or disjunction list pointer of each meta-token
@@ -12550,7 +12642,14 @@ contains
       integer(ip) :: second  !! node of the second meta-token of the current expression
       integer(ip) :: start  !! node of the first meta-token of the subexpression to push
       integer(ip) :: state  !! state of the parser (push, pop, parse, reduced or terminated)
+!
+!     Stack parameters:
+!
       integer(ip) :: maxstk  !! size of the stack
+!
+!     MAXREL is the maximum number of relations that can be handled
+!     by this routine.
+!
       integer(ip) :: maxrel  !! initial size of the relation, conjunction, disjunction and descriptor pools
       integer(ip) :: mtsize  !! size of the meta-token pool
 
@@ -12567,6 +12666,9 @@ contains
       cj = 0
       dj = 0
       rel = 0
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -14722,6 +14824,9 @@ contains
       integer(ip), intent(in) :: type  !! Data type of page.
       integer(ip), intent(in) :: p  !! Page number.
       integer(ip), intent(in) :: fward  !! Forward data pointer.
+!
+!     Local variables
+!
       real(wp) :: dpptr
       integer(ip) :: base
 
@@ -14834,6 +14939,9 @@ contains
       integer(ip), intent(in) :: type  !! Data type of page.
       integer(ip), intent(in) :: p  !! Page number.
       integer(ip), intent(in) :: nlinks  !! Number of links to page.
+!
+!     Local variables
+!
       real(wp) :: dplnk
       integer(ip) :: base
 
@@ -14995,6 +15103,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: tree  !! Root of tree.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: c1page ( pgsizi )
       integer(ip) :: c2page ( pgsizi )
@@ -15260,6 +15371,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: tree  !! Root of tree.
+!
+!     Local variables
+!
       integer(ip) :: c1page ( pgsizi )
       integer(ip) :: c2page ( pgsizi )
       integer(ip) :: child  ( 2 )
@@ -15424,13 +15538,14 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     Just use the mapping supplied by the paging system.
       module integer(ip) function zzektrbs ( ctx, node )
       use pepper_kinds, only: ip
       use pepper_inc_ektype
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: node  !! Node number.
+!
+!     Just use the mapping supplied by the paging system.
+!
       call zzekpgbs ( ctx, int, node, zzektrbs )
 
       return
@@ -15533,6 +15648,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: tree  !! Root of tree.
+!
+!     Local parameters
+!
       integer(ip), parameter :: paridx = 1
 
       integer(ip), parameter :: nkdidx = 2
@@ -15768,10 +15886,16 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(out) :: tree  !! Root of tree.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: p
       if ( .not. allocated ( ctx%zzektrit_state ) ) allocate ( ctx%zzektrit_state )
       associate ( page => ctx%zzektrit_state%page )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -15908,12 +16032,6 @@ contains
       !>        values.
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
-      !>
-      !>     Initial values
-      !>
-      !> in this puppy.
-      !>
-      !>     Nothing found to begin with.
       module subroutine zzektrlk ( ctx, handle, tree, key, idx, node, noffst, level, value )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
@@ -15957,6 +16075,11 @@ contains
                   first => ctx%zzektrlk_state%first, &
                   leaf => ctx%zzektrlk_state%leaf, &
                   rdonly => ctx%zzektrlk_state%rdonly )
+!
+!     Use discovery check-in in this puppy.
+!
+!     Nothing found to begin with.
+!
       found  =  .false.
 
       if ( first ) then
@@ -16355,6 +16478,9 @@ contains
       integer(ip), intent(out) :: rpidx  !! Node-relative index of the right parent key.
       integer(ip), intent(out) :: rpkey  !! Right parent key.
       integer(ip), intent(out) :: rsib  !! Node number of right sibling.
+!
+!     Local variables
+!
       integer(ip) :: child
       integer(ip) :: lkey
       integer(ip) :: maxkey
@@ -16368,7 +16494,7 @@ contains
       logical :: found
 
 !
-! in this puppy.
+!     Use discovery check-in in this puppy.
 !
 !     Nothing found to begin with.
 !
@@ -16693,6 +16819,9 @@ contains
       integer(ip), intent(in) :: parent  !! Parent node of pair to participate in rotation.
       integer(ip), intent(in) :: pkidx  !! Parent key index.
       integer(ip), intent(in) :: nrot  !! Number of keys to rotate.
+!
+!     Local variables
+!
       integer(ip) :: datbas
       integer(ip) :: dpar
       integer(ip) :: drotat
@@ -17209,6 +17338,9 @@ contains
       integer(ip) :: crwbas_1(1)  !! one-element copy of crwbas (array argument)
       integer(ip) :: ncndsv_1(1)  !! one-element copy of ncndsv (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
+!
+!     Local variables
+!
       integer(ip) :: i
       integer(ip) :: base
       integer(ip) :: cand
@@ -18359,6 +18491,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(inout) :: coldsc ( cdscsz )  !! Column descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -20122,6 +20257,9 @@ contains
       integer(ip), intent(in) :: pkidx  !! Node-relative index of parent key.
       logical, intent(out) :: overfl  !! Overflow flag.
       integer(ip) :: nnode_1(1)  !! one-element copy of nnode (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: c1page ( pgsizi )
       integer(ip) :: c2page ( pgsizi )
@@ -20727,6 +20865,9 @@ contains
       integer(ip), intent(in) :: lpkidx  !! Node-relative index of left parent key of MIDDLE.
       logical, intent(out) :: undrfl  !! Underflow flag.
       integer(ip) :: nnode_1(1)  !! one-element copy of nnode (array argument)
+!
+!     Local parameters
+!
       integer(ip), parameter :: lsize = (3*mnkeyc)/2
 
       integer(ip), parameter :: rsize = 3*mnkeyc - lsize
@@ -21240,13 +21381,16 @@ contains
       integer(ip), intent(in) :: tree  !! Root of tree.
       integer(ip), intent(in) :: key  !! Key corresponding to pointer.
       integer(ip), intent(out) :: ptr  !! Data pointer.
+!
+!     Local variables
+!
       integer(ip) :: idx
       integer(ip) :: node
       integer(ip) :: noffst
       integer(ip) :: level
 
 !
-! in this puppy.
+!     Use discovery check-in in this puppy.
 !
       call zzektrlk ( ctx, handle, tree,   key,   idx, &
                       node,   noffst, level, ptr  )
@@ -21430,6 +21574,9 @@ contains
       integer(ip) :: rkey_1(1)  !! one-element copy of rkey (array argument)
       integer(ip) :: lkey_1(1)  !! one-element copy of lkey (array argument)
       integer(ip) :: loffst_1(1)  !! one-element copy of loffst (array argument)
+!
+!     Local variables
+!
       integer(ip) :: addrss
       integer(ip) :: base
       integer(ip) :: keybas
@@ -21762,6 +21909,9 @@ contains
       integer(ip), intent(in) :: key  !! Key to delete.
       integer(ip), intent(out) :: trgkey  !! Key identifying node from which deletion occurred.
       logical, intent(out) :: undrfl  !! Underflow flag.
+!
+!     Local variables
+!
       integer(ip) :: datptr
       integer(ip) :: depth
       integer(ip) :: i
@@ -22329,6 +22479,9 @@ contains
       integer(ip), intent(in) :: key  !! Key to insert.
       integer(ip), intent(in) :: value  !! Value to insert.
       logical, intent(out) :: overfl  !! Overflow flag.
+!
+!     Local variables
+!
       integer(ip) :: datloc
       integer(ip) :: datptr
       integer(ip) :: depth
@@ -22969,6 +23122,9 @@ contains
       integer(ip), intent(in) :: key  !! Key.
       integer(ip), intent(out) :: recptr  !! Record pointer.
       integer(ip) :: recptr_1(1)  !! one-element copy of recptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: addrss
       integer(ip) :: base
       integer(ip) :: itype
@@ -23087,6 +23243,9 @@ contains
       integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip), intent(in) :: n  !! Ordinal position of record.
       integer(ip), intent(out) :: recptr  !! Record pointer.
+!
+!     Local variables
+!
       integer(ip) :: stype
       integer(ip) :: tree
 
@@ -24029,6 +24188,9 @@ contains
       integer(ip), intent(in) :: right  !! Right node of pair to be balanced.
       integer(ip), intent(in) :: parent  !! Parent node of pair to be balanced.
       integer(ip), intent(in) :: pkidx  !! Parent key index.
+!
+!     Local variables
+!
       integer(ip) :: lnkeys
       integer(ip) :: rnkeys
       integer(ip) :: root
@@ -24189,6 +24351,9 @@ contains
       integer(ip), intent(in) :: n  !! Index of key of interest.
       integer(ip), intent(out) :: key  !! Key located at index N.
       integer(ip) :: key_1(1)  !! one-element copy of key (array argument)
+!
+!     Local variables
+!
       integer(ip) :: addrss
       integer(ip) :: base
       integer(ip) :: idx
@@ -24303,6 +24468,9 @@ contains
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: tree  !! Tree root.
       integer(ip), intent(in) :: ival  !! Value to search for.
+!
+!     Local variables
+!
       integer(ip) :: i
       integer(ip) :: n
       integer(ip) :: value
@@ -24426,6 +24594,9 @@ contains
       integer(ip), intent(out) :: page  !! Integer metadata start page number.
       integer(ip), intent(out) :: base  !! Page base.
       integer(ip) :: tree_1(1)  !! one-element copy of tree (array argument)
+!
+!     Local variables
+!
       integer(ip) :: nseg
       integer(ip) :: tbase
       integer(ip) :: tree
@@ -24624,6 +24795,9 @@ contains
 
 
 
+!
+!     Local parameters
+!
       integer(ip), parameter :: merg32 = balnce + 1
 
       integer(ip), parameter :: merg31 = merg32 + 1
@@ -25166,6 +25340,9 @@ contains
 
 
 
+!
+!     Local parameters
+!
       integer(ip), parameter :: splt23 = balnce + 1
 
       integer(ip), parameter :: splt13 = splt23 + 1
@@ -25486,6 +25663,9 @@ contains
       integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor.
       integer(ip), intent(in) :: type  !! Data type of page.
       integer(ip), intent(in) :: p  !! Page number.
+!
+!     Local variables
+!
       integer(ip) :: mbase
       integer(ip) :: loc
       integer(ip) :: tree
@@ -25655,6 +25835,9 @@ contains
       integer(ip) :: colidx_1(1)  !! one-element copy of colidx (array argument)
       integer(ip) :: stkseg_1(1)  !! one-element copy of stkseg (array argument)
       integer(ip) :: stkhan_1(1)  !! one-element copy of stkhan (array argument)
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = 100
 
       integer(ip) :: addrss
@@ -25924,6 +26107,9 @@ contains
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: segno  !! Segment number.
       integer(ip), intent(out) :: segdsc ( sdscsz )  !! Segment descriptor.
+!
+!     Local variables
+!
       integer(ip) :: mp
       integer(ip) :: mbase
 
@@ -26137,6 +26323,9 @@ contains
       integer(ip), intent(out) :: segdsc ( sdscsz    )  !! Segment descriptor.
       character(*), intent(out) :: cnames (         * )  !! Names of columns in segment.
       integer(ip), intent(out) :: cdscrs ( cdscsz, * )  !! Descriptors of columns in segment.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: i
       integer(ip) :: ncols
@@ -27104,6 +27293,9 @@ contains
       integer(ip), intent(in) :: n  !! Number of pages to allocate.
       integer(ip), intent(out) :: p  !! Page number.
       integer(ip), intent(out) :: base  !! DAS base address of page.
+!
+!     Local variables
+!
       integer(ip) :: b
       integer(ip) :: i
       integer(ip) :: idx
@@ -27256,6 +27448,9 @@ contains
       logical, intent(in) :: new  !! Flag indicating whether page is new.
       integer(ip), intent(out) :: p  !! Page number.
       integer(ip), intent(out) :: base  !! DAS base address of page.
+!
+!     Local variables
+!
       integer(ip) :: idx
       integer(ip) :: tree
 
@@ -28221,6 +28416,9 @@ contains
       integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: nelts_1(1)  !! one-element copy of nelts (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: datptr
       integer(ip) :: nelts
@@ -28447,6 +28645,9 @@ contains
       integer(ip), intent(in) :: handle  !! File handle.
       integer(ip), intent(in) :: segno  !! Segment number.
       integer(ip), intent(in) :: recptr  !! Record pointer.
+!
+!     Local variables
+!
       integer(ip) :: segdsc ( sdscsz )
       integer(ip) :: stype
 

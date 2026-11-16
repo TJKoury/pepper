@@ -1214,34 +1214,6 @@ contains
       !>        5) The header was updated to reflect the changes.
       !>
       !>-    Beta Version 1.0.0, 04-MAY-1990 (RET) (IMU)
-      !>
-      !>     Local parameters
-      !>
-      !>        NDC        is the number of double precision components in an
-      !>                   unpacked C-kernel segment descriptor.
-      !>
-      !>        NIC        is the number of integer components in an unpacked
-      !>                   C-kernel segment descriptor.
-      !>
-      !>        NC         is the number of components in a packed C-kernel
-      !>                   descriptor.  All DAF summaries have this formulaic
-      !>                   relationship between the number of its integer and
-      !>                   double precision components and the number of packed
-      !>                   components.
-      !>
-      !>        IDLEN      is the length of the C-kernel segment identifier.
-      !>                   All DAF names have this formulaic relationship
-      !>                   between the number of summary components and
-      !>                   the length of the name (You will notice that
-      !>                   a name and a summary have the same length in bytes.)
-      !>
-      !>     Saved frame name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved frame name/ID item declarations.
-      !>
-      !>     Saved frame name/ID items.
       module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm
@@ -1256,6 +1228,9 @@ contains
       real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix pointing data.
       real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
       logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+!
+!     Local variables
+!
       character(idlen) :: segid
       real(wp) :: av     ( 3 )
       real(wp) :: dcd    ( ndc  )
@@ -1281,6 +1256,9 @@ contains
                   svref => ctx%ckgp_state%svref, &
                   svrefr => ctx%ckgp_state%svrefr, &
                   first => ctx%ckgp_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -2217,34 +2195,6 @@ contains
       !>        5) The header was updated to reflect the changes.
       !>
       !>-    Beta Version 1.0.0, 04-JUN-1990 (RET) (IMU)
-      !>
-      !>     Local parameters
-      !>
-      !>        NDC        is the number of double precision components in an
-      !>                   unpacked C-kernel segment descriptor.
-      !>
-      !>        NIC        is the number of integer components in an unpacked
-      !>                   C-kernel segment descriptor.
-      !>
-      !>        NC         is the number of components in a packed C-kernel
-      !>                   descriptor.  All DAF summaries have this formulaic
-      !>                   relationship between the number of its integer and
-      !>                   double precision components and the number of packed
-      !>                   components.
-      !>
-      !>        IDLEN      is the length of the C-kernel segment identifier.
-      !>                   All DAF names have this formulaic relationship
-      !>                   between the number of summary components and
-      !>                   the length of the name (You will notice that
-      !>                   a name and a summary have the same length in bytes.)
-      !>
-      !>     Saved frame name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved frame name/ID item declarations.
-      !>
-      !>     Saved frame name/ID items.
       module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mtxv, mxm, xf2rav
@@ -2260,6 +2210,9 @@ contains
       real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
       real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
       logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+!
+!     Local variables
+!
       character(idlen) :: segid
       real(wp) :: dcd      ( ndc  )
       real(wp) :: descr    ( nc   )
@@ -2287,6 +2240,9 @@ contains
                   svref => ctx%ckgpav_state%svref, &
                   svrefr => ctx%ckgpav_state%svrefr, &
                   first => ctx%ckgpav_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

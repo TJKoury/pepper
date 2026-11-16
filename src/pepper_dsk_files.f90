@@ -6186,11 +6186,6 @@ contains
       !>        "A list" elements with which plate lists were associated.
       !>        Now, indices in the voxel-plate pointer array are used as
       !>        "A" values.
-      !>
-      !>     Local parameters
-      !>
-      !>     Fraction of voxel edge length used a tolerance for plate
-      !>     inclusion in voxels:
       module subroutine zzmkspin ( ctx, np, plates, vrtces, voxscl, cgscal, maxptr, mxcell, maxvxl, cells, nvox, voxsiz, voxori, nvxtot, nvxptr, vxptr, nvxlst, vxlist, extent, cgrptr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
@@ -6217,6 +6212,10 @@ contains
       integer(ip), intent(out) :: vxlist ( * )  !! Voxel to plates list.
       real(wp), intent(out) :: extent ( 6 )  !! Vertex coordinate extents in km.
       integer(ip), intent(out) :: cgrptr ( * )  !! Coarse voxel grid pointer array.
+!
+!     Fraction of voxel edge length used a tolerance for plate
+!     inclusion in voxels:
+!
       real(wp), parameter :: tol = 1.0e-3_wp
 
       real(wp) :: avext

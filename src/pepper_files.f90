@@ -841,25 +841,6 @@ contains
       !>               indicate the new sizes of the various string
       !>               components. Routines that include this must
       !>               then be recompiled.
-      !>
-      !>     Local Parameters
-      !>
-      !>     Maximum size of an individual test cluster component
-      !>     including the ':'.
-      !>
-      !>     Integer codes of characters appearing in test clusters.
-      !>
-      !>     Local Variables
-      !>
-      !>     Non-printing character values.
-      !>
-      !>     Data Statements
-      !>
-      !>     Set up the components of the FTP validation string that
-      !>     are not supposed to change for forward and backward
-      !>     compatibility.
-      !>
-      !>     On the first invocation initialize the string values.
       module subroutine zzftpstr ( ctx, tstcom, lend, rend, delim )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
@@ -870,14 +851,29 @@ contains
       character(*), intent(out) :: lend  !! String that brackets TSTCOM on the left in a file.
       character(*), intent(out) :: rend  !! String that brackets TSTCOM on the right in a file.
       character(*), intent(out) :: delim  !! Delimiter that separates the pieces of TSTCOM.
+!
+!     Local Parameters
+!
+!     Maximum size of an individual test cluster component
+!     including the ':'.
+!
       integer(ip), parameter :: siztsq = 5
+!
+!     Integer codes of characters appearing in test clusters.
+!
       integer(ip), parameter :: int000 = 0
       integer(ip), parameter :: int010 = 10
       integer(ip), parameter :: int013 = 13
       integer(ip), parameter :: int016 = 16
       integer(ip), parameter :: int129 = 129
       integer(ip), parameter :: int206 = 206
+!
+!     Local Variables
+!
       character(siztsq) :: testsq ( numtst )
+!
+!     Non-printing character values.
+!
       character(1) :: asc000
       character(1) :: asc010
       character(1) :: asc013
@@ -891,6 +887,9 @@ contains
                   loclnd => ctx%zzftpstr%loclnd, &
                   locrnd => ctx%zzftpstr%locrnd, &
                   locstr => ctx%zzftpstr%locstr )
+!
+!     On the first invocation initialize the string values.
+!
       if ( first ) then
 !
 !        Convert the integer parameters to their non-printing ASCII
@@ -1150,11 +1149,6 @@ contains
       !>               chunk from STRING.  If it is, then the file is
       !>               as valid as far as this version of the toolkit is
       !>               concerned.  Otherwise, the file is damaged.
-      !>
-      !>     Data Statements
-      !>
-      !>     On the first pass through, fetch a copy of the current FTP
-      !>     validation string.
       module subroutine zzftpchk ( ctx, string, ftperr )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, rtrim
@@ -1163,6 +1157,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: string  !! String that may contain the FTP validation string.
       logical, intent(out) :: ftperr  !! Logical indicating if FTP corruption occurred.
+!
+!     Local Variables
+!
       character(sizdlm) :: delim
       character(sizexp) :: filstr
       integer(ip) :: fsmidx
@@ -1174,6 +1171,10 @@ contains
                   lftbkt => ctx%zzftpchk%lftbkt, &
                   memstr => ctx%zzftpchk%memstr, &
                   rgtbkt => ctx%zzftpchk%rgtbkt )
+!
+!     On the first pass through, fetch a copy of the current FTP
+!     validation string.
+!
       if ( first ) then
 
          call zzftpstr ( ctx, memstr, lftbkt, rgtbkt, delim )
@@ -1792,7 +1793,13 @@ contains
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(out) :: bffid  !! Binary file format code for this system.
+!
+!     Local Parameters
+!
       real(wp), parameter :: dpvalu = 7.0_wp
+!
+!     Local Variables
+!
       integer(ip) :: i
       integer(ip) :: iequiv ( 2 )
 !
@@ -1904,17 +1911,6 @@ contains
       !>        for Fortran compilers but was irritating for human readers.
       !>
       !>-    SPICELIB Version 1.0.0, 07-JUN-2001 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Number of classes of label/ID pairs of which this routine is
-      !>     aware.
-      !>
-      !>     Integer codes for the currently supported classes.
-      !>
-      !>     Data Statements
-      !>
-      !>     Left justify and convert the input to upper case.
       module subroutine zzddhgsd ( ctx, class, id, label )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
@@ -1924,10 +1920,19 @@ contains
       character(*), intent(in) :: class  !! String indicating the class of label requested.
       integer(ip), intent(in) :: id  !! Integer ID desired for the decoding.
       character(*), intent(out) :: label  !! Corresponding label for the CLASS/ID pair.
+!
+!     Local Parameters
+!
       integer(ip), parameter :: locsiz = 8
+!
+!     Integer codes for the currently supported classes.
+!
       integer(ip), parameter :: method = 1
       integer(ip), parameter :: arch = method + 1
       integer(ip), parameter :: bff = arch   + 1
+!
+!     Local Variables
+!
       character(locsiz) :: tmpstr
       integer(ip) :: clsid
       if ( .not. allocated ( ctx%zzddhgsd ) ) allocate ( ctx%zzddhgsd )
@@ -1935,6 +1940,9 @@ contains
                   stramh => ctx%zzddhgsd%stramh, &
                   strarc => ctx%zzddhgsd%strarc, &
                   strbff => ctx%zzddhgsd%strbff )
+!
+!     Left justify and convert the input to upper case.
+!
       tmpstr = adjustl(class)
       call ucase_inplace ( tmpstr )
 
@@ -2077,18 +2085,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 26-APR-2012 (BVS)
-      !>
-      !>     Local parameters.
-      !>
-      !>     Character buffer size consistent with the number of integers
-      !>     that will be read from the file.
-      !>
-      !>     Minimum and maximum values for the range of ASCII printing
-      !>     characters.
-      !>
-      !>     Data statements.
-      !>
-      !>     Set default output value to zero.
       module real(wp) function zzddhmnm ( ctx, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -2097,9 +2093,22 @@ contains
       integer(ip), intent(in) :: unit  !! Logical unit attached to a file.
       integer(ip), parameter :: idlen = 8
       integer(ip), parameter :: nints = 20
+!
+!     Local parameters.
+!
+!     Character buffer size consistent with the number of integers
+!     that will be read from the file.
+!
       integer(ip), parameter :: nchars = nints * 4
+!
+!     Minimum and maximum values for the range of ASCII printing
+!     characters.
+!
       integer(ip), parameter :: minpch = 32
       integer(ip), parameter :: maxpch = 126
+!
+!     Local variables.
+!
       character(idlen) :: arch
       character(idlen) :: idword
       character(idlen) :: type
@@ -2118,6 +2127,9 @@ contains
                   natbff => ctx%zzddhmnm%natbff, &
                   supbff => ctx%zzddhmnm%supbff, &
                   numsup => ctx%zzddhmnm%numsup )
+!
+!     Set default output value to zero.
+!
       mnm      = 0.0_wp
       zzddhmnm = 0.0_wp
 
@@ -2550,45 +2562,6 @@ contains
       !>        a null binary file format ID, and apply the byte
       !>        examination algorithm used on pre-N0050 DAFs to determine
       !>        its format.
-      !>
-      !>     Local Parameters
-      !>
-      !>     Number of characters to be read in from a record.
-      !>
-      !>     Bounding indices for the window that brackets the FTP
-      !>     error detection string in the file record.
-      !>
-      !>     Index of the start of the binary file format identification
-      !>     string in DAF binaries.
-      !>
-      !>     Index of the start of the binary file format identification
-      !>     string in DAS binaries.
-      !>
-      !>     Size of the binary format identification string.
-      !>
-      !>     Index of the first byte of NI in the DAF file record.
-      !>
-      !>     Index of the first byte of NSUM in the DAF descriptor record.
-      !>
-      !>     Index of the first byte of FDREC in the DAF file record.
-      !>
-      !>     Integer code such that CHAR(INTNUL) produces the NULL character.
-      !>
-      !>     IDW2AT Output Argument Lengths.
-      !>
-      !>     NULLID is the index of the extended STRBFF "NULL" string ID.
-      !>
-      !>     Data Statements
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     On some supported environments, ICHAR is not sufficient to
-      !>     produce the desired results.  This however, is not the case
-      !>     with this particular environment.
-      !>     Some versions of the g77 implement ICHAR with a signed integer.
-      !>     This function computes the value of ICHAR that this code requires
-      !>     on any version of g77 for x86 Linux.
       module subroutine zzddhppf ( ctx, unit, arch, bff )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, ucase_inplace
@@ -2599,18 +2572,59 @@ contains
       integer(ip), intent(in) :: unit  !! Logical unit attached to the binary file.
       integer(ip), intent(in) :: arch  !! Integer code indicating the file architecture.
       integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
+!
+!     Local Parameters
+!
+!     Number of characters to be read in from a record.
+!
       integer(ip), parameter :: numchr = 1000
+!
+!     Bounding indices for the window that brackets the FTP
+!     error detection string in the file record.
+!
       integer(ip), parameter :: ftpstr = 500
       integer(ip), parameter :: ftpend = 1000
+!
+!     Index of the start of the binary file format identification
+!     string in DAF binaries.
+!
       integer(ip), parameter :: dafbff = 89
+!
+!     Index of the start of the binary file format identification
+!     string in DAS binaries.
+!
       integer(ip), parameter :: dasbff = 85
+!
+!     Size of the binary format identification string.
+!
       integer(ip), parameter :: bffsiz = 8
+!
+!     Index of the first byte of NI in the DAF file record.
+!
       integer(ip), parameter :: nipos = 13
+!
+!     Index of the first byte of NSUM in the DAF descriptor record.
+!
       integer(ip), parameter :: nsmpos = 17
+!
+!     Index of the first byte of FDREC in the DAF file record.
+!
       integer(ip), parameter :: fdrpos = 77
+!
+!     Integer code such that CHAR(INTNUL) produces the NULL character.
+!
       integer(ip), parameter :: intnul = 0
+!
+!     IDW2AT Output Argument Lengths.
+!
       integer(ip), parameter :: idwlen = 4
+!
+!     NULLID is the index of the extended STRBFF "NULL" string ID.
+!
       integer(ip), parameter :: nullid = numbff+1
+!
+!     Local Variables
+!
       character(1) :: carg
       character(numchr) :: chrrec
       character(bffsiz) :: bffidw
@@ -2623,6 +2637,19 @@ contains
       integer(ip) :: tstarc
       logical :: found
       logical :: ftperr
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     On some supported environments, ICHAR is not sufficient to
+!     produce the desired results.  This however, is not the case
+!     with this particular environment.
+!     Some versions of the g77 implement ICHAR with a signed integer.
+!     This function computes the value of ICHAR that this code requires
+!     on any version of g77 for x86 Linux.
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
@@ -2636,6 +2663,9 @@ contains
                   null => ctx%zzddhppf%null, &
                   strarc => ctx%zzddhppf%strarc, &
                   strbff => ctx%zzddhppf%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -3568,22 +3598,6 @@ contains
       !>        Added MAC-OSX environments.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     These parameters are used for arithmetic shifting.
-      !>
-      !>     Data Statements
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     On some supported environments, ICHAR is not sufficient to
-      !>     produce the desired results.  This however, is not the case
-      !>     with this particular environment.
-      !>     Some versions of the g77 implement ICHAR with a signed integer.
-      !>     This function computes the value of ICHAR that this code requires
-      !>     on any version of g77 for x86 Linux.
       module subroutine zzxlatei ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmin
@@ -3595,9 +3609,17 @@ contains
       character(*), intent(in) :: input  !! String containing integers read as characters.
       integer(ip), intent(in) :: space  !! Number of integers that can be placed in OUTPUT.
       integer(ip), intent(out) :: output ( * )  !! Translated integer values.
+!
+!     Local Parameters
+!
+!     These parameters are used for arithmetic shifting.
+!
       integer(ip), parameter :: shft8 = 2**8
       integer(ip), parameter :: shft16 = 2**16
       integer(ip), parameter :: shft24 = 2**24
+!
+!     Local Variables
+!
       character(1) :: carg
       character(strsiz) :: tmpstr
       integer(ip) :: i
@@ -3606,6 +3628,19 @@ contains
       integer(ip) :: numint
       integer(ip) :: osign
       integer(ip) :: value
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     On some supported environments, ICHAR is not sufficient to
+!     produce the desired results.  This however, is not the case
+!     with this particular environment.
+!     Some versions of the g77 implement ICHAR with a signed integer.
+!     This function computes the value of ICHAR that this code requires
+!     on any version of g77 for x86 Linux.
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
@@ -3616,6 +3651,9 @@ contains
                   strbff => ctx%zzxlatei%strbff, &
                   smlint => ctx%zzxlatei%smlint, &
                   bigint => ctx%zzxlatei%bigint )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5952,6 +5990,9 @@ contains
                   utlck => ctx%zzddhman_units%utlck, &
                   utlun => ctx%zzddhman_units%utlun, &
                   reqcnt => ctx%zzddhman_units%reqcnt )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6843,6 +6884,9 @@ contains
                   uthan => ctx%zzddhman_units%uthan, &
                   utlck => ctx%zzddhman_units%utlck, &
                   utlun => ctx%zzddhman_units%utlun )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7163,6 +7207,9 @@ contains
                   utlck => ctx%zzddhman_units%utlck, &
                   utlun => ctx%zzddhman_units%utlun, &
                   reqcnt => ctx%zzddhman_units%reqcnt )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7519,6 +7566,9 @@ contains
                   nut => ctx%zzddhman_units%nut, &
                   uthan => ctx%zzddhman_units%uthan, &
                   utlck => ctx%zzddhman_units%utlck )
+!
+!     Standard SPICE discovery error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7719,8 +7769,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Do the initialization tasks.
       module subroutine zzddhnfo ( ctx, handle, fname, intarc, intbff, intamh, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
@@ -7764,6 +7812,9 @@ contains
                   natbff => ctx%zzddhman_units%natbff, &
                   supbff => ctx%zzddhman_units%supbff, &
                   numsup => ctx%zzddhman_units%numsup )
+!
+!     Do the initialization tasks.
+!
       if ( first ) then
 
          call zzddhini ( ctx, natbff, supbff, numsup, &
@@ -7887,8 +7938,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Do the initialization tasks.
       module subroutine zzddhisn ( ctx, handle, native, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
@@ -7929,6 +7978,9 @@ contains
                   natbff => ctx%zzddhman_units%natbff, &
                   supbff => ctx%zzddhman_units%supbff, &
                   numsup => ctx%zzddhman_units%numsup )
+!
+!     Do the initialization tasks.
+!
       if ( first ) then
 
          call zzddhini ( ctx, natbff, supbff, numsup, &
@@ -8204,8 +8256,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Do the initialization tasks.
       module subroutine zzddhluh ( ctx, unit, handle, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -8246,6 +8296,9 @@ contains
                   nut => ctx%zzddhman_units%nut, &
                   uthan => ctx%zzddhman_units%uthan, &
                   utlun => ctx%zzddhman_units%utlun )
+!
+!     Do the initialization tasks.
+!
       if ( first ) then
 
          call zzddhini ( ctx, natbff, supbff, numsup, &

@@ -1862,6 +1862,9 @@ contains
       integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
       real(wp), intent(in) :: sclkdp  !! Encoded representation of a spacecraft clock count.
       character(*), intent(out) :: sclkch  !! Character representation of a clock count.
+!
+!     Local variables
+!
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
       integer(ip) :: npmax
       character(12) :: prtstr  ! PEPPER: any partition number and the slash (SPICELIB: PARTLN, 5)
@@ -1871,6 +1874,9 @@ contains
       integer(ip) :: suflen
       integer(ip) :: i
       real(wp) :: ticks
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

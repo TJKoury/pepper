@@ -1829,72 +1829,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
-      !>
-      !>     The buffered numeric string has the form:
-      !>
-      !>       by.xxxxxxxxxxxxxEseee...
-      !>       123456789012345678901234
-      !>                1         2
-      !>
-      !>     Ignoring the exponent we can regard this as being the
-      !>     decimal equivalent of the number with the decimal point
-      !>     in the wrong position.  We'll need to remedy this.
-      !>
-      !>       by.xxxxxxxxxxxxx
-      !>       1234567890123456
-      !>                1
-      !>
-      !>      We can think of this decimal representation as being a
-      !>      simplification of the "infinite string" representation
-      !>      below.
-      !>
-      !>                     b    y   .   x   x       x
-      !>        d-4 d-3 d-2 d-1  d00  p  d01 d02 ... d13  0   0   0   0
-      !>        -2  -1   0   1    2   3   4   5       16
-      !>
-      !>     From this its clear that i'th digit can be easily computed
-      !>     via following decision block.
-      !>
-      !>        if ( i .lt. 0 ) then
-      !>           digit  = '0'
-      !>        else if ( i .eq. 0 ) then
-      !>           digit  = string(2:2)
-      !>        else if ( i .lt. maxsig ) then
-      !>           digit = string(i+3:i+3)
-      !>        else
-      !>           digit = '0'
-      !>        end if
-      !>
-      !>     To have an accurate representation of the number (one that
-      !>     accounts for the exponent) we shift the decimal point ('p')
-      !>     "right" by EXP slots. (If EXP is negative we shift right a
-      !>     negative number of slots).  In the sequence of characters the
-      !>     decimal point will follow d_EXP.
-      !>
-      !>     IF we renumber the slots so that the decimal point is in
-      !>     slot 0 then for S < 0 slot S contains digit d_EXP+1+S
-      !>
-      !>     For S > 0 slot S contains digit d_EXP+S
-      !>
-      !>     Combining these observations we can compute the SLOT'th character
-      !>     of the virtual string as follows.
-      !>
-      !>     If the character requested is character zero of the virtual
-      !>     string, we just get the decimal point.
-      !>
-      !>     If the character requested is in a slot whose index is
-      !>     greater than zero it is to the
-      !>     right of the decimal point so it must be D_exp+slot.
-      !>
-      !>     If the character requested is in a slot whose index is negative
-      !>     it is to the left of the decimal point.  Since the slot
-      !>     just to the left of the decimal point contains D_exp it follows
-      !>     by induction that for any negative slot, the decimal is
-      !>     D_exp+slot+1
-      !>
-      !>     Since we may need to round the output, we will work from right
-      !>     to left.  First thing we do is get the index of the right most
-      !>     significant portion of SUBSTR that we will manipulate.
       module subroutine zzvsbstr ( ctx, from, to, rnd, substr, did )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -1916,6 +1850,73 @@ contains
                   myfill => ctx%zzvstrng_state%myfill, &
                   code0 => ctx%zzvstrng_state%code0, &
                   exp => ctx%zzvstrng_state%exp )
+!
+!     The buffered numeric string has the form:
+!
+!       by.xxxxxxxxxxxxxEseee...
+!       123456789012345678901234
+!                1         2
+!
+!     Ignoring the exponent we can regard this as being the
+!     decimal equivalent of the number with the decimal point
+!     in the wrong position.  We'll need to remedy this.
+!
+!       by.xxxxxxxxxxxxx
+!       1234567890123456
+!                1
+!
+!      We can think of this decimal representation as being a
+!      simplification of the "infinite string" representation
+!      below.
+!
+!                     b    y   .   x   x       x
+!        d-4 d-3 d-2 d-1  d00  p  d01 d02 ... d13  0   0   0   0
+!        -2  -1   0   1    2   3   4   5       16
+!
+!     From this its clear that i'th digit can be easily computed
+!     via following decision block.
+!
+!        if ( i .lt. 0 ) then
+!           digit  = '0'
+!        else if ( i .eq. 0 ) then
+!           digit  = string(2:2)
+!        else if ( i .lt. maxsig ) then
+!           digit = string(i+3:i+3)
+!        else
+!           digit = '0'
+!        end if
+!
+!     To have an accurate representation of the number (one that
+!     accounts for the exponent) we shift the decimal point ('p')
+!     "right" by EXP slots. (If EXP is negative we shift right a
+!     negative number of slots).  In the sequence of characters the
+!     decimal point will follow d_EXP.
+!
+!     IF we renumber the slots so that the decimal point is in
+!     slot 0 then for S < 0 slot S contains digit d_EXP+1+S
+!
+!     For S > 0 slot S contains digit d_EXP+S
+!
+!     Combining these observations we can compute the SLOT'th character
+!     of the virtual string as follows.
+!
+!     If the character requested is character zero of the virtual
+!     string, we just get the decimal point.
+!
+!     If the character requested is in a slot whose index is
+!     greater than zero it is to the
+!     right of the decimal point so it must be D_exp+slot.
+!
+!     If the character requested is in a slot whose index is negative
+!     it is to the left of the decimal point.  Since the slot
+!     just to the left of the decimal point contains D_exp it follows
+!     by induction that for any negative slot, the decimal is
+!     D_exp+slot+1
+!
+!     Since we may need to round the output, we will work from right
+!     to left.  First thing we do is get the index of the right most
+!     significant portion of SUBSTR that we will manipulate.
+!
       j    = to - from + 1
       lsub = len(substr)
 !
@@ -3487,70 +3488,6 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in RMAINI calls.
-      !>
-      !>     Local parameters
-      !>
-      !>     We declare the variables that contain the number of days in
-      !>     400 years (Gregorian), 100 years (Gregorian), 4 years and 1 year.
-      !>
-      !>     The following integers give the number of days during the
-      !>     associated month of a non-leap year.
-      !>
-      !>     The integers that follow give the number of days in a normal
-      !>     year that precede the first of the month.
-      !>
-      !>     The integers that follow give the number of days in a leap
-      !>     year that precede the first of the month.
-      !>
-      !>     Local variables
-      !>
-      !>     The array EXTRA contains the number of additional days that
-      !>     appear before the first of a month during a leap year (as opposed
-      !>     to a non-leap year).
-      !>
-      !>     DPJAN0(I) gives the number of days that occur before the I'th
-      !>     month of a normal year.
-      !>
-      !>     Initial values
-      !>
-      !>     Definitions of statement functions.
-      !>
-      !>     The number of days elapsed since Gregorian Jan 1, of year 1 A.D.
-      !>     to Jan 1 of YR is given by:
-      !>
-      !>     The number of days elapsed since Julian Jan 1, of year 1 A.D.
-      !>     to Jan 1 of YR is given by:
-      !>
-      !>     Return 1 if YR is divisible by M, otherwise return 0.
-      !>
-      !>     The number of leap days in a Gregorian year is given by:
-      !>
-      !>     The number of leap days in a Julian year is given by:
-      !>
-      !>     To compute the day of the year we
-      !>
-      !>        look up the number of days to the beginning of the month,
-      !>
-      !>        add on the number leap days that occurred prior to that
-      !>        time
-      !>
-      !>        add on the number of days into the month
-      !>
-      !>     The number of days since 1 Jan 1 A.D. (Gregorian) is given by:
-      !>
-      !>     The number of days since 1 Jan 1 A.D. (Julianis given by:
-      !>
-      !>     If this is the first pass through this entry point (or the
-      !>     companion entry point) we need to set up some reference points.
-      !>
-      !>     RDAYG   is the number of days past 1 A.D. Jan 1 of the Gregorian
-      !>             calendar of the date Oct 15, 1582
-      !>
-      !>     RDAYJ   is the number of days past 1 A.D. Jan 1 of the Julian
-      !>             calendar of the date Oct 5, 1582.
-      !>
-      !>     OFFSTJ and OFFSTG are just the offset from one count of days
-      !>     to the other.
       module subroutine jul2gr ( ctx, year, month, day, doy )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlti
@@ -3560,15 +3497,27 @@ contains
       integer(ip), intent(inout) :: month  !! Month of Julian Calendar/Gregorian Calendar
       integer(ip), intent(inout) :: day  !! Day of Month in Julian Calendar/Gregorian Calendar
       integer(ip), intent(out) :: doy  !! Day of Year in Gregorian Calendar
+!
+!     Local (in-line) Functions
+!
       integer(ip) :: divble
       integer(ip) :: gdoy
       integer(ip) :: gdp001
       integer(ip) :: gldays
+!
+!     Definitions of statement functions.
+!
+!     The number of days elapsed since Gregorian Jan 1, of year 1 A.D.
+!     to Jan 1 of YR is given by:
+!
       integer(ip) :: gydays
       integer(ip) :: jdoy
       integer(ip) :: jdp001
       integer(ip) :: jldays
       integer(ip) :: jydays
+!
+!     Local variables
+!
       integer(ip) :: dayg
       integer(ip) :: dayj
       integer(ip) :: dofyr
@@ -3583,11 +3532,22 @@ contains
       integer(ip) :: tmpyr
       integer(ip) :: yr
       integer(ip) :: yroff
+!
+!     The array EXTRA contains the number of additional days that
+!     appear before the first of a month during a leap year (as opposed
+!     to a non-leap year).
+!
+!     Initial values
+!
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
          [ janl0, febl0, marl0, aprl0, mayl0, junl0, jull0, augl0, &
            sepl0, octl0, novl0, decl0 ]
+!
+!     DPJAN0(I) gives the number of days that occur before the I'th
+!     month of a normal year.
+!
       integer(ip), parameter :: dpjan0 ( 12 ) = &
          [ jan0, feb0, mar0, apr0, may0, jun0, jul0, aug0, sep0, oct0, &
            nov0, dec0 ]
@@ -3657,6 +3617,19 @@ contains
                   rdayj => ctx%jul2gr_state%rdayj, &
                   offstj => ctx%jul2gr_state%offstj, &
                   offstg => ctx%jul2gr_state%offstg )
+!
+!     If this is the first pass through this entry point (or the
+!     companion entry point) we need to set up some reference points.
+!
+!     RDAYG   is the number of days past 1 A.D. Jan 1 of the Gregorian
+!             calendar of the date Oct 15, 1582
+!
+!     RDAYJ   is the number of days past 1 A.D. Jan 1 of the Julian
+!             calendar of the date Oct 5, 1582.
+!
+!     OFFSTJ and OFFSTG are just the offset from one count of days
+!     to the other.
+!
       if ( first ) then
 
          first  = .false.
@@ -5031,89 +5004,6 @@ contains
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in RMAIND and RMAINI calls. Changed reference to LDPOOL to
       !>        reference to FURNSH in an error message.
-      !>
-      !>     Parameters
-      !>
-      !>     We declare the variables that contain the number of days in
-      !>     400 years, 100 years, 4 years and 1 year.
-      !>
-      !>     The following integers give the number of days during the
-      !>     associated month of a non-leap year.
-      !>
-      !>     The integers that follow give the number of days in a normal
-      !>     year that precede the first of the month.
-      !>
-      !>     The integers that follow give the number of days in a leap
-      !>     year that precede the first of the month.
-      !>
-      !>     MAXLP is the maximum number of leap seconds that can be
-      !>     stored internally.   The value of 140 should be sufficient
-      !>     to store leap seconds through the year 2100.
-      !>
-      !>     MAXVAR is the number of kernel pool variables required by this
-      !>     routine.
-      !>
-      !>     The following gives us an "enumeration" for all of the
-      !>     various types of time vectors that are recognized.
-      !>
-      !>     DAYSEC
-      !>     DAYP2
-      !>     ET
-      !>     FRML
-      !>     JDTDB
-      !>     JDTDT
-      !>     JDUTC
-      !>     JED
-      !>     TAI
-      !>     TDB
-      !>     TDT
-      !>     YD
-      !>     YDD
-      !>     YDDF
-      !>     YDF
-      !>     YMD
-      !>     YMDF
-      !>     YMWD
-      !>     YMWDF
-      !>     YWD
-      !>     YWDF
-      !>
-      !>     The following parameters just make the code seem a bit
-      !>     more natural.
-      !>
-      !>     Local variables
-      !>
-      !>     The array EXTRA contains the number of many additional days that
-      !>     appear before the first of a month during a leap year (as opposed
-      !>     to a non-leap year).
-      !>
-      !>     DPJAN0(I) gives the number of days that occur before the I'th
-      !>     month of a normal year.
-      !>
-      !>     Initial values
-      !>
-      !>     Definitions of statement functions.
-      !>
-      !>     The number of days elapsed since Jan 1, of year 1 A.D. to
-      !>     Jan 1 of YEAR is given by:
-      !>
-      !>     Return 1 if YEAR is divisible by N, otherwise return 0.
-      !>
-      !>     The number of leap days in a year is given by:
-      !>
-      !>     To compute the day of the year we
-      !>
-      !>        look up the number of days to the beginning of the month,
-      !>
-      !>        add on the number leap days that occurred prior to that
-      !>        time
-      !>
-      !>        add on the number of days into the month
-      !>
-      !>     The number of days since 1 Jan 1 A.D. is given by:
-      !>
-      !>     The number of seconds represented by HOURS hours MINS minutes
-      !>     and SECS seconds.
       module subroutine ttrans ( ctx, from, to, tvec )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
@@ -5128,12 +5018,47 @@ contains
       character(*), intent(in) :: from  !! description of a time vector.
       character(*), intent(in) :: to  !! description of a time vector.
       real(wp), intent(inout) :: tvec ( mxcomp )  !! time vector representing an epoch.
+!
+!     Local (in-line) functions
+!
       integer(ip) :: divble
       integer(ip) :: doy
       integer(ip) :: dp0001
       integer(ip) :: ldays
+!
+!     Definitions of statement functions.
+!
+!     The number of days elapsed since Jan 1, of year 1 A.D. to
+!     Jan 1 of YEAR is given by:
+!
       integer(ip) :: ydays
       real(wp) :: hmssec
+!
+!     The following gives us an "enumeration" for all of the
+!     various types of time vectors that are recognized.
+!
+!     DAYSEC
+!     DAYP2
+!     ET
+!     FRML
+!     JDTDB
+!     JDTDT
+!     JDUTC
+!     JED
+!     TAI
+!     TDB
+!     TDT
+!     YD
+!     YDD
+!     YDDF
+!     YDF
+!     YMD
+!     YMDF
+!     YMWD
+!     YMWDF
+!     YWD
+!     YWDF
+!
       integer(ip), parameter :: daysec = 1
       integer(ip), parameter :: dayp2 = daysec + 1
       integer(ip), parameter :: et = dayp2 + 1
@@ -5156,7 +5081,14 @@ contains
       integer(ip), parameter :: ywd = ymwdf  + 1
       integer(ip), parameter :: ywdf = ywd    + 1
       integer(ip), parameter :: nrec = ywdf
+!
+!     The following parameters just make the code seem a bit
+!     more natural.
+!
       logical, parameter :: yes = .true.
+!
+!     Local variables
+!
       real(wp) :: hours
       real(wp) :: mins
       real(wp) :: secs
@@ -5164,11 +5096,22 @@ contains
       integer(ip) :: i
       integer(ip) :: month
       integer(ip) :: year
+!
+!     The array EXTRA contains the number of many additional days that
+!     appear before the first of a month during a leap year (as opposed
+!     to a non-leap year).
+!
+!     Initial values
+!
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
          [ janl0, febl0, marl0, aprl0, mayl0, junl0, jull0, augl0, &
            sepl0, octl0, novl0, decl0 ]
+!
+!     DPJAN0(I) gives the number of days that occur before the I'th
+!     month of a normal year.
+!
       integer(ip), parameter :: dpjan0 ( 12 ) = &
          [ jan0, feb0, mar0, apr0, may0, jun0, jul0, aug0, sep0, oct0, &
            nov0, dec0 ]
@@ -7867,11 +7810,6 @@ contains
       !>        properly set when a time system was specified
       !>        in the input string. In such cases, ZONED retained the
       !>        value from the previous call.
-      !>
-      !>     Local (in-line) Functions
-      !>
-      !>     The following integers are pointers to the
-      !>     locations of various components in a time vector.
       module subroutine str2et ( ctx, timstr, et )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, repmc_inplace, repmi_inplace
@@ -7879,6 +7817,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: timstr  !! A string representing an epoch.
       real(wp), intent(out) :: et  !! The equivalent value in seconds past J2000, TDB.
+!
+!     Local (in-line) Functions
+!
       integer(ip), parameter :: smwdsz = 16
       integer(ip), parameter :: msgsiz = 400
       integer(ip), parameter :: era = 1
@@ -7893,6 +7834,10 @@ contains
       character(smwdsz) :: type
       integer(ip) :: day
       integer(ip) :: year
+!
+!     The following integers are pointers to the
+!     locations of various components in a time vector.
+!
       logical :: mods
       integer(ip) :: hr
       integer(ip) :: yr
@@ -8680,11 +8625,6 @@ contains
       !>        replaced CMPRSS/UCASE with LJUCRS.
       !>
       !>-    SPICELIB Version 1.0.0, 13-DEC-2004 (NJB)
-      !>
-      !>     Local variables
-      !>
-      !>     PEPPER: the table (in increasing order of the strings, as the
-      !>     binary search needs; SPICELIB sorted it on the first call).
       module subroutine zzprscor ( ctx, abcorr, attblk )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
@@ -8697,6 +8637,12 @@ contains
       character(corlen), parameter :: corlst ( nabcor ) = [ character(corlen) :: &
          'CN', 'CN+S', 'LT', 'LT+S', 'NONE', 'RL', 'RL+S', 'S',&
          'XCN', 'XCN+S', 'XLT', 'XLT+S', 'XRL', 'XRL+S', 'XS' ]
+!
+!     Local variables
+!
+!     PEPPER: the table (in increasing order of the strings, as the
+!     binary search needs; SPICELIB sorted it on the first call).
+!
       character(corlen) :: tmpcor
 
       integer(ip) :: i
@@ -9062,6 +9008,9 @@ contains
       real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
       real(wp), intent(in) :: lt  !! Light time.
       real(wp), intent(out) :: etcorr  !! Light time-corrected epoch.
+!
+!     Local variables
+!
       logical :: corblk ( abatsz )
 
       if ( ctx%failed() ) return

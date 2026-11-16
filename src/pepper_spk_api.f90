@@ -15635,10 +15635,6 @@ contains
       !>        CHECK=BOUNDS option for the DEC VAX/VMX DCL FORTRAN command.
       !>        Also, without the local variable CORR, SPKAPP would have to
       !>        modify the value of a passed argument, ABCORR. That's a no no.
-      !>
-      !>     Local parameters
-      !>
-      !>     Indices of flags in the FLAGS array:
       module subroutine spkapp ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -15653,6 +15649,9 @@ contains
       character(*), intent(in) :: abcorr  !! Aberration correction flag.
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
+!
+!     Local variables
+!
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: uselt  !! (PEPPER) copy of the saved flag for this call
       logical :: usecn  !! (PEPPER) copy of the saved flag for this call
@@ -15672,6 +15671,9 @@ contains
                   c_usestl => ctx%spkapp_state%usestl, &
                   c_uselt => ctx%spkapp_state%uselt, &
                   c_xmit => ctx%spkapp_state%xmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then
@@ -17209,14 +17211,6 @@ contains
       !>        Updated to handle aberration corrections for transmission
       !>        of radiation. Formerly, only the reception case was
       !>        supported.
-      !>
-      !>     Local parameters
-      !>
-      !>     Saved frame name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved frame name/ID item declarations.
       recursive module subroutine spkezp ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv
@@ -17232,6 +17226,9 @@ contains
       integer(ip), intent(in) :: obs  !! Observing body NAIF ID code.
       real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
+!
+!     Local variables
+!
       real(wp) :: temp     ( 3    )
       real(wp) :: xform    ( 3, 3 )
       logical :: found
@@ -17250,6 +17247,9 @@ contains
                   svctr1 => ctx%spkezp_state%svctr1, &
                   svref => ctx%spkezp_state%svref, &
                   svreqf => ctx%spkezp_state%svreqf )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -17882,16 +17882,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     Local parameters
-      !>
-      !>     TOL is the tolerance used for a division-by-zero test
-      !>     performed prior to computation of DLT.
-      !>
-      !>     Convergence limit:
-      !>
-      !>     Maximum number of light time iterations for any
-      !>     aberration correction:
       module subroutine zzspkflt (  ctx, trgsub, et, ref, abcorr, stobs, starg, lt, dlt  )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -17907,6 +17897,9 @@ contains
       real(wp), intent(out) :: starg  ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+!
+!     Local variables
+!
       real(wp) :: a
       real(wp) :: b
       real(wp) :: c
@@ -17930,6 +17923,9 @@ contains
                   usecn => ctx%zzspkflt_state%usecn, &
                   uselt => ctx%zzspkflt_state%uselt, &
                   xmit => ctx%zzspkflt_state%xmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -19882,6 +19878,9 @@ contains
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+!
+!     Local variables
+!
       real(wp) :: acc    ( 3 )
       real(wp) :: ssbobs ( 6 )
       real(wp) :: stctr  ( 6 )
@@ -19896,6 +19895,9 @@ contains
       associate ( pass1 => ctx%zzspkfao_state%pass1, &
                   prvcor => ctx%zzspkfao_state%prvcor, &
                   usestl => ctx%zzspkfao_state%usestl )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -20333,6 +20335,9 @@ contains
       real(wp), intent(out) :: starg  ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+!
+!     Local variables
+!
       real(wp) :: corpos ( 3 )
       real(wp) :: corvel ( 3 )
       real(wp) :: dpcorr ( 3 )
@@ -20345,6 +20350,9 @@ contains
                   prvcor => ctx%zzspkfap_state%prvcor, &
                   usestl => ctx%zzspkfap_state%usestl, &
                   xmit => ctx%zzspkfap_state%xmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -21360,14 +21368,6 @@ contains
       !>        Finally, the $Particulars section was updated. In the previous
       !>        version, it said that calling SPKEZ was equivalent to calling
       !>        SPKSSB and SPKAPP.
-      !>
-      !>     Local parameters
-      !>
-      !>     Saved frame name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved frame name/ID item declarations.
       recursive module subroutine spkez ( ctx, targ, et, ref, abcorr, obs, starg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
@@ -21383,6 +21383,9 @@ contains
       integer(ip), intent(in) :: obs  !! Observing body.
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
+!
+!     Local variables
+!
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: usegeo  !! (PEPPER) copy of the saved flag for this call
       real(wp) :: state    ( 6    )
@@ -21409,6 +21412,9 @@ contains
                   svref => ctx%spkez_state%svref, &
                   svreqf => ctx%spkez_state%svreqf, &
                   first => ctx%spkez_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -21935,6 +21941,9 @@ contains
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
+!
+!     Local variables
+!
       real(wp) :: acc    ( 3 )
       real(wp) :: ltssb
       real(wp) :: ssblt
@@ -21948,6 +21957,9 @@ contains
       associate ( pass1 => ctx%zzspkfat_state%pass1, &
                   prvcor => ctx%zzspkfat_state%prvcor, &
                   usestl => ctx%zzspkfat_state%usestl )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -22736,6 +22748,9 @@ contains
       character(*), intent(in) :: abcorr  !! Aberration correction flag.
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
+!
+!     Local variables
+!
       real(wp) :: corxfm   ( 6, 6 )
       real(wp) :: dlt
       real(wp) :: dltctr
@@ -22759,6 +22774,9 @@ contains
                   prvcor => ctx%zzspkfzo_state%prvcor, &
                   usegeo => ctx%zzspkfzo_state%usegeo, &
                   xmit => ctx%zzspkfzo_state%xmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if (  pass1  .or.  ( abcorr /= prvcor )  ) then
@@ -25786,6 +25804,9 @@ contains
       integer(ip), intent(in) :: obs  !! Observing body.
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
+!
+!     Local variables
+!
       logical :: attblk ( nabcor )
       real(wp) :: xform    ( 6, 6 )
       integer(ip) :: type
@@ -25809,6 +25830,9 @@ contains
                   first => ctx%zzspkfzt_state%first, &
                   usegeo => ctx%zzspkfzt_state%usegeo, &
                   xmit => ctx%zzspkfzt_state%xmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if (  first  .or.  ( abcorr /= prvcor )  ) then

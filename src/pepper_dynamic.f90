@@ -327,6 +327,9 @@ contains
       real(wp), intent(out) :: xform ( 6, 6 )  !! The requested state transformation matrix.
       integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       call enter_dynamic_frame ( ctx, infram )
+!
+!     Initial values
+!
       if ( ctx%failed() ) return
       call dynamic_frame_xform ( ctx, infram, center, et, xform, basfrm )
       ctx%ndynamic = ctx%ndynamic - 1
@@ -618,6 +621,9 @@ contains
       real(wp), intent(out) :: rotate ( 3, 3 )  !! The requested rotation matrix.
       integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       call enter_dynamic_frame ( ctx, infram )
+!
+!     Initial values
+!
       if ( ctx%failed() ) return
       call dynamic_frame_rotation ( ctx, infram, center, et, rotate, basfrm )
       ctx%ndynamic = ctx%ndynamic - 1

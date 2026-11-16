@@ -3813,59 +3813,6 @@ contains
       !>-    Beta Version 2.1.0, 17-MAR-1994 (MJS) (NJB)
       !>
       !>        Integer argument to BRCKTD changed from 0 to 0.0D0.
-      !>
-      !>     Local parameters
-      !>
-      !>     The parameters below act essentially as an enumeration
-      !>     of the various kinds of components we will be looking at in the
-      !>     input time string.
-      !>
-      !>     The following parameters serve as an enumeration of the various
-      !>     time formats that are recognized.
-      !>
-      !>     The parameters below are used to declare the space needed for
-      !>     scanning the input format string.
-      !>
-      !>     The length of the local string that we will use for copying
-      !>     the format string.
-      !>
-      !>     Local variables
-      !>
-      !>     The next set of variables holds the marks and auxiliary
-      !>     arrays used for scanning the format string.
-      !>
-      !>     The variables below are used to hold, base formats, values of
-      !>     time vector components, adjustments to use when rounding,
-      !>     the lengths of the format pictures and whether or not various
-      !>     components have already been computed.
-      !>
-      !>     The array below contains the indexes of the various values
-      !>     associated with the three different times of time vectors
-      !>     that we will be using YMD, YD, CONTIN.
-      !>
-      !>     We will be making a local copy of the input format string
-      !>     and the input time.
-      !>
-      !>     The integers below are used to mark substring boundaries.
-      !>
-      !>     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
-      !>     on this particular invocation of TIMOUT is stored in TIMTYP.
-      !>     The routine TTRANS needs to have input and output time vector
-      !>     types.  The one used based upon the input PICTUR is stored
-      !>     in BASTYP.
-      !>
-      !>     Loop counters and delimiters
-      !>
-      !>     Utility double precision numbers
-      !>
-      !>     The array power is used to assist in the truncation of double
-      !>     precision values.
-      !>
-      !>     calendar variables.
-      !>
-      !>     Character string representations for months and week days.
-      !>
-      !>     Save everything.
       module subroutine timout ( ctx, et, pictur, output )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, spd
@@ -3876,6 +3823,13 @@ contains
       real(wp), intent(in) :: et  !! Epoch in seconds past the ephemeris epoch J2000.
       character(*), intent(in) :: pictur  !! A format specification for the output string.
       character(*), intent(out) :: output  !! A string representation of the input epoch.
+!
+!     Local parameters
+!
+!     The parameters below act essentially as an enumeration
+!     of the various kinds of components we will be looking at in the
+!     input time string.
+!
       integer(ip), parameter :: currnt = 1
       integer(ip), parameter :: begin = currnt
       integer(ip), parameter :: noname = currnt  + 1
@@ -3930,10 +3884,25 @@ contains
       integer(ip), parameter :: noon = era    + 1
       integer(ip), parameter :: rlyear = noon   + 1
       integer(ip), parameter :: finish = rlyear
+!
+!     The following parameters serve as an enumeration of the various
+!     time formats that are recognized.
+!
       integer(ip), parameter :: ymd = 1
       integer(ip), parameter :: contin = ymd + 1
+!
+!     The parameters below are used to declare the space needed for
+!     scanning the input format string.
+!
       integer(ip), parameter :: room = 100
+!
+!     The length of the local string that we will use for copying
+!     the format string.
+!
       integer(ip), parameter :: maxlen = 256
+!
+!     Initial values
+!
       real(wp), parameter :: power  ( 0 : 14 ) = &
          [ 1.0_wp, 1.0e1_wp, 1.0e2_wp, 1.0e3_wp, 1.0e4_wp, 1.0e5_wp, &
            1.0e6_wp, 1.0e7_wp, 1.0e8_wp, 1.0e9_wp, 1.0e10_wp, 1.0e11_wp, &
@@ -3949,22 +3918,56 @@ contains
            'Friday', 'Saturday' ]
       integer(ip), parameter :: wklen  (  7 ) = &
          [ 6, 6, 7, 9, 8, 6, 8 ]
+!
+!     Utility double precision numbers
+!
       real(wp) :: timpad
+!
+!     The integers below are used to mark substring boundaries.
+!
       integer(ip) :: ident  (  room   )
       integer(ip) :: start
       integer(ip) :: end    (  room   )
+!
+!     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
+!     on this particular invocation of TIMOUT is stored in TIMTYP.
+!     The routine TTRANS needs to have input and output time vector
+!     types.  The one used based upon the input PICTUR is stored
+!     in BASTYP.
+!
       logical :: doera
+!
+!     Character string representations for months and week days.
+!
       character(9) :: mywkd
       logical :: unknwn
       integer(ip) :: ntokns
       logical :: ok
       real(wp) :: incr
+!
+!     We will be making a local copy of the input format string
+!     and the input time.
+!
       character(maxlen) :: mystr
+!
+!     The array power is used to assist in the truncation of double
+!     precision values.
+!
       real(wp) :: x
+!
+!     Loop counters and delimiters
+!
       integer(ip) :: part
+!
+!     The next set of variables holds the marks and auxiliary
+!     arrays used for scanning the format string.
+!
       integer(ip) :: type
       character(8) :: ymdfmt
       real(wp) :: factor
+!
+!     calendar variables.
+!
       integer(ip) :: jmonth
       character(9) :: mymon
       integer(ip) :: jday

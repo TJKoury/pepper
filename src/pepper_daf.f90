@@ -6234,23 +6234,6 @@ contains
       !>        Re-ordered header sections.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Record Number of the file record in a DAF.
-      !>
-      !>     Length of the IDWORD string.
-      !>
-      !>     Length of the internal filename string.
-      !>
-      !>     Starting location in bytes of the internal filename in the
-      !>     file record.
-      !>
-      !>     Size of an integer in bytes.
-      !>
-      !>     Local Variables
-      !>
-      !>     PEPPER: ZZXLATEI returns an array (also of one element).
       module subroutine zzdafgfr ( ctx, handle, idword, nd, ni, ifname, fward, bward, free, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
@@ -6266,9 +6249,26 @@ contains
       integer(ip), intent(out) :: bward  !! Backward list pointer.
       integer(ip), intent(out) :: free  !! Free address pointer.
       logical, intent(out) :: found  !! Logical indicating whether the record was found.
+!
+!     Local Parameters
+!
+!     Record Number of the file record in a DAF.
+!
       integer(ip), parameter :: frlocr = 1
+!
+!     Starting location in bytes of the internal filename in the
+!     file record.
+!
       integer(ip), parameter :: ifnstr = 17
+!
+!     Size of an integer in bytes.
+!
       integer(ip), parameter :: inlen = 4
+!
+!     Local Variables
+!
+!     PEPPER: ZZXLATEI returns an array (also of one element).
+!
       character(cbfsiz) :: chrbuf
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(idwlen) :: locidw
@@ -6292,6 +6292,9 @@ contains
       associate ( first => ctx%zzdafgfr_state%first, &
                   natbff => ctx%zzdafgfr_state%natbff, &
                   strbff => ctx%zzdafgfr_state%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6564,23 +6567,6 @@ contains
       !>        Detailed_Input sections of the module header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-1999 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Amount of space measured in characters necessary to
-      !>     null pad between the last character of FORMAT and the
-      !>     first character of FTPSTR to keep FTPSTR at character
-      !>     700 in a 1024 byte record.
-      !>
-      !>     Amount of space measured in characters necessary to
-      !>     null pad from the last character of FTPSTR to the
-      !>     end of the file record. Note: This value assumes the
-      !>     length of the file record is 1024 bytes.  The DAF
-      !>     specification only requires the presence of 1000
-      !>     characters, so this may require modification for
-      !>     non-standard platforms.
-      !>
-      !>     Lengths of internal file name, ID word, and format word.
       module subroutine zzdafnfr ( ctx, lun, idword, nd, ni, ifname, fward, bward, free, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
@@ -6596,8 +6582,28 @@ contains
       integer(ip), intent(in) :: bward  !! Last descriptor record.
       integer(ip), intent(in) :: free  !! First free address.
       character(*), intent(in) :: format  !! File binary format identifier string.
+!
+!     Local Parameters
+!
+!     Amount of space measured in characters necessary to
+!     null pad between the last character of FORMAT and the
+!     first character of FTPSTR to keep FTPSTR at character
+!     700 in a 1024 byte record.
+!
       integer(ip), parameter :: preftp = 603
+!
+!     Amount of space measured in characters necessary to
+!     null pad from the last character of FTPSTR to the
+!     end of the file record. Note: This value assumes the
+!     length of the file record is 1024 bytes.  The DAF
+!     specification only requires the presence of 1000
+!     characters, so this may require modification for
+!     non-standard platforms.
+!
       integer(ip), parameter :: pstftp = 297
+!
+!     Local Variables
+!
       character(1) :: nullch
       character(fmtlen) :: locfmt
       character(idwlen) :: locidw
@@ -6613,6 +6619,9 @@ contains
                   ftpstr => ctx%zzdafnfr_state%ftpstr, &
                   prenul => ctx%zzdafnfr_state%prenul, &
                   pstnul => ctx%zzdafnfr_state%pstnul )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6818,6 +6827,9 @@ contains
       integer(ip), intent(in) :: recno  !! Record number.
       real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
       logical, intent(out) :: found  !! Logical indicating whether the record was found.
+!
+!     Local Variables
+!
       character(cbfsiz) :: chrbuf
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(strsiz) :: tmpstr
@@ -6833,6 +6845,9 @@ contains
       associate ( first => ctx%zzdafgdr_state%first, &
                   natbff => ctx%zzdafgdr_state%natbff, &
                   strbff => ctx%zzdafgdr_state%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7077,16 +7092,6 @@ contains
       !>        Corrected typo in comments. Reordered header sections.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Length in bytes of double precision numbers and integers.
-      !>
-      !>     Local Variables
-      !>
-      !>     Equivalence DPBUF to INBUF. (PEPPER: not equivalenced; a
-      !>     summary's integers are translated into INBUF and packed into
-      !>     DPBUF with TRANSFER.)
       module subroutine zzdafgsr ( ctx, handle, recno, nd, ni, dprec, found )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
@@ -7100,8 +7105,16 @@ contains
       integer(ip), intent(in) :: ni  !! Number of integer components in a summary.
       real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
       logical, intent(out) :: found  !! Logical indicating whether the record was found.
+!
+!     Local Parameters
+!
+!     Length in bytes of double precision numbers and integers.
+!
       integer(ip), parameter :: dplen = 8
       integer(ip), parameter :: inlen = dplen/2
+!
+!     Local Variables
+!
       character(cbfsiz) :: chrbuf
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(strsiz) :: tmpstr
@@ -7123,6 +7136,9 @@ contains
       associate ( first => ctx%zzdafgsr_state%first, &
                   natbff => ctx%zzdafgsr_state%natbff, &
                   strbff => ctx%zzdafgsr_state%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8268,6 +8284,9 @@ contains
       logical :: found
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8650,6 +8669,9 @@ contains
       logical :: found
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -9177,6 +9199,9 @@ contains
       logical :: found
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -10181,6 +10206,9 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       call zzddhhlu ( ctx, handle, 'DAF', .true., unit )
@@ -11949,8 +11977,6 @@ contains
       !>-    SPICELIB Version 1.1.0, 04-AUG-2020 (JDR)
       !>
       !>        Added IMPLICIT NONE statement.
-      !>
-      !>     Just undo whatever DAFPS did.
       module subroutine dafus ( ctx, sum, nd, ni, dc, ic )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: unpack_integers
@@ -11963,6 +11989,9 @@ contains
       real(wp), intent(in) :: sum      ( * )  !! Array summary.
       integer(ip) :: n
       integer(ip) :: m
+!
+!     Just undo whatever DAFPS did.
+!
       n = min ( 125, max ( 0, nd ) )
 
       dc(1:n) = sum(1:n)
@@ -12757,6 +12786,9 @@ contains
                   rbnbr => ctx%dafrwd%rbnbr, &
                   nread => ctx%dafrwd%nread, &
                   nreq => ctx%dafrwd%nreq )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -13732,31 +13764,6 @@ contains
       !>        Added MAC-OSX environments.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Length of the double precision and integer buffers that
-      !>     are equivalenced. (PEPPER: the integer buffer only; its
-      !>     integers are copied to OUTPUT as doubles with TRANSFER.)
-      !>
-      !>     These parameters are used for arithmetic shifting.
-      !>
-      !>     Local Variables
-      !>
-      !>     Equivalence DPBUFR to INBUFR. (PEPPER: no DPBUFR; TRANSFER of
-      !>     INBUFR.)
-      !>
-      !>     Data Statements
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     On some supported environments, ICHAR is not sufficient to
-      !>     produce the desired results.  This, however, is not the case
-      !>     with this particular environment.
-      !>     Some versions of the g77 implement ICHAR with a signed integer.
-      !>     This function computes the value of ICHAR that this code requires
-      !>     on any version of g77 for x86 Linux.
       module subroutine zzxlated ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
@@ -13769,11 +13776,22 @@ contains
       character(*), intent(in) :: input  !! String containing d.p. values read as characters.
       integer(ip), intent(in) :: space  !! Number of d.p. values that can be placed in OUTPUT.
       real(wp), intent(out) :: output ( * )  !! Translated d.p. values.
+!
+!     Length of the double precision and integer buffers that
+!     are equivalenced. (PEPPER: the integer buffer only; its
+!     integers are copied to OUTPUT as doubles with TRANSFER.)
+!
       integer(ip), parameter :: dpblen = 128
       integer(ip), parameter :: inblen = 2 * dpblen
+!
+!     These parameters are used for arithmetic shifting.
+!
       integer(ip), parameter :: shft8 = 2**8
       integer(ip), parameter :: shft16 = 2**16
       integer(ip), parameter :: shft24 = 2**24
+!
+!     Local Variables
+!
       character(1) :: carg
       character(strsiz) :: tmpstr
       integer(ip) :: i
@@ -13785,6 +13803,19 @@ contains
       integer(ip) :: osign
       integer(ip) :: outpos
       integer(ip) :: value
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     On some supported environments, ICHAR is not sufficient to
+!     produce the desired results.  This, however, is not the case
+!     with this particular environment.
+!     Some versions of the g77 implement ICHAR with a signed integer.
+!     This function computes the value of ICHAR that this code requires
+!     on any version of g77 for x86 Linux.
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
@@ -13795,6 +13826,9 @@ contains
                   strbff => ctx%zzxlated_state%strbff, &
                   natbff => ctx%zzxlated_state%natbff, &
                   first => ctx%zzxlated_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -19167,6 +19201,9 @@ contains
                   stpool => ctx%dafana%stpool, &
                   sthead => ctx%dafana%sthead, &
                   stfptr => ctx%dafana%stfptr )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -19595,6 +19632,9 @@ contains
                   staddg => ctx%dafana%staddg, &
                   stfree => ctx%dafana%stfree, &
                   sthead => ctx%dafana%sthead )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -19797,6 +19837,9 @@ contains
                   stlsum => ctx%dafana%stlsum, &
                   stname => ctx%dafana%stname, &
                   sthead => ctx%dafana%sthead )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

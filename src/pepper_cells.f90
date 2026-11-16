@@ -637,6 +637,9 @@ contains
       if ( ctx%failed() ) then
          return
 
+!
+!     Standard SPICE error handling.
+!
       else if ( len ( string ) < minlen ) then
          call ctx%sigerr ( 'SPICE(INSUFFLEN)' )
          return

@@ -2475,6 +2475,9 @@ contains
       integer(ip), intent(out) :: number  !! Integer value to be returned.
       logical, intent(out) :: error  !! A logical flag which is .TRUE. on error.
       character(*), intent(out) :: errmsg  !! A descriptive error message.
+!
+!     Local Parameters
+!
       integer(ip), parameter :: base = 16
 !
 !     Character codes and limits (SPICELIB computed them on the first

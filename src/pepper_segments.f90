@@ -2636,6 +2636,8 @@ contains
       character(*), intent(in) :: fname  !! Name of the file to be loaded.
       integer(ip), intent(out) :: handle  !! Loaded file's handle.
 !
+!     Standard SPICE error handling.
+!
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
 !     them when a body was first searched for). A file loaded again is
 !     searched first, as in SPICELIB.
@@ -3074,8 +3076,6 @@ contains
       !>
       !>        If an attempt is made to call SPKSFS when there are no files
       !>        loaded, an error is now signaled.
-      !>
-      !>     Assume the segment is not found, until it actually is.
       module subroutine spksfs ( ctx, body, et, handle, descr, ident, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
@@ -3087,6 +3087,9 @@ contains
       real(wp), intent(out) :: descr    ( * )  !! Descriptor of the applicable segment.
       character(*), intent(out) :: ident  !! Identifier of the applicable segment.
       logical, intent(out) :: found  !! Indicates whether or not a segment was found.
+!
+!     Assume the segment is not found, until it actually is.
+!
       found = .false.
       if ( ctx%failed() ) return
       if ( ctx%spice%spkbsr%index%nfiles > 0 ) then
@@ -3729,6 +3732,8 @@ contains
       character(*), intent(in) :: fname  !! Name of the CK file to be loaded.
       integer(ip), intent(out) :: handle  !! Loaded file's handle.
 !
+!     Standard SPICE error handling.
+!
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
 !     them when an instrument was first searched for). A file loaded
 !     again is searched first, as in SPICELIB.
@@ -4062,6 +4067,9 @@ contains
       logical, intent(in) :: needav  !! Is there a need for angular velocity?
       if ( .not. allocated ( ctx%ckbsr_cache ) ) allocate ( ctx%ckbsr_cache )
       associate ( cs => ctx%ckbsr_cache )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       cs%active = .false.
       cs%scinst = inst
@@ -4355,8 +4363,6 @@ contains
       !>              updated.
       !>
       !>-    Beta Version 1.0.0, 20-APR-1990 (RET) (IMU)
-      !>
-      !>     Nothing's been found yet.
       module subroutine cksns ( ctx, handle, descr, segid, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
@@ -4368,6 +4374,9 @@ contains
       logical, intent(out) :: found  !! .TRUE. if a segment was found.
       integer(ip) :: e
       integer(ip) :: s
+!
+!     Nothing's been found yet.
+!
       found = .false.
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%ckbsr_cache ) ) allocate ( ctx%ckbsr_cache )
@@ -4690,6 +4699,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: fname  !! Name of the DSK file to be loaded.
       integer(ip), intent(out) :: handle  !! Loaded file's handle.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ctx%spice%zzdskbsr%index%ndescr == 0 ) &
          call ctx%spice%zzdskbsr%index%init ( int ( dskdsz, ip ), int ( dladsz, ip ) )
@@ -4903,6 +4915,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: bodyid  !! ID code of body.
       if ( .not. allocated ( ctx%zzdskbsr_cache ) ) allocate ( ctx%zzdskbsr_cache )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       ctx%zzdskbsr_cache%active = .false.
       if ( ctx%spice%zzdskbsr%index%nfiles > 0 ) then
@@ -5052,8 +5067,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     Nothing's been found yet.
       module subroutine zzdsksns ( ctx, cmpfun, handle, dladsc, dskdsc, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
@@ -5071,6 +5084,9 @@ contains
       integer(ip) :: lhan
       integer(ip) :: ldla ( dladsz )
       real(wp) :: ldsk ( dskdsz )
+!
+!     Nothing's been found yet.
+!
       found = .false.
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%zzdskbsr_cache ) ) allocate ( ctx%zzdskbsr_cache )

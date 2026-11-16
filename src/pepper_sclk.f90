@@ -741,6 +741,9 @@ contains
          mxnfld, mxnfld, 1, 1,&
          1 ]
       logical :: found
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -1188,6 +1191,9 @@ contains
          mxnfld, mxnfld, 1, 1,&
          1 ]
       logical :: found
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -1577,20 +1583,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     Local parameters
-      !>
-      !>     Following are parameters for the indices within the
-      !>     array NAMLST of the kernel variable names used by the
-      !>     SC01 entry points.
-      !>
-      !>     NOTE: indices for the d.p. variables must be listed first.
-      !>
-      !>     Maximum number of elements in coefficient array:
-      !>
-      !>     Local variables
-      !>
-      !>     Saved values
       module subroutine zzscad01 ( ctx, sc, sclkat )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: suffix, repmi_inplace
@@ -1601,7 +1593,17 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: its type 1 SCLK database grows)
       integer(ip), intent(in) :: sc  !! SCLK ID code.
       integer(ip), intent(out) :: sclkat  !! Index of the clock in the database.
+!
+!     Local parameters
+!
       integer(ip), parameter :: namlen = 60
+!
+!     Following are parameters for the indices within the
+!     array NAMLST of the kernel variable names used by the
+!     SC01 entry points.
+!
+!     NOTE: indices for the d.p. variables must be listed first.
+!
       integer(ip), parameter :: prsidx = cofidx + 1
       integer(ip), parameter :: preidx = prsidx + 1
       integer(ip), parameter :: offidx = preidx + 1
@@ -1611,8 +1613,14 @@ contains
       integer(ip), parameter :: sysidx = delidx + 1
       integer(ip), parameter :: nkitem = sysidx
       integer(ip), parameter :: ndp = modidx
+!
+!     Local variables
+!
       character(1) :: kvtype ( nkitem )
       character(namlen) :: kvname ( nkitem )
+!
+!     Initial values
+!
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_OFFSETS',&
          'SCLK01_MODULI', 'SCLK01_N_FIELDS', 'SCLK01_OUTPUT_DELIM', 'SCLK01_TIME_SYSTEM' ]
@@ -2334,6 +2342,8 @@ contains
          call init_sc01_state ( ctx%sc01_state )
       end if
 !
+!     Standard SPICE error handling.
+!
 !     PEPPER: make the clock's data current before the ASSOCIATE block
 !     (the database may grow).
 !
@@ -2768,6 +2778,8 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
+!
+!     Standard SPICE error handling.
 !
 !     PEPPER: make the clock's data current before the ASSOCIATE block
 !     (the database may grow).
@@ -3216,6 +3228,8 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
+!
+!     Standard SPICE error handling.
 !
 !     PEPPER: make the clock's data current before the ASSOCIATE block
 !     (the database may grow).
@@ -3718,6 +3732,8 @@ contains
          call init_sc01_state ( ctx%sc01_state )
       end if
 !
+!     Standard SPICE error handling.
+!
 !     PEPPER: make the clock's data current before the ASSOCIATE block
 !     (the database may grow).
 !
@@ -4193,6 +4209,8 @@ contains
          allocate ( ctx%sc01_state )
          call init_sc01_state ( ctx%sc01_state )
       end if
+!
+!     Standard SPICE error handling.
 !
 !     PEPPER: make the clock's data current before the ASSOCIATE block
 !     (the database may grow).

@@ -13940,13 +13940,6 @@ contains
       !>        DAFHLU is no longer used, since it locks the unit
       !>        returned to its HANDLE, tying up resources in the
       !>        handle manager.
-      !>
-      !>     Local parameters
-      !>
-      !>     IFNLEN      is the length of a DAF internal file name.
-      !>
-      !>     MAXCPR      is the maximum number of characters per DAF record and
-      !>                 hence the maximum comment line length.
       module subroutine spcac ( ctx, handle, unit, bmark, emark )
       use pepper_kinds, only: ip
       implicit none
@@ -13955,6 +13948,9 @@ contains
       integer(ip), intent(in) :: unit  !! Logical unit connected to comment file.
       character(*), intent(in) :: bmark  !! Beginning marker.
       character(*), intent(in) :: emark  !! Ending marker.
+!
+!     Local variables
+!
       character(maxcpr+2) :: data
       character(1) :: eot
       character(ifnlen) :: ifname
@@ -13986,6 +13982,9 @@ contains
       integer(ip) :: start
       integer(ip) :: total
       logical :: found
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -15082,13 +15081,6 @@ contains
       !>        to its handle. The value of HANDLE is now buffered in
       !>        HANBUF, to allow the entry point to retrieve a logical
       !>        unit.
-      !>
-      !>     Local parameters
-      !>
-      !>     IFNLEN      is the length of a DAF internal file name.
-      !>
-      !>     MAXCPR      is the maximum number of characters per DAF record and
-      !>                 hence the maximum comment line length.
       module subroutine spcrfl ( ctx, handle, line, eoc )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
@@ -15097,6 +15089,9 @@ contains
       integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
       character(*), intent(out) :: line  !! First line of text from the comment area.
       logical, intent(out) :: eoc  !! End of comments?
+!
+!     Local variables
+!
       integer(ip) :: nd
       integer(ip) :: posnul
       integer(ip) :: nrr
@@ -15116,6 +15111,9 @@ contains
                   rec => ctx%spcrfl_state%rec, &
                   called => ctx%spcrfl_state%called, &
                   eocsav => ctx%spcrfl_state%eocsav )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

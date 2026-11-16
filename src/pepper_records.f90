@@ -9492,28 +9492,6 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in XPOSEG and LGRESP calls.
-      !>
-      !>     Local parameters
-      !>
-      !>     Size of a state vector:
-      !>
-      !>     Indices of input record elements:
-      !>
-      !>        -- size
-      !>        -- start epoch
-      !>        -- step size
-      !>        -- start of state information
-      !>
-      !>     Local variables
-      !>
-      !>     Saved values
-      !>
-      !>     Save arrays to prevent stack overflow problems on some
-      !>     platforms.
-      !>
-      !>     Initial values
-      !>
-      !>     Initialize the workspace array to suppress compiler warnings.
       module subroutine spke08 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spkrec
@@ -9522,12 +9500,30 @@ contains
       real(wp), intent(in) :: et  !! Target epoch.
       real(wp), intent(in) :: record ( * )  !! Data record.
       real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
+!
+!     Indices of input record elements:
+!
+!        -- size
+!        -- start epoch
+!        -- step size
+!        -- start of state information
+!
       integer(ip), parameter :: begidx = 2
       integer(ip), parameter :: stpidx = 3
+!
+!     Local variables
+!
       integer(ip) :: i
       integer(ip) :: n
       integer(ip) :: ystart
+!
+!     Save arrays to prevent stack overflow problems on some
+!     platforms.
+!
       real(wp) :: locrec ( maxrec )
+!
+!     Initialize the workspace array to suppress compiler warnings.
+!
       real(wp) :: work   ( maxrec )
       if ( ctx%failed() ) return
 
@@ -16601,95 +16597,6 @@ contains
       !>        The file was modified to include values for other platforms.
       !>        Also, the file was formatted for use by the program that
       !>        creates the environment specific source files.
-      !>
-      !>     Local Parameters
-      !>
-      !>     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
-      !>     space for Maclaurin series coefficients and for determining how
-      !>     many terms of these series to use in the computation of
-      !>     C_2 and C_3.
-      !>
-      !>     Here's what is supposed to be true.
-      !>
-      !>        1/(TRUNC*2)!  + 1.0D0 = 1.0D0
-      !>
-      !>     using this machine's double precision arithmetic.
-      !>
-      !>     We will map the input X to a value y between -1 and 1 and then
-      !>     construct the values of the functions at X from their values at y.
-      !>     Since we will only evaluate the series expansion for C_2 and C_3
-      !>     for values of y between -1 and 1, its easy to show that we don't
-      !>     need to consider terms in the series whose coefficients have
-      !>     magnitudes less than or equal 1/(2*TRUNC)! .
-      !>
-      !>     If the value of TRUNC is 10, then the series expansions for
-      !>     C_2(y) and C_3(y) are can be truncated as shown here:
-      !>
-      !>                                   2             7       8
-      !>              .    1      y       y             y       y
-      !>       C_3(y) =   --- -  ---  +  ---  +  ... - ---  +  ---
-      !>                   3!     5!      7!           17!     19!
-      !>
-      !>                 1        y         y            y           y
-      !>              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
-      !>                2*3      4*5       6*7          16*17       18*19
-      !>
-      !>              .    1      y       y             y       y
-      !>       C_2(y) =   --- -  ---  +  ---  +  ... + ---  -  ---
-      !>                   2!     4!      6!           16!     18!
-      !>
-      !>                 1        y         y            y           y
-      !>              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
-      !>                1*2      3*4       5*6          15*16       17*18
-      !>
-      !>     As is evident from the above, we are going to need the
-      !>     "reciprocal pairs"
-      !>
-      !>       1/(1*2),  1/(2*3),  1/(3*4), 1/(4*5), ...
-      !>
-      !>     The number of such fractions be computed directly from
-      !>     TRUNC. LPAIR3 and LPAIR2 indicate which of these pairs
-      !>     (counting 1/(1*2) as the first) will be the last one needed in
-      !>     the evaluation of C_2 and C_3.
-      !>
-      !>     Initial values
-      !>
-      !>     We are going to need the numbers
-      !>
-      !>        1/(2*3), 1/(3*4), 1/(4*5), ...
-      !>
-      !>     but we don't want to compute them every time this routine is
-      !>     called.  So the first time this routine is called we compute
-      !>     them and put them in the array PAIRS for use on subsequent
-      !>     calls. (This could be done via parameters, but computing them
-      !>     at run time seems to have a better chance of being
-      !>     easily maintained.)
-      !>
-      !>     In addition we will need to compute the lower bound for which
-      !>     C_0,...,C_3 can be computed.  This lower bound is computed by
-      !>     noting that C_0 has the largest magnitude of all the Stumpff
-      !>     functions over the domain from -infinity to -1.  Moreover, in this
-      !>     range
-      !>
-      !>        C_0(X) = Cosh( SQRT(-X) )
-      !>
-      !>     Thus the range of X for which the Stumpff functions can be
-      !>     computed is bounded below by the value of X for which
-      !>
-      !>        Cosh ( SQRT(-X) ) = DPMAX
-      !>
-      !>     Which implies the lower bound for valid inputs is at
-      !>
-      !>        X = - ( DLOG ( 2.0 ) + DLOG( DPMAX ) ) ** 2
-      !>
-      !>          = - ( DLOG ( 2*N ) + DLOG ( DPMAX/N  ) ) ** 2
-      !>
-      !>     We point out the second formulation of the bound just in case
-      !>     your compiler can't handle the computation of DLOG ( DPMAX ).
-      !>     If this unfortunate situation should arise, complain to the
-      !>     company that produces your compiler and in the code below
-      !>     compute LBOUND using the second form above with N equal to
-      !>     some large power of 2 (say 2**20).
       module subroutine stmp03 ( ctx, x, c0, c1, c2, c3 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
@@ -16703,9 +16610,61 @@ contains
 !     PEPPER: SPICELIB truncated the series at 10 terms for Intel Fortran
 !     on Windows (#if) and at 11 everywhere else; 11 is used everywhere.
       integer(ip), parameter :: trunc = 11
+!
+!     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
+!     space for Maclaurin series coefficients and for determining how
+!     many terms of these series to use in the computation of
+!     C_2 and C_3.
+!
+!     Here's what is supposed to be true.
+!
+!        1/(TRUNC*2)!  + 1.0D0 = 1.0D0
+!
+!     using this machine's double precision arithmetic.
+!
+!     We will map the input X to a value y between -1 and 1 and then
+!     construct the values of the functions at X from their values at y.
+!     Since we will only evaluate the series expansion for C_2 and C_3
+!     for values of y between -1 and 1, its easy to show that we don't
+!     need to consider terms in the series whose coefficients have
+!     magnitudes less than or equal 1/(2*TRUNC)! .
+!
+!     If the value of TRUNC is 10, then the series expansions for
+!     C_2(y) and C_3(y) are can be truncated as shown here:
+!
+!                                   2             7       8
+!              .    1      y       y             y       y
+!       C_3(y) =   --- -  ---  +  ---  +  ... - ---  +  ---
+!                   3!     5!      7!           17!     19!
+!
+!                 1        y         y            y           y
+!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
+!                2*3      4*5       6*7          16*17       18*19
+!
+!              .    1      y       y             y       y
+!       C_2(y) =   --- -  ---  +  ---  +  ... + ---  -  ---
+!                   2!     4!      6!           16!     18!
+!
+!                 1        y         y            y           y
+!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
+!                1*2      3*4       5*6          15*16       17*18
+!
+!     As is evident from the above, we are going to need the
+!     "reciprocal pairs"
+!
+!       1/(1*2),  1/(2*3),  1/(3*4), 1/(4*5), ...
+!
+!     The number of such fractions be computed directly from
+!     TRUNC. LPAIR3 and LPAIR2 indicate which of these pairs
+!     (counting 1/(1*2) as the first) will be the last one needed in
+!     the evaluation of C_2 and C_3.
+!
       integer(ip), parameter :: npairs = 2*trunc - 2
       integer(ip), parameter :: lpair3 = npairs
       integer(ip), parameter :: lpair2 = npairs - 1
+!
+!     Local variables
+!
       real(wp) :: y
       real(wp) :: z
       integer(ip) :: i
@@ -16713,6 +16672,44 @@ contains
       associate ( first => ctx%stmp03_state%first, &
                   lbound => ctx%stmp03_state%lbound, &
                   pairs => ctx%stmp03_state%pairs )
+!
+!     We are going to need the numbers
+!
+!        1/(2*3), 1/(3*4), 1/(4*5), ...
+!
+!     but we don't want to compute them every time this routine is
+!     called.  So the first time this routine is called we compute
+!     them and put them in the array PAIRS for use on subsequent
+!     calls. (This could be done via parameters, but computing them
+!     at run time seems to have a better chance of being
+!     easily maintained.)
+!
+!     In addition we will need to compute the lower bound for which
+!     C_0,...,C_3 can be computed.  This lower bound is computed by
+!     noting that C_0 has the largest magnitude of all the Stumpff
+!     functions over the domain from -infinity to -1.  Moreover, in this
+!     range
+!
+!        C_0(X) = Cosh( SQRT(-X) )
+!
+!     Thus the range of X for which the Stumpff functions can be
+!     computed is bounded below by the value of X for which
+!
+!        Cosh ( SQRT(-X) ) = DPMAX
+!
+!     Which implies the lower bound for valid inputs is at
+!
+!        X = - ( DLOG ( 2.0 ) + DLOG( DPMAX ) ) ** 2
+!
+!          = - ( DLOG ( 2*N ) + DLOG ( DPMAX/N  ) ) ** 2
+!
+!     We point out the second formulation of the bound just in case
+!     your compiler can't handle the computation of DLOG ( DPMAX ).
+!     If this unfortunate situation should arise, complain to the
+!     company that produces your compiler and in the code below
+!     compute LBOUND using the second form above with N equal to
+!     some large power of 2 (say 2**20).
+!
       if ( first ) then
 
          first  = .false.

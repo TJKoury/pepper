@@ -10542,6 +10542,9 @@ contains
       real(wp), intent(in) :: ma  !! Mean anomaly at epoch.
       real(wp), intent(in) :: ecc  !! Eccentricity.
       real(wp), intent(out) :: f  !! Hyperbolic eccentric anomaly.
+!
+!     Local variables
+!
       integer(ip) :: count
       integer(ip) :: mcount
       real(wp) :: m
@@ -10554,6 +10557,9 @@ contains
       if ( .not. allocated ( ctx%hyptof_state ) ) allocate ( ctx%hyptof_state )
       associate ( first => ctx%hyptof_state%first, &
                   maxlog => ctx%hyptof_state%maxlog )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if ( first ) then
@@ -13376,20 +13382,6 @@ contains
       !>        Updated to save the input body name and ZZBODTRN state
       !>        counter and to do name-ID conversion only if the counter
       !>        has changed.
-      !>
-      !>     Local parameters
-      !>
-      !>     Saved body name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved name/ID item declarations.
-      !>
-      !>     Saved name/ID items.
-      !>
-      !>     Initial values.
-      !>
-      !>     Give the function an initial value.
       module real(wp) function lspcn ( ctx, body, et, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv, recrad, ucrss
@@ -13399,7 +13391,13 @@ contains
       character(*), intent(in) :: body  !! Name of central body.
       real(wp), intent(in) :: et  !! Epoch in seconds past J2000 TDB.
       character(*), intent(in) :: abcorr  !! Aberration correction.
+!
+!     Local parameters
+!
       character(*), parameter :: ref = 'J2000'
+!
+!     Local variables
+!
       real(wp) :: uavel  ( 3 )
       real(wp) :: lat
       real(wp) :: lt
@@ -13419,6 +13417,9 @@ contains
                   svidcd => ctx%lspcn_state%svidcd, &
                   svfnd1 => ctx%lspcn_state%svfnd1, &
                   first => ctx%lspcn_state%first )
+!
+!     Give the function an initial value.
+!
       lspcn = 0.0_wp
 
 !
@@ -15497,7 +15498,13 @@ contains
       real(wp), intent(in) :: et  !! Epoch of elements.
       real(wp), intent(in) :: mu  !! Gravitational parameter (GM) of primary body.
       real(wp), intent(out) :: elts   ( 8 )  !! Equivalent conic elements.
+!
+!     Local parameters
+!
       real(wp), parameter :: close = 1.0e-10_wp
+!
+!     Local variables
+!
       real(wp) :: argp
       real(wp) :: cosea
       real(wp) :: coshf
@@ -15522,6 +15529,9 @@ contains
       real(wp) :: xprod  ( 3 )
       if ( .not. allocated ( ctx%oscelt_state ) ) allocate ( ctx%oscelt_state )
       associate ( zvec => ctx%oscelt_state%zvec )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if ( mu <= 0.0_wp ) then
@@ -19175,8 +19185,6 @@ contains
       !>        Bug fix: modified algorithm to handle case where string
       !>        "SCLK" appears in SCLK name.  SCN2ID now uses POSR to locate
       !>        the substring "SCLK" in the input string.
-      !>
-      !>     Convert name to upper case.
       module subroutine scn2id ( ctx, clknam, clkid, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: posr, rtrim, ucase
@@ -19188,6 +19196,9 @@ contains
       logical :: return
       character(maxlen) :: tmpnam
       integer(ip) :: loc
+!
+!     Convert name to upper case.
+!
       call ucase ( clknam, tmpnam )
 
 !
@@ -20228,6 +20239,9 @@ contains
       real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis along the z-axis.
       real(wp), intent(out) :: point  ( 3 )  !! Point on the ellipsoid pointed to by U.
       logical, intent(out) :: found  !! Flag indicating if U points at the ellipsoid.
+!
+!     Local variables
+!
       real(wp) :: p     ( 3 )
       real(wp) :: pmag
       real(wp) :: scale
@@ -22141,6 +22155,9 @@ contains
       integer(ip), intent(out) :: nx  !! Number of real roots exceeding bound.
       real(wp), intent(out) :: r1  !! Root of smaller absolute value.
       real(wp), intent(out) :: r2  !! Root of larger absolute value.
+!
+!     Local variables
+!
       real(wp) :: denom
       real(wp) :: dscrim
       real(wp) :: num1
@@ -33056,20 +33073,6 @@ contains
       !>        light time estimate. In some cases, this allows an intercept
       !>        to be found again in a later pass through the loop, and a
       !>        solution intercept to be found at that point or later.
-      !>
-      !>     Local parameters
-      !>
-      !>     This value will become system-dependent when systems
-      !>     using 128-bit d.p. numbers are supported by SPICELIB.
-      !>     CNVLIM, when added to 1.0D0, should yield 1.0D0.
-      !>
-      !>     Round-off error limit for arc sine input:
-      !>
-      !>     Fraction of target body angular radius used to define
-      !>     region outside of which rays are immediately rejected
-      !>     as non-intersecting.
-      !>
-      !>     Code for the frame J2000.
       module subroutine zzsfxcor ( ctx, udnear, udmaxr, udrayx, trgcde, et, abcorr, uselt, usecn, &
             usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, dvec, spoint, trgepc, srfvec, &
             found )
@@ -33080,7 +33083,15 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       implicit none
+!
+!     Fraction of target body angular radius used to define
+!     region outside of which rays are immediately rejected
+!     as non-intersecting.
+!
       real(wp), parameter :: margin = 1.01_wp
+!
+!     Local variables
+!
       real(wp) :: dist
       real(wp) :: etdiff
       real(wp) :: j2dir  ( 3 )
@@ -33142,6 +33153,9 @@ contains
       associate ( first => ctx%zzsfxcor_state%first, &
                   loccor => ctx%zzsfxcor_state%loccor, &
                   prvcor => ctx%zzsfxcor_state%prvcor )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -44451,18 +44465,6 @@ contains
       !>        Updated to support representations of integers in the
       !>        input arguments TARGET and OBSRVR: calls to BODN2C
       !>        were replaced by calls to BODS2C.
-      !>
-      !>     Local parameters
-      !>
-      !>     Saved body name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved name/ID item declarations.
-      !>
-      !>     Saved variables
-      !>
-      !>     Saved name/ID items.
       module subroutine subsol ( ctx, method, target, et, abcorr, obsrvr, spoint )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
@@ -44475,6 +44477,9 @@ contains
       character(*), intent(in) :: abcorr  !! Aberration correction.
       character(*), intent(in) :: obsrvr  !! Name of observing body.
       real(wp), intent(out) :: spoint ( 3 )  !! Sub-solar point on the target body.
+!
+!     Local variables
+!
       character(:), allocatable :: frname
       real(wp) :: alt
       real(wp) :: ettarg
@@ -44497,6 +44502,9 @@ contains
                   svobsc => ctx%subsol_state%svobsc, &
                   svfnd2 => ctx%subsol_state%svfnd2, &
                   first => ctx%subsol_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -51365,11 +51373,20 @@ contains
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(surface_names), intent(inout) :: srf  !! the surface names from the kernel pool
+!
+!     Local parameters
+!
       integer(ip), parameter :: nnames = 3
       character(*), parameter :: kvsfnm = 'NAIF_SURFACE_NAME'
       character(*), parameter :: kvsfcd = 'NAIF_SURFACE_CODE'
       character(*), parameter :: kvsfbd = 'NAIF_SURFACE_BODY'
+!
+!     Initial values
+!
       character(17), parameter :: names ( nnames ) = [ kvsfnm, kvsfcd, kvsfbd ]
+!
+!     Local variables
+!
       character(1) :: bdtype
       character(1) :: cdtype
       character(1) :: ndtype
@@ -66602,23 +66619,6 @@ contains
       !>
       !>           Note that the problem could occur in cases where
       !>           voxels 1 and 2 are not adjacent.
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Statement function type declarations
-      !>
-      !>     Local parameters
-      !>
-      !>     Tolerance used for vertex-voxel grid distance test:
-      !>
-      !>     Maximum number of voxels we can accept for
-      !>     one XDDA call.
-      !>
-      !>     Maximum number of plates we work with
-      !>     at any time.
-      !>
-      !>     Parameter indicating no coordinates are to be excluded
-      !>     in the test for a point being within segment boundaries.
       module subroutine dskx02 ( ctx, handle, dladsc, vertex, raydir, plid, xpt, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
@@ -66640,9 +66640,24 @@ contains
       logical, intent(out) :: found  !! Flag indicating whether intercept exists.
       integer(ip) :: nplate_1(1)  !! one-element copy of nplate (array argument)
       integer(ip) :: voxptr_1(1)  !! one-element copy of voxptr (array argument)
+!
+!     Statement function type declarations
+!
+!     Statement functions
+!
       integer(ip) :: vox2id
+!
+!     Tolerance used for vertex-voxel grid distance test:
+!
       real(wp), parameter :: vtxtol = 1.0e-12_wp
+!
+!     Parameter indicating no coordinates are to be excluded
+!     in the test for a point being within segment boundaries.
+!
       integer(ip), parameter :: none = 0
+!
+!     Local Variables
+!
       integer(ip), parameter :: bufsiz = 200
       real(wp) :: coord  ( 3 )
       real(wp) :: edges  ( 3, 3 )
@@ -66730,6 +66745,9 @@ contains
                   vgrext => ctx%dskx02_state%vgrext, &
                   voxori => ctx%dskx02_state%voxori, &
                   voxsiz => ctx%dskx02_state%voxsiz )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -86835,32 +86853,6 @@ contains
       !>        for a specified ray and time, the surface tangency point
       !>        for a given ray, and the radius of an outer bounding
       !>        sphere for the target.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     EXTERNAL routines
-      !>
-      !>     Local parameters
-      !>
-      !>     Saved body name length.
-      !>
-      !>     Saved frame name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved name/ID item declarations.
-      !>
-      !>     Saved frame name/ID item declarations.
-      !>
-      !>     Saved surface name/ID item declarations.
-      !>
-      !>     Saved variables
-      !>
-      !>     Saved name/ID items.
-      !>
-      !>     Saved frame name/ID items.
-      !>
-      !>     Saved surface name/ID items.
       module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
@@ -86884,6 +86876,9 @@ contains
       real(wp), intent(out) :: trgepc  !! Intercept epoch.
       real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to intercept point.
       logical, intent(out) :: found  !! Flag indicating whether intercept was found.
+!
+!     Local variables
+!
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -86933,6 +86928,9 @@ contains
                   svdref => ctx%sincpt_state%svdref, &
                   svdfrc => ctx%sincpt_state%svdfrc, &
                   svctr5 => ctx%sincpt_state%svctr5 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !

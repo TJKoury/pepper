@@ -1909,17 +1909,6 @@ contains
       !>        environments, so references to ICHAR were replaced
       !>        with a ZZICHR statement function that returns values
       !>        in this range for all supported environments.
-      !>
-      !>     Initial values
-      !>
-      !>     Define the hexadecimal digits
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     Some compilers implement ICHAR with a signed integer; this computes
-      !>     the (non-negative) value this code requires. (PEPPER: one form for
-      !>     all compilers; it equals ICHAR where ICHAR is not negative.)
       module subroutine wrencc ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
@@ -1927,13 +1916,24 @@ contains
       integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
       integer(ip), intent(in) :: n  !! Number of characters to encode and write.
       character(*), intent(in) :: data ( * )  !! List of characters to encode and write.
+!
+!     Local parameters
+!
       character(1), parameter :: quote = ''''
       character(1), parameter :: chrfpc = ' '
       character(1), parameter :: chrlpc = '~'
       integer(ip), parameter :: hexbas = 16
+!
+!     Local variables
+!
       character(1) :: carg
       character(1) :: ch
       character(maxenc) :: encchr
+!
+!     Initial values
+!
+!     Define the hexadecimal digits
+!
       character(1), parameter :: hexdig(0:15) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
@@ -1949,6 +1949,16 @@ contains
       integer(ip) :: nchars
       integer(ip) :: nchout
       integer(ip) :: room
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     Some compilers implement ICHAR with a signed integer; this computes
+!     the (non-negative) value this code requires. (PEPPER: one form for
+!     all compilers; it equals ICHAR where ICHAR is not negative.)
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
       zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
       if ( .not. allocated ( ctx%wrencc_state ) ) allocate ( ctx%wrencc_state )
@@ -1957,6 +1967,9 @@ contains
                   intlpc => ctx%wrencc_state%intlpc, &
                   intquo => ctx%wrencc_state%intquo, &
                   first => ctx%wrencc_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if ( first ) then
@@ -3509,20 +3522,6 @@ contains
       !>        Reordered header sections. Corrected typo in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 11-DEC-2001 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Amount of space measured in characters necessary to null pad
-      !>     between the last character of FORMAT and the first character
-      !>     of FTPSTR to keep FTPSTR at character 700 in a 1024 byte
-      !>     record.
-      !>
-      !>     Amount of space measured in characters necessary to
-      !>     null pad from the last character of FTPSTR to the
-      !>     end of the file record. Note: This value assumes the
-      !>     length of the file record is 1024 bytes.
-      !>
-      !>     Lengths of internal file name, ID word, and format word.
       module subroutine zzdasnfr ( ctx, lun, idword, ifname, nresvr, nresvc, ncomr, ncomc, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
@@ -3537,8 +3536,25 @@ contains
       integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
       integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
       character(*), intent(in) :: format  !! File binary format identifier string.
+!
+!     Local Parameters
+!
+!     Amount of space measured in characters necessary to null pad
+!     between the last character of FORMAT and the first character
+!     of FTPSTR to keep FTPSTR at character 700 in a 1024 byte
+!     record.
+!
       integer(ip), parameter :: preftp = 607
+!
+!     Amount of space measured in characters necessary to
+!     null pad from the last character of FTPSTR to the
+!     end of the file record. Note: This value assumes the
+!     length of the file record is 1024 bytes.
+!
       integer(ip), parameter :: pstftp = 297
+!
+!     Local Variables
+!
       character(1) :: nullch
       character(fmtlen) :: locfmt
       character(idwlen) :: locidw
@@ -3554,6 +3570,9 @@ contains
                   ftpstr => ctx%zzdasnfr_state%ftpstr, &
                   prenul => ctx%zzdasnfr_state%prenul, &
                   pstnul => ctx%zzdasnfr_state%pstnul )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -3770,22 +3789,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     Local parameters
-      !>
-      !>     Parameters for positions of file record elements:
-      !>
-      !>     ID word begin and end:
-      !>
-      !>     Internal file name begin and end:
-      !>
-      !>     Reserved record count begin and end:
-      !>
-      !>     Reserved record character count begin and end:
-      !>
-      !>     Comment area record count begin and end:
-      !>
-      !>     Comment area character count begin and end:
       module subroutine zzdasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
@@ -3802,18 +3805,39 @@ contains
       integer(ip) :: ncomr_1(1)  !! one-element copy of ncomr (array argument)
       integer(ip) :: nresvc_1(1)  !! one-element copy of nresvc (array argument)
       integer(ip) :: nresvr_1(1)  !! one-element copy of nresvr (array argument)
+!
+!     ID word begin and end:
+!
       integer(ip), parameter :: begidw = 1
       integer(ip), parameter :: endidw = 8
+!
+!     Internal file name begin and end:
+!
       integer(ip), parameter :: begifn = 9
       integer(ip), parameter :: endifn = 68
+!
+!     Reserved record count begin and end:
+!
       integer(ip), parameter :: begnrr = 69
       integer(ip), parameter :: endnrr = 72
+!
+!     Reserved record character count begin and end:
+!
       integer(ip), parameter :: begnrc = 73
       integer(ip), parameter :: endnrc = 76
+!
+!     Comment area record count begin and end:
+!
       integer(ip), parameter :: begncr = 77
       integer(ip), parameter :: endncr = 80
+!
+!     Comment area character count begin and end:
+!
       integer(ip), parameter :: begncc = 81
       integer(ip), parameter :: endncc = 84
+!
+!     Local variables
+!
       character(nwc) :: chrbuf
       character(idwlen) :: tmpidw
       character(ifnlen) :: tmpifn
@@ -3823,6 +3847,9 @@ contains
       if ( .not. allocated ( ctx%zzdasrfr_state ) ) allocate ( ctx%zzdasrfr_state )
       associate ( first => ctx%zzdasrfr_state%first, &
                   natbff => ctx%zzdasrfr_state%natbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -4317,6 +4344,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -4939,6 +4969,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5485,6 +5518,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5979,6 +6015,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6407,6 +6446,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6961,6 +7003,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7478,6 +7523,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       findex  =  ft%find ( handle )
@@ -7791,6 +7839,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8047,8 +8098,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     We use discovery check-ins in this routine.
       module subroutine dashlu ( ctx, handle, unit )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -8097,6 +8146,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     We use discovery check-ins in this routine.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8286,6 +8338,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8524,6 +8579,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8714,6 +8772,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       call zzddhfnh ( ctx, fname, handle, found )
@@ -9125,6 +9186,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -9364,6 +9428,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -9544,8 +9611,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     If it hasn't been done yet, initialize the pointer list pools.
       module subroutine dasrrd ( ctx, handle, recno, first, last, datad )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -9573,6 +9638,9 @@ contains
                   headd => ctx%dasrwr%headd, &
                   usedd => ctx%dasrwr%usedd, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     If it hasn't been done yet, initialize the pointer list pools.
+!
       if ( pass1 ) then
 
          call lnkini ( ctx, bufszd, poold )
@@ -9881,10 +9949,6 @@ contains
       !>        Made modifications to enhance efficiency. Removed references
       !>        to the function RETURN. For buffered reads, MOVEI is not
       !>        called when a single word is to be read.
-      !>
-      !>     Non-standard SPICE error handling.
-      !>
-      !>     If it hasn't been done yet, initialize the pointer list pools.
       module subroutine dasrri ( ctx, handle, recno, first, last, datai )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -9912,6 +9976,9 @@ contains
                   headi => ctx%dasrwr%headi, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     If it hasn't been done yet, initialize the pointer list pools.
+!
       if ( pass1 ) then
 
          call lnkini ( ctx, bufszd, poold )
@@ -10213,8 +10280,6 @@ contains
       !>
       !>        Made modifications to enhance efficiency. Removed references
       !>        to the function RETURN.
-      !>
-      !>     If it hasn't been done yet, initialize the pointer list pools.
       module subroutine dasrrc ( ctx, handle, recno, first, last, datac )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -10243,6 +10308,9 @@ contains
                   headc => ctx%dasrwr%headc, &
                   usedc => ctx%dasrwr%usedc, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     If it hasn't been done yet, initialize the pointer list pools.
+!
       if ( pass1 ) then
 
          call lnkini ( ctx, bufszd, poold )
@@ -10552,6 +10620,9 @@ contains
                   headd => ctx%dasrwr%headd, &
                   usedd => ctx%dasrwr%usedd, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -10838,6 +10909,9 @@ contains
                   headi => ctx%dasrwr%headi, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -11124,6 +11198,9 @@ contains
                   headc => ctx%dasrwr%headc, &
                   usedc => ctx%dasrwr%usedc, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -11439,6 +11516,9 @@ contains
                   headd => ctx%dasrwr%headd, &
                   usedd => ctx%dasrwr%usedd, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -11791,6 +11871,9 @@ contains
                   headi => ctx%dasrwr%headi, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -12147,6 +12230,9 @@ contains
                   headc => ctx%dasrwr%headc, &
                   usedc => ctx%dasrwr%usedc, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -12741,6 +12827,9 @@ contains
                   usedd => ctx%dasrwr%usedd, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -13833,216 +13922,6 @@ contains
       !>        that data type in a DAS record. The correct product involves
       !>        the number of records in the cluster and the number of words of
       !>        that data type in a DAS record.
-      !>
-      !>     Programmer's note: the TSPICE routine P_DASA2L must be
-      !>     kept in sync with this routine. Current version of that
-      !>     routine is
-      !>
-      !>        TSPICE Version 1.0.0 APR-11-2014 (NJB)
-      !>
-      !>     Local parameters
-      !>
-      !>     Words per data record, for each data type:
-      !>
-      !>     Directory forward pointer location
-      !>
-      !>     Directory address range locations
-      !>
-      !>     Index of highest address in a `range array':
-      !>
-      !>     Location of first type descriptor
-      !>
-      !>     Access word length
-      !>
-      !>     File table size
-      !>
-      !>     Initial values
-      !>
-      !>     NEXT and PREV map the DAS data type codes to their
-      !>     successors and predecessors, respectively.
-      !>
-      !>     Discovery check-in is used in this routine, even though
-      !>     this routine calls routines that can signal errors. This
-      !>     routine is a special case, because fast operation is very
-      !>     important.
-      !>
-      !>     DAS files have the following general structure:
-      !>
-      !>           +------------------------+
-      !>           |      file record       |
-      !>           +------------------------+
-      !>           |    reserved records    |
-      !>           |                        |
-      !>           +------------------------+
-      !>           |     comment records    |
-      !>           |                        |
-      !>           |                        |
-      !>           |                        |
-      !>           +------------------------+
-      !>           | first data directory   |
-      !>           +------------------------+
-      !>           |      data records      |
-      !>           |                        |
-      !>           |                        |
-      !>           |                        |
-      !>           |                        |
-      !>           +------------------------+
-      !>                       .
-      !>                       .
-      !>           +------------------------+
-      !>           | last data directory    |
-      !>           +------------------------+
-      !>           |     data records       |
-      !>           |                        |
-      !>           |                        |
-      !>           +------------------------+
-      !>
-      !>        Within each DAS data record, word numbers start at one and
-      !>        increase up to NWI, NWD, or NWC: the number of words in an
-      !>        integer, double precision, or character data record.
-      !>
-      !>           +--------------------------------+
-      !>           |       |       |   ...  |       |
-      !>           +--------------------------------+
-      !>               1      2                NWD
-      !>
-      !>           +--------------------------------+
-      !>           |   |   |       ...          |   |
-      !>           +--------------------------------+
-      !>             1   2                       NWI
-      !>
-      !>           +------------------------------------+
-      !>           | | |           ...                | |
-      !>           +------------------------------------+
-      !>            1 2                               NWC
-      !>
-      !>        Directories are single records that describe the data
-      !>        types of data records that follow. The directories
-      !>        in a DAS file form a doubly linked list: each directory
-      !>        contains forward and backward pointers to the next and
-      !>        previous directories.
-      !>
-      !>        Each directory also contains, for each data type, the lowest
-      !>        and highest logical address occurring in any of the records
-      !>        described by the directory.
-      !>
-      !>        Following the pointers and address range information is
-      !>        a sequence of data type descriptors. These descriptors
-      !>        indicate the data type of data records following the
-      !>        directory record. Each descriptor gives the data type
-      !>        of a maximal set of contiguous data records, all having the
-      !>        same type. By `maximal set' we mean that no data records of
-      !>        the same type bound the set of records in question.
-      !>
-      !>        Pictorially, the structure of a directory is as follows:
-      !>
-      !>           +----------------------------------------------------+
-      !>           | <pointers> | <address ranges> | <type descriptors> |
-      !>           +----------------------------------------------------+
-      !>
-      !>        where the <pointers> section looks like
-      !>
-      !>           +-----------------------------------------+
-      !>           | <backward pointer> | <forward pointer>  |
-      !>           +-----------------------------------------+
-      !>
-      !>        the <address ranges> section looks like
-      !>
-      !>           +-------------------------------------------+
-      !>           | <char range> | <d.p. range> | <int range> |
-      !>           +-------------------------------------------+
-      !>
-      !>        and each range looks like one of:
-      !>
-      !>           +------------------------------------------------+
-      !>           | <lowest char address> | <highest char address> |
-      !>           +------------------------------------------------+
-      !>
-      !>           +------------------------------------------------+
-      !>           | <lowest d.p. address> | <highest d.p. address> |
-      !>           +------------------------------------------------+
-      !>
-      !>           +------------------------------------------------+
-      !>           | <lowest int address>  | <highest int address>  |
-      !>           +------------------------------------------------+
-      !>
-      !>        The type descriptors implement a run-length encoding
-      !>        scheme. The first element of the series of descriptors
-      !>        occupies two integers: it contains a type code and a count.
-      !>        The rest of the descriptors are just signed counts; the data
-      !>        types of the records they describe are deduced from the sign
-      !>        of the count and the data type of the previous descriptor.
-      !>        The method of finding the data type for a given descriptor
-      !>        in terms of its predecessor is as follows: if the sign of a
-      !>        descriptor is positive, the type of that descriptor is the
-      !>        successor of the type of the preceding descriptor in the
-      !>        sequence of types below. If the sign of a descriptor is
-      !>        negative, the type of the descriptor is the predecessor of the
-      !>        type of the preceding descriptor.
-      !>
-      !>           C  -->  D  -->  I  -->  C
-      !>
-      !>        For example, if the preceding type is `I', and a descriptor
-      !>        contains the number 16, the type of the descriptor is `C',
-      !>        whereas if the descriptor contained the number -800, the type
-      !>        of the descriptor would be `D'.
-      !>
-      !>     Logic cases
-      !>     ===========
-      !>
-      !>     There are three kinds of file attributes that this
-      !>     routine distinguishes:
-      !>
-      !>        Attributes
-      !>        ----------
-      !>        "FAST"           read-only and segregated
-      !>        "READONLY"       read-only and unsegregated
-      !>        "WRITABLE"       writable
-      !>
-      !>     There are three kinds of file histories that this
-      !>     routine distinguishes:
-      !>
-      !>        History
-      !>        -------
-      !>        "SAME"           file is the same as seen on
-      !>                         the previous call
-      !>
-      !>        "KNOWN"          file is not the same as seen
-      !>                         on the previous call, but file
-      !>                         information is buffered
-      !>
-      !>        "UNKNOWN"        file information is not buffered.
-      !>
-      !>     All combinations of attributes and history are possible,
-      !>     so there are nine cases.
-      !>
-      !>     Mapping actions to cases
-      !>     ========================
-      !>
-      !>        Action                             Cases
-      !>        ------                             -----
-      !>        Set SAMFIL, PRVOK                  ALL
-      !>        Data type check                    ALL
-      !>        Set KNOWN                          not (FAST and SAME)
-      !>        Get access method                  UNKNOWN
-      !>        Buffer insertion                   UNKNOWN
-      !>        Set
-      !>            TBHAN
-      !>            TBRDON
-      !>            TBFAST
-      !>            TBFWRD                         UNKNOWN
-      !>        Get file summary                   UNKNOWN or WRITABLE
-      !>        Set TBMXAD                         UNKNOWN or WRITABLE
-      !>        Segregation check                  UNKNOWN and not WRITABLE
-      !>        Set TBBASE, TBSIZE                 FAST and UNKNOWN
-      !>        Set FAST                           not SAME
-      !>        Address range check                ALL
-      !>        Address search                     READONLY or WRITABLE
-      !>        Set CLBASE, CLSIZE                 ALL
-      !>
-      !>     ========================
-      !>
-      !>     Make sure the data type is valid.
       module subroutine dasa2l ( ctx, handle, type, addrss, clbase, clsize, recno, wordno )
       use pepper_kinds, only: ip
       implicit none
@@ -14057,8 +13936,17 @@ contains
       integer(ip) :: nxtrec_1(1)  !! one-element copy of nxtrec (array argument)
       integer(ip), parameter :: char = 1
       integer(ip), parameter :: int = 3
+!
+!     Index of highest address in a `range array':
+!
       integer(ip), parameter :: high = 2
+!
+!     File table size
+!
       integer(ip), parameter :: maxfil = 20
+!
+!     Local variables
+!
       integer(ip) :: curtyp
       integer(ip) :: lstrec ( 3 )
       integer(ip) :: hiaddr
@@ -14068,6 +13956,10 @@ contains
       integer(ip) :: dscloc
       integer(ip) :: baserc
       integer(ip) :: j
+!
+!     NEXT and PREV map the DAS data type codes to their
+!     successors and predecessors, respectively.
+!
       logical :: known
       integer(ip) :: nrec
       integer(ip) :: ndirs
@@ -14103,6 +13995,190 @@ contains
                   prvok => ctx%dasa2l_state%prvok, &
                   tbfast => ctx%dasa2l_state%tbfast, &
                   tbrdon => ctx%dasa2l_state%tbrdon )
+!
+!     Discovery check-in is used in this routine, even though
+!     this routine calls routines that can signal errors. This
+!     routine is a special case, because fast operation is very
+!     important.
+!
+!     DAS files have the following general structure:
+!
+!           +------------------------+
+!           |      file record       |
+!           +------------------------+
+!           |    reserved records    |
+!           |                        |
+!           +------------------------+
+!           |     comment records    |
+!           |                        |
+!           |                        |
+!           |                        |
+!           +------------------------+
+!           | first data directory   |
+!           +------------------------+
+!           |      data records      |
+!           |                        |
+!           |                        |
+!           |                        |
+!           |                        |
+!           +------------------------+
+!                       .
+!                       .
+!           +------------------------+
+!           | last data directory    |
+!           +------------------------+
+!           |     data records       |
+!           |                        |
+!           |                        |
+!           +------------------------+
+!
+!        Within each DAS data record, word numbers start at one and
+!        increase up to NWI, NWD, or NWC: the number of words in an
+!        integer, double precision, or character data record.
+!
+!           +--------------------------------+
+!           |       |       |   ...  |       |
+!           +--------------------------------+
+!               1      2                NWD
+!
+!           +--------------------------------+
+!           |   |   |       ...          |   |
+!           +--------------------------------+
+!             1   2                       NWI
+!
+!           +------------------------------------+
+!           | | |           ...                | |
+!           +------------------------------------+
+!            1 2                               NWC
+!
+!        Directories are single records that describe the data
+!        types of data records that follow. The directories
+!        in a DAS file form a doubly linked list: each directory
+!        contains forward and backward pointers to the next and
+!        previous directories.
+!
+!        Each directory also contains, for each data type, the lowest
+!        and highest logical address occurring in any of the records
+!        described by the directory.
+!
+!        Following the pointers and address range information is
+!        a sequence of data type descriptors. These descriptors
+!        indicate the data type of data records following the
+!        directory record. Each descriptor gives the data type
+!        of a maximal set of contiguous data records, all having the
+!        same type. By `maximal set' we mean that no data records of
+!        the same type bound the set of records in question.
+!
+!        Pictorially, the structure of a directory is as follows:
+!
+!           +----------------------------------------------------+
+!           | <pointers> | <address ranges> | <type descriptors> |
+!           +----------------------------------------------------+
+!
+!        where the <pointers> section looks like
+!
+!           +-----------------------------------------+
+!           | <backward pointer> | <forward pointer>  |
+!           +-----------------------------------------+
+!
+!        the <address ranges> section looks like
+!
+!           +-------------------------------------------+
+!           | <char range> | <d.p. range> | <int range> |
+!           +-------------------------------------------+
+!
+!        and each range looks like one of:
+!
+!           +------------------------------------------------+
+!           | <lowest char address> | <highest char address> |
+!           +------------------------------------------------+
+!
+!           +------------------------------------------------+
+!           | <lowest d.p. address> | <highest d.p. address> |
+!           +------------------------------------------------+
+!
+!           +------------------------------------------------+
+!           | <lowest int address>  | <highest int address>  |
+!           +------------------------------------------------+
+!
+!        The type descriptors implement a run-length encoding
+!        scheme. The first element of the series of descriptors
+!        occupies two integers: it contains a type code and a count.
+!        The rest of the descriptors are just signed counts; the data
+!        types of the records they describe are deduced from the sign
+!        of the count and the data type of the previous descriptor.
+!        The method of finding the data type for a given descriptor
+!        in terms of its predecessor is as follows: if the sign of a
+!        descriptor is positive, the type of that descriptor is the
+!        successor of the type of the preceding descriptor in the
+!        sequence of types below. If the sign of a descriptor is
+!        negative, the type of the descriptor is the predecessor of the
+!        type of the preceding descriptor.
+!
+!           C  -->  D  -->  I  -->  C
+!
+!        For example, if the preceding type is `I', and a descriptor
+!        contains the number 16, the type of the descriptor is `C',
+!        whereas if the descriptor contained the number -800, the type
+!        of the descriptor would be `D'.
+!
+!     Logic cases
+!     ===========
+!
+!     There are three kinds of file attributes that this
+!     routine distinguishes:
+!
+!        Attributes
+!        ----------
+!        "FAST"           read-only and segregated
+!        "READONLY"       read-only and unsegregated
+!        "WRITABLE"       writable
+!
+!     There are three kinds of file histories that this
+!     routine distinguishes:
+!
+!        History
+!        -------
+!        "SAME"           file is the same as seen on
+!                         the previous call
+!
+!        "KNOWN"          file is not the same as seen
+!                         on the previous call, but file
+!                         information is buffered
+!
+!        "UNKNOWN"        file information is not buffered.
+!
+!     All combinations of attributes and history are possible,
+!     so there are nine cases.
+!
+!     Mapping actions to cases
+!     ========================
+!
+!        Action                             Cases
+!        ------                             -----
+!        Set SAMFIL, PRVOK                  ALL
+!        Data type check                    ALL
+!        Set KNOWN                          not (FAST and SAME)
+!        Get access method                  UNKNOWN
+!        Buffer insertion                   UNKNOWN
+!        Set
+!            TBHAN
+!            TBRDON
+!            TBFAST
+!            TBFWRD                         UNKNOWN
+!        Get file summary                   UNKNOWN or WRITABLE
+!        Set TBMXAD                         UNKNOWN or WRITABLE
+!        Segregation check                  UNKNOWN and not WRITABLE
+!        Set TBBASE, TBSIZE                 FAST and UNKNOWN
+!        Set FAST                           not SAME
+!        Address range check                ALL
+!        Address search                     READONLY or WRITABLE
+!        Set CLBASE, CLSIZE                 ALL
+!
+!     ========================
+!
+!     Make sure the data type is valid.
+!
       if (  ( type < char ) .or. ( type > int )  ) then
 
          call ctx%setmsg ( 'Invalid data type: #. File was #' )
@@ -17613,7 +17689,13 @@ contains
       integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
       character(*), intent(in) :: data   ( * )  !! Array providing the set of substrings to be
                                                 !! added to the character data in the DAS file.
+!
+!     Local parameters
+!
       integer(ip), parameter :: char = 1
+!
+!     Local variables
+!
       integer(ip) :: chr
       integer(ip) :: clbase
       integer(ip) :: clsize
@@ -17636,6 +17718,9 @@ contains
       integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadc_state ) ) allocate ( ctx%dasadc_state )
       associate ( record => ctx%dasadc_state%record )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -18114,6 +18199,9 @@ contains
       integer(ip), intent(in) :: handle  !! DAS file handle.
       integer(ip), intent(in) :: n  !! Number of d.p. numbers to add to DAS file.
       real(wp), intent(in) :: data   ( * )  !! Array of d.p. numbers to add.
+!
+!     Local variables
+!
       integer(ip) :: clbase
       integer(ip) :: clsize
       integer(ip) :: free
@@ -18131,6 +18219,9 @@ contains
       integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadd_state ) ) allocate ( ctx%dasadd_state )
       associate ( record => ctx%dasadd_state%record )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -18529,7 +18620,13 @@ contains
       integer(ip), intent(in) :: handle  !! DAS file handle.
       integer(ip), intent(in) :: n  !! Number of integers to add to DAS file.
       integer(ip), intent(in) :: data   ( * )  !! Array of integers to add.
+!
+!     Local parameters
+!
       integer(ip), parameter :: int = 3
+!
+!     Local variables
+!
       integer(ip) :: clbase
       integer(ip) :: clsize
       integer(ip) :: free
@@ -18547,6 +18644,9 @@ contains
       integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadi_state ) ) allocate ( ctx%dasadi_state )
       associate ( record => ctx%dasadi_state%record )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -21518,10 +21618,16 @@ contains
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
+!
+!     Local variables
+!
       character(10) :: method
       integer(ip) :: iostat
       integer(ip) :: unit
       logical :: notscr
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -23841,30 +23947,6 @@ contains
       !>        the increase in the value.
       !>
       !>-    SPICELIB Version 1.0.0, 23-NOV-1992 (KRG)
-      !>
-      !>     Local parameters
-      !>
-      !>     Length of a DAS character record, in characters.
-      !>
-      !>     Maximum and minimum decimal values for the printable ASCII
-      !>     characters.
-      !>
-      !>     Decimal value for the DAS comment area end-of-line (EOL) marker.
-      !>
-      !>     Maximum length of a filename.
-      !>
-      !>     Length of a DAS file ID word.
-      !>
-      !>     Length of a DAS file internal filename.
-      !>
-      !>     Local variables
-      !>
-      !>     The file table declarations for keeping track of which files
-      !>     are currently in the process of having comments extracted.
-      !>
-      !>     Saved variables
-      !>
-      !>     Save all of the file table information.
       module subroutine dasec ( ctx, handle, bufsiz, n, buffer, done )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
@@ -23876,6 +23958,9 @@ contains
       integer(ip), intent(out) :: n  !! Number of comments extracted from the DAS file.
       character(*), intent(out) :: buffer(*)  !! Buffer in which extracted comments are placed.
       logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
+!
+!     Local variables
+!
       character(1) :: ch
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -23893,6 +23978,10 @@ contains
       integer(ip) :: nresvr
       integer(ip) :: numcom
       integer(ip) :: recno
+!
+!     The file table declarations for keeping track of which files
+!     are currently in the process of having comments extracted.
+!
       logical :: eol
       if ( .not. allocated ( ctx%dasec_state ) ) then
          allocate ( ctx%dasec_state )
@@ -23917,6 +24006,9 @@ contains
                   lstrec => ctx%dasec_state%lstrec, &
                   nfiles => ctx%dasec_state%nfiles, &
                   first => ctx%dasec_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 !
 !     If this is the first time that this routine has been called,

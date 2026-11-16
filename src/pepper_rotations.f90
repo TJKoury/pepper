@@ -3696,6 +3696,9 @@ contains
       real(wp), intent(in) :: plndef ( 6 )  !! State defining (with AXDEF) a principal plane.
       integer(ip), intent(in) :: indexp  !! Second axis number (with INDEXA) of principal plane.
       real(wp), intent(out) :: xform  ( 6, 6 )  !! Output state transformation matrix.
+!
+!     Local Variables
+!
       real(wp) :: tmpsta ( 6 )
 
       integer(ip) :: i
@@ -5204,61 +5207,6 @@ contains
       !>
       !>        This is the value used in this routine.  The verification of
       !>        this error is courtesy of Myles Standish.
-      !>
-      !>     Parameters
-      !>
-      !>     NTERM is the number of SIN and COSINE terms used in the
-      !>     computation of Delta Psi and Delta epsilon
-      !>
-      !>     The parameters below stand for
-      !>
-      !>        revolutions
-      !>        degrees
-      !>        minutes
-      !>        seconds
-      !>        julian century
-      !>        julian century ** 2
-      !>        julian century ** 3
-      !>
-      !>     These parameters are needed for converting the quantities
-      !>     on page 114 of the Explanatory supplement from revolutions,
-      !>     degrees, minutes and seconds / century, century**2 and century**3
-      !>     to degrees, degrees/day, degrees/(0.0001 days)**2 and
-      !>     degrees/(0.0001 days)**3.
-      !>
-      !>     The next set of parameters is an enumeration of the various
-      !>     angles needed in the computation of nutations.
-      !>
-      !>     Local Variables.
-      !>
-      !>     PEPPER: the table of the series (one term, i.e. one column, per
-      !>     line; SPICELIB set it with DATA statements).
-      !>
-      !>     Below are the coefficients for the various periods of the
-      !>     nutation model.  There does not appear to be any particular reason
-      !>     for the ordering selected.  The n'th row corresponds to the n'th
-      !>     period listed above each data statement.
-      !>
-      !>>> Periods: 6798.4, 3399.2, 1305.5, 1095.2, 1615.7, 3232.9, 6786.3,
-      !>             943.2,  182.6,  365.3,  121.7,  365.2,  177.8,  205.9,
-      !>             173.3,  182.6,  386.0,   91.3,  346.6
-      !>
-      !>     Periods: 199.8, 346.6, 212.3, 119.6, 411.8, 131.7, 169.0, 329.8,
-      !>              409.2, 388.3, 117.5,  13.7,  27.6,  13.6,   9.1,  31.8,
-      !>               27.1,  14.8,  27.7
-      !>
-      !>     Periods: 27.4, 9.6,  9.1,  7.1, 13.8, 23.9, 6.9, 13.6, 27.0, 32.0,
-      !>              31.7, 9.5, 34.8, 13.2, 14.2,  5.6, 9.6, 12.8, 14.8
-      !>
-      !>     Periods: 7.1, 23.9, 14.7, 29.8, 6.9, 15.4, 26.9, 29.5, 25.6, 9.1,
-      !>              9.4,  9.8, 13.7,  5.5, 7.2,  8.9, 32.6, 13.8, 27.8
-      !>
-      !>      Periods: 9.2,  9.3, 27.3, 10.1, 14.6,  5.8, 15.9, 22.5,  5.6,
-      !>               7.3,  9.1, 29.3, 12.8,  4.7,  9.6, 12.7,  8.7, 23.8,
-      !>              13.1
-      !>
-      !>     Periods: 35.0, 13.6, 25.4, 14.2, 9.5, 14.2, 34.7, 32.8, 7.1, 4.8,
-      !>              27.3
       module subroutine zzwahr ( ctx, et, dvnut )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, spd, twopi
@@ -5266,8 +5214,31 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris Time for which nutations are sought
       real(wp), intent(out) :: dvnut(4)  !! Nutation angles and their rates.
+!
+!     Parameters
+!
+!     NTERM is the number of SIN and COSINE terms used in the
+!     computation of Delta Psi and Delta epsilon
+!
       integer(ip), parameter :: nterm = 106
       real(wp), parameter :: zero = 0.0_wp
+!
+!     The parameters below stand for
+!
+!        revolutions
+!        degrees
+!        minutes
+!        seconds
+!        julian century
+!        julian century ** 2
+!        julian century ** 3
+!
+!     These parameters are needed for converting the quantities
+!     on page 114 of the Explanatory supplement from revolutions,
+!     degrees, minutes and seconds / century, century**2 and century**3
+!     to degrees, degrees/day, degrees/(0.0001 days)**2 and
+!     degrees/(0.0001 days)**3.
+!
       real(wp), parameter :: rev = 360.0_wp
       real(wp), parameter :: deg = 1.0_wp
       real(wp), parameter :: min = 1.0_wp / 60.0_wp
@@ -5275,6 +5246,10 @@ contains
       real(wp), parameter :: cent1 = 36525.0_wp
       real(wp), parameter :: cent2 = cent1*cent1*1.0e-8_wp
       real(wp), parameter :: cent3 = cent1*cent2*1.0e-4_wp
+!
+!     The next set of parameters is an enumeration of the various
+!     angles needed in the computation of nutations.
+!
       integer(ip), parameter :: l = 1
       integer(ip), parameter :: lp = l      + 1
       integer(ip), parameter :: f = lp     + 1
@@ -5388,6 +5363,12 @@ contains
               0,      0,      2,      4,      2,     -1,      0,      0,      0,&
               0,      1,      0,      1,      0,      1,      0,      0,      0 ], &
          [ 9, nterm ] )
+!
+!     Local Variables.
+!
+!     PEPPER: the table of the series (one term, i.e. one column, per
+!     line; SPICELIB set it with DATA statements).
+!
       real(wp) :: rasec
       real(wp) :: t
       real(wp) :: dddj
@@ -5705,6 +5686,9 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
       real(wp), intent(out) :: nutxf  ( 6, 6 )  !! Nutation transformation matrix.
+!
+!     Local variables
+!
       real(wp) :: dmob
       real(wp) :: dvnut  ( 4 )
       real(wp) :: eulang ( 6 )

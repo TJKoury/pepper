@@ -6744,6 +6744,9 @@ contains
       logical :: lupdte
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
@@ -7778,6 +7781,9 @@ contains
                   pulctr => ctx%zzbodtrn%pulctr, &
                   nodata => ctx%zzbodtrn%nodata, &
                   first => ctx%zzbodtrn%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8175,6 +8181,9 @@ contains
       logical :: lupdte
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
@@ -10907,16 +10916,6 @@ contains
       !>
       !>        Updated to use BODS2C. This simplifies the name-to-ID
       !>        mapping code.
-      !>
-      !>     Local parameters
-      !>
-      !>     Saved body name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved name/ID item declarations.
-      !>
-      !>     Saved name/ID items.
       module subroutine bodvrd ( ctx, bodynm, item, maxn, dim, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix
@@ -10929,6 +10928,9 @@ contains
       integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
       integer(ip), intent(out) :: dim  !! Number of values returned.
       real(wp), intent(out) :: values  ( * )  !! Values.
+!
+!     Local variables
+!
       character(cdelen) :: code
       character(1) :: type
       character(namlen) :: varnam
@@ -10940,6 +10942,9 @@ contains
                   svbdid => ctx%bodvrd_cache%svbdid, &
                   svfnd1 => ctx%bodvrd_cache%svfnd1, &
                   first => ctx%bodvrd_cache%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
