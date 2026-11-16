@@ -1275,6 +1275,19 @@ contains
       end if
 
 !
+!     PEPPER: a kernel built in memory (it has no file) is a DAF, of the
+!     type its ID word names.
+!
+      i = synthetic_named ( ctx, file )
+      if ( i > 0 ) then
+         associate ( rec => daf_image_chars ( ctx%spice%zzddhman%files(i)%image, 1_ip ) )
+            arch   = 'DAF'
+            kertyp = rec(5:8)
+         end associate
+         return
+      end if
+
+!
 !     See if this is a binary file that is currently open
 !     within the SPICE binary file management subsystem.  At
 !     the moment, as far as we know, the file is not opened.

@@ -1,0 +1,1557 @@
+!> Kernels built in memory and kernel loaders (PEPPER;
+!> plans/external_loaders_plan.md).
+!>
+!> - Programmatic kernels: a kernel_builder loaded with load_kernel gives
+!>   bitwise the states of an SPK file written by SPKW09/SPKW13 from the
+!>   same arrays; KDATA, KTOTAL, SPKCOV, UNLOAD; replacing by name; keep;
+!>   more segments than one summary record holds; write_kernel; the
+!>   builder's checks and adapt; an unknown frame at the load.
+!> - A kernel loader, for the made-up format of pepper_test_loader: FURNSH
+!>   by extension, by detection, by name; loader=PEPPER; conflicts; SPICE
+!>   binary files never claimed; errors with the line, loading nothing;
+!>   unsupported interpolation; discontinuities, gaps, bounds; the
+!>   loader's kept data and unload callbacks; meta-kernels with
+!>   KERNEL_LOADERS.
+!> - Programmatic ephemerides a kernel owns (add_ephemeris): a file that
+!>   holds a model (the test format's CIRCULAR), its states computed by the
+!>   loader's evaluator; coverage and objects by the kernel's name; kernels
+!>   of the same body coexist (the last loaded first; unloading it restores
+!>   the earlier), with the program's add_ephemeris too; write_kernel
+!>   refuses; an unknown frame loads nothing; KCLEAR removes them.
+!> - Frames a kernel defines: tables of rotations at ET epochs
+!>   (frame_rotations: quaternions or matrices, Lagrange or Hermite, with
+!>   or without angular velocities), interpolated as CK type 5; models
+!>   (add_frame); from a loader's file. PXFORM and SXFORM against the
+!>   exact rotation; several kernels of one frame (the last that covers an
+!>   epoch); the program's add_frame with them; errors; UNLOAD and KCLEAR.
+!> - Body names a kernel defines (define_body): usable while it is
+!>   loaded, in contexts made before the load too; removed by UNLOAD and
+!>   KCLEAR, an earlier BODDEF of the name in effect again; the latest
+!>   kernel wins; the kernel pool's names take precedence.
+!> - The round trip: test format -> kernel -> .bsp file -> test format
+!>   (from the SPK's segments) -> kernel: the same states, bitwise, and
+!>   the same rows.
+program test_loaders
+
+   use pepper_module, only: ip, wp, pepper_instance, pepper_context, kernel_builder, kernel_loader
+   use pepper_test_kernels, only: circle_state, delete_file
+   use pepper_test_loader, only: simple_loader, write_simple, circle_orbit, spin_frame, spin_matrix
+
+   implicit none
+
+   integer, parameter :: n = 150  !! rows of the test trajectory (more than 100: an epoch directory)
+   real(wp), parameter :: step = 60.0_wp  !! seconds between rows
+   real(wp), parameter :: radius = 7000.0_wp  !! km
+   integer(ip), parameter :: sc = -10001  !! the test body
+   character(*), parameter :: ref_bsp = 'test_loaders_ref.bsp'  !! SPKW13 and SPKW09 from the arrays
+   character(*), parameter :: prog_bsp = 'test_loaders_prog.bsp'  !! a programmatic kernel written out
+   character(*), parameter :: many_bsp = 'test_loaders_many.bsp'  !! 60 segments written out
+   character(*), parameter :: sim_a = 'test_loaders_a.sim'  !! the test format, by extension
+   character(*), parameter :: sim_b = 'test_loaders_b.txt'  !! the same, found by detect
+   character(*), parameter :: sim_c = 'test_loaders_c.dat'  !! the same, by name only
+   character(*), parameter :: rt_sim = 'test_loaders_rt.sim'  !! the round trip's file
+   character(*), parameter :: rt_bsp = 'test_loaders_rt.bsp'  !! ... written to an SPK
+   character(*), parameter :: rt_back = 'test_loaders_rt_back.sim'  !! ... and back
+   character(*), parameter :: bad_sim = 'test_loaders_bad.sim'  !! broken files
+   character(*), parameter :: meta = 'test_loaders.tm'  !! a meta-kernel
+   character(*), parameter :: meta_bad = 'test_loaders_bad.tm'  !! KERNEL_LOADERS not in pairs
+   character(*), parameter :: m1 = 'test_loaders_m1.sim'  !! listed by the meta-kernel
+   character(*), parameter :: m2 = 'test_loaders_m2.dat'  !! listed, with a loader in KERNEL_LOADERS
+   type(pepper_instance), target :: spice, ref, other
+   type(pepper_context), pointer :: ctx, rctx, octx
+   real(wp) :: epochs(n), states(6, n)
+   integer :: failures = 0, k
+
+   ctx => spice%context()
+   rctx => ref%context()
+   octx => other%context()
+   call delete_files()
+   epochs = [(step*(k - 1), k = 1, n)]
+   do k = 1, n
+      states(:, k) = circle_state(radius, 0.3_wp, epochs(k))
+   end do
+   call write_reference()
+
+   call test_programmatic()
+   call test_builder_checks()
+   call test_many_segments()
+   call test_loader()
+   call test_choice()
+   call test_round_trip()
+   call test_discontinuities()
+   call test_file_errors()
+   call test_meta_kernel()
+   call test_names()
+   call test_models()
+   call test_frames()
+   call test_frame_files()
+   call test_write_frames()
+   call test_review_fixes()
+
+   call spice%kclear()
+   call ref%kclear()
+   call other%kclear()
+   call delete_files()
+   if (failures > 0) then
+      print '(i0, a)', failures, ' check(s) failed'
+      stop 1
+   end if
+   print '(a)', 'test_loaders: all checks passed'
+
+contains
+
+   !> Count and report a failed check.
+   subroutine check(ok, what)
+      logical, intent(in) :: ok  !! the check passed
+      character(*), intent(in) :: what  !! what was checked
+      if (.not. ok) then
+         failures = failures + 1
+         print '(2a)', 'FAILED: ', what
+      end if
+   end subroutine check
+
+   !> Check that `c` failed with the short message `short` (and reset it).
+   subroutine check_error(c, short, what)
+      type(pepper_context), intent(inout) :: c  !! the context
+      character(*), intent(in) :: short  !! the expected short message
+      character(*), intent(in) :: what  !! what was checked
+      character(1840) :: msg
+      if (.not. c%failed()) then
+         call check(.false., what//' (no error)')
+         return
+      end if
+      call c%getmsg('SHORT', msg)
+      if (trim(msg) /= short) print '(4a)', '   ', trim(msg), ' instead of ', short
+      call check(trim(msg) == short, what)
+      call c%reset()
+   end subroutine check_error
+
+   !> Check that `c` has no error (reporting it, and resetting).
+   subroutine check_ok(c, what)
+      type(pepper_context), intent(inout) :: c  !! the context
+      character(*), intent(in) :: what  !! what was checked
+      character(1840) :: msg
+      logical :: ok
+      ok = .not. c%failed()
+      if (.not. ok) then
+         call c%getmsg('LONG', msg)
+         print '(2a)', '   ', trim(msg)
+         call c%reset()
+      end if
+      call check(ok, what)
+   end subroutine check_ok
+
+   !> The state of `body` relative to `center` in J2000 at `et` (zeros and
+   !> `ok` false on an error, which is reset).
+   subroutine state_of(c, body, center, et, state, ok)
+      type(pepper_context), intent(inout) :: c  !! the context
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! the center
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: state(6)  !! the state
+      logical, intent(out) :: ok  !! no error
+      real(wp) :: lt
+      call c%spkgeo(body, et, 'J2000', center, state, lt)
+      ok = .not. c%failed()
+      if (.not. ok) then
+         state = 0.0_wp
+         call c%reset()
+      end if
+   end subroutine state_of
+
+   !> True if two contexts give bitwise the same states of `body` at
+   !> `nt` epochs spread over [t0, t1] (the ends and many points between
+   !> rows).
+   logical function same_states(a, b, body, t0, t1, nt) result(same)
+      type(pepper_context), intent(inout) :: a  !! a context
+      type(pepper_context), intent(inout) :: b  !! another context
+      integer(ip), intent(in) :: body  !! the body
+      real(wp), intent(in) :: t0  !! the first epoch
+      real(wp), intent(in) :: t1  !! the last epoch
+      integer, intent(in) :: nt  !! the number of epochs
+      real(wp) :: sa(6), sb(6), et
+      logical :: oka, okb
+      integer :: i
+      same = .true.
+      do i = 1, nt
+         et = t0 + (t1 - t0)*real(i - 1, wp)/real(nt - 1, wp)
+         call state_of(a, body, 399_ip, et, sa, oka)
+         call state_of(b, body, 399_ip, et, sb, okb)
+         if (.not. (oka .and. okb) .or. any(sa /= sb)) then
+            if (same) print '(a, es24.16, 2l2)', '   first difference at ', et, oka, okb
+            same = .false.
+         end if
+      end do
+   end function same_states
+
+   !> The reference SPK, written by SPKW13 (body SC) and SPKW09 (body
+   !> SC-1) from the trajectory's arrays, loaded in REF.
+   subroutine write_reference()
+      integer(ip) :: h
+      call rctx%spkopn(ref_bsp, 'REFERENCE', 0_ip, h)
+      call rctx%spkw13(h, sc, 399_ip, 'J2000', epochs(1), epochs(n), 'REF13', 7_ip, int(n, ip), states, epochs)
+      call rctx%spkw09(h, sc - 1, 399_ip, 'J2000', epochs(1), epochs(n), 'REF09', 8_ip, int(n, ip), states, epochs)
+      call rctx%spkcls(h)
+      call ref%furnsh(ref_bsp)
+      call check_ok(rctx, 'the reference SPK')
+   end subroutine write_reference
+
+   !> A programmatic kernel: the same arrays as the reference, the same
+   !> states; the kernel table, coverage, write_kernel, replacing, keep,
+   !> unload, and an unknown frame.
+   subroutine test_programmatic()
+      type(kernel_builder) :: kb, kb2
+      character(:), allocatable :: loader, format
+      character(256) :: file, srcfil
+      character(32) :: filtyp
+      real(wp), allocatable :: cover(:, :)
+      real(wp) :: s(6), s2(6)
+      integer(ip) :: count, handle
+      logical :: found, ok, ok2
+
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, states, 7_ip, ident='PROG13')
+      call kb%spk_lagrange(ctx, sc - 1, 399_ip, 'J2000', epochs, states, 8_ip, ident='PROG09')
+      call check(kb%nsegments() == 2, 'the builder has two segments')
+      call spice%load_kernel('prog', kb)
+      call check_ok(ctx, 'load_kernel')
+      call check(kb%nsegments() == 0, 'the builder is emptied by the load')
+
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 997), &
+                 'programmatic kernel: type 13 states bitwise those of SPKW13')
+      call check(same_states(ctx, rctx, sc - 1, epochs(1), epochs(n), 997), &
+                 'programmatic kernel: type 9 states bitwise those of SPKW09')
+
+      call ctx%ktotal('SPK', count)
+      call check(count == 1, 'KTOTAL counts it as an SPK')
+      call ctx%kdata(1_ip, 'SPK', file, filtyp, srcfil, handle, found)
+      call check(found .and. file == 'prog' .and. filtyp == 'SPK' .and. handle > 0, 'KDATA: its name, type SPK, a handle')
+      call ctx%kernel_format('prog', loader, format, found)
+      call check(found .and. loader == ' ' .and. format == '(programmatic)', 'kernel_format of a programmatic kernel')
+      call ctx%spk_coverage('prog', sc, cover)
+      call check(size(cover, 2) == 1, 'SPKCOV by the kernel''s name: one interval')
+      if (size(cover, 2) == 1) call check(cover(1, 1) == epochs(1) .and. cover(2, 1) == epochs(n), 'its coverage')
+      call check_comments(handle)
+
+      ! to a real SPK file: loaded on its own, the same states
+      call spice%write_kernel('prog', prog_bsp)
+      call check_ok(ctx, 'write_kernel')
+      call other%furnsh(prog_bsp)
+      call check_ok(octx, 'the written SPK loads')
+      call check(same_states(ctx, octx, sc, epochs(1), epochs(n), 501), 'the written SPK: the same states (type 13)')
+      call check(same_states(ctx, octx, sc - 1, epochs(1), epochs(n), 501), 'the written SPK: the same states (type 9)')
+      call other%unload(prog_bsp)
+      call spice%write_kernel('prog', prog_bsp)
+      call check_error(ctx, 'SPICE(FILEEXISTS)', 'write_kernel does not write over a file')
+      call spice%write_kernel('no such kernel', 'test_loaders_none.bsp')
+      call check_error(ctx, 'SPICE(NOSUCHKERNEL)', 'write_kernel of an unknown kernel')
+
+      ! replacing by name: the new data, one kernel
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, 2.0_wp*states, 7_ip)
+      call spice%load_kernel('prog', kb)
+      call check_ok(ctx, 'load_kernel again under the same name')
+      call ctx%ktotal('SPK', count)
+      call check(count == 1, 'the kernel is replaced (one SPK loaded)')
+      call state_of(ctx, sc, 399_ip, epochs(10), s, ok)
+      call check(ok .and. maxval(abs(s - 2.0_wp*states(:, 10))) < 1.0e-8_wp, 'the replacement''s states')
+      call state_of(ctx, sc - 1, 399_ip, epochs(10), s, ok)
+      call check(.not. ok, 'the replaced kernel''s other body is gone')
+
+      ! keep: one builder loaded into two instances
+      call kb2%spk_hermite(ctx, sc - 2, 399_ip, 'J2000', epochs, states, 5_ip)
+      call spice%load_kernel('kept', kb2, keep=.true.)
+      call check(kb2%nsegments() == 1, 'keep: the builder keeps its segments')
+      call other%load_kernel('kept', kb2)
+      call check_ok(octx, 'the kept builder loaded into another instance')
+      call state_of(ctx, sc - 2, 399_ip, 1000.0_wp, s, ok)
+      call state_of(octx, sc - 2, 399_ip, 1000.0_wp, s2, ok2)
+      call check(ok .and. ok2 .and. all(s == s2), 'keep: the same states in both instances')
+
+      ! unload
+      call spice%unload('prog')
+      call state_of(ctx, sc, 399_ip, epochs(10), s, ok)
+      call check(.not. ok, 'UNLOAD of a programmatic kernel')
+      call spice%unload('kept')
+      call other%unload('kept')
+
+      ! an unknown frame, found at the load: nothing loaded, the builder unchanged
+      call kb%clear()
+      call kb%spk_hermite(ctx, sc, 399_ip, 'NOSUCHFRAME', epochs, states, 7_ip)
+      call check_ok(ctx, 'a segment in an unknown frame can be added')
+      call spice%load_kernel('badframe', kb)
+      call check_error(ctx, 'SPICE(INVALIDREFFRAME)', 'an unknown frame at load_kernel')
+      call check(kb%nsegments() == 1, 'the builder is unchanged after a failed load')
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'a failed load loads nothing')
+      call spice%load_kernel(' ', kb)
+      call check_error(ctx, 'SPICE(BLANKFILENAME)', 'a blank kernel name')
+   end subroutine test_programmatic
+
+   !> A DAF built in memory has no comments.
+   subroutine check_comments(handle)
+      use pepper_containers, only: string
+      integer(ip), intent(in) :: handle  !! the handle
+      type(string), allocatable :: lines(:)
+      call ctx%daf_comments(handle, lines)
+      call check_ok(ctx, 'daf_comments of a kernel built in memory')
+      call check(size(lines) == 0, 'a kernel built in memory has no comments')
+   end subroutine check_comments
+
+   !> The builder's checks (SPKW09's and SPKW13's), and adapt.
+   subroutine test_builder_checks()
+      type(kernel_builder) :: kb
+      real(wp) :: e(3), s(6, 3)
+      e = [0.0_wp, 60.0_wp, 120.0_wp]
+      s = states(:, 1:3)
+      call kb%spk_lagrange(ctx, sc, 399_ip, 'J2000', e(1:2), s(:, 1:2), 8_ip)
+      call check_error(ctx, 'SPICE(TOOFEWSTATES)', 'too few states for the degree')
+      call kb%spk_lagrange(ctx, sc, 399_ip, 'J2000', e(1:2), s(:, 1:2), 8_ip, adapt=.true.)
+      call check_ok(ctx, 'adapt: two states')
+      call check(kb%nsegments() == 1, 'adapt: two states make a segment')
+      call kb%spk_lagrange(ctx, sc, 399_ip, 'J2000', e(1:1), s(:, 1:1), 8_ip, adapt=.true.)
+      call check_ok(ctx, 'adapt: one state')
+      call check(kb%nsegments() == 1, 'adapt: one state is dropped')
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', e, s, 6_ip)
+      call check_error(ctx, 'SPICE(INVALIDDEGREE)', 'an even Hermite degree')
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', e, s, 29_ip)
+      call check_error(ctx, 'SPICE(INVALIDDEGREE)', 'a degree above 27')
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', [0.0_wp, 120.0_wp, 60.0_wp], s, 3_ip)
+      call check_error(ctx, 'SPICE(TIMESOUTOFORDER)', 'epochs out of order')
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', e, s, 3_ip, tbeg=-1.0_wp)
+      call check_error(ctx, 'SPICE(BADDESCRTIMES)', 'bounds outside the epochs')
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', e, s(:, 1:2), 3_ip)
+      call check_error(ctx, 'SPICE(INVALIDSIZE)', 'states of the wrong shape')
+      call kb%spk_hermite(ctx, 399_ip, 399_ip, 'J2000', e, s, 3_ip)
+      call check_error(ctx, 'SPICE(BARYCENTEREPHEM)', 'a body that is its own center')
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', e, s, 3_ip, ident=repeat('x', 41))
+      call check_error(ctx, 'SPICE(SEGIDTOOLONG)', 'an identifier longer than 40 characters')
+      call check(kb%nsegments() == 1, 'failed adds add nothing')
+   end subroutine test_builder_checks
+
+   !> More segments than a summary record holds (25): 60 segments of 6
+   !> states, sharing their end epochs.
+   subroutine test_many_segments()
+      type(kernel_builder) :: kb
+      real(wp), allocatable :: cover(:, :)
+      real(wp) :: s(6)
+      integer :: i, j
+      logical :: ok
+      do i = 1, 60
+         j = 2*(i - 1) + 1
+         call kb%spk_hermite(ctx, sc - 3, 399_ip, 'J2000', epochs(j:j + 2), states(:, j:j + 2), 3_ip)
+      end do
+      call check(kb%nsegments() == 60, '60 segments')
+      call spice%load_kernel('many', kb)
+      call check_ok(ctx, 'a kernel of 60 segments')
+      call ctx%spk_coverage('many', sc - 3, cover)
+      call check(size(cover, 2) == 1, '60 touching segments: one interval')
+      do i = 1, 121
+         call state_of(ctx, sc - 3, 399_ip, epochs(i), s, ok)
+         if (.not. ok .or. maxval(abs(s - states(:, i))) > 1.0e-8_wp) then
+            call check(.false., '60 segments: the states at the rows')
+            exit
+         end if
+      end do
+      call spice%write_kernel('many', many_bsp)
+      call other%furnsh(many_bsp)
+      call check(same_states(ctx, octx, sc - 3, epochs(1), epochs(121), 1201), '60 segments written to a file')
+      call other%unload(many_bsp)
+      call spice%unload('many')
+   end subroutine test_many_segments
+
+   !> The test loader by extension and by detection; its kept data.
+   subroutine test_loader()
+      type(simple_loader) :: ld
+      class(kernel_loader), pointer :: p
+      character(:), allocatable :: loader, format
+      integer(ip) :: count
+      logical :: found
+
+      call spice%add_loader('Simple', ld, extensions=['.sim'])
+      call check_ok(ctx, 'add_loader')
+      call write_simple(sim_a, [character(40) :: 'OBJECT = -10001', 'CENTER = EARTH', 'FRAME = J2000', &
+                                                 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call spice%furnsh(sim_a)
+      call check_ok(ctx, 'FURNSH of a file of the test format (by extension)')
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 997), &
+                 'loaded file: the states of SPKW13 from the same rows, bitwise')
+      call ctx%kernel_format(sim_a, loader, format, found)
+      call check(found .and. loader == 'SIMPLE' .and. format == 'SIMPLE_EPHEMERIS (test format)', &
+                 'kernel_format: the loader and the description')
+      call ctx%ktotal('SPK', count)
+      call check(count == 1, 'the file is an SPK for KTOTAL')
+
+      call spice%loader('SIMPLE', p)
+      call check(associated(p), 'loader() finds the loader')
+      if (associated(p)) then
+         select type (p)
+         type is (simple_loader)
+            call check(p%loads == 1 .and. p%rows_of(sim_a) == n, 'the loader kept the rows of the file')
+         class default
+            call check(.false., 'the loader''s type')
+         end select
+      end if
+
+      ! by detection: the same content, an extension no loader has
+      call write_simple(sim_b, [character(40) :: 'OBJECT = -10002', 'CENTER = 399', 'FRAME = J2000', &
+                                                 'INTERPOLATION = LAGRANGE 8'], epochs, states, [1], [n])
+      call spice%furnsh(sim_b)
+      call check_ok(ctx, 'FURNSH of a file found by detect')
+      call ctx%kernel_format(sim_b, loader, format, found)
+      call check(found .and. loader == 'SIMPLE', 'detect: read by the loader')
+      call check(same_states(ctx, rctx, sc - 1, epochs(1), epochs(n), 997), &
+                 'detected file: the states of SPKW09 from the same rows, bitwise')
+
+      ! unload: the callback, the kept data freed
+      call spice%unload(sim_a)
+      call spice%loader('SIMPLE', p)
+      select type (p)
+      type is (simple_loader)
+         call check(p%unloads == 1 .and. p%rows_of(sim_a) == -1, 'UNLOAD calls the loader''s unload')
+      end select
+      call spice%unload(sim_b)
+   end subroutine test_loader
+
+   !> How FURNSH chooses: by name, PEPPER's own loading, conflicts, SPICE files
+   !> never claimed, unknown loaders.
+   subroutine test_choice()
+      type(simple_loader) :: quiet
+      character(:), allocatable :: loader, format
+      character(256) :: file, srcfil
+      character(32) :: filtyp
+      integer(ip) :: handle
+      logical :: found
+
+      quiet%sniff = .false.
+      call spice%add_loader('NOSNIFF', quiet)
+      call write_simple(sim_c, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                                 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call spice%furnsh(sim_c, loader='nosniff')
+      call check_ok(ctx, 'FURNSH with loader=')
+      call ctx%kernel_format(sim_c, loader, format, found)
+      call check(found .and. loader == 'NOSNIFF', 'loader= chooses the loader')
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 101), 'loader=: the states')
+      call spice%unload(sim_c)
+
+      ! PEPPER: PEPPER's own loading, registered loaders not asked (sim_a's
+      ! extension, .sim, is SIMPLE's: here it is read as a text kernel)
+      call spice%furnsh(sim_a, loader='pepper')
+      call check_ok(ctx, 'FURNSH with loader=PEPPER')
+      call ctx%kdata(1_ip, 'ALL', file, filtyp, srcfil, handle, found)
+      call check(found .and. filtyp == 'TEXT', 'loader=PEPPER: PEPPER''s own loading, the loaders not asked')
+      call spice%unload(sim_a)
+      call spice%add_loader('Pepper', quiet)
+      call check_error(ctx, 'SPICE(RESERVEDLOADERNAME)', 'PEPPER cannot be registered')
+
+      call spice%furnsh(sim_a, loader='nope')
+      call check_error(ctx, 'SPICE(UNKNOWNLOADER)', 'an unknown loader')
+      call spice%furnsh(sim_a, loader='TEXT')
+      call check_error(ctx, 'SPICE(UNKNOWNLOADER)', 'TEXT is not a name of PEPPER''s (no loader has it)')
+
+      ! the former reserved names are ordinary names
+      call spice%add_loader('text', quiet)
+      call check_ok(ctx, 'a loader named TEXT')
+      call spice%furnsh(sim_a, loader='TEXT')
+      call ctx%kernel_format(sim_a, loader, format, found)
+      call check(found .and. loader == 'TEXT', 'loader=: the loader named TEXT')
+      call spice%unload(sim_a)
+      call spice%remove_loader('TEXT')
+
+      ! a named loader overrides every other choice: another loader's
+      ! extension, and the check that the file exists (the loader reports it)
+      call spice%furnsh(sim_a, loader='NOSNIFF')
+      call ctx%kernel_format(sim_a, loader, format, found)
+      call check(found .and. loader == 'NOSNIFF', 'loader=: over another loader''s extension')
+      call spice%unload(sim_a)
+      call spice%furnsh('test_loaders_missing.sim', loader='NOSNIFF')
+      call check_error(ctx, 'SPICE(FILEOPENFAILED)', 'loader=: the loader, not FURNSH, reports a missing file')
+      call spice%furnsh('test_loaders_missing.sim')
+      call check_error(ctx, 'SPICE(NOSUCHFILE)', 'without loader=: FURNSH reports a missing file')
+
+      call spice%add_loader('SIMPLE', quiet)
+      call check_error(ctx, 'SPICE(LOADERCONFLICT)', 'a name registered twice')
+      call spice%add_loader('OTHER', quiet, extensions=['.SIM'])
+      call check_error(ctx, 'SPICE(LOADERCONFLICT)', 'an extension registered twice')
+      call spice%add_loader('OTHER', quiet, extensions=['.SIM'], replace=.true.)
+      call check_ok(ctx, 'an extension taken over with replace')
+      call spice%furnsh(sim_a)
+      call ctx%kernel_format(sim_a, loader, format, found)
+      call check(found .and. loader == 'OTHER', 'the extension''s new loader')
+      call spice%unload(sim_a)
+      call spice%remove_loader('OTHER')
+      call spice%add_loader('SIMPLE', quiet, extensions=['.sim'], replace=.true.)
+      call check_ok(ctx, 'a loader replaced')
+
+      ! SPICE's binary kernels are never claimed by extension or detect
+      call spice%add_loader('BSP', quiet, extensions=['.bsp'])
+      call spice%furnsh(prog_bsp)
+      call ctx%kernel_format(prog_bsp, loader, format, found)
+      call check(found .and. loader == ' ', 'an SPK file is loaded as an SPK, whatever loaders claim .bsp')
+      call spice%unload(prog_bsp)
+      call spice%furnsh(prog_bsp, loader='simple')
+      call check_error(ctx, 'SPICE(BADSIMPLEFILE)', 'a loader named for an SPK file reads it (and fails)')
+      call ctx%ktotal('ALL', handle)
+      call check(handle == 0, 'nothing loaded after the loader failed')
+      call spice%remove_loader('BSP')
+      call spice%remove_loader('NOSNIFF')
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_choice
+
+   !> The round trip: test format -> kernel -> .bsp -> test format -> kernel.
+   subroutine test_round_trip()
+      type(simple_loader) :: ld
+      real(wp), allocatable :: s2(:, :)
+      integer(ip) :: h1, h2
+      integer :: nseg1, nseg2
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      call ref%add_loader('SIMPLE', ld, extensions=['.sim'])
+      ! two blocks: a discontinuity at row 80 (its velocity changed), the
+      ! second block with bounds inside its rows, Lagrange then Hermite
+      s2 = states
+      s2(4:6, 80) = 1.01_wp*states(4:6, 80)
+      call write_round_trip_file(s2)
+      call spice%furnsh(rt_sim)
+      call check_ok(ctx, 'round trip: the file loads')
+
+      call spice%write_kernel(rt_sim, rt_bsp)
+      call check_ok(ctx, 'round trip: written to an SPK')
+      call other%furnsh(rt_bsp)
+      call check_ok(octx, 'round trip: the SPK loads')
+      call check(same_states(ctx, octx, sc, epochs(1), epochs(n - 5), 2003), &
+                 'round trip: the SPK gives the kernel''s states, bitwise')
+
+      ! back: the SPK's segments to the test format
+      h1 = handle_of(ctx, rt_sim)
+      h2 = handle_of(octx, rt_bsp)
+      call spk_to_simple(octx, h2, rt_back, nseg2)
+      call check_ok(octx, 'round trip: the SPK read back')
+      call check(nseg2 == 2, 'round trip: two segments')
+      ! the kernel in memory read the same way (its summary and name records)
+      call spk_to_simple(ctx, h1, 'test_loaders_rt_mem.sim', nseg1)
+      call check_ok(ctx, 'round trip: the kernel in memory read as a DAF')
+      call check(nseg1 == 2 .and. same_file('test_loaders_rt_mem.sim', rt_back), &
+                 'round trip: the kernel in memory and the SPK have the same segments')
+      call check(same_rows(rt_sim, rt_back), 'round trip: the rows read back are the rows of the file')
+
+      call ref%furnsh(rt_back)
+      call check_ok(rctx, 'round trip: the file read back loads')
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n - 5), 2003), &
+                 'round trip: the file read back gives the same states, bitwise')
+      call ref%unload(rt_back)
+      call other%unload(rt_bsp)
+      call spice%unload(rt_sim)
+      call spice%remove_loader('SIMPLE')
+      call ref%remove_loader('SIMPLE')
+   end subroutine test_round_trip
+
+   !> The round trip's file: rows 1 to 80 (Lagrange 8), and rows 80 to
+   !> N-5 (Hermite 7) with bounds inside, the velocity at row 80 changed.
+   subroutine write_round_trip_file(s2)
+      real(wp), intent(in) :: s2(:, :)  !! the states of the second block
+      integer :: lun, k
+      open (newunit=lun, file=rt_sim, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'SIMPLE_EPHEMERIS'
+      write (lun, '(a)') 'OBJECT = -10001'
+      write (lun, '(a)') 'CENTER = 399'
+      write (lun, '(a)') 'FRAME = J2000'
+      write (lun, '(a)') 'INTERPOLATION = LAGRANGE 8'
+      write (lun, '(a)') 'BEGIN_DATA'
+      do k = 1, 80
+         write (lun, '(7es25.16e3)') epochs(k), states(:, k)
+      end do
+      write (lun, '(a)') 'END_DATA'
+      write (lun, '(a)') 'INTERPOLATION = HERMITE 7'
+      write (lun, '(a, 2es25.16e3)') 'BOUNDS = ', epochs(80), epochs(n - 5)
+      write (lun, '(a)') 'BEGIN_DATA'
+      do k = 80, n
+         write (lun, '(7es25.16e3)') epochs(k), s2(:, k)
+      end do
+      write (lun, '(a)') 'END_DATA'
+      close (lun)
+   end subroutine write_round_trip_file
+
+   !> The handle of a loaded kernel.
+   integer(ip) function handle_of(c, name) result(handle)
+      type(pepper_context), intent(inout) :: c  !! the context
+      character(*), intent(in) :: name  !! the kernel
+      character(256) :: file, srcfil
+      character(32) :: filtyp
+      integer(ip) :: i, count
+      logical :: found
+      handle = 0
+      call c%ktotal('SPK', count)
+      do i = 1, count
+         call c%kdata(i, 'SPK', file, filtyp, srcfil, handle, found)
+         if (file == name) return
+      end do
+      handle = 0
+   end function handle_of
+
+   !> Write the segments of an SPK (types 9 and 13) in the test format:
+   !> a block per segment, its interpolation and bounds from the segment,
+   !> its rows from the segment's data (the DAF read through its handle).
+   subroutine spk_to_simple(c, handle, file, nseg)
+      type(pepper_context), intent(inout) :: c  !! the context
+      integer(ip), intent(in) :: handle  !! the SPK's handle
+      character(*), intent(in) :: file  !! the file to write
+      integer, intent(out) :: nseg  !! the number of segments
+      real(wp) :: sum(5), dc(2), ctl(2)
+      real(wp), allocatable :: data(:)
+      integer(ip) :: ic(6), m, deg
+      character(40) :: name
+      integer :: lun, k
+      logical :: fnd
+      nseg = 0
+      open (newunit=lun, file=file, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'SIMPLE_EPHEMERIS'
+      call c%dafbfs(handle)
+      call c%daffna(fnd)
+      do while (fnd .and. .not. c%failed())
+         call c%dafgs(sum)
+         call c%dafus(sum, 2_ip, 6_ip, dc, ic)
+         call c%dafgn(name)
+         call c%dafgda(handle, ic(6) - 1, ic(6), ctl)
+         m = nint(ctl(2), ip)
+         if (ic(4) == 9) then
+            deg = nint(ctl(1), ip)
+            write (lun, '(a, i0)') 'INTERPOLATION = LAGRANGE ', deg
+         else
+            deg = 2*(nint(ctl(1), ip) + 1) - 1
+            write (lun, '(a, i0)') 'INTERPOLATION = HERMITE ', deg
+         end if
+         write (lun, '(a, i0)') 'OBJECT = ', ic(1)
+         write (lun, '(a, i0)') 'CENTER = ', ic(2)
+         write (lun, '(a)') 'FRAME = J2000'
+         write (lun, '(a, 2es25.16e3)') 'BOUNDS = ', dc
+         allocate (data(7*m))
+         call c%dafgda(handle, ic(5), ic(5) + 7*m - 1, data)
+         write (lun, '(a)') 'BEGIN_DATA'
+         do k = 1, m
+            write (lun, '(7es25.16e3)') data(6*m + k), data(6*(k - 1) + 1:6*k)
+         end do
+         write (lun, '(a)') 'END_DATA'
+         deallocate (data)
+         nseg = nseg + 1
+         if (trim(name) /= 'SIMPLE') call check(.false., 'the segment''s name')
+         call c%daffna(fnd)
+      end do
+      close (lun)
+   end subroutine spk_to_simple
+
+   !> True if two files have the same lines.
+   logical function same_file(a, b) result(same)
+      character(*), intent(in) :: a  !! a file
+      character(*), intent(in) :: b  !! another file
+      character(512) :: la, lb
+      integer :: ua, ub, ia, ib
+      open (newunit=ua, file=a, status='OLD', action='READ')
+      open (newunit=ub, file=b, status='OLD', action='READ')
+      same = .true.
+      do
+         read (ua, '(a)', iostat=ia) la
+         read (ub, '(a)', iostat=ib) lb
+         if (ia /= 0 .or. ib /= 0) then
+            same = same .and. ia == ib
+            exit
+         end if
+         same = same .and. la == lb
+      end do
+      close (ua)
+      close (ub)
+   end function same_file
+
+   !> True if two files of the test format have the same rows (the lines
+   !> between BEGIN_DATA and END_DATA, compared as numbers).
+   logical function same_rows(a, b) result(same)
+      character(*), intent(in) :: a  !! a file
+      character(*), intent(in) :: b  !! another file
+      real(wp), allocatable :: ra(:, :), rb(:, :)
+      call read_rows(a, ra)
+      call read_rows(b, rb)
+      same = size(ra, 2) == size(rb, 2)
+      if (same) same = all(ra == rb)
+   end function same_rows
+
+   !> The rows of a file of the test format.
+   subroutine read_rows(file, rows)
+      character(*), intent(in) :: file  !! the file
+      real(wp), allocatable, intent(out) :: rows(:, :)  !! the rows (7, n)
+      character(512) :: line
+      real(wp) :: r(7)
+      real(wp), allocatable :: tmp(:, :)
+      integer :: lun, ios, m
+      logical :: in_data
+      allocate (rows(7, 0))
+      in_data = .false.
+      m = 0
+      open (newunit=lun, file=file, status='OLD', action='READ')
+      do
+         read (lun, '(a)', iostat=ios) line
+         if (ios /= 0) exit
+         line = adjustl(line)
+         if (line == 'BEGIN_DATA') then
+            in_data = .true.
+         else if (line == 'END_DATA') then
+            in_data = .false.
+         else if (in_data) then
+            read (line, *) r
+            m = m + 1
+            allocate (tmp(7, m))
+            tmp(:, 1:m - 1) = rows
+            tmp(:, m) = r
+            call move_alloc(tmp, rows)
+         end if
+      end do
+      close (lun)
+   end subroutine read_rows
+
+   !> Discontinuities (the later block wins at the shared epoch), gaps
+   !> (two coverage intervals), bounds, adapt.
+   subroutine test_discontinuities()
+      type(simple_loader) :: ld
+      real(wp), allocatable :: cover(:, :)
+      real(wp) :: s(6), e3(101), s3(6, 101)
+      logical :: ok
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      ! rows 1 to 50, then rows 50 to 100 with the velocity at row 50 halved
+      e3 = [epochs(1:50), epochs(50:100)]
+      s3(:, 1:50) = states(:, 1:50)
+      s3(:, 51:101) = states(:, 50:100)
+      s3(4:6, 51) = 0.5_wp*states(4:6, 50)
+      call write_simple('test_loaders_disc.sim', [character(40) :: 'OBJECT = -10001', 'CENTER = 399', &
+                        'FRAME = J2000', 'INTERPOLATION = HERMITE 7'], e3, s3, [1, 51], [50, 101])
+      call spice%furnsh('test_loaders_disc.sim')
+      call check_ok(ctx, 'a discontinuity: loads')
+      call state_of(ctx, sc, 399_ip, epochs(50), s, ok)
+      call check(ok .and. maxval(abs(s(4:6) - s3(4:6, 51))) < 1.0e-12_wp, &
+                 'a discontinuity: the later block''s state at the shared epoch')
+      call state_of(ctx, sc, 399_ip, epochs(50) - 1.0e-3_wp, s, ok)
+      call check(ok .and. abs(s(4) - states(4, 50)) < 1.0e-6_wp, 'a discontinuity: the earlier block just before')
+      call ctx%spk_coverage('test_loaders_disc.sim', sc, cover)
+      call check(size(cover, 2) == 1, 'a discontinuity: one coverage interval')
+      call spice%unload('test_loaders_disc.sim')
+
+      call write_simple_blocks('test_loaders_gap.sim', 'INTERPOLATION = HERMITE 7', states, [1, 60], [40, 100])
+      call spice%furnsh('test_loaders_gap.sim')
+      call ctx%spk_coverage('test_loaders_gap.sim', sc, cover)
+      call check(size(cover, 2) == 2, 'a gap: two coverage intervals')
+      call state_of(ctx, sc, 399_ip, epochs(50), s, ok)
+      call check(.not. ok, 'a gap: no state in it')
+      call spice%unload('test_loaders_gap.sim')
+
+      ! bounds inside the rows
+      call write_simple('test_loaders_bounds.sim', [character(60) :: 'OBJECT = -10001', 'CENTER = 399', &
+                        'FRAME = J2000', 'INTERPOLATION = HERMITE 7', 'BOUNDS = 600.0 3000.0'], &
+                        epochs, states, [1], [n])
+      call spice%furnsh('test_loaders_bounds.sim')
+      call ctx%spk_coverage('test_loaders_bounds.sim', sc, cover)
+      call check(size(cover, 2) == 1, 'bounds: one interval')
+      if (size(cover, 2) == 1) call check(cover(1, 1) == 600.0_wp .and. cover(2, 1) == 3000.0_wp, 'bounds: the coverage')
+      call spice%unload('test_loaders_bounds.sim')
+
+      ! adapt: a block of two rows, a block of one
+      call write_simple_blocks('test_loaders_short.sim', 'INTERPOLATION = LAGRANGE 8', states, [1, 20, 21], [20, 21, 21])
+      call spice%furnsh('test_loaders_short.sim')
+      call check_error(ctx, 'SPICE(TOOFEWSTATES)', 'a block too short for its degree')
+      call write_simple_blocks('test_loaders_short.sim', 'ADAPT = YES', states, [1, 20, 21], [20, 21, 21], &
+                               'INTERPOLATION = LAGRANGE 8')
+      call spice%furnsh('test_loaders_short.sim')
+      call check_ok(ctx, 'adapt: short blocks')
+      call state_of(ctx, sc, 399_ip, 0.5_wp*(epochs(20) + epochs(21)), s, ok)
+      call check(ok, 'adapt: the two-row block covers its interval')
+      call spice%unload('test_loaders_short.sim')
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_discontinuities
+
+   !> A file of the test format with several blocks of the trajectory.
+   subroutine write_simple_blocks(file, line, s, first, last, line2)
+      character(*), intent(in) :: file  !! the file
+      character(*), intent(in) :: line  !! a header line
+      real(wp), intent(in) :: s(:, :)  !! the states
+      integer, intent(in) :: first(:)  !! the blocks' first rows
+      integer, intent(in) :: last(:)  !! their last rows
+      character(*), intent(in), optional :: line2  !! another header line
+      character(60) :: h2
+      h2 = '# -'
+      if (present(line2)) h2 = line2
+      call write_simple(file, [character(60) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', line, h2], &
+                        epochs, s, first, last)
+   end subroutine write_simple_blocks
+
+   !> Broken files: the error names the line, and nothing is loaded.
+   subroutine test_file_errors()
+      type(simple_loader) :: ld
+      character(1840) :: msg
+      integer(ip) :: count
+      integer :: lun
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      open (newunit=lun, file=bad_sim, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'SIMPLE_EPHEMERIS'
+      write (lun, '(a)') 'OBJECT = -10001'
+      write (lun, '(a)') 'CENTER = 399'
+      write (lun, '(a)') 'FRAME = J2000'
+      write (lun, '(a)') 'INTERPOLATION = HERMITE 3'
+      write (lun, '(a)') 'BEGIN_DATA'
+      write (lun, '(a)') '0 7000 0 0 0 7 0'
+      write (lun, '(a)') '60 6999 420 0 -0.01 7 0'
+      write (lun, '(a)') '120 6998 bad 0 0 7 0'
+      write (lun, '(a)') 'END_DATA'
+      close (lun)
+      call spice%furnsh(bad_sim)
+      call ctx%getmsg('LONG', msg)
+      call check(index(msg, 'line 9') > 0, 'the error names the line')
+      call check_error(ctx, 'SPICE(BADSIMPLEFILE)', 'a bad number')
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'nothing loaded after an error')
+
+      call write_simple(bad_sim, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                                   'INTERPOLATION = SPLINE 5'], epochs, states, [1], [n])
+      call spice%furnsh(bad_sim)
+      call check_error(ctx, 'SPICE(UNSUPPORTEDINTERP)', 'an interpolation PEPPER does not support')
+      call write_simple(bad_sim, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                                   'INTERPOLATION = HERMITE 6'], epochs, states, [1], [n])
+      call spice%furnsh(bad_sim)
+      call check_error(ctx, 'SPICE(INVALIDDEGREE)', 'an even Hermite degree in a file')
+      call write_simple(bad_sim, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = NOSUCHFRAME', &
+                                                   'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call spice%furnsh(bad_sim)
+      call check_error(ctx, 'SPICE(INVALIDREFFRAME)', 'an unknown frame in a file')
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'nothing loaded after the errors')
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_file_errors
+
+   !> A meta-kernel: a file by extension, another named in KERNEL_LOADERS;
+   !> UNLOAD of the meta-kernel calls the unload callbacks; KCLEAR too.
+   subroutine test_meta_kernel()
+      use pepper_containers, only: string
+      type(simple_loader) :: ld, quiet
+      class(kernel_loader), pointer :: p
+      character(:), allocatable :: loader, format
+      type(string), allocatable :: values(:)
+      integer(ip) :: count
+      integer :: lun
+      logical :: found
+
+      quiet%sniff = .false.
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      call spice%add_loader('NOSNIFF', quiet)
+      call write_simple(m1, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                              'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call write_simple(m2, [character(40) :: 'OBJECT = -10002', 'CENTER = 399', 'FRAME = J2000', &
+                                              'INTERPOLATION = LAGRANGE 8'], epochs, states, [1], [n])
+      open (newunit=lun, file=meta, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'KPL/MK'
+      write (lun, '(a)') '\begindata'
+      write (lun, '(a)') "PATH_SYMBOLS = ( 'D' )"
+      write (lun, '(a)') "PATH_VALUES = ( '.' )"
+      write (lun, '(a)') "KERNELS_TO_LOAD = ( '$D/"//m1//"', '"//m2//"' )"
+      write (lun, '(a)') "KERNEL_LOADERS = ( '"//m2//"', 'NOSNIFF' )"
+      write (lun, '(a)') '\begintext'
+      close (lun)
+      call spice%furnsh(meta)
+      call check_ok(ctx, 'a meta-kernel with KERNEL_LOADERS')
+      call ctx%ktotal('SPK', count)
+      call check(count == 2, 'the meta-kernel loaded two kernels')
+      call ctx%kernel_format(m2, loader, format, found)
+      call check(found .and. loader == 'NOSNIFF', 'KERNEL_LOADERS chose the loader')
+      call ctx%kernel_format('./'//m1, loader, format, found)
+      call check(found .and. loader == 'SIMPLE', 'a path symbol, then the extension')
+      call check(same_states(ctx, rctx, sc - 1, epochs(1), epochs(n), 301), 'the meta-kernel''s file: the states')
+      call ctx%pool_strings('KERNEL_LOADERS', values, found)
+      call check(.not. found, 'KERNEL_LOADERS is removed from the pool after the load')
+
+      call spice%unload(meta)
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'UNLOAD of the meta-kernel unloads its files')
+      call spice%loader('SIMPLE', p)
+      select type (p)
+      type is (simple_loader)
+         call check(p%unloads == 1, 'the unload callback of the meta-kernel''s file')
+      end select
+      call spice%loader('NOSNIFF', p)
+      select type (p)
+      type is (simple_loader)
+         call check(p%unloads == 1, 'the unload callback of the KERNEL_LOADERS file')
+      end select
+
+      ! KCLEAR calls the callbacks too
+      call spice%furnsh(meta)
+      call spice%kclear()
+      call spice%loader('SIMPLE', p)
+      select type (p)
+      type is (simple_loader)
+         call check(p%unloads == 2 .and. p%loads == 2, 'KCLEAR calls the unload callbacks')
+      end select
+
+      ! KERNEL_LOADERS not in pairs
+      open (newunit=lun, file=meta_bad, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'KPL/MK'
+      write (lun, '(a)') '\begindata'
+      write (lun, '(a)') "KERNELS_TO_LOAD = ( '"//m2//"' )"
+      write (lun, '(a)') "KERNEL_LOADERS = ( '"//m2//"' )"
+      write (lun, '(a)') '\begintext'
+      close (lun)
+      call spice%furnsh(meta_bad)
+      call check_error(ctx, 'SPICE(BADKERNELLOADERS)', 'KERNEL_LOADERS with an odd number of values')
+      call spice%kclear()
+      call spice%remove_loader('SIMPLE')
+      call spice%remove_loader('NOSNIFF')
+   end subroutine test_meta_kernel
+
+   !> Body names defined by kernels (define_body): from a loader's file and
+   !> from a programmatic kernel.
+   subroutine test_names()
+      type(simple_loader) :: ld
+      type(kernel_builder) :: kb
+      type(pepper_context) :: pre
+      character(64) :: name
+      real(wp) :: s(6), lt
+      integer(ip) :: code
+      logical :: found
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      pre = spice%new_context()  ! made, and its name tables built, before the loads
+      call pre%bodn2c('EARTH', code, found)
+      call spice%boddef('SC_ONE', -5_ip)  ! the program's own definition of the name
+      call write_simple('test_loaders_n1.sim', [character(40) :: 'OBJECT = SC_ONE', 'OBJECT_CODE = -10001', &
+                        'CENTER = 399', 'FRAME = J2000', 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call write_simple('test_loaders_n2.sim', [character(40) :: 'OBJECT = SC_ONE', 'OBJECT_CODE = -10002', &
+                        'CENTER = 399', 'FRAME = J2000', 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call spice%furnsh('test_loaders_n1.sim')
+      call check_ok(ctx, 'a file that defines a body name')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -10001, 'the kernel''s name, in a context made before the load')
+      call pre%bodc2n(-10001_ip, name, found)
+      call check(found .and. name == 'SC_ONE', 'the kernel''s code to name')
+      call pre%spkezr('SC_ONE', 1000.0_wp, 'J2000', 'NONE', 'EARTH', s, lt)
+      call check_ok(pre, 'SPKEZR by the kernel''s name')
+      call check(maxval(abs(s - circle_state(radius, 0.3_wp, 1000.0_wp))) < 1.0e-6_wp, 'the state by the name')
+
+      call spice%furnsh('test_loaders_n2.sim')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -10002, 'the latest kernel''s definition wins')
+      call spice%unload('test_loaders_n2.sim')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -10001, 'UNLOAD: the earlier kernel''s definition again')
+      call pre%bodc2n(-10002_ip, name, found)
+      call check(.not. found, 'UNLOAD: the code''s name is gone')
+
+      ! the kernel pool's names take precedence
+      call spice%pcpool('NAIF_BODY_NAME', 1_ip, ['SC_ONE'])
+      call spice%pipool('NAIF_BODY_CODE', 1_ip, [-77_ip])
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -77, 'the kernel pool''s name over the kernel''s')
+      call spice%dvpool('NAIF_BODY_NAME')
+      call spice%dvpool('NAIF_BODY_CODE')
+
+      call spice%unload('test_loaders_n1.sim')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -5, 'UNLOAD: the program''s BODDEF again')
+      call pre%bodc2n(-10001_ip, name, found)
+      call check(.not. found, 'UNLOAD: no name for the kernel''s code')
+
+      ! a programmatic kernel's names; KCLEAR removes them, not BODDEF's
+      call kb%define_body(ctx, 'PROG_SC', -10003_ip)
+      call kb%define_body(ctx, ' ', -10004_ip)
+      call check_error(ctx, 'SPICE(BLANKNAMEASSIGNED)', 'a blank name')
+      call kb%spk_hermite(ctx, -10003_ip, 399_ip, 'J2000', epochs, states, 7_ip)
+      call spice%load_kernel('named', kb)
+      call ctx%bodn2c('PROG_SC', code, found)
+      call check(found .and. code == -10003, 'a programmatic kernel''s name')
+      call spice%furnsh('test_loaders_n1.sim')
+      call spice%kclear()
+      call pre%bodn2c('PROG_SC', code, found)
+      call check(.not. found, 'KCLEAR removes the kernels'' names')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -5, 'KCLEAR keeps the program''s BODDEF')
+      call pre%destroy()
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_names
+
+   !> Files that hold a model: programmatic ephemerides owned by kernels.
+   subroutine test_models()
+      type(simple_loader) :: ld
+      type(kernel_builder) :: kb
+      real(wp), allocatable :: cover(:, :)
+      integer(ip), allocatable :: ids(:)
+      character(:), allocatable :: loader, format
+      real(wp) :: s(6)
+      integer(ip) :: count
+      logical :: ok, found
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      call write_model('test_loaders_ma.sim', 'OBJECT = -10001', 'CIRCULAR = 7000.0 1.0e-6 0.3 0.0 8940.0')
+      call write_model('test_loaders_mb.sim', 'OBJECT = -10001', 'CIRCULAR = 8000.0 1.0e-6 0.3 0.0 8940.0')
+      call spice%furnsh('test_loaders_ma.sim')
+      call check_ok(ctx, 'a file that holds a model')
+      call state_of(ctx, sc, 399_ip, 1234.5_wp, s, ok)
+      call check(ok .and. maxval(abs(s - circle_state(radius, 0.3_wp, 1234.5_wp))) < 1.0e-9_wp, &
+                 'the model''s state, computed at the epoch')
+      call ctx%kernel_format('test_loaders_ma.sim', loader, format, found)
+      call check(found .and. loader == 'SIMPLE', 'the model''s kernel: kernel_format')
+      call ctx%spk_coverage('test_loaders_ma.sim', sc, cover)
+      call check(size(cover, 2) == 1, 'the model''s coverage by the kernel''s name')
+      if (size(cover, 2) == 1) call check(cover(1, 1) == 0.0_wp .and. cover(2, 1) == 8940.0_wp, &
+                                           'the model''s coverage')
+      call ctx%spk_objects('test_loaders_ma.sim', ids)
+      call check(size(ids) == 1, 'the model''s body by the kernel''s name')
+      if (size(ids) == 1) call check(ids(1) == sc, 'the model''s body')
+      call state_of(ctx, sc, 399_ip, 9000.0_wp, s, ok)
+      call check(.not. ok, 'no state outside the model''s coverage')
+
+      ! two files of the same body: the last loaded first, the earlier back after its unload
+      call spice%furnsh('test_loaders_mb.sim')
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 8000.0_wp*cos(0.3_wp)) < 1.0e-9_wp, 'the later file''s model')
+      ! the program's add_ephemeris of the body, later still
+      call spice%add_ephemeris(sc, 399_ip, 'J2000', 0.0_wp, 8940.0_wp, circle_orbit(r=9000.0_wp, w=1.0e-6_wp))
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 9000.0_wp) < 1.0e-9_wp, 'the program''s ephemeris, added last')
+      call spice%remove_ephemeris(sc)
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 8000.0_wp*cos(0.3_wp)) < 1.0e-9_wp, &
+                 'remove_ephemeris removes the program''s only, not a kernel''s')
+      call spice%unload('test_loaders_mb.sim')
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 7000.0_wp*cos(0.3_wp)) < 1.0e-9_wp, 'UNLOAD: the earlier file''s model again')
+
+      call spice%write_kernel('test_loaders_ma.sim', 'test_loaders_model.bsp')
+      call check_error(ctx, 'SPICE(NOTWRITABLE)', 'write_kernel of a kernel with a model')
+      call spice%unload('test_loaders_ma.sim')
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(.not. ok, 'UNLOAD removes the model')
+
+      ! rows and a model in one file
+      ! (a model for -10002, then rows for -10001: a block uses the OBJECT set last)
+      call write_simple('test_loaders_mix.sim', [character(60) :: 'OBJECT = -10002', 'CENTER = 399', &
+                        'FRAME = J2000', 'CIRCULAR = 7000.0 1.0e-6 0.3 0.0 8940.0', &
+                        'INTERPOLATION = HERMITE 7', 'OBJECT = -10001'], epochs, states, [1], [n])
+      call spice%furnsh('test_loaders_mix.sim')
+      call state_of(ctx, sc - 1, 399_ip, 100.0_wp, s, ok)
+      call check(ok .and. maxval(abs(s - circle_state(radius, 0.3_wp, 100.0_wp))) < 1.0e-9_wp, &
+                 'rows and a model in one file: the model''s body')
+      call state_of(ctx, sc, 399_ip, 100.0_wp, s, ok)
+      call check(ok, 'rows and a model in one file: the rows'' body')
+      call ctx%spk_objects('test_loaders_mix.sim', ids)
+      call check(size(ids) == 2, 'rows and a model in one file: both bodies')
+      call spice%unload('test_loaders_mix.sim')
+
+      ! an unknown frame: nothing loaded
+      call write_model('test_loaders_mbad.sim', 'OBJECT = -10001', 'CIRCULAR = 7000.0 1.0e-6 0.3 0.0 8940.0', &
+                       'NOSUCHFRAME')
+      call spice%furnsh('test_loaders_mbad.sim')
+      call check_error(ctx, 'SPICE(UNKNOWNFRAME)', 'a model in an unknown frame')
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'a model in an unknown frame loads nothing')
+
+      ! a programmatic kernel with a model; KCLEAR removes it
+      call kb%add_ephemeris(ctx, sc, 399_ip, 'J2000', 0.0_wp, 100.0_wp, circle_orbit(r=7000.0_wp, w=1.0e-6_wp))
+      call kb%add_ephemeris(ctx, sc, 399_ip, 'J2000', 10.0_wp, 0.0_wp, circle_orbit(r=7000.0_wp))
+      call check_error(ctx, 'SPICE(BADDESCRTIMES)', 'a model''s coverage ending before it starts')
+      call check(kb%nsegments() == 1, 'the builder counts the model as a segment')
+      call spice%load_kernel('model', kb)
+      call state_of(ctx, sc, 399_ip, 50.0_wp, s, ok)
+      call check(ok, 'a programmatic kernel''s model')
+      call spice%add_ephemeris(sc - 5, 399_ip, 'J2000', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp))
+      call spice%kclear()
+      call state_of(ctx, sc, 399_ip, 50.0_wp, s, ok)
+      call check(.not. ok, 'KCLEAR removes a kernel''s model')
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_models
+
+   !> A file of the test format with only a model.
+   subroutine write_model(file, object, model, frame)
+      character(*), intent(in) :: file  !! the file
+      character(*), intent(in) :: object  !! the OBJECT line
+      character(*), intent(in) :: model  !! the CIRCULAR line
+      character(*), intent(in), optional :: frame  !! the frame (default J2000)
+      integer :: lun
+      open (newunit=lun, file=file, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'SIMPLE_EPHEMERIS'
+      write (lun, '(a)') object
+      write (lun, '(a)') 'CENTER = 399'
+      if (present(frame)) then
+         write (lun, '(2a)') 'FRAME = ', frame
+      else
+         write (lun, '(a)') 'FRAME = J2000'
+      end if
+      write (lun, '(a)') model
+      close (lun)
+   end subroutine write_model
+
+   !> Frames defined by programmatic kernels: rotation tables and models.
+   subroutine test_frames()
+      real(wp), parameter :: w = 1.0e-3_wp  !! the spin rate of the test frames (rad/s)
+      type(kernel_builder) :: kb, kb2
+      type(spin_frame) :: model
+      real(wp) :: q(4, n), q2(4, n), m(3, 3, n), mt(3, 3, n), av(3, n), rot(3, 3), rot2(3, 3)
+      real(wp) :: xf(6, 6), exact(3, 3), t, err, derr, herr, nerr
+      integer(ip) :: code, count, k
+      logical :: ok
+
+      do k = 1, n
+         m(:, :, k) = spin_matrix(w, epochs(k))
+         mt(:, :, k) = transpose(m(:, :, k))
+         call ctx%m2q(m(:, :, k), q(:, k))
+         av(:, k) = [0.0_wp, 0.0_wp, w]
+      end do
+      q2 = q
+      q2(:, 2:n:2) = -q2(:, 2:n:2)   ! signs not continuous: made so by the builder
+
+      ! a table of quaternions (Lagrange), of matrices, and with angular velocities (Hermite)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_Q', 1400100_ip, 399_ip, 'J2000', epochs, q2, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_M', 1400101_ip, 399_ip, 'J2000', epochs, m, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_I', 1400102_ip, 399_ip, 'J2000', epochs, mt, 7_ip, inverse=.true.)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_H', 1400103_ip, 399_ip, 'J2000', epochs, q, 7_ip, av=av, &
+                              method='hermite')
+      call kb%frame_rotations(ctx, 'TEST_SPIN_A', 1400104_ip, 399_ip, 'J2000', epochs, q, 7_ip, av=av)
+      call kb%add_frame(ctx, 'TEST_SPIN_MODEL', 1400105_ip, 399_ip, spin_frame(rate=w))
+      call check_ok(ctx, 'tables of rotations and a model added')
+      call check(kb%nsegments() == 6, 'the builder counts the tables and the model')
+      call spice%load_kernel('frames', kb)
+      call check_ok(ctx, 'a kernel of frames')
+
+      ! PXFORM and SXFORM against the exact rotation, at the rows and between them
+      err = 0.0_wp
+      herr = 0.0_wp
+      derr = 0.0_wp
+      do k = 1, 300
+         t = epochs(1) + (epochs(n) - epochs(1))*real(k - 1, wp)/299.0_wp
+         exact = spin_matrix(w, t)
+         call ctx%pxform('J2000', 'TEST_SPIN_Q', t, rot)
+         err = max(err, maxval(abs(rot - exact)))
+         call ctx%sxform('J2000', 'TEST_SPIN_H', t, xf)
+         herr = max(herr, maxval(abs(xf(1:3, 1:3) - exact)))
+         derr = max(derr, maxval(abs(xf(4:6, 1:3) - w*reshape([-sin(w*t), -cos(w*t), 0.0_wp, cos(w*t), &
+                                                                  -sin(w*t), 0.0_wp, 0.0_wp, 0.0_wp, 0.0_wp], [3, 3]))))
+      end do
+      nerr = 0.0_wp
+      do k = 1, n
+         call ctx%pxform('J2000', 'TEST_SPIN_Q', epochs(k), rot)
+         nerr = max(nerr, maxval(abs(rot - m(:, :, k))))
+      end do
+      call check_ok(ctx, 'PXFORM and SXFORM of the frames')
+      if (err > 1.0e-8_wp .or. herr > 1.0e-12_wp .or. derr > 1.0e-12_wp .or. nerr > 1.0e-14_wp) &
+         print '(a, 4es10.2)', '   errors ', err, herr, derr, nerr
+      call check(nerr < 1.0e-14_wp, 'the rotation at the table''s epochs')
+      call check(err < 1.0e-8_wp, 'Lagrange interpolation (degree 7, 0.06 rad between rows): within 1e-8')
+      call check(herr < 1.0e-12_wp, 'Hermite interpolation (with the rates): within 1e-12')
+      call check(derr < 1.0e-12_wp, 'the angular velocity of Hermite interpolation (from the given rates)')
+      call ctx%sxform('J2000', 'TEST_SPIN_Q', 1000.0_wp, xf)
+      call check(maxval(abs(xf(4:6, 1:3) - w*reshape([-sin(w*1000.0_wp), -cos(w*1000.0_wp), 0.0_wp, &
+                 cos(w*1000.0_wp), -sin(w*1000.0_wp), 0.0_wp, 0.0_wp, 0.0_wp, 0.0_wp], [3, 3]))) < 1.0e-10_wp, &
+                 'the angular velocity of Lagrange interpolation (from the interpolation)')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 1234.5_wp, rot)
+      call ctx%pxform('J2000', 'TEST_SPIN_M', 1234.5_wp, rot2)
+      call check(all(rot == rot2), 'matrices and quaternions: the same rotations')
+      call ctx%pxform('J2000', 'TEST_SPIN_I', 1234.5_wp, rot2)
+      call check(all(rot == rot2), 'inverse: the same rotations')
+      call ctx%pxform('J2000', 'TEST_SPIN_MODEL', 1234.5_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1234.5_wp))) < 1.0e-15_wp, 'a model frame (add_frame)')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', epochs(n) + 1.0_wp, rot)
+      call check(ctx%failed(), 'no rotation outside the table''s coverage')
+      call ctx%reset()
+      call spice%write_kernel('frames', 'test_loaders_frames.bsp')
+      call check_error(ctx, 'SPICE(NOTWRITABLE)', 'write_kernel of a kernel of frames')
+
+      ! a second kernel of TEST_SPIN_Q, over part of the time, spinning faster
+      do k = 1, n
+         call ctx%m2q(spin_matrix(2.0_wp*w, epochs(k)), q(:, k))
+      end do
+      call kb2%frame_rotations(ctx, 'TEST_SPIN_Q', 1400100_ip, 399_ip, 'J2000', epochs, q, 7_ip, &
+                               tbeg=3000.0_wp, tend=6000.0_wp)
+      call spice%load_kernel('frames2', kb2)
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 4000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(2.0_wp*w, 4000.0_wp))) < 1.0e-12_wp, 'the later kernel where it has data')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 1000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1000.0_wp))) < 1.0e-12_wp, 'the earlier kernel outside it')
+      ! the program's add_frame of the frame, the latest
+      model%rate = 3.0_wp*w
+      call spice%add_frame('TEST_SPIN_Q', 1400100_ip, 399_ip, model)
+      call check_ok(ctx, 'the program''s add_frame of a kernel''s frame')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 1000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(3.0_wp*w, 1000.0_wp))) < 1.0e-15_wp, 'the program''s frame, added last')
+      call spice%remove_frame('TEST_SPIN_Q')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 4000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(2.0_wp*w, 4000.0_wp))) < 1.0e-12_wp, &
+                 'remove_frame removes the program''s only')
+      call spice%unload('frames2')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 4000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 4000.0_wp))) < 1.0e-12_wp, 'UNLOAD: the earlier kernel''s frame again')
+
+      ! the definitions survive a rebuild of the pool (a text kernel unloaded)
+      call write_text_kernel('test_loaders_vars.tpc')
+      call spice%furnsh('test_loaders_vars.tpc')
+      call spice%unload('test_loaders_vars.tpc')
+      call ctx%pxform('J2000', 'TEST_SPIN_MODEL', 1234.5_wp, rot)
+      call check_ok(ctx, 'the kernel''s frames after the pool is rebuilt')
+
+      call spice%unload('frames')
+      call ctx%namfrm('TEST_SPIN_Q', code)
+      call check(code == 0, 'UNLOAD: the frame is gone')
+      call ctx%namfrm('TEST_SPIN_MODEL', code)
+      call check(code == 0, 'UNLOAD: the model frame is gone')
+
+      ! errors
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 6_ip)
+      call check_error(ctx, 'SPICE(INVALIDDEGREE)', 'an even Lagrange degree')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 5_ip, av=av, method='HERMITE')
+      call check_error(ctx, 'SPICE(INVALIDDEGREE)', 'a Hermite degree with an odd window')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 7_ip, method='HERMITE')
+      call check_error(ctx, 'SPICE(UNSUPPORTEDINTERP)', 'Hermite without angular velocities')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 7_ip, method='SPLINE')
+      call check_error(ctx, 'SPICE(UNSUPPORTEDINTERP)', 'an unsupported interpolation')
+      q2 = q
+      q2(:, 5) = 0.0_wp
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q2, 7_ip)
+      call check_error(ctx, 'SPICE(ZEROQUATERNION)', 'a zero quaternion')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q(:, 1:3), 7_ip)
+      call check_error(ctx, 'SPICE(INVALIDSIZE)', 'quaternions of the wrong shape')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'NO_SUCH_BASE', epochs, q, 7_ip)
+      call spice%load_kernel('bad', kb)
+      call check_error(ctx, 'SPICE(UNKNOWNFRAME)', 'an unknown base frame, at the load')
+      call kb%clear()
+      call kb%frame_rotations(ctx, 'IAU_EARTH', 1400111_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_OK', 1400112_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('bad', kb)
+      call check_error(ctx, 'SPICE(FRAMEEXISTS)', 'a built-in frame''s name')
+      call ctx%namfrm('TEST_OK', code)
+      call ctx%ktotal('ALL', count)
+      call check(code == 0 .and. count == 0, 'a failed load of frames defines nothing')
+      call kb%clear()
+
+      ! KCLEAR removes a kernel's frames
+      call kb%frame_rotations(ctx, 'TEST_K', 1400113_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('k', kb)
+      call ctx%namfrm('TEST_K', code)
+      ok = code == 1400113
+      call spice%kclear()
+      call ctx%namfrm('TEST_K', code)
+      call check(ok .and. code == 0, 'KCLEAR removes a kernel''s frames')
+   end subroutine test_frames
+
+   !> Frames from a loader's file: a table of rotations and a model.
+   subroutine test_frame_files()
+      real(wp), parameter :: w = 1.0e-3_wp
+      type(simple_loader) :: ld
+      real(wp) :: q(4), rot(3, 3)
+      integer(ip) :: code
+      integer :: lun, k
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      open (newunit=lun, file='test_loaders_fr.sim', status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'SIMPLE_EPHEMERIS'
+      write (lun, '(a)') 'ROTATING_FRAME = FILE_SPIN 1400120 399 J2000'
+      write (lun, '(a)') 'ROTATION_INTERPOLATION = LAGRANGE 7'
+      write (lun, '(a)') 'BEGIN_ROTATIONS'
+      do k = 1, n
+         call ctx%m2q(spin_matrix(w, epochs(k)), q)
+         write (lun, '(5es25.16e3)') epochs(k), q
+      end do
+      write (lun, '(a)') 'END_ROTATIONS'
+      write (lun, '(a)') 'SPIN_FRAME = FILE_MODEL 1400121 399 J2000 1.0e-3'
+      close (lun)
+      call spice%furnsh('test_loaders_fr.sim')
+      call check_ok(ctx, 'a file of frames')
+      call ctx%pxform('J2000', 'FILE_SPIN', 1234.5_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1234.5_wp))) < 1.0e-12_wp, 'a file''s table of rotations')
+      call ctx%pxform('J2000', 'FILE_MODEL', 1234.5_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1234.5_wp))) < 1.0e-15_wp, 'a file''s model frame')
+      call spice%unload('test_loaders_fr.sim')
+      call ctx%namfrm('FILE_SPIN', code)
+      call check(code == 0, 'UNLOAD of the file: its frames are gone')
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_frame_files
+
+   !> Rotation tables: coverage by the kernel's name (CK_COVERAGE,
+   !> CK_OBJECTS), and written to SPICE files (an SPK, a CK, a text kernel
+   !> with the clocks, frame definitions and body names) that load into
+   !> another instance with the same states, orientations and names.
+   subroutine test_write_frames()
+      real(wp), parameter :: w = 1.0e-3_wp
+      type(kernel_builder) :: kb
+      real(wp), allocatable :: cover(:, :)
+      integer(ip), allocatable :: ids(:)
+      real(wp) :: q(4, n), av(3, n), en(n), rot(3, 3), rot2(3, 3), xf(6, 6), xf2(6, 6), s(6), s2(6), lt, t
+      integer(ip) :: code
+      integer :: k
+      logical :: same
+
+      do k = 1, n
+         call ctx%m2q(spin_matrix(w, epochs(k)), q(:, k))
+         av(:, k) = [0.0_wp, 0.0_wp, w]
+      end do
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, states, 7_ip)
+      call kb%define_body(ctx, 'SC_W', sc)
+      call kb%frame_rotations(ctx, 'TEST_W', 1400200_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_WH', 1400201_ip, 399_ip, 'J2000', epochs, q, 7_ip, av=av, &
+                              method='HERMITE', tbeg=600.0_wp, tend=6000.0_wp)
+      call spice%load_kernel('writable', kb)
+      call check_ok(ctx, 'a kernel of a segment, a name and rotation tables')
+
+      ! coverage by the kernel's name
+      call ctx%ck_coverage('writable', 1400201_ip, .false., 'SEGMENT', 0.0_wp, 'TDB', cover)
+      call check(size(cover, 2) == 1, 'CK_COVERAGE by the kernel''s name: one interval')
+      if (size(cover, 2) == 1) call check(cover(1, 1) == 600.0_wp .and. cover(2, 1) == 6000.0_wp, &
+                                           'CK_COVERAGE by the kernel''s name: the table''s bounds')
+      call ctx%ck_objects('writable', ids)
+      call check(size(ids) == 2, 'CK_OBJECTS by the kernel''s name: two frames')
+      if (size(ids) == 2) call check(ids(1) == 1400200 .and. ids(2) == 1400201, 'CK_OBJECTS: the frames'' codes')
+
+      ! written: an SPK, a CK, a text kernel
+      call spice%write_kernel('writable', 'test_loaders_w.bsp')
+      call check_error(ctx, 'SPICE(NOTWRITABLE)', 'rotation tables need ck_file and text_file')
+      call spice%write_kernel('writable', 'test_loaders_w.bsp', ck_file='test_loaders_w.bc', &
+                              text_file='test_loaders_w.tf')
+      call check_ok(ctx, 'write_kernel: SPK, CK and text kernel')
+      call spice%write_kernel('writable', ' ', ck_file='test_loaders_w.bc', text_file='test_loaders_w2.tf')
+      call check_error(ctx, 'SPICE(FILEEXISTS)', 'write_kernel does not write over the CK')
+      call other%furnsh('test_loaders_w.tf')
+      call other%furnsh('test_loaders_w.bsp')
+      call other%furnsh('test_loaders_w.bc')
+      call check_ok(octx, 'the written files load (SPICE''s CK path, with the written clocks)')
+      same = .true.
+      do k = 1, 301
+         t = 600.0_wp + 5400.0_wp*real(k - 1, wp)/300.0_wp
+         call ctx%pxform('J2000', 'TEST_W', t, rot)
+         call octx%pxform('J2000', 'TEST_W', t, rot2)
+         same = same .and. all(rot == rot2)
+         call ctx%sxform('J2000', 'TEST_WH', t, xf)
+         call octx%sxform('J2000', 'TEST_WH', t, xf2)
+         same = same .and. all(xf == xf2)
+      end do
+      call check_ok(octx, 'the written frames'' queries')
+      call check(same, 'the written CK: the same rotations and transformations, bitwise')
+      call octx%spkezr('SC_W', 1000.0_wp, 'J2000', 'NONE', 'EARTH', s2, lt)
+      call ctx%spkezr('SC_W', 1000.0_wp, 'J2000', 'NONE', 'EARTH', s, lt)
+      call check_ok(octx, 'the written body name')
+      call check(all(s == s2), 'the written SPK and name: the same state')
+      call octx%ck_coverage('test_loaders_w.bc', 1400201_ip, .false., 'SEGMENT', 0.0_wp, 'TDB', cover)
+      call check_ok(octx, 'CKCOV of the written CK')
+      if (size(cover, 2) == 1) then
+         call check(abs(cover(1, 1) - 600.0_wp) < 1.0e-9_wp .and. abs(cover(2, 1) - 6000.0_wp) < 1.0e-9_wp, &
+                    'CKCOV of the written CK, in TDB (through its clock)')
+      else
+         call check(.false., 'CKCOV of the written CK: one interval')
+      end if
+      call other%kclear()
+      call spice%unload('writable')
+      call ctx%namfrm('TEST_W', code)
+      call check(code == 0, 'UNLOAD of the kernel: its frames are gone')
+
+      ! epochs before J2000: the written CK's ticks are shifted
+      en = epochs - 1.0e5_wp
+      do k = 1, n
+         call ctx%m2q(spin_matrix(w, en(k)), q(:, k))
+      end do
+      call kb%frame_rotations(ctx, 'TEST_WN', 1400202_ip, 399_ip, 'J2000', en, q, 7_ip)
+      call spice%load_kernel('early', kb)
+      call spice%write_kernel('early', ' ', ck_file='test_loaders_wn.bc', text_file='test_loaders_wn.tf')
+      call check_ok(ctx, 'write_kernel of rotations before J2000')
+      call other%furnsh('test_loaders_wn.tf')
+      call other%furnsh('test_loaders_wn.bc')
+      same = .true.
+      do k = 1, 101
+         t = en(1) + (en(n) - en(1))*real(k - 1, wp)/100.0_wp
+         call ctx%pxform('J2000', 'TEST_WN', t, rot)
+         call octx%pxform('J2000', 'TEST_WN', t, rot2)
+         same = same .and. maxval(abs(rot - rot2)) < 1.0e-13_wp
+      end do
+      call check_ok(octx, 'the shifted CK''s queries')
+      call check(same, 'the shifted CK: the same rotations, to rounding')
+      call other%kclear()
+      call spice%unload('early')
+   end subroutine test_write_frames
+
+   !> A small text kernel (one variable).
+   subroutine write_text_kernel(file)
+      character(*), intent(in) :: file  !! the file
+      integer :: lun
+      open (newunit=lun, file=file, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'KPL/PCK'
+      write (lun, '(a)') '\begindata'
+      write (lun, '(a)') 'TEST_LOADERS_VAR = 1'
+      write (lun, '(a)') '\begintext'
+      close (lun)
+   end subroutine write_text_kernel
+
+   !> The review's fixes: a file is read from disk even when a kernel built
+   !> in memory has its name (loader='PEPPER', a loader removed,
+   !> write_kernel under the kernel's name); a failed load_kernel keeps the
+   !> kernel it would replace; a frame's definition after one of its
+   !> kernels goes; detect sees only the bytes of a short file; segment
+   !> identifiers of rotation tables and models are checked.
+   subroutine test_review_fixes()
+      use, intrinsic :: iso_fortran_env, only: int64
+      use pepper_test_loader, only: last_head_len
+      character(*), parameter :: same = 'test_loaders_same.bsp'
+      character(*), parameter :: tiny = 'test_loaders_tiny.txt'
+      type(simple_loader) :: ld
+      type(kernel_builder) :: kb
+      character(256) :: file, srcfil
+      character(32) :: filtyp
+      real(wp) :: s(6), q(4, n)
+      integer(ip) :: h1, h2, count, code, cent, frclss, clssid
+      integer(int64) :: nbytes
+      logical :: found, ok
+      integer :: k
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      call write_simple(sim_a, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                                 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+
+      ! 2: loader='PEPPER' on a file a loader read (still loaded): the file, a text kernel
+      call spice%furnsh(sim_a)
+      call spice%furnsh(sim_a, loader='PEPPER')
+      call check_ok(ctx, 'loader=PEPPER on a file a loader read, still loaded')
+      call ctx%kdata(2_ip, 'ALL', file, filtyp, srcfil, h2, found)
+      call check(found .and. filtyp == 'TEXT', 'loader=PEPPER: the file is read (TEXT), not the kernel in memory')
+      call spice%unload(sim_a)
+      call spice%unload(sim_a)
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'both entries unloaded')
+
+      ! 2: the loader removed, the file loaded again: read as a text kernel
+      call spice%furnsh(sim_a)
+      call spice%remove_loader('SIMPLE')
+      call spice%furnsh(sim_a)
+      call check_ok(ctx, 'a loader''s file loaded again after its loader was removed')
+      call ctx%kdata(2_ip, 'ALL', file, filtyp, srcfil, h2, found)
+      call check(found .and. filtyp == 'TEXT', 'no loader: the file is read (TEXT), not the kernel in memory')
+      call ctx%kdata(1_ip, 'ALL', file, filtyp, srcfil, h1, found)
+      call check(found .and. filtyp == 'SPK', 'the loader''s kernel stays an SPK')
+      ! 3: unloading the text entry keeps the kernel's ephemeris
+      call spice%unload(sim_a)
+      call state_of(ctx, sc, 399_ip, epochs(5), s, ok)
+      call check(ok, 'the SPK of the loader still answers after the later entry goes')
+      call spice%unload(sim_a)
+      call state_of(ctx, sc, 399_ip, epochs(5), s, ok)
+      call check(.not. ok, 'and goes with its own entry')
+
+      ! 2: write_kernel under the kernel's own name, then FURNSH: the file
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, states, 7_ip)
+      call spice%load_kernel(same, kb)
+      call spice%write_kernel(same, same)
+      call check_ok(ctx, 'write_kernel to a file of the kernel''s name')
+      call spice%furnsh(same)
+      call check_ok(ctx, 'FURNSH of that file')
+      call ctx%kdata(1_ip, 'ALL', file, filtyp, srcfil, h1, found)
+      call ctx%kdata(2_ip, 'ALL', file, filtyp, srcfil, h2, found)
+      call check(found .and. filtyp == 'SPK' .and. h2 /= h1, 'the file is a DAF of its own (another handle)')
+      call spice%unload(same)
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 101), 'the kernel in memory after the file goes')
+      call spice%unload(same)
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'the kernel and the file unloaded')
+
+      ! 4: a failed load_kernel keeps the kernel of the name
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, states, 7_ip)
+      call kb%define_body(ctx, 'KEPT_SC', sc)
+      call spice%load_kernel('kept4', kb)
+      call kb%add_ephemeris(ctx, sc - 7, 399_ip, 'NO_SUCH_FRAME', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp))
+      call spice%load_kernel('kept4', kb)
+      call check_error(ctx, 'SPICE(UNKNOWNFRAME)', 'a load_kernel that fails')
+      call kb%clear()
+      call ctx%ktotal('ALL', count)
+      call check(count == 1, 'the failed load: the kernel of the name stays loaded')
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 101), 'and answers')
+      call ctx%bodn2c('KEPT_SC', code, found)
+      call check(found .and. code == sc, 'with its names')
+      call spice%unload('kept4')
+
+      ! 5: a frame of two kernels, with other centers: the remaining one's
+      do k = 1, n
+         call ctx%m2q(spin_matrix(1.0e-3_wp, epochs(k)), q(:, k))
+      end do
+      call kb%frame_rotations(ctx, 'TWO_KERNELS', 1400130_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('frame5a', kb)
+      call kb%frame_rotations(ctx, 'TWO_KERNELS', 1400130_ip, 301_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('frame5b', kb)
+      call ctx%frinfo(1400130_ip, cent, frclss, clssid, found)
+      call check(found .and. cent == 301, 'the later kernel''s center')
+      call spice%unload('frame5b')
+      call ctx%frinfo(1400130_ip, cent, frclss, clssid, found)
+      call check(found .and. cent == 399, 'the later kernel unloaded: the earlier''s center again')
+      call spice%unload('frame5a')
+      call ctx%namfrm('TWO_KERNELS', code)
+      call check(code == 0, 'both unloaded: the frame is gone')
+      call check_ok(ctx, 'frames of two kernels')
+
+      ! 6: detect gets the bytes of a short file, not padding
+      call spice%add_loader('SIMPLE', ld)
+      call write_simple(tiny, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                                'INTERPOLATION = LAGRANGE 3'], epochs(1:10), states(:, 1:10), [1], [10])
+      inquire (file=tiny, size=nbytes)
+      last_head_len = -1
+      call spice%furnsh(tiny)
+      call check_ok(ctx, 'a short file found by detect')
+      call check(nbytes < 4096 .and. last_head_len == nbytes, 'detect: the head is the file''s bytes only')
+      call spice%unload(tiny)
+      call spice%remove_loader('SIMPLE')
+
+      ! 8: the segment identifiers of rotation tables and models
+      call kb%frame_rotations(ctx, 'ID_LONG', 1400131_ip, 399_ip, 'J2000', epochs, q, 7_ip, &
+                              ident=repeat('X', 41))
+      call check_error(ctx, 'SPICE(SEGIDTOOLONG)', 'a rotation table''s identifier of 41 characters')
+      call kb%frame_rotations(ctx, 'ID_BELL', 1400131_ip, 399_ip, 'J2000', epochs, q, 7_ip, &
+                              ident='BELL'//achar(7))
+      call check_error(ctx, 'SPICE(NONPRINTABLECHARS)', 'a rotation table''s nonprintable identifier')
+      call kb%add_ephemeris(ctx, sc - 7, 399_ip, 'J2000', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp), &
+                            ident=repeat('Y', 41))
+      call check_error(ctx, 'SPICE(SEGIDTOOLONG)', 'a model''s identifier of 41 characters')
+      call kb%add_ephemeris(ctx, sc - 7, 399_ip, 'J2000', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp), &
+                            ident='TAB'//achar(9))
+      call check_error(ctx, 'SPICE(NONPRINTABLECHARS)', 'a model''s nonprintable identifier')
+      call kb%frame_rotations(ctx, 'ID_OK', 1400131_ip, 399_ip, 'J2000', epochs, q, 7_ip, ident=repeat('Z', 40))
+      call check_ok(ctx, 'an identifier of 40 characters')
+      call check(kb%nsegments() == 1, 'only the valid table added')
+      call kb%clear()
+      call delete_file(same)
+      call delete_file(tiny)
+   end subroutine test_review_fixes
+
+   !> Delete the test's files.
+   subroutine delete_files()
+      call delete_file(ref_bsp)
+      call delete_file(prog_bsp)
+      call delete_file(many_bsp)
+      call delete_file(sim_a)
+      call delete_file(sim_b)
+      call delete_file(sim_c)
+      call delete_file(rt_sim)
+      call delete_file(rt_bsp)
+      call delete_file(rt_back)
+      call delete_file('test_loaders_rt_mem.sim')
+      call delete_file(bad_sim)
+      call delete_file(meta)
+      call delete_file(meta_bad)
+      call delete_file(m1)
+      call delete_file(m2)
+      call delete_file('test_loaders_disc.sim')
+      call delete_file('test_loaders_gap.sim')
+      call delete_file('test_loaders_bounds.sim')
+      call delete_file('test_loaders_short.sim')
+      call delete_file('test_loaders_none.bsp')
+      call delete_file('test_loaders_n1.sim')
+      call delete_file('test_loaders_n2.sim')
+      call delete_file('test_loaders_ma.sim')
+      call delete_file('test_loaders_mb.sim')
+      call delete_file('test_loaders_mix.sim')
+      call delete_file('test_loaders_same.bsp')
+      call delete_file('test_loaders_tiny.txt')
+      call delete_file('test_loaders_mbad.sim')
+      call delete_file('test_loaders_model.bsp')
+      call delete_file('test_loaders_frames.bsp')
+      call delete_file('test_loaders_vars.tpc')
+      call delete_file('test_loaders_fr.sim')
+      call delete_file('test_loaders_w.bsp')
+      call delete_file('test_loaders_w.bc')
+      call delete_file('test_loaders_w.tf')
+      call delete_file('test_loaders_w2.tf')
+      call delete_file('test_loaders_wn.bc')
+      call delete_file('test_loaders_wn.tf')
+   end subroutine delete_files
+
+end program test_loaders

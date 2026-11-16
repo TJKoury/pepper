@@ -1,6 +1,64 @@
 # Kernel loaders for other file formats: plan
 
-**Status:** proposed (2026-11-15). No code yet.
+**Status:** phases 1 and 2 implemented (2026-11-15), programmatic
+kernels in the C interface and PepperyPy, and phase 3's `define_body`
+(body names owned by a kernel: BODDEF records with an owner, removed when
+the kernel is unloaded, every context rebuilding its name tables), and
+phase 4 as `kb%add_ephemeris` (a provider owned by the kernel: the
+registration of `add_ephemeris` with an owner, not replacing another of the
+same body, removed with the kernel; SPKCOV and SPKOBJ by the kernel's name;
+`write_kernel` refuses it). Frames (2026-11-15): `kb%frame_rotations`
+(rotations at ET epochs, quaternions or matrices, as a CK type 5 segment
+with ET tags in a DAF built in memory, evaluated by CKR05/CKE05 through a
+`rotation_table` frame provider: no clock) and `kb%add_frame` (a frame
+provider owned by the kernel); programmatic frames have owners, kernels of
+one frame coexist (the last that has data answers). CKCOV/CKOBJ by a
+kernel's name report its rotation tables; `write_kernel(name, file,
+ck_file, text_file)` writes them as a CK (ticks = ET, shifted to be
+non-negative if an epoch is before J2000) and a text kernel (a type 1 SCLK
+per frame, the CK frame definitions, the body names), checked with CSPICE.
+Not yet: the binary test format (phase 3); frame definitions owned by a
+kernel (4c); the frame features in the C interface and PepperyPy (except
+`write_kernel`'s new arguments, which they have).
+
+What was built:
+- `src/pepper_loaders.f90` (a submodule of `pepper_instance_module`): the
+  builder (`kernel_builder`: `spk_lagrange`, `spk_hermite`, `set_format`,
+  `clear`, `nsegments`; `adapt`), programmatic kernels (`load_kernel`,
+  `write_kernel`), the registry (`add_loader`, `remove_loader`, `loader`),
+  `kernel_format`, and the choice of a loader for FURNSH;
+- `src/pepper_spk_packing.f90`: the data of SPK types 9 and 13, used by the
+  builder and by SPKW09 and SPKW13;
+- DAFs built in memory: `ddh_file%synthetic`; ZZDDHOPN finds them by name
+  (the most recent, if several), ZZDDHF2H skips them, ZZDDHHLU refuses a
+  unit for them (SPICE(NOFILEFORKERNEL)); ZZDAFGFR, ZZDAFGSR and DAFRCR
+  read their file, summary and name records from the image; DAFEC and
+  `daf_comments` give no comments; GETFAT reports them as DAFs of their
+  type (so SPKCOV, SPKOBJ, CKCOV work by name);
+- FURNSH's `loader` argument, ZZLDKER's resolution, `KERNEL_LOADERS`, the
+  unload callbacks in UNLOAD and KCLEAR; `keeper_kernel%loader` and
+  `%format`;
+- the tests: `test/core/test_loaders.f90` with a made-up format
+  (`test/core/pepper_test_loader.f90`: a header of `KEY = value` lines,
+  blocks of `et x y z vx vy vz` rows), including the round trip format ->
+  kernel -> .bsp -> format -> kernel; builders filled by threads and
+  kernels queried by threads in `test_parallel`.
+
+Differences from the plan below:
+- The test format is the simple text one (with `OBJECT_CODE` for a name the
+  file defines); its binary form (phase 3) is not done.
+- One reserved name, `PEPPER` (2026-11-15): `loader='PEPPER'` is PEPPER's
+  own loading (as without loaders; registered loaders not asked); it
+  cannot be registered. The former reserved names (SPK, CK, PCK, DSK, EK,
+  TEXT, JSON, META) are ordinary names.
+- `load_kernel` copies the builder's data into the DAF image (one copy),
+  then empties the builder; with `keep` it is not emptied.
+- A file a loader read, loaded again, is read again (a second kernel, with
+  its own handle); UNLOAD removes the last one, as for any file loaded
+  twice. FURNSH reads the file on disk even when a kernel built in memory
+  has its name (`zzddhman%files_only`, set while ZZLDKER loads from
+  disk): with `loader='PEPPER'`, after the loader is removed, or for an
+  SPK written under the kernel's name.
 
 Let a program attach **loaders** to an instance: objects that read a file
 format SPICE does not know and turn it into ordinary kernel data at load
@@ -124,8 +182,7 @@ call spice%loader(name, ptr)          ! a pointer to the instance's copy (class(
 ```
 
 - `name`: what `furnsh(..., loader=)` and meta-kernels refer to. It is
-  case-insensitive (stored in upper case). `SPK`, `CK`, `PCK`, `DSK`, `EK`,
-  `TEXT`, `JSON` and `META` are reserved (D3).
+  case-insensitive (stored in upper case). `PEPPER` is reserved (D3).
 - `loader`: any extension of `kernel_loader`. The instance keeps a copy
   (`class(kernel_loader), allocatable`, as it keeps providers), so the
   loader can keep data from its loads (R12).
@@ -283,10 +340,12 @@ its arrays with no file and no callback, e.g.
 `spice%furnsh(file, in_memory, loader)` gets a new optional `loader`.
 Resolution order (R1):
 
-1. **`loader=` given**: that loader, with no detection
-   (SPICE(UNKNOWNLOADER) if no loader has that name). The reserved names
-   force a built-in loader, e.g. `loader='TEXT'` for a text kernel named
-   `*.json`.
+1. **`loader=` given**: the registered loader with that name reads the
+   file, overriding everything else: no check that the file exists, of
+   its type (even a DAF), its extension, or detection; the loader reports
+   its own errors. `loader='PEPPER'` loads the file as without loaders
+   (steps 2 and 5; registered loaders not asked). Any other name no loader
+   has: SPICE(UNKNOWNLOADER).
 2. **A DAF or DAS file** (GETFAT's ID word): the built-in loaders. A real
    SPICE binary file is never handed to a registered loader by extension or
    detection; its ID word is unambiguous.
@@ -380,8 +439,10 @@ New short messages:
 - SPICE(UNKNOWNLOADER): `loader=` or `KERNEL_LOADERS` names no registered
   loader;
 - SPICE(LOADERCONFLICT): a name or extension registered twice without
-  `replace`;
-- SPICE(RESERVEDLOADERNAME): a reserved name.
+  `replace`.
+
+- SPICE(RESERVEDLOADERNAME): `add_loader` with the name PEPPER (FURNSH's
+  name for PEPPER's own loading).
 
 Each loader has its own, documented in its library. The builder's are those
 of the SPK writers.
@@ -394,8 +455,11 @@ of the SPK writers.
   alternative is a prefix inside `KERNELS_TO_LOAD` (`'MYFORMAT:file'`),
   which clashes with Windows drive letters and with existing names. Or
   none at all, relying on extensions and detection.
-- **D3. Reserved names** for the built-in loaders, so `loader=` can force
-  one.
+- **D3. Reserved names** for the built-in loaders. As built (2026-11-15):
+  one name, `PEPPER`, PEPPER's own loading (as without loaders: SPICE's
+  kernels by their ID word, JSON kernels by their extension, text kernels
+  and meta-kernels), not registrable. It exists for a SPICE text kernel or
+  meta-kernel whose extension a registered loader also has.
 - **D4. SPICE binary files are never claimed** by registered extensions or
   detection (resolution step 2).
 - **D5. The loader object is copied into the instance**, so it can keep
@@ -502,7 +566,7 @@ nanoseconds and six `real64`. It tests a loader doing its own binary I/O
 - **Names** (R14): `spkezr('SC_ONE', ...)` works while the file is loaded
   and not after UNLOAD.
 - **Resolution** (R1): by `loader=`, by extension, by detection with an
-  unrelated extension (`.txt`), a reserved name forcing a built-in loader,
+  unrelated extension (`.txt`), `loader='PEPPER'` keeping the loaders off,
   a DAF never claimed, conflicts and replacement; in meta-kernels
   (extensions and `KERNEL_LOADERS`) and through the legacy FURNSH.
 - **Kernel table**: KDATA/KINFO type `SPK`, `kernel_format`, KTOTAL,
@@ -579,10 +643,40 @@ Each phase with its tests (`pixi run test`, `test-parallel` many times,
 
 ### Later
 
-- PepperyPy and the C interface: programmatic kernels from NumPy arrays
-  (no callbacks needed), and `furnsh(..., loader=)` with the Fortran
-  loaders. Registering loaders written in Python would need callbacks
-  through the C API, a separate decision.
+- PepperyPy and the C interface: **done for programmatic kernels**
+  (2026-11-15): `pepper_builder_*` and `pepper_spice_load_kernel` in C
+  (`src/capi/pepper_capi_core.f90`), `KernelBuilder` and
+  `Spice.load_kernel` in PepperyPy, from NumPy arrays; `write_kernel` and
+  `kernel_format` are generated. Kernel loaders are not registered from C
+  or Python (they are Fortran types; `remove_loader` is not wrapped
+  either), so FURNSH's `loader` argument is not in the C interface.
+- **Done (2026-11-15): kernel loaders in the C interface and PepperyPy.**
+  C: `pepper_spice_add_loader` (load, detect and unload functions with
+  user data; `capi_loader`, which gives the C load function a context of the
+  instance made for the call and copies its errors), `pepper_spice_remove_loader`,
+  `pepper_loader_names`, `pepper_spice_furnsh_loader`; the builder's
+  `pepper_builder_add_ephemeris`, `_add_frame`, `_frame_rotations`.
+  PepperyPy: `KernelLoader`, `Spice.add_loader`, `remove_loader`, `loaders`,
+  `furnsh(loader=)`; `KernelBuilder.add_ephemeris`, `add_frame`,
+  `frame_rotations`. A Fortran loader library is registered from C by a
+  function it exports (taking the instance's handle, `spice_of`), if it is
+  linked into the same program as PEPPER; not on a PepperyPy instance,
+  whose PEPPER is inside its extension module (that needs PEPPER as a shared
+  library, or the loader built into PepperyPy). The original to-do:
+  - FURNSH's `loader` argument in `pepper_spice_furnsh` and PepperyPy's
+    `furnsh(path, loader=...)` (and `KERNEL_LOADERS` already works through
+    them);
+  - registering loaders: a loader written in C (a function that fills a
+    builder through `pepper_builder_*`, with optional `detect` and
+    `unload` functions and user data, as the programmatic providers take
+    function pointers) and in Python (a class with `load(ctx, kb, file)`,
+    `detect`, `unload`, called through those C callbacks, under the GIL);
+  - Fortran loader libraries (FreeFlyer, OEM) usable from C and Python: an
+    entry point each library exports to register its loader on an
+    instance handle (e.g. `pepper_freeflyer_register(spice)`), so a Python
+    program can use them without writing a loader;
+  - `remove_loader`, a list of the registered loaders, and their kept data
+    (through the loader's own API).
 - More builder segment types: 2/3 (Chebyshev, for compact fits), 8/12
   (equally spaced), 10 (two-line elements), 18/19, 21.
 

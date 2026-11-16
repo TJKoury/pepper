@@ -4359,6 +4359,7 @@ contains
       real(wp) :: descr  ( nd + ni/2 )
 
       integer(ip) :: handle
+      integer(ip) :: i  ! PEPPER
       integer(ip) :: ic     ( ni )
 
       logical :: found
@@ -4466,6 +4467,18 @@ contains
 !
 !     Release the file.
 !
+!
+!     PEPPER: a kernel built in memory has also the programmatic
+!     ephemerides it owns (kernel_builder's add_ephemeris).
+!
+      do i = 1, ctx%spice%nprovided_spk
+         if ( ctx%failed() ) exit
+         associate ( pe => ctx%spice%provided_spk(i) )
+            if ( pe%owner == handle .and. pe%body == body ) then
+               call insert_interval ( ctx, pe%tbeg, pe%tend, window )
+            end if
+         end associate
+      end do
       call dafcls ( ctx, handle )
 
       if ( .not. ctx%failed() ) call window%window ( intervals )
@@ -6652,6 +6665,7 @@ contains
       real(wp) :: descr  ( nd + ni/2 )
 
       integer(ip) :: handle
+      integer(ip) :: i  ! PEPPER
       integer(ip) :: ic     ( ni )
 
       logical :: found
@@ -6757,6 +6771,15 @@ contains
 !
 !     Release the file.
 !
+!
+!     PEPPER: a kernel built in memory has also the programmatic
+!     ephemerides it owns (kernel_builder's add_ephemeris).
+!
+      do i = 1, ctx%spice%nprovided_spk
+         if ( ctx%spice%provided_spk(i)%owner == handle ) then
+            call append_id ( list, nlist, ctx%spice%provided_spk(i)%body )
+         end if
+      end do
       call dafcls ( ctx, handle )
 
       if ( .not. ctx%failed() ) then

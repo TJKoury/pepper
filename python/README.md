@@ -199,6 +199,36 @@ A provider may make queries through the context it is given (another
 body's state, a frame). Providers are called from the querying threads,
 under the GIL; `remove_ephemeris`, `remove_frame` and `kclear` remove them.
 
+## Kernels built in memory
+
+An SPK made from NumPy arrays, with no file, loaded like an SPK file
+(states, `spkcov` and `spkobj` by its name, `kdata`, `unload`), and written
+to a real SPK file if wanted (see the [main README](../README.md#kernels-built-in-memory-and-kernel-loaders)):
+
+```python
+from pepperypy import KernelBuilder
+
+kb = KernelBuilder()
+kb.spk_hermite(-10001, 399, 'J2000', ets, states, 7)    # SPK type 13; states: (n, 6)
+kb.spk_lagrange(-10002, 399, 'J2000', ets, states, 8)   # SPK type 9
+spice.load_kernel('my_trajectory', kb)                  # or pepperypy.load_kernel(...)
+spice.write_kernel('my_trajectory', 'my_trajectory.bsp')
+ctx.kernel_format('my_trajectory')                      # ('', '(programmatic)')
+```
+
+`kb.define_body('SPACECRAFT1', -10001)` defines a body name while the
+kernel is loaded (removed with it). `tbeg`/`tend` set coverage bounds inside the epochs, `adapt=True` lowers
+the degree of a segment too short for it, and a kernel loaded under a name
+in use replaces it (`keep=True` keeps the builder's segments). A builder
+belongs to no instance: threads can fill builders while others query.
+`kb.add_ephemeris` and `kb.add_frame` add Python providers to the kernel,
+and `kb.frame_rotations(name, code, center, base, epochs, rotations, degree)`
+a frame from rotations at epochs ((n, 4) quaternions or (n, 3, 3) matrices).
+Kernel loaders can be written in Python: a `KernelLoader` subclass with
+`load(ctx, kb, file)` (and optionally `detect`, `unload`), registered with
+`spice.add_loader(name, loader, extensions=[...])`; `spice.furnsh(path,
+loader='NAME')` names one. See the [guide](../guides/ephemeris_data.md#from-c-and-python).
+
 ## Speed
 
 `pixi run -e python py-bench` (Apple M-series, 10 CPUs, Python 3.13 with the
@@ -262,7 +292,7 @@ the threads, each with its own context). The speedups are over SpiceyPy's
   (88%); most of the others take or return SpiceyPy's ctypes structures
   (planes, ellipses, DLA and DSK descriptors, EK queries) or work arrays.
 - SpiceyPy's own test suite, run against PepperyPy
-  (`pixi run -e python py-test-spiceypy`): 524 of its 638 tests pass; of the
+  (`pixi run -e python py-test-spiceypy`): 523 of its 639 tests pass; of the
   others, 108 use a function PepperyPy does not have, and 5 differ:
   `tkvrsn` (PEPPER's version), `szpool` (PEPPER has no pool size limits),
   `gfposc` (a time agrees to 1 µs, not to its last printed digit), `lgrind`

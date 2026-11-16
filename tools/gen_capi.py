@@ -51,7 +51,10 @@ EXCLUDE_CTX = {
 }
 # Instance procedures with hand-written wrappers.
 EXCLUDE_SPICE = {'furnsh', 'pcpool', 'pdpool', 'pipool', 'lmpool', 'add_ephemeris', 'add_frame',
-                 'destroy'}  # (destroy: the lifetime is pepper_spice_free's, Spice.close's)
+                 'destroy',  # (destroy: the lifetime is pepper_spice_free's, Spice.close's)
+                 'load_kernel',  # hand-written (the builder: pepper_builder_*, KernelBuilder)
+                 'write_kernel',  # hand-written (its optional ck_file and text_file)
+                 'remove_loader'}  # kernel loaders are Fortran types: not registered from C or Python
 # Shims generated, Python wrappers written by hand (_core.pyx).
 NO_PYTHON = {'kclear', 'remove_ephemeris', 'remove_frame'}
 
@@ -213,7 +216,9 @@ def parse_decls(lines, args):
 def make_arg(name, t, dims, doc):
     m = re.search(r'intent\((in|out|inout)\)', t)
     intent = m.group(1) if m else ''
-    if 'optional' in t or 'value' in t.split(',')[0:1]:
+    # An optional output is always passed by the shim (so always made); an
+    # optional input is not supported (its absence has a meaning).
+    if ('optional' in t and intent != 'out') or 'value' in t.split(',')[0:1]:
         intent = 'optional' if 'optional' in t else intent
     if t.startswith('character'):
         ftype = 'char'

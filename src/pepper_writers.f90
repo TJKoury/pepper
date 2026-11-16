@@ -9061,6 +9061,7 @@ contains
       !>        via the non-SPICE utility MEX2KER, for European missions.
       module procedure ckw05
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: ck05_data
       use pepper_arrays, only: bsrchd, lstltd
       use pepper_math, only: odd
       use pepper_inc_ck05
@@ -9483,39 +9484,15 @@ contains
 !        | Number of packets          |
 !        +----------------------------+
 !
-      call dafada ( ctx, packts,  n*packsz )
-      call dafada ( ctx, sclkdp,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-
-         call dafada ( ctx,  sclkdp( dirsiz*i ),  1  )
-
-      end do
-
 !
-!     Now add the interval start times.
+!     PEPPER: the data is made by ck05_data (pepper_spk_packing), which the
+!     kernel builder uses too.
 !
-      call dafada ( ctx, starts, nints )
-
-!
-!     And the directory of interval start times.  The directory of
-!     start times will simply be every (DIRSIZ)th start time.
-!
-      do i = 1, (nints -1) / dirsiz
-
-         call dafada ( ctx, starts( dirsiz*i ), 1 )
-
-      end do
-
-!
-!     Add the SCLK rate, segment subtype, window size, interval
-!     count, and packet count.
-!
-      call dafada ( ctx, [ rate ], 1 )
-      call dafada ( ctx, [ real( subtyp, wp ) ], 1 )
-      call dafada ( ctx, [ real( winsiz, wp ) ], 1 )
-      call dafada ( ctx, [ real( nints, wp  ) ], 1 )
-      call dafada ( ctx, [ real( n, wp      ) ], 1 )
+      block
+         real(wp), allocatable :: data(:)
+         data = ck05_data ( subtyp, winsiz, sclkdp(1:n), packts(1:n*packsz), rate, starts(1:nints) )
+         call dafada ( ctx, data, size ( data, kind=ip ) )
+      end block
 
 !
 !     As long as nothing went wrong, end the segment.
@@ -19240,6 +19217,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 05-AUG-1993 (NJB) (JML) (WLT)
       module procedure spkw09
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: spk09_data, spk_data_size
       implicit none
 
 
@@ -19488,15 +19466,11 @@ contains
 !        +-----------------------+
 !
 
-      call dafada ( ctx, states,  n*statsz )
-      call dafada ( ctx, epochs,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
-      end do
-
-      call dafada ( ctx, [ real(degree, wp) ], 1 )
-      call dafada ( ctx, [ real(n, wp) ], 1 )
+!
+!     PEPPER: the data is made by spk09_data (pepper_spk_packing), which the
+!     kernel builder uses too.
+!
+      call dafada ( ctx, spk09_data ( states(:, 1:n), epochs(1:n), degree ), spk_data_size ( n ) )
 
 !
 !     As long as nothing went wrong, end the segment.
@@ -20942,6 +20916,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 20-MAR-2000 (NJB)
       module procedure spkw13
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: spk13_data, spk_data_size
       implicit none
 
 
@@ -21173,15 +21148,11 @@ contains
 !        +-----------------------+
 !
 
-      call dafada ( ctx, states,  n*statsz )
-      call dafada ( ctx, epochs,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
-      end do
-
-      call dafada ( ctx, [ real( winsiz - 1, wp) ], 1 )
-      call dafada ( ctx, [ real( n, wp         ) ], 1 )
+!
+!     PEPPER: the data is made by spk13_data (pepper_spk_packing), which the
+!     kernel builder uses too.
+!
+      call dafada ( ctx, spk13_data ( states(:, 1:n), epochs(1:n), degree ), spk_data_size ( n ) )
 
 !
 !     As long as nothing went wrong, end the segment.

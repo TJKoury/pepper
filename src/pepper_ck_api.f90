@@ -369,6 +369,21 @@ contains
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
+!
+!     PEPPER: a kernel built in memory: the frames of its rotation tables
+!     (their CK ID codes are the frames' codes).
+!
+      block
+         integer(ip), allocatable :: codes(:)
+         logical :: is_kernel
+         call kernel_frame_codes ( ctx, file, is_kernel, codes )
+         if ( ctx%failed() ) return
+         if ( is_kernel ) then
+            ids = codes
+            call sort_unique ( ids )
+            return
+         end if
+      end block
       call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
@@ -5183,6 +5198,24 @@ contains
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
+!
+!     PEPPER: a kernel built in memory: the coverage of its rotation tables
+!     (their time tags are ET, which are also their ticks: TDB and SCLK
+!     give the same values).
+!
+      block
+         real(wp), allocatable :: tb(:), te(:)
+         logical :: is_kernel
+         call kernel_frame_tables ( ctx, file, inst, is_kernel, tb, te )
+         if ( ctx%failed() ) return
+         if ( is_kernel ) then
+            do i = 1, size ( tb )
+               call insert_interval ( ctx, tb(i) - tol, te(i) + tol, window )
+            end do
+            if ( .not. ctx%failed() ) call window%window ( intervals )
+            return
+         end if
+      end block
       call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return

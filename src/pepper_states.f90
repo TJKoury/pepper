@@ -1502,6 +1502,13 @@ module pepper_states
       character(typlen) :: type = ' '  !! SPK, CK, PCK, DSK, EK, TEXT or META
       integer(ip) :: handle = 0  !! handle of the kernel (0 for a text kernel)
       integer(ip) :: source = 0  !! index of the meta-kernel it was loaded from (0: loaded directly)
+      !> PEPPER: the loader that read the file ([[spice_add_loader]]), or
+      !> blank for SPICE's own kernels and programmatic kernels
+      !> ([[spice_load_kernel]]).
+      character(:), allocatable :: loader
+      !> PEPPER: the description of a kernel built in memory (the builder's
+      !> [[kb_set_format]]); blank for SPICE's own kernels.
+      character(:), allocatable :: format
    end type keeper_kernel
 
    !> The kernels loaded through FURNSH, in load order.
@@ -3405,6 +3412,10 @@ module pepper_states
       !> DAF word address `a` is `image(a)`. Written when the file is loaded,
       !> read by all contexts, freed with the entry.
       real(wp), allocatable :: image(:)
+      !> PEPPER: a DAF built in memory ([[spice_load_kernel]], or a kernel
+      !> loader's): `image` is the whole file and there is no file behind
+      !> it, so the file is never opened, inquired or read by its name.
+      logical :: synthetic = .false.
    end type ddh_file
 
    !> The file table: the files in increasing order of abs(handle) (the
@@ -3422,6 +3433,12 @@ module pepper_states
       ! first record, until the table changes.
       integer(ip) :: changes = 0  !! changes of the table (add, remove)
       logical :: reuse_f2h = .false.  !! [[zzddhf2h]] may keep and reuse its result
+      !> PEPPER: names are files only: a DAF built in memory is not found
+      !> by its name (GETFAT, ZZDDHOPN). Set by ZZLDKER while it loads a
+      !> file from disk, so that a file is read even if a kernel built in
+      !> memory has its name (a loader's file loaded again, or an SPK
+      !> written from a kernel under the kernel's name).
+      logical :: files_only = .false.
       character(:), allocatable :: f2h_name  !! the file of the kept result
       integer(ip) :: f2h_changes = -1  !! the table's changes when it was kept
       real(wp) :: f2h_mnm = 0.0_wp  !! the file's unique number
@@ -5585,6 +5602,8 @@ contains
       to%handle = from%handle
       to%source = from%source
       call move_alloc(from%name, to%name)
+      call move_alloc(from%loader, to%loader)
+      call move_alloc(from%format, to%format)
    end subroutine move_kernel
 
    !> Set the initial values of a new [[limbpt_state]]: SPICELIB's DATA
@@ -6084,6 +6103,7 @@ contains
       to%mnm = from%mnm
       call move_alloc(from%name, to%name)
       call move_alloc(from%image, to%image)
+      to%synthetic = from%synthetic
    end subroutine move_file
 
    !> Set the initial values of a new [[zzdsksbf_state]]: SPICELIB's DATA

@@ -11,7 +11,10 @@
 !> loaded by one instance at a time). Every result must be identical
 !> (bitwise) to the serial one. Last, threads query an instance that has
 !> loaded nothing (built-in frames and body names): its first use is by
-!> the threads, at once.
+!> the threads, at once. Last, kernels built in memory: the threads fill
+!> kernel builders at once (no instance is involved), the setup context
+!> loads them, and loads a file read by a kernel loader; the threads query
+!> them, with results identical to the serial ones.
 !>
 !> The library has no OpenMP; only this test uses it (`pixi run
 !> test-parallel` builds with -fopenmp). Built without OpenMP, the "parallel"
@@ -21,7 +24,9 @@ program test_parallel
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: twopi
-   use pepper_instance_module, only: pepper_instance, pepper_context, ephemeris_procedure, frame_procedure
+   use pepper_instance_module, only: pepper_instance, pepper_context, ephemeris_procedure, frame_procedure, &
+                                     kernel_builder
+   use pepper_test_loader, only: simple_loader, write_simple, spin_frame, spin_matrix
    !$ use omp_lib, only: omp_get_thread_num, omp_get_max_threads
 
    implicit none
@@ -30,6 +35,8 @@ program test_parallel
    character(*), parameter :: spk = 'test_parallel.bsp'
    character(*), parameter :: fk = 'test_parallel_fk.json'  !! a JSON kernel
    character(*), parameter :: spk_mem = 'test_parallel_mem.bsp'  !! the SPK's copy, loaded in memory
+   character(*), parameter :: sim = 'test_parallel.sim'  !! a file read by a kernel loader
+   integer, parameter :: nrow = 300  !! rows of the kernels built in memory
    integer, parameter :: nepoch = 2000  !! number of query epochs
    integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1 + 6 + 9 + 6  !! results per epoch
    integer, parameter :: nthreads = 4
@@ -116,6 +123,8 @@ program test_parallel
    call check(errors == 0, 'parallel built-in queries without kernels identical to the serial ones')
    serial = spice%new_context()
 
+   call built_kernels()
+
    call spice%kclear()
    call memspice%kclear()
    call serial%close_unloaded_files()  ! (Windows cannot delete an open file)
@@ -160,6 +169,215 @@ contains
          !$omp end critical (report)
       end if
    end subroutine thread_queries
+
+   !> Kernels built in memory: builders filled by the threads at once, then
+   !> loaded; a file read by a kernel loader; the threads query them.
+   subroutine built_kernels()
+      type(kernel_builder) :: kbs(nthreads)
+      type(simple_loader) :: ld
+      real(wp) :: e(nrow), st(6, nrow)
+      real(wp), allocatable :: bref(:, :), bpar(:, :)
+      integer :: t, i, errs
+      errs = 0
+      !$omp parallel do num_threads(nthreads) reduction(+:errs)
+      do t = 1, nthreads
+         call fill_builder(t, kbs(t), errs)
+      end do
+      !$omp end parallel do
+      call check(errs == 0, 'kernel builders filled by the threads at once')
+      do t = 1, nthreads
+         call spice%load_kernel('built_'//achar(iachar('0') + t), kbs(t))
+      end do
+      call check(.not. setup%failed(), 'the builders loaded')
+      ! a file of the test loader's format
+      do i = 1, nrow
+         e(i) = 1.0e4_wp*(i - 1)
+         st(:, i) = body_state(9300, e(i))
+      end do
+      ! with a model (body 9301: a programmatic ephemeris the kernel owns)
+      call write_simple(sim, [character(48) :: 'OBJECT = 9301', 'CENTER = 1000', 'FRAME = J2000', &
+                                              'CIRCULAR = 20000.0 2.0e-6 0.5 0.0 3.0e6', 'OBJECT = 9300', &
+                                              'INTERPOLATION = HERMITE 9'], e, st, [1], [nrow])
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      call spice%furnsh(sim)
+      call check(.not. setup%failed(), 'a file read by a kernel loader')
+
+      allocate (bref(6*(nthreads + 2), nepoch), bpar(6*(nthreads + 2), nepoch))
+      do i = 1, nepoch
+         call built_queries(serial, et(i), bref(:, i))
+      end do
+      call check(.not. serial%failed(), 'serial queries of the kernels built in memory')
+      bpar = 0.0_wp
+      errs = 0
+      !$omp parallel num_threads(nthreads) reduction(+:errs)
+      call thread_built_queries(bpar, errs)
+      !$omp end parallel
+      call check(errs == 0 .and. all(bpar == bref), &
+                 'parallel queries of the kernels built in memory identical to the serial ones')
+      ! the kernels' body names, looked up by every thread; then one kernel unloaded
+      errs = 0
+      !$omp parallel num_threads(nthreads) reduction(+:errs)
+      call thread_built_names(nthreads, .true., errs)
+      !$omp end parallel
+      call check(errs == 0, 'the kernels'' body names in every thread')
+      call spice%unload('built_1')
+      errs = 0
+      !$omp parallel num_threads(nthreads) reduction(+:errs)
+      call thread_built_names(nthreads, .false., errs)
+      !$omp end parallel
+      call check(errs == 0, 'an unloaded kernel''s name gone in every thread')
+      call spice%unload(sim)
+      call spice%remove_loader('SIMPLE')
+      call built_frames()
+   end subroutine built_kernels
+
+   !> Frames of a kernel built in memory, queried by the threads: a table
+   !> of rotations (CK type 5's interpolation on a DAF in memory) and a
+   !> model (a frame provider the kernel owns).
+   subroutine built_frames()
+      type(kernel_builder) :: kb
+      real(wp) :: e(nrow), q(4, nrow)
+      real(wp), allocatable :: fref(:, :), fpar(:, :)
+      integer :: i, errs
+      do i = 1, nrow
+         e(i) = 1.0e4_wp*(i - 1)
+         call setup%m2q(spin_matrix(2.0e-5_wp, e(i)), q(:, i))
+      end do
+      call kb%frame_rotations(setup, 'PAR_TABLE', 1400600_ip, 1000_ip, 'J2000', e, q, 7_ip)
+      call kb%add_frame(setup, 'PAR_MODEL', 1400601_ip, 1000_ip, spin_frame(rate=3.0e-5_wp))
+      call spice%load_kernel('built_frames', kb)
+      call check(.not. setup%failed(), 'a kernel of frames')
+      allocate (fref(45, nepoch), fpar(45, nepoch))
+      do i = 1, nepoch
+         call frame_queries(serial, et(i), fref(:, i))
+      end do
+      call check(.not. serial%failed(), 'serial queries of the kernel''s frames')
+      fpar = 0.0_wp
+      errs = 0
+      !$omp parallel num_threads(nthreads) reduction(+:errs)
+      call thread_frame_queries(fpar, errs)
+      !$omp end parallel
+      call check(errs == 0 .and. all(fpar == fref), &
+                 'parallel queries of the kernel''s frames identical to the serial ones')
+      call spice%unload('built_frames')
+   end subroutine built_frames
+
+   !> The transformations of the kernel's frames at one epoch.
+   subroutine frame_queries(ctx, t, res)
+      type(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: t  !! the epoch
+      real(wp), intent(out) :: res(45)  !! a 6x6 transformation and a rotation
+      real(wp) :: xf(6, 6), rot(3, 3)
+      call ctx%sxform('J2000', 'PAR_TABLE', t, xf)
+      call ctx%pxform('PAR_MODEL', 'J2000', t, rot)
+      res(1:36) = reshape(xf, [36])
+      res(37:45) = reshape(rot, [9])
+   end subroutine frame_queries
+
+   !> One thread's queries of the kernel's frames.
+   subroutine thread_frame_queries(fpar, errs)
+      real(wp), intent(inout) :: fpar(:, :)  !! the results (each thread its epochs)
+      integer, intent(inout) :: errs  !! incremented if the context failed
+      type(pepper_context) :: ctx
+      integer :: k
+      ctx = spice%new_context()
+      !$omp do schedule(dynamic, 5)
+      do k = 1, nepoch
+         call frame_queries(ctx, et(k), fpar(:, k))
+      end do
+      !$omp end do
+      if (ctx%failed()) errs = errs + 1
+      call ctx%destroy()
+   end subroutine thread_frame_queries
+
+   !> Fill builder `t` (one thread's): a body 9200+t on a circle around
+   !> body 1000, Hermite then Lagrange segments. A context of the thread's
+   !> own, for the errors; no instance is used.
+   subroutine fill_builder(t, kb, errs)
+      integer, intent(in) :: t  !! the builder's number
+      type(kernel_builder), intent(inout) :: kb  !! the builder
+      integer, intent(inout) :: errs  !! incremented on an error
+      type(pepper_context) :: ctx
+      real(wp) :: e(nrow), st(6, nrow)
+      integer :: i
+      ctx = spice%new_context()
+      do i = 1, nrow
+         e(i) = 1.0e4_wp*(i - 1)
+         st(:, i) = body_state(9200 + t, e(i))
+      end do
+      call kb%spk_hermite(ctx, int(9200 + t, ip), 1000_ip, 'J2000', e(1:nrow/2 + 1), st(:, 1:nrow/2 + 1), 7_ip)
+      call kb%spk_lagrange(ctx, int(9200 + t, ip), 1000_ip, 'J2000', e(nrow/2 + 1:), st(:, nrow/2 + 1:), 8_ip)
+      call kb%define_body(ctx, 'BUILT_'//achar(iachar('0') + t), int(9200 + t, ip))
+      if (ctx%failed() .or. kb%nsegments() /= 2) errs = errs + 1
+      call ctx%destroy()
+   end subroutine fill_builder
+
+   !> The state of a test body built in memory (a circle of its own).
+   pure function body_state(body, t) result(state)
+      integer, intent(in) :: body  !! the body
+      real(wp), intent(in) :: t  !! the epoch
+      real(wp) :: state(6)
+      real(wp) :: r, w, a
+      r = 1.0e4_wp + 100.0_wp*body
+      w = 1.0e-6_wp*(1 + mod(body, 7))
+      a = w*t + 0.1_wp*body
+      state = [r*cos(a), r*sin(a), 0.01_wp*r, -r*w*sin(a), r*w*cos(a), 0.0_wp]
+   end function body_state
+
+   !> The states of the bodies built in memory and of the loader's body,
+   !> at one epoch.
+   subroutine built_queries(ctx, t, res)
+      type(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: t  !! the epoch
+      real(wp), intent(out) :: res(:)  !! 6 per body
+      real(wp) :: lt
+      integer :: b
+      do b = 1, nthreads
+         call ctx%spkgeo(int(9200 + b, ip), t, 'J2000', 1000_ip, res(6*(b - 1) + 1:6*b), lt)
+      end do
+      call ctx%spkgeo(9300_ip, t, 'J2000', 1000_ip, res(6*nthreads + 1:6*nthreads + 6), lt)
+      call ctx%spkgeo(9301_ip, t, 'J2000', 1000_ip, res(6*nthreads + 7:6*nthreads + 12), lt)
+   end subroutine built_queries
+
+   !> One thread's lookups of the names of the kernels built in memory
+   !> (BUILT_1 is gone once its kernel is unloaded). A new context, and the
+   !> setup context's instance's tables changed by loads and unloads.
+   subroutine thread_built_names(n, loaded1, errs)
+      integer, intent(in) :: n  !! the number of kernels
+      logical, intent(in) :: loaded1  !! the kernel of BUILT_1 is loaded
+      integer, intent(inout) :: errs  !! incremented on a wrong result
+      type(pepper_context) :: ctx
+      integer(ip) :: code
+      logical :: found, expected
+      integer :: b, k
+      ctx = spice%new_context()
+      do k = 1, 50
+         do b = 1, n
+            call ctx%bodn2c('BUILT_'//achar(iachar('0') + b), code, found)
+            expected = b > 1 .or. loaded1
+            if (found .neqv. expected) errs = errs + 1
+            if (found .and. code /= 9200 + b) errs = errs + 1
+         end do
+      end do
+      if (ctx%failed()) errs = errs + 1
+      call ctx%destroy()
+   end subroutine thread_built_names
+
+   !> One thread's queries of the kernels built in memory.
+   subroutine thread_built_queries(bpar, errs)
+      real(wp), intent(inout) :: bpar(:, :)  !! the results (each thread its epochs)
+      integer, intent(inout) :: errs  !! incremented if the context failed
+      type(pepper_context) :: ctx
+      integer :: k
+      ctx = spice%new_context()
+      !$omp do schedule(dynamic, 5)
+      do k = 1, nepoch
+         call built_queries(ctx, et(k), bpar(:, k))
+      end do
+      !$omp end do
+      if (ctx%failed()) errs = errs + 1
+      call ctx%destroy()
+   end subroutine thread_built_queries
 
    !> One thread's built-in queries (no kernels): a context of its own of
    !> the instance that has loaded nothing.
@@ -289,11 +507,11 @@ contains
 
    !> Remove the test files that exist.
    subroutine delete_files()
-      character(32) :: files(4)
+      character(32) :: files(5)
       logical :: exists
       integer :: unit, k
       logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
-      files = [character(32) :: lsk, spk, fk, spk_mem]
+      files = [character(32) :: lsk, spk, fk, spk_mem, sim]
       do k = 1, size(files)
          inquire (file=trim(files(k)), exist=exists)
          if (exists) then

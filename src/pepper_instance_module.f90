@@ -95,10 +95,12 @@ module pepper_instance_module
       !> Incremented by every change of the loaded kernels or the kernel
       !> pool; caches in contexts are valid while it is unchanged.
       integer(ip) :: generation = 0
-      ! Body names defined by the program (boddef), in order of definition.
-      ! Each context applies them to its own name tables (see pepper_bodies).
+      ! Body names defined by the program (boddef), and by kernels built in
+      ! memory (kernel_builder's define_body), in order of definition. Each
+      ! context applies them to its own name tables (see pepper_bodies).
       type(string), allocatable :: boddef_names(:)  !! names defined with boddef (any length)
       integer(ip), allocatable :: boddef_codes(:)  !! their codes
+      integer(ip), allocatable :: boddef_owners(:)  !! the handle of the kernel that defined each (0: the program)
       integer(ip) :: boddef_count = 0  !! number of definitions recorded
       integer(ip) :: boddef_epoch = 0  !! changed by every definition and by a reset
       !> Incremented by every write of a record to a DAF or DAS file; contexts
@@ -199,6 +201,10 @@ module pepper_instance_module
       !> definitions are in the kernel pool).
       type(provided_frame), allocatable :: provided_frames(:)
       integer(ip) :: nprovided_frames = 0  !! number of programmatic frames
+      !> Kernel loaders ([[spice_add_loader]]): FURNSH hands them the files
+      !> of formats SPICE does not know.
+      type(registered_loader), allocatable :: loaders(:)
+      integer(ip) :: nloaders = 0  !! number of registered loaders
    contains
       procedure, non_overridable :: new_context
       procedure, non_overridable :: context => instance_context
@@ -225,6 +231,12 @@ module pepper_instance_module
       procedure, non_overridable :: remove_ephemeris => spice_remove_ephemeris
       procedure, non_overridable :: add_frame => spice_add_frame
       procedure, non_overridable :: remove_frame => spice_remove_frame
+      ! Kernels built in memory and kernel loaders (pepper_loaders)
+      procedure, non_overridable :: load_kernel => spice_load_kernel
+      procedure, non_overridable :: write_kernel => spice_write_kernel
+      procedure, non_overridable :: add_loader => spice_add_loader
+      procedure, non_overridable :: remove_loader => spice_remove_loader
+      procedure, non_overridable :: loader => spice_loader
       procedure, non_overridable :: spklef => spice_spklef
       procedure, non_overridable :: spkuef => spice_spkuef
       procedure, non_overridable :: pcklof => spice_pcklof
@@ -984,6 +996,8 @@ module pepper_instance_module
       procedure, non_overridable :: kinfo
       procedure, non_overridable :: kernel_data
       procedure, non_overridable :: kernel_info
+      procedure, non_overridable :: kernel_format
+      procedure, non_overridable :: loader_names
       ! --- end pepper_keeper
       ! --- pepper_time
       procedure, non_overridable :: badkpv
@@ -1868,6 +1882,10 @@ module pepper_instance_module
       real(wp) :: tend = 0.0_wp  !! end of its coverage
       integer(ip) :: handle = 0  !! the handle of its virtual SPK file
       class(ephemeris_provider), allocatable :: provider  !! the source of its states
+      !> The kernel it belongs to (the handle of a kernel built in memory,
+      !> [[kb_add_ephemeris]]), removed with it; 0: the program's
+      !> ([[spice_add_ephemeris]]).
+      integer(ip) :: owner = 0
    end type provided_ephemeris
 
    !> A programmatic frame (instance state; its definition is in the kernel
@@ -1877,7 +1895,29 @@ module pepper_instance_module
       integer(ip) :: center = 0  !! its center
       character(:), allocatable :: name  !! its name (upper case)
       class(frame_provider), allocatable :: provider  !! the source of its orientation
+      !> The kernel it belongs to (the handle of a kernel built in memory:
+      !> [[kb_add_frame]], [[kb_frame_quaternions]]), removed with it; 0:
+      !> the program's ([[spice_add_frame]]).
+      integer(ip) :: owner = 0
    end type provided_frame
+
+   !> A frame whose orientation is a table of rotations at ET epochs, built
+   !> in memory (PEPPER; [[kb_frame_quaternions]]): the table is a CK type
+   !> 5 segment, with ET as its time tags (a clock rate of 1), in a DAF
+   !> built in memory, evaluated by SPICE's CKR05 and CKE05 (so with CK
+   !> type 5's interpolation). Several segments: the last that covers the
+   !> epoch.
+   type, extends(frame_provider) :: rotation_table
+      integer(ip) :: handle = 0  !! the handle of the DAF of the segments
+      integer(ip) :: nseg = 0  !! number of segments
+      integer(ip), allocatable :: bases(:)  !! the frame each segment's rotations are relative to
+      real(wp), allocatable :: descr(:, :)  !! their descriptors (5, nseg)
+      real(wp), allocatable :: tbeg(:)  !! their coverage: start
+      real(wp), allocatable :: tend(:)  !! end
+   contains
+      procedure :: transform => rotation_table_transform
+      procedure :: rotation => rotation_table_rotation
+   end type rotation_table
 
    interface
 
@@ -1886,8 +1926,9 @@ module pepper_instance_module
       !> of it is kept) at the epochs of [TBEG, TEND]. The body enters the SPK
       !> segment search as a file loaded now: it overrides the files loaded
       !> before (and is overridden by those loaded after) at those epochs.
-      !> Adding a body again replaces its registration. Errors are signaled
-      !> in the instance's context.
+      !> Adding a body again replaces its registration (the program's, not a
+      !> kernel's: [[kb_add_ephemeris]]). Errors are signaled in the
+      !> instance's context.
       module subroutine spice_add_ephemeris ( this, body, center, frame, tbeg, tend, provider )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -1900,7 +1941,9 @@ module pepper_instance_module
       end subroutine spice_add_ephemeris
 
       !> Remove a programmatic ephemeris (PEPPER): the body's other segments
-      !> (files) apply again. No error if the body has none.
+      !> (files) apply again. No error if the body has none. Only the
+      !> program's ([[spice_add_ephemeris]]): one a kernel owns
+      !> ([[kb_add_ephemeris]]) goes with its kernel (UNLOAD, KCLEAR).
       module subroutine spice_remove_ephemeris ( this, body )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2020,6 +2063,693 @@ module pepper_instance_module
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine write_provided_frames
+
+   end interface
+
+   ! ------------------------------------------------------------------------
+   ! Kernels built in memory and kernel loaders (PEPPER;
+   ! plans/external_loaders_plan.md, src/pepper_loaders.f90)
+   ! ------------------------------------------------------------------------
+
+   !> One segment of a [[kernel_builder]]: its descriptor's items and its
+   !> data, packed as in an SPK file.
+   type :: builder_segment
+      integer(ip) :: body = 0  !! the body
+      integer(ip) :: center = 0  !! its center of motion
+      character(:), allocatable :: frame  !! the frame of the states (a name, resolved at the load)
+      integer(ip) :: type = 0  !! the SPK type (9 or 13)
+      real(wp) :: tbeg = 0.0_wp  !! start of the segment's coverage
+      real(wp) :: tend = 0.0_wp  !! end of the segment's coverage
+      character(:), allocatable :: ident  !! the segment identifier
+      real(wp), allocatable :: data(:)  !! the segment's data (pepper_spk_packing)
+   end type builder_segment
+
+   !> A table of rotations in a [[kernel_builder]] (a CK type 5 segment's
+   !> data, ET tags): one segment of a frame defined by the kernel.
+   type :: builder_frame_table
+      character(:), allocatable :: name  !! the frame's name
+      integer(ip) :: code = 0  !! its ID code
+      integer(ip) :: center = 0  !! its center
+      character(:), allocatable :: base  !! the frame the rotations are relative to (resolved at the load)
+      logical :: avflag = .false.  !! the segment has angular velocities
+      real(wp) :: tbeg = 0.0_wp  !! start of its coverage
+      real(wp) :: tend = 0.0_wp  !! end of its coverage
+      character(:), allocatable :: ident  !! the segment identifier
+      real(wp), allocatable :: data(:)  !! the segment's data (pepper_spk_packing's ck05_data)
+   end type builder_frame_table
+
+   !> A programmatic frame in a [[kernel_builder]] (a provider): registered
+   !> when the builder is loaded, owned by the kernel ([[kb_add_frame]]).
+   type :: builder_frame
+      character(:), allocatable :: name  !! the frame's name
+      integer(ip) :: code = 0  !! its ID code
+      integer(ip) :: center = 0  !! its center
+      class(frame_provider), allocatable :: provider  !! the source of its orientation
+   end type builder_frame
+
+   !> A programmatic ephemeris in a [[kernel_builder]]: registered when the
+   !> builder is loaded, owned by the kernel ([[kb_add_ephemeris]]).
+   type :: builder_provider
+      integer(ip) :: body = 0  !! the body
+      integer(ip) :: center = 0  !! its center of motion
+      character(:), allocatable :: frame  !! the frame of its states (a name, resolved at the load)
+      real(wp) :: tbeg = 0.0_wp  !! start of its coverage
+      real(wp) :: tend = 0.0_wp  !! end of its coverage
+      character(:), allocatable :: ident  !! its segment identifier
+      class(ephemeris_provider), allocatable :: provider  !! the source of its states
+   end type builder_provider
+
+   !> The contents of a kernel made in memory: SPK segments added from
+   !> arrays, programmatic ephemerides (states computed by a provider,
+   !> [[kb_add_ephemeris]]) and body names ([[kb_define_body]]), loaded by
+   !> [[spice_load_kernel]] (a programmatic kernel), or by FURNSH for a file
+   !> a [[kernel_loader]] read.
+   !>
+   !> A builder does not depend on an instance: it can be filled in any
+   !> thread (each thread its own builder), while other threads query.
+   !> Segments are checked and packed when they are added; their frames are
+   !> resolved when the builder is loaded. The interpolation is SPICE's:
+   !> Lagrange (SPK type 9) or Hermite (SPK type 13).
+   type, public :: kernel_builder
+      private
+      type(builder_segment), allocatable :: segments(:)  !! the segments (1 to nseg are used)
+      integer(ip) :: nseg = 0  !! number of segments
+      character(:), allocatable :: format  !! the kernel's description ([[kb_set_format]])
+      type(string), allocatable :: body_names(:)  !! the body names the kernel defines ([[kb_define_body]])
+      integer(ip), allocatable :: body_codes(:)  !! their codes
+      integer(ip) :: nbodies = 0  !! number of body names
+      type(builder_provider), allocatable :: providers(:)  !! the programmatic ephemerides ([[kb_add_ephemeris]])
+      integer(ip) :: nprov = 0  !! number of programmatic ephemerides
+      type(builder_frame_table), allocatable :: tables(:)  !! the frames' rotation tables ([[kb_frame_quaternions]])
+      integer(ip) :: ntab = 0  !! number of rotation tables
+      type(builder_frame), allocatable :: frames(:)  !! the programmatic frames ([[kb_add_frame]])
+      integer(ip) :: nframes = 0  !! number of programmatic frames
+   contains
+      procedure :: kb_frame_quaternions
+      procedure :: kb_frame_matrices
+      generic :: frame_rotations => kb_frame_quaternions, kb_frame_matrices
+      procedure :: add_frame => kb_add_frame
+      procedure :: add_ephemeris => kb_add_ephemeris
+      procedure :: define_body => kb_define_body
+      procedure :: spk_lagrange => kb_spk_lagrange
+      procedure :: spk_hermite => kb_spk_hermite
+      procedure :: set_format => kb_set_format
+      procedure :: clear => kb_clear
+      procedure :: nsegments => kb_nsegments
+   end type kernel_builder
+
+   !> A reader of a file format SPICE does not know, registered with
+   !> [[spice_add_loader]]: FURNSH gives it the files it chooses it for
+   !> (by name, which overrides everything else; by extension; or by
+   !> `detect`: [[spice_furnsh]]), and it fills a [[kernel_builder]] with
+   !> the file's data. Named by FURNSH's `loader`, it is given the file
+   !> without any check (that it exists, what it is): `load` reports the
+   !> errors, e.g. a file it cannot open or read.
+   !>
+   !> Loaders run only inside FURNSH, UNLOAD and KCLEAR, on the instance,
+   !> while no queries run. The instance keeps its own copy of the loader
+   !> (so it may keep data from its loads, e.g. what an SPK has no place
+   !> for); [[spice_loader]] gives access to it.
+   type, abstract, public :: kernel_loader
+   contains
+      procedure(kernel_loader_load), deferred :: load
+      procedure :: detect => kernel_loader_detect
+      procedure :: unload => kernel_loader_unload
+   end type kernel_loader
+
+   abstract interface
+      !> Read `file` and add its segments to the builder `kb` (empty).
+      !> Signal errors in `ctx` (the instance's context), with the file
+      !> and the line. Nothing of the file is loaded after an error.
+      subroutine kernel_loader_load ( self, ctx, kb, file )
+         import :: kernel_loader, pepper_context, kernel_builder
+         implicit none
+         class(kernel_loader), intent(inout) :: self  !! the loader (the instance's copy)
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context (lookups and errors)
+         type(kernel_builder), intent(inout) :: kb  !! the builder to fill
+         character(*), intent(in) :: file  !! the file
+      end subroutine kernel_loader_load
+   end interface
+
+   !> A registered kernel loader (instance state).
+   type :: registered_loader
+      character(:), allocatable :: name  !! its name (upper case)
+      type(string), allocatable :: extensions(:)  !! the file-name endings it reads (upper case)
+      class(kernel_loader), allocatable :: loader  !! the instance's copy of the loader
+   end type registered_loader
+
+   interface
+
+      !> Add an SPK segment of type 9 (Lagrange interpolation) to a kernel
+      !> builder (PEPPER).
+      !>
+      !> The checks are SPKW09's, with its short error messages, except the
+      !> frame's, which is checked when the builder is loaded. With
+      !> `adapt`, a segment with too few states for its degree is not an
+      !> error: its degree is lowered to what the states allow; two states
+      !> make a Hermite segment (type 13, a cubic from the velocities); a
+      !> single state is dropped (it covers no interval).
+      module subroutine kb_spk_lagrange ( this, ctx, body, center, frame, epochs, states, degree, &
+                                          tbeg, tend, ident, adapt )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         integer(ip), intent(in) :: body  !! the body
+         integer(ip), intent(in) :: center  !! its center of motion
+         character(*), intent(in) :: frame  !! the frame of the states
+         real(wp), intent(in) :: epochs(:)  !! the epochs (TDB seconds past J2000), increasing
+         real(wp), intent(in) :: states(:, :)  !! the states (6, size(epochs)), km and km/s
+         integer(ip), intent(in) :: degree  !! the degree of the Lagrange polynomials (1 to 27)
+         real(wp), intent(in), optional :: tbeg  !! start of the coverage (default: the first epoch)
+         real(wp), intent(in), optional :: tend  !! end of the coverage (default: the last epoch)
+         character(*), intent(in), optional :: ident  !! the segment identifier (default: blank)
+         logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
+      end subroutine kb_spk_lagrange
+
+      !> Add an SPK segment of type 13 (Hermite interpolation) to a kernel
+      !> builder (PEPPER).
+      !>
+      !> The checks are SPKW13's, with its short error messages (the degree
+      !> is odd), except the frame's, which is checked when the builder is
+      !> loaded. With `adapt`, a segment with too few states for its
+      !> degree is not an error: its degree is lowered to what the states
+      !> allow; a single state is dropped (it covers no interval).
+      module subroutine kb_spk_hermite ( this, ctx, body, center, frame, epochs, states, degree, &
+                                         tbeg, tend, ident, adapt )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         integer(ip), intent(in) :: body  !! the body
+         integer(ip), intent(in) :: center  !! its center of motion
+         character(*), intent(in) :: frame  !! the frame of the states
+         real(wp), intent(in) :: epochs(:)  !! the epochs (TDB seconds past J2000), increasing
+         real(wp), intent(in) :: states(:, :)  !! the states (6, size(epochs)), km and km/s
+         integer(ip), intent(in) :: degree  !! the degree of the Hermite polynomials (odd, 1 to 27)
+         real(wp), intent(in), optional :: tbeg  !! start of the coverage (default: the first epoch)
+         real(wp), intent(in), optional :: tend  !! end of the coverage (default: the last epoch)
+         character(*), intent(in), optional :: ident  !! the segment identifier (default: blank)
+         logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
+      end subroutine kb_spk_hermite
+
+      !> Add a programmatic ephemeris to the kernel a builder makes
+      !> (PEPPER): a segment whose states come from `provider` (an
+      !> [[ephemeris_provider]]: its `state` computes the state of `body`
+      !> relative to `center` in `frame` at any epoch of [tbeg, tend]), not
+      !> from a table. A kernel loader uses it for a file that holds a
+      !> model rather than states (elements and a propagator): the loader
+      !> reads the file and puts what it read in the provider's components.
+      !>
+      !> When the builder is loaded, the ephemeris is registered as
+      !> [[spice_add_ephemeris]] registers one, but owned by the kernel: it
+      !> takes part in the segment search with the kernel's priority (after
+      !> the kernel's own table segments), SPKCOV and SPKOBJ report it by
+      !> the kernel's name, and UNLOAD and KCLEAR remove it with the kernel.
+      !> Unlike [[spice_add_ephemeris]], it does not replace another
+      !> ephemeris of the same body: kernels of the same body coexist, the
+      !> last loaded first, as SPK files do. The builder keeps a copy of the
+      !> provider; the provider is called from any context, so from several
+      !> threads at once, and must not change shared data. A kernel with a
+      !> programmatic ephemeris cannot be written to an SPK file
+      !> ([[spice_write_kernel]]).
+      !>
+      !> The checks are those of [[spice_add_ephemeris]] (SPICE(BADDESCRTIMES),
+      !> SPICE(BODYANDCENTERSAME)), except the frame's, which is checked when
+      !> the builder is loaded (SPICE(UNKNOWNFRAME)).
+      module subroutine kb_add_ephemeris ( this, ctx, body, center, frame, tbeg, tend, provider, ident )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         integer(ip), intent(in) :: body  !! the body
+         integer(ip), intent(in) :: center  !! its center of motion
+         character(*), intent(in) :: frame  !! the frame of the states
+         real(wp), intent(in) :: tbeg  !! start of the coverage (TDB seconds past J2000)
+         real(wp), intent(in) :: tend  !! end of the coverage
+         class(ephemeris_provider), intent(in) :: provider  !! the source of the states (copied)
+         character(*), intent(in), optional :: ident  !! the segment identifier (default: PROGRAMMATIC EPHEMERIS)
+      end subroutine kb_add_ephemeris
+
+      !> Add a table of rotations to the kernel a builder makes, as
+      !> quaternions (PEPPER): a frame NAME (ID code CODE, center CENTER)
+      !> whose orientation relative to BASE (e.g. J2000) is given at ET
+      !> epochs; PEPPER interpolates it (CK type 5's interpolation, with ET
+      !> as its time tags: no clock). Loaded, the frame is defined while the
+      !> kernel is (as [[spice_add_frame]] defines one, owned by the kernel):
+      !> PXFORM, SXFORM and every query that takes a frame use it.
+      !>
+      !> The rotations: `quats(:, k)` is the SPICE quaternion (scalar first)
+      !> of the rotation matrix R that maps vectors from BASE to the frame
+      !> at `epochs(k)` (v_frame = R v_base: R = PXFORM(BASE, NAME)); with
+      !> `inverse`, of the matrix from the frame to BASE. Signs need not be
+      !> continuous (they are made so). `av(:, k)`, optional: the angular
+      !> velocity of the frame relative to BASE, in BASE's coordinates
+      !> (rad/s), as a CK has it; without it, the angular velocity
+      !> (SXFORM's derivative) is that of the interpolated rotation.
+      !>
+      !> `method`: 'LAGRANGE' (default; CK type 5 subtype 1, or 3 with `av`)
+      !> or 'HERMITE' (needs `av`: subtype 0). The interpolation window
+      !> must have an even size, so the degree is odd for Lagrange (1, 3,
+      !> ..., 23) and 3, 7, 11, 15, 19 or 23 for Hermite (SPICE(INVALIDDEGREE)
+      !> otherwise). `tbeg` and `tend`: the coverage, inside the epochs
+      !> (default: their span). Several tables of a frame: the last added
+      !> that covers an epoch. Outside the coverage the frame has no
+      !> orientation (FRMGET's no-data error).
+      !>
+      !> Errors (in `ctx`): SPICE(INVALIDSIZE) (arrays of the wrong shape),
+      !> SPICE(TIMESOUTOFORDER), SPICE(BADDESCRTIMES), SPICE(ZEROQUATERNION),
+      !> SPICE(INVALIDDEGREE), SPICE(UNSUPPORTEDINTERP) (a method other than
+      !> LAGRANGE or HERMITE, or HERMITE without `av`), SPICE(BLANKSTRING)
+      !> (a blank name). The frame's name, code and base are checked when
+      !> the builder is loaded (SPICE(FRAMEEXISTS), SPICE(UNKNOWNFRAME)).
+      module subroutine kb_frame_quaternions ( this, ctx, name, code, center, base, epochs, quats, degree, &
+                                               av, method, inverse, tbeg, tend, ident )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center (a body's ID code)
+         character(*), intent(in) :: base  !! the frame the rotations are relative to
+         real(wp), intent(in) :: epochs(:)  !! the epochs (TDB seconds past J2000), increasing
+         real(wp), intent(in) :: quats(:, :)  !! the quaternions (4, size(epochs)): from BASE to the frame
+         integer(ip), intent(in) :: degree  !! the degree of the interpolation (odd)
+         real(wp), intent(in), optional :: av(:, :)  !! the angular velocities (3, size(epochs)), rad/s, in BASE
+         character(*), intent(in), optional :: method  !! 'LAGRANGE' (default) or 'HERMITE'
+         logical, intent(in), optional :: inverse  !! the rotations are from the frame to BASE
+         real(wp), intent(in), optional :: tbeg  !! start of the coverage (default: the first epoch)
+         real(wp), intent(in), optional :: tend  !! end of the coverage (default: the last epoch)
+         character(*), intent(in), optional :: ident  !! the segment identifier
+      end subroutine kb_frame_quaternions
+
+      !> Add a table of rotations to the kernel a builder makes, as 3x3
+      !> rotation matrices (PEPPER): `rots(:, :, k)` maps vectors from BASE
+      !> to the frame (or, with `inverse`, from the frame to BASE) at
+      !> `epochs(k)`. Otherwise as [[kb_frame_quaternions]] (the matrices
+      !> are converted to quaternions, M2Q).
+      module subroutine kb_frame_matrices ( this, ctx, name, code, center, base, epochs, rots, degree, &
+                                            av, method, inverse, tbeg, tend, ident )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center
+         character(*), intent(in) :: base  !! the frame the rotations are relative to
+         real(wp), intent(in) :: epochs(:)  !! the epochs, increasing
+         real(wp), intent(in) :: rots(:, :, :)  !! the rotation matrices (3, 3, size(epochs)): from BASE to the frame
+         integer(ip), intent(in) :: degree  !! the degree of the interpolation (odd)
+         real(wp), intent(in), optional :: av(:, :)  !! the angular velocities (3, size(epochs))
+         character(*), intent(in), optional :: method  !! 'LAGRANGE' (default) or 'HERMITE'
+         logical, intent(in), optional :: inverse  !! the rotations are from the frame to BASE
+         real(wp), intent(in), optional :: tbeg  !! start of the coverage
+         real(wp), intent(in), optional :: tend  !! end of the coverage
+         character(*), intent(in), optional :: ident  !! the segment identifier
+      end subroutine kb_frame_matrices
+
+      !> Add a programmatic frame to the kernel a builder makes (PEPPER): a
+      !> frame whose orientation comes from `provider` (a [[frame_provider]],
+      !> as [[spice_add_frame]] takes), for a file that holds an orientation
+      !> model. Loaded, it is defined as [[spice_add_frame]] defines one,
+      !> owned by the kernel: UNLOAD and KCLEAR remove it. Kernels that
+      !> define the same frame (the same name and code) coexist: the last
+      !> loaded whose provider has the orientation at an epoch gives it.
+      !> The name and code are checked when the builder is loaded.
+      module subroutine kb_add_frame ( this, ctx, name, code, center, provider )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center
+         class(frame_provider), intent(in) :: provider  !! the source of its orientation (copied)
+      end subroutine kb_add_frame
+
+      !> Check a frame definition as [[spice_add_frame]] does (a blank name;
+      !> a name or code of another frame: SPICE(FRAMEEXISTS)) (PEPPER).
+      module subroutine check_frame_definition ( ctx, name, code )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+      end subroutine check_frame_definition
+
+      !> Register a programmatic frame owned by a kernel built in memory
+      !> (its handle), from a builder being loaded (PEPPER).
+      module subroutine register_owned_frame ( ctx, name, code, center, provider, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center
+         class(frame_provider), intent(in) :: provider  !! the source of its orientation
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+      end subroutine register_owned_frame
+
+      !> The rotation tables a kernel built in memory has for a frame (its
+      !> code, which is the tables' CK ID code): their coverage, in ET
+      !> (CKCOV, CK_COVERAGE by the kernel's name). `is_kernel` is false if
+      !> no kernel built in memory has the name (then it is a file) (PEPPER).
+      module subroutine kernel_frame_tables ( ctx, name, code, is_kernel, tbeg, tend )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the kernel's name
+         integer(ip), intent(in) :: code  !! the frame's code
+         logical, intent(out) :: is_kernel  !! a kernel built in memory has the name
+         real(wp), allocatable, intent(out) :: tbeg(:)  !! the tables' coverage: starts
+         real(wp), allocatable, intent(out) :: tend(:)  !! ends
+      end subroutine kernel_frame_tables
+
+      !> The codes of the frames whose rotation tables a kernel built in
+      !> memory has (CKOBJ, CK_OBJECTS by the kernel's name); `is_kernel` as
+      !> for [[kernel_frame_tables]] (PEPPER).
+      module subroutine kernel_frame_codes ( ctx, name, is_kernel, codes )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the kernel's name
+         logical, intent(out) :: is_kernel  !! a kernel built in memory has the name
+         integer(ip), allocatable, intent(out) :: codes(:)  !! the frames' codes (with repeats)
+      end subroutine kernel_frame_codes
+
+      !> Remove the programmatic frames a kernel owns (its handle): UNLOAD,
+      !> KCLEAR. A frame's definition leaves the kernel pool when no other
+      !> registration of it remains (PEPPER).
+      module subroutine remove_owned_frames ( ctx, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+      end subroutine remove_owned_frames
+
+      !> The state transformation of a frame of rotation tables, from the
+      !> frame to its base (PEPPER).
+      recursive module subroutine rotation_table_transform ( self, ctx, frame, et, xform, relative, found )
+         implicit none
+         class(rotation_table), intent(in) :: self  !! the frame's tables
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: xform(6, 6)  !! the transformation from the frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the base frame
+         logical, intent(out) :: found  !! a table covers ET
+      end subroutine rotation_table_transform
+
+      !> The rotation of a frame of rotation tables, from the frame to its
+      !> base (PEPPER).
+      recursive module subroutine rotation_table_rotation ( self, ctx, frame, et, rotate, relative, found )
+         implicit none
+         class(rotation_table), intent(in) :: self  !! the frame's tables
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: rotate(3, 3)  !! the rotation from the frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the base frame
+         logical, intent(out) :: found  !! a table covers ET
+      end subroutine rotation_table_rotation
+
+      !> Register a programmatic ephemeris owned by a kernel built in memory
+      !> (its handle), from a builder being loaded (PEPPER).
+      module subroutine register_owned_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: body  !! the body
+         integer(ip), intent(in) :: center  !! its center
+         character(*), intent(in) :: frame  !! the frame
+         real(wp), intent(in) :: tbeg  !! start of the coverage
+         real(wp), intent(in) :: tend  !! end of the coverage
+         class(ephemeris_provider), intent(in) :: provider  !! the source of the states
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+         character(*), intent(in) :: ident  !! the segment identifier
+      end subroutine register_owned_ephemeris
+
+      !> Remove the programmatic ephemerides a kernel owns (its handle):
+      !> UNLOAD, KCLEAR (PEPPER).
+      module subroutine remove_owned_ephemerides ( ctx, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+      end subroutine remove_owned_ephemerides
+
+      !> Define a body name of the kernel a builder makes (PEPPER): while the
+      !> kernel is loaded, `name` translates to `code` and `code` to `name`
+      !> (BODN2C, BODC2N, and every query that takes a name), as BODDEF
+      !> would; when the kernel is unloaded (UNLOAD, KCLEAR, replaced) the
+      !> definition is removed, and an earlier one of the same name or code
+      !> (BODDEF's, another kernel's) is in effect again. A later definition
+      !> of a name, by BODDEF or another kernel, takes precedence, and names
+      !> from the kernel pool (NAIF_BODY_NAME/CODE) take precedence over all
+      !> of them, as over BODDEF's. SPICE(BLANKNAMEASSIGNED) for a blank name.
+      module subroutine kb_define_body ( this, ctx, name, code )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         character(*), intent(in) :: name  !! the body's name
+         integer(ip), intent(in) :: code  !! its NAIF ID code
+      end subroutine kb_define_body
+
+      !> Add a body name/code pair defined by a kernel built in memory, owned
+      !> by it (its handle): BODDEF's definition, removed with
+      !> [[remove_owned_boddefs]] when the kernel is unloaded (PEPPER).
+      module subroutine owned_boddef ( ctx, name, code, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: name  !! the body's name
+         integer(ip), intent(in) :: code  !! its NAIF ID code
+         integer(ip), intent(in) :: owner  !! the handle of the kernel that defines it
+      end subroutine owned_boddef
+
+      !> Remove the body name/code pairs a kernel defined ([[owned_boddef]]):
+      !> every context rebuilds its name tables from the built-in names and
+      !> the definitions that remain, in their order (PEPPER).
+      module subroutine remove_owned_boddefs ( ctx, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: owner  !! the handle of the kernel unloaded
+      end subroutine remove_owned_boddefs
+
+      !> Set the description of the kernel a builder makes (shown by
+      !> [[kernel_format]]), e.g. the file format and its version (PEPPER).
+      module subroutine kb_set_format ( this, text )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         character(*), intent(in) :: text  !! the description
+      end subroutine kb_set_format
+
+      !> Empty a kernel builder, to reuse it (PEPPER).
+      module subroutine kb_clear ( this )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+      end subroutine kb_clear
+
+      !> The number of segments in a kernel builder (PEPPER).
+      module integer(ip) function kb_nsegments ( this )
+         implicit none
+         class(kernel_builder), intent(in) :: this  !! the builder
+      end function kb_nsegments
+
+      !> The default `detect` of a [[kernel_loader]]: it accepts no file,
+      !> so the loader is used only by name or by its extensions (PEPPER).
+      module logical function kernel_loader_detect ( self, file, head )
+         implicit none
+         class(kernel_loader), intent(in) :: self  !! the loader
+         character(*), intent(in) :: file  !! the file
+         character(*), intent(in) :: head  !! the start of the file: its first `len(head)` bytes (at most 4096; fewer for a short file)
+      end function kernel_loader_detect
+
+      !> The default `unload` of a [[kernel_loader]]: nothing to free
+      !> (PEPPER).
+      module subroutine kernel_loader_unload ( self, file )
+         implicit none
+         class(kernel_loader), intent(inout) :: self  !! the loader
+         character(*), intent(in) :: file  !! the file unloaded
+      end subroutine kernel_loader_unload
+
+      !> Load a kernel builder as a kernel named `name`: a programmatic
+      !> kernel, with no file (PEPPER).
+      !>
+      !> The kernel is an SPK held in memory, used exactly like an SPK
+      !> file: queries, coverage (SPKCOV, SPKOBJ by its name), KDATA and
+      !> KINFO (type SPK), UNLOAD and KCLEAR. Loaded under a name in use
+      !> (a kernel or a file), it replaces the old kernel, which is
+      !> unloaded once the new one has loaded; the new one has the highest
+      !> priority. The builder's data is moved into the instance (the
+      !> builder is then empty) unless `keep` is true (it is copied). An
+      !> error, e.g. an unknown frame, loads nothing and keeps the old
+      !> kernel of the name.
+      module subroutine spice_load_kernel ( this, name, kb, keep )
+         implicit none
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
+         character(*), intent(in) :: name  !! the kernel's name (non-blank)
+         type(kernel_builder), intent(inout) :: kb  !! the builder (emptied unless keep)
+         logical, intent(in), optional :: keep  !! copy the builder's data instead of moving it
+      end subroutine spice_load_kernel
+
+      !> Write a kernel built in memory (by [[spice_load_kernel]] or a
+      !> kernel loader) to SPICE kernel files (PEPPER), which SPICE (and
+      !> PEPPER) load to give the same states, orientations and names:
+      !>
+      !> - `file`: an SPK file of its segments (blank: none, for a kernel of
+      !>   frames only);
+      !> - `ck_file`: a CK file of its rotation tables
+      !>   ([[kb_frame_quaternions]]), CK type 5 segments;
+      !> - `text_file`: a text kernel with what the CK needs and the kernel
+      !>   defines: for each frame of rotation tables, a type 1 SCLK (one
+      !>   tick a TDB second, ID -|frame code|) and the frame's definition
+      !>   (a CK frame, class 3, CK ID the frame's code); and the body names
+      !>   ([[kb_define_body]]) as NAIF_BODY_NAME/CODE assignments (`+=`).
+      !>
+      !> The CK's time tags are the tables' ET epochs (ticks), shifted by a
+      !> whole number of seconds if an epoch is before J2000 (ticks cannot
+      !> be negative): then its orientations agree to rounding, else
+      !> exactly. A kernel with rotation tables needs `ck_file` and
+      !> `text_file`; a kernel with programmatic ephemerides or frames
+      !> (models, computed by code) cannot be written (SPICE(NOTWRITABLE)).
+      !> The files must not exist (SPICE(FILEEXISTS)).
+      module subroutine spice_write_kernel ( this, name, file, ck_file, text_file )
+         implicit none
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
+         character(*), intent(in) :: name  !! the kernel's name (as loaded)
+         character(*), intent(in) :: file  !! the SPK file to write (blank: none)
+         character(*), intent(in), optional :: ck_file  !! the CK file of the rotation tables
+         character(*), intent(in), optional :: text_file  !! the text kernel: SCLKs, frame definitions, body names
+      end subroutine spice_write_kernel
+
+      !> Register a kernel loader (PEPPER): a reader of a file format SPICE
+      !> does not know. FURNSH uses it for a file (the rules:
+      !> [[spice_furnsh]]):
+      !>
+      !> - when FURNSH's `loader` argument, or the meta-kernel variable
+      !>   `KERNEL_LOADERS`, names it: then it reads the file whatever the
+      !>   file is, before any other choice or check;
+      !> - else, for a file that is not a SPICE binary kernel (DAF, DAS),
+      !>   when the file name ends with one of `extensions` (the longest
+      !>   match among all loaders), or when its `detect` accepts the file
+      !>   (the most recently registered loader first).
+      !>
+      !> The instance keeps a copy of `loader` ([[spice_loader]] gives
+      !> access to it). A name or extension already registered signals
+      !> SPICE(LOADERCONFLICT), unless `replace` (the old loader is
+      !> replaced, or the extension moves to this loader). The name PEPPER
+      !> is FURNSH's for PEPPER's own loading, and cannot be registered
+      !> (SPICE(RESERVEDLOADERNAME)); any other name can.
+      module subroutine spice_add_loader ( this, name, loader, extensions, replace )
+         implicit none
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
+         character(*), intent(in) :: name  !! the loader's name (case-insensitive)
+         class(kernel_loader), intent(in) :: loader  !! the loader (copied)
+         character(*), intent(in), optional :: extensions(:)  !! file-name endings, e.g. '.myeph' (case-insensitive)
+         logical, intent(in), optional :: replace  !! replace a loader with this name or these extensions
+      end subroutine spice_add_loader
+
+      !> Remove a kernel loader (PEPPER). The kernels it loaded stay loaded
+      !> (their data is the instance's); their unload callbacks are then
+      !> not called. Nothing happens if no loader has this name.
+      module subroutine spice_remove_loader ( this, name )
+         implicit none
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
+         character(*), intent(in) :: name  !! the loader's name
+      end subroutine spice_remove_loader
+
+      !> A pointer to the instance's copy of a registered loader, e.g. to
+      !> read what it kept from its loads (PEPPER); null if no loader has
+      !> this name. It is valid until loaders are added or removed.
+      module subroutine spice_loader ( this, name, ptr )
+         implicit none
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
+         character(*), intent(in) :: name  !! the loader's name
+         class(kernel_loader), pointer, intent(out) :: ptr  !! the loader
+      end subroutine spice_loader
+
+      !> The loader and the description of a loaded kernel (PEPPER): for a
+      !> file read by a kernel loader, the loader's name and the builder's
+      !> description; for a programmatic kernel, a blank loader and its
+      !> description (`(programmatic)` if none was set); for SPICE's own
+      !> kernels, blanks. `found` is false if no kernel has this name.
+      module subroutine kernel_format ( ctx, file, loader, format, found )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: file  !! the kernel (as loaded)
+         character(:), allocatable, intent(out) :: loader  !! the loader's name (blank if none)
+         character(:), allocatable, intent(out) :: format  !! the description (blank if none)
+         logical, intent(out) :: found  !! a kernel has this name
+      end subroutine kernel_format
+
+      !> The names of the kernel loaders registered on the context's instance
+      !> ([[spice_add_loader]]), in the order of registration (PEPPER).
+      module subroutine loader_names ( ctx, names )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(string), allocatable, intent(out) :: names(:)  !! the loaders' names (upper case)
+      end subroutine loader_names
+
+      !> The registered loader FURNSH uses for `file` (not a SPICE binary
+      !> kernel) when no loader is named: the longest extension that ends
+      !> the file name (case-insensitive), else the first `detect` that
+      !> accepts the file's first 4096 bytes, the most recently registered
+      !> loader first; 0 if none (PEPPER; [[spice_furnsh]]).
+      module subroutine match_kernel_loader ( ctx, file, k )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: file  !! the file
+         integer(ip), intent(out) :: k  !! the loader's index (0: none)
+      end subroutine match_kernel_loader
+
+      !> The loader named `name` (FURNSH's `loader`, or `KERNEL_LOADERS`;
+      !> case-insensitive): -1 for PEPPER (PEPPER's own loading: the file is
+      !> loaded as without kernel loaders), else the index of the registered
+      !> loader with the name, else SPICE(UNKNOWNLOADER) (PEPPER;
+      !> [[spice_furnsh]]).
+      module subroutine find_kernel_loader ( ctx, file, name, k )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: file  !! the file (for the message)
+         character(*), intent(in) :: name  !! the loader's name
+         integer(ip), intent(out) :: k  !! the loader's index (-1: PEPPER, PEPPER's own loading)
+      end subroutine find_kernel_loader
+
+      !> Load `file` with registered loader `k` (ZZLDKER): run the loader,
+      !> then load its builder as an SPK in memory named `file` (PEPPER).
+      module subroutine run_kernel_loader ( ctx, k, file, handle, format )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: k  !! the loader's index
+         character(*), intent(in) :: file  !! the file
+         integer(ip), intent(out) :: handle  !! the handle of the SPK made
+         character(:), allocatable, intent(out) :: format  !! the kernel's description
+      end subroutine run_kernel_loader
+
+      !> The meta-kernel variable KERNEL_LOADERS (FURNSH, loading the
+      !> meta-kernel `file`): pairs of a file, as written in
+      !> KERNELS_TO_LOAD, and a kernel loader's name; size 0 if it is not
+      !> set. SPICE(BADKERNELLOADERS) for an odd number of values
+      !> (PEPPER).
+      module subroutine meta_kernel_loaders ( ctx, file, pairs )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: file  !! the meta-kernel (for the message)
+         type(string), allocatable, intent(out) :: pairs(:)  !! the values of KERNEL_LOADERS
+      end subroutine meta_kernel_loaders
+
+      !> The loader KERNEL_LOADERS names for a file of KERNELS_TO_LOAD
+      !> (as written, `raw`, or with its path symbols replaced,
+      !> `expanded`); blank if none (the last pair for the file wins)
+      !> (PEPPER).
+      module subroutine meta_kernel_loader ( pairs, raw, expanded, name )
+         implicit none
+         type(string), intent(in) :: pairs(:)  !! the values of KERNEL_LOADERS
+         character(*), intent(in) :: raw  !! the file as written in KERNELS_TO_LOAD
+         character(*), intent(in) :: expanded  !! the file with its path symbols replaced
+         character(:), allocatable, intent(out) :: name  !! the loader's name (blank: none)
+      end subroutine meta_kernel_loader
+
+      !> Kernel `i` of the KEEPER table is removed (UNLOAD, KCLEAR): remove
+      !> what a kernel built in memory defined (body names, ephemerides,
+      !> frames, the DAF of its rotation tables), unless another KEEPER
+      !> entry still has its handle, and call the unload callback of its
+      !> loader, if it has one and it is still registered (PEPPER).
+      module subroutine notify_kernel_unloaded ( ctx, i, clearing )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: i  !! the kernel's index in the KEEPER table
+         logical, intent(in), optional :: clearing  !! KCLEAR: every entry goes, so only the later entries share the handle
+      end subroutine notify_kernel_unloaded
 
    end interface
 
@@ -7663,13 +8393,24 @@ module pepper_instance_module
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
-      module subroutine zzldker ( ctx, file, nofile, filtyp, handle )
+      !>
+      !> PEPPER: chooses the loader of FILE (the rules: [[spice_furnsh]]): a
+      !> registered kernel loader named by `loader`, before any check of the
+      !> file; else SPICE's binary kernels by their ID word; else a
+      !> registered loader by extension or `detect`; else the text readers.
+      !> A file a kernel loader reads is loaded as an SPK built in memory
+      !> (FILTYP 'SPK').
+      module subroutine zzldker ( ctx, file, nofile, filtyp, handle, loader, used, format )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: file  !! The name of a file to be loaded.
          character(*), intent(in) :: nofile  !! A message to issue if FILE cannot be located
          character(*), intent(out) :: filtyp  !! The type of kernel.
          integer(ip), intent(out) :: handle  !! The handle associated with the loaded kernel.
+         character(*), intent(in), optional :: loader  !! PEPPER: the registered loader that reads FILE, before anything else
+                                                       !! (PEPPER: PEPPER's own loading; blank: chosen by the file)
+         character(:), allocatable, intent(out), optional :: used  !! PEPPER: the kernel loader that read the file (blank: none)
+         character(:), allocatable, intent(out), optional :: format  !! PEPPER: the description of a kernel built by a loader
       end subroutine zzldker
 
       !> Load one or more SPICE kernels into a program. Lines of text
@@ -7679,11 +8420,21 @@ module pepper_instance_module
       !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
       !> [[pepper_json]]), a text kernel or meta-kernel.
       !>
+      !> PEPPER: kernel loaders ([[spice_add_loader]]) read other file
+      !> formats: `loader` names the one that reads FILE, overriding every
+      !> other choice, or is PEPPER for PEPPER's own loading (registered
+      !> loaders not asked); without it FURNSH chooses (SPICE's binary
+      !> kernels, a loader's extension, a loader's `detect`, the text
+      !> readers). The rules are in [[spice_furnsh]], the method programs
+      !> call.
+      !>
       !> FILSIZ     P   Maximum file name length.
-      module subroutine furnsh ( ctx, file )
+      module subroutine furnsh ( ctx, file, loader )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
+         character(*), intent(in), optional :: loader  !! PEPPER: the registered kernel loader that reads FILE, overriding
+                                                       !! every other choice ([[spice_furnsh]]; blank or absent: FURNSH chooses)
       end subroutine furnsh
 
       !> Return the number of kernels of a specified type that are
@@ -20683,16 +21434,91 @@ contains
    !> PEPPER: `in_memory` reads the binary kernels (DAF: SPK, CK, binary PCK)
    !> whole into memory: the file, or every binary kernel a meta-kernel
    !> lists (default: the instance's choice, [[set_in_memory]]).
-   subroutine spice_furnsh(this, file, in_memory)
+   !>
+   !>## Which loader reads the file (PEPPER)
+   !>
+   !> With `loader` (not blank): the name of a kernel loader registered with
+   !> [[spice_add_loader]] (case-insensitive). That loader reads the file,
+   !> and nothing else decides: FURNSH does not check that the file exists,
+   !> what it is (a SPICE binary kernel is given to the loader too), its
+   !> extension, or the other loaders' `detect`. The loader reports its own
+   !> errors.
+   !>
+   !> - `loader = 'PEPPER'`: PEPPER's own loading. The file is loaded as
+   !>   without kernel loaders (the steps 1, 2 and 5 below): a SPICE binary
+   !>   kernel by its ID word, a `*.json` file as a JSON kernel, any other
+   !>   file as a text kernel or meta-kernel. Registered loaders are not
+   !>   asked, so this is how to load a SPICE text kernel or meta-kernel
+   !>   whose extension a registered loader also has (a meta-kernel named
+   !>   `*.txt`, with a loader registered for `.txt`). PEPPER cannot be a
+   !>   registered loader's name.
+   !> - Any other name no loader is registered under: SPICE(UNKNOWNLOADER),
+   !>   and nothing is loaded.
+   !>
+   !> Without `loader` (or blank), FURNSH chooses:
+   !>
+   !> 1. The file must exist (SPICE(NOSUCHFILE)).
+   !> 2. A SPICE binary kernel (DAF or DAS: SPK, CK, binary PCK, DSK, EK,
+   !>    known by the ID word of its first record) is loaded by PEPPER;
+   !>    registered loaders are not asked, whatever their extensions.
+   !> 3. Else a registered loader with an extension that ends the file
+   !>    name reads it (case-insensitive; the longest match, so `.oem.xml`
+   !>    is chosen over `.xml`).
+   !> 4. Else the registered loaders' `detect` (on the file's first 4096
+   !>    bytes), the most recently registered first: the first that
+   !>    accepts reads it.
+   !> 5. Else the file is a JSON kernel (`*.json`, any case) or a text
+   !>    kernel or meta-kernel.
+   !>
+   !> FURNSH always reads the file on disk, even when a kernel built in
+   !> memory has its name (a file a loader read, loaded again; an SPK that
+   !> [[spice_write_kernel]] wrote under its kernel's name). Loaded again,
+   !> a file a loader read goes to steps 3 and 4 first; if no loader
+   !> matches it any more (or with `loader = 'PEPPER'`), it is read from
+   !> disk by steps 2 and 5 as any other file.
+   !>
+   !> A file a loader reads becomes an SPK held in memory (the loader fills
+   !> a [[kernel_builder]]: segments from the file's rows, programmatic
+   !> ephemerides for a file that holds a model, [[kb_add_ephemeris]], and
+   !> body names, [[kb_define_body]]), named after the file: queries, SPKCOV and
+   !> SPKOBJ by the file's name, KDATA and KINFO (type SPK),
+   !> [[kernel_format]] (the loader's name and the kernel's description),
+   !> UNLOAD and KCLEAR (which call the loader's `unload`), like an SPK
+   !> file. `in_memory` does not apply to it. If the loader signals an
+   !> error, or its data fails the builder's checks (an unknown frame, too
+   !> few states, ...), nothing of the file is loaded. Loaded again, the
+   !> file is read again: a second kernel (UNLOAD removes the last).
+   !>
+   !> `loader` applies to `file` only. For a meta-kernel it is the loader of
+   !> the meta-kernel itself; the files it lists are chosen by the steps
+   !> above, unless the meta-kernel's variable `KERNEL_LOADERS` names their
+   !> loaders: pairs of a file (as written in `KERNELS_TO_LOAD`, or with its
+   !> path symbols replaced) and a loader's name, with the rules of
+   !> `loader`, PEPPER included (SPICE(BADKERNELLOADERS) for an odd number
+   !> of values):
+   !>
+   !>```
+   !>     KERNELS_TO_LOAD = ( '$K/naif0012.tls', '$K/sc_ephem.txt' )
+   !>     KERNEL_LOADERS  = ( '$K/sc_ephem.txt', 'MYFORMAT' )
+   !>```
+   !>
+   !> In the C interface `loader` is `pepper_spice_furnsh_loader`'s, in
+   !> PepperyPy `furnsh(path, loader=...)`. The legacy FURNSH has no
+   !> `loader` argument: loaders registered on its instance are chosen by
+   !> steps 3 and 4 and by `KERNEL_LOADERS`.
+   subroutine spice_furnsh(this, file, in_memory, loader)
       class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
       logical, intent(in), optional :: in_memory  !! read binary kernels whole into memory
+      character(*), intent(in), optional :: loader  !! the registered kernel loader that reads the file, overriding every
+                                                    !! other choice; PEPPER: PEPPER's own loading (see above; blank or
+                                                    !! absent: FURNSH chooses)
       type(pepper_context), pointer :: ctx
       logical :: saved
       ctx => this%context()
       saved = this%in_memory
       if (present(in_memory)) this%in_memory = in_memory
-      call furnsh(ctx, file)
+      call furnsh(ctx, file, loader)
       this%in_memory = saved
    end subroutine spice_furnsh
 
@@ -21292,6 +22118,67 @@ contains
          end if
       end associate
    end function daf_image_slot
+
+   !> The index in the instance's file table of the DAF `handle` if it was
+   !> built in memory (it has no file: [[spice_load_kernel]], or a kernel
+   !> loader's), else 0. Its records are read from its image, always.
+   integer(ip) function daf_synthetic_slot(ctx, handle) result(k)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the DAF
+      k = daf_image_slot(ctx, handle)
+      if (k > 0) then
+         if (.not. ctx%spice%zzddhman%files(k)%synthetic) k = 0
+      end if
+   end function daf_synthetic_slot
+
+   !> The index in the instance's file table of the DAF built in memory
+   !> named `name` (the most recently loaded, if several), else 0 (always
+   !> 0 while `zzddhman%files_only` is set: ZZLDKER loading from disk).
+   integer(ip) function synthetic_named(ctx, name) result(k)
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the kernel's name
+      k = 0
+      if (ctx%spice%zzddhman%files_only) return   ! ZZLDKER reads a file from disk
+      associate (ft => ctx%spice%zzddhman)
+         do k = ft%nft, 1, -1
+            if (.not. ft%files(k)%synthetic) cycle
+            if (ft%files(k)%name == trim(adjustl(name))) return
+         end do
+      end associate
+      k = 0
+   end function synthetic_named
+
+   !> Record `recno` of a DAF image as characters: the bytes of its 128
+   !> double precision words (the image of a native file).
+   pure function daf_image_chars(image, recno) result(rec)
+      real(wp), intent(in) :: image(:)  !! the DAF image (whole records)
+      integer(ip), intent(in) :: recno  !! the record number
+      character(1024) :: rec  !! the record's 1024 bytes
+      rec = transfer(image(128*(recno - 1) + 1:128*recno), rec)
+   end function daf_image_chars
+
+   !> The items of the file record (record 1) of a native DAF image, as
+   !> ZZDAFGFR reads them from a native file: ID word, ND, NI, internal
+   !> file name, forward and backward pointers, free address.
+   pure subroutine daf_image_file_record(image, idword, nd, ni, ifname, fward, bward, free)
+      real(wp), intent(in) :: image(:)  !! the DAF image
+      character(*), intent(out) :: idword  !! the ID word
+      integer(ip), intent(out) :: nd  !! number of double precision components of a summary
+      integer(ip), intent(out) :: ni  !! number of integer components of a summary
+      character(*), intent(out) :: ifname  !! the internal file name
+      integer(ip), intent(out) :: fward  !! the first summary record
+      integer(ip), intent(out) :: bward  !! the last summary record
+      integer(ip), intent(out) :: free  !! the first free address
+      character(1024) :: rec
+      rec = daf_image_chars(image, 1_ip)
+      idword = rec(1:8)
+      nd = transfer(rec(9:12), nd)
+      ni = transfer(rec(13:16), ni)
+      ifname = rec(17:76)
+      fward = transfer(rec(77:80), fward)
+      bward = transfer(rec(81:84), bward)
+      free = transfer(rec(85:88), free)
+   end subroutine daf_image_file_record
 
    !> Read the DAF `handle` whole into memory (FURNSH's `in_memory`; the
    !> instance's context, while no queries run). A file in a non-native

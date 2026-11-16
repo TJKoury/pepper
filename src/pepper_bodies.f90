@@ -10960,10 +10960,50 @@ contains
       if ( ctx%failed() ) return
       call zzboddef_apply ( ctx, name, code )
       if ( ctx%failed() ) return
-      call record_boddef ( ctx%spice, name, code )
+      call record_boddef ( ctx%spice, name, code, 0_ip )
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
       ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
       end procedure zzboddef
+
+      !> PEPPER: a name/code pair defined by a kernel built in memory, owned
+      !> by its handle (kernel_builder's define_body).
+      module procedure owned_boddef
+      implicit none
+      call sync_boddefs ( ctx )
+      if ( ctx%failed() ) return
+      call zzboddef_apply ( ctx, name, code )
+      if ( ctx%failed() ) return
+      call record_boddef ( ctx%spice, name, code, owner )
+      ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
+      ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
+      end procedure owned_boddef
+
+      !> PEPPER: remove the pairs a kernel defined. The record loses them
+      !> and the epoch changes while the count drops, so every context's
+      !> next look (sync_boddefs) rebuilds its tables from the built-in
+      !> names and the remaining definitions, in order: an earlier
+      !> definition of the same name or code is in effect again.
+      module procedure remove_owned_boddefs
+      implicit none
+      integer(ip) :: k, n
+      associate ( s => ctx%spice )
+         if ( s%boddef_count == 0 .or. owner == 0 ) return
+         if ( .not. allocated ( s%boddef_owners ) ) return
+         if ( .not. any ( s%boddef_owners(1:s%boddef_count) == owner ) ) return
+         n = 0
+         do k = 1, s%boddef_count
+            if ( s%boddef_owners(k) == owner ) cycle
+            n = n + 1
+            if ( n /= k ) then
+               call move_alloc ( s%boddef_names(k)%s, s%boddef_names(n)%s )
+               s%boddef_codes(n) = s%boddef_codes(k)
+               s%boddef_owners(n) = s%boddef_owners(k)
+            end if
+         end do
+         s%boddef_count = n
+         s%boddef_epoch = s%boddef_epoch + 1
+      end associate
+      end procedure remove_owned_boddefs
 
       !> Reset the defined names to the built-in names (SPICELIB's
       !> [[zzbodrst]]), in the instance and so for all its contexts.
@@ -11015,17 +11055,20 @@ contains
       end subroutine sync_boddefs
 
       !> Append a name/code pair to the instance's record of definitions.
-      subroutine record_boddef ( spice, name, code )
+      subroutine record_boddef ( spice, name, code, owner )
       use pepper_containers, only: grow
       type(pepper_instance), intent(inout) :: spice  !! the instance
       character(*), intent(in) :: name  !! common name of some body
       integer(ip), intent(in) :: code  !! integer code for that body
+      integer(ip), intent(in) :: owner  !! PEPPER: the handle of the kernel that defines it (0: the program)
       integer(ip) :: n
       n = spice%boddef_count + 1
       call grow ( spice%boddef_names, n )
       call grow ( spice%boddef_codes, n )
+      call grow ( spice%boddef_owners, n )
       spice%boddef_names(n)%s = trim ( name )
       spice%boddef_codes(n) = code
+      spice%boddef_owners(n) = owner
       spice%boddef_count = n
       spice%boddef_epoch = spice%boddef_epoch + 1
       end subroutine record_boddef

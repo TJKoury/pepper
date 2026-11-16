@@ -6324,6 +6324,19 @@ contains
       end if
 
 !
+!     PEPPER: a DAF built in memory has no file: its file record is in
+!     its image.
+!
+      i = daf_synthetic_slot ( ctx, handle )
+      if ( i > 0 ) then
+         call daf_image_file_record ( ctx%spice%zzddhman%files(i)%image, &
+                                      idword, nd, ni, ifname, &
+                                      fward, bward, free )
+         found = .true.
+         return
+      end if
+
+!
 !     Now get a logical unit for the handle.  Check FAILED() in
 !     case an error occurs.
 !
@@ -7144,6 +7157,19 @@ contains
          //            'has been closed.'                           )
          call ctx%errint ( '#', handle                                  )
          call ctx%sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
+         return
+      end if
+
+!
+!     PEPPER: a DAF built in memory has no file: the summary record is
+!     in its image (native).
+!
+      i = daf_synthetic_slot ( ctx, handle )
+      if ( i > 0 ) then
+         associate ( image => ctx%spice%zzddhman%files(i)%image )
+            found = recno >= 1 .and. recno <= size(image)/128
+            if ( found ) dprec(1:128) = image(128*(recno-1)+1:128*recno)
+         end associate
          return
       end if
 
@@ -15841,6 +15867,7 @@ contains
 
       integer(ip) :: unit
       integer(ip) :: iostat
+      integer(ip) :: k
 
 !
 !     Standard SPICE error handling.
@@ -15871,6 +15898,25 @@ contains
 !        Retrieve a logical unit for this handle.  This has the
 !        side-effect of locking this UNIT to HANDLE.
 !
+!
+!        PEPPER: a DAF built in memory has no file: the record is in its
+!        image.
+!
+         k = daf_synthetic_slot ( ctx, handle )
+         if ( k > 0 ) then
+            associate ( image => ctx%spice%zzddhman%files(k)%image )
+               if ( recno >= 1 .and. recno <= size(image)/128 ) then
+                  crec = daf_image_chars ( image, recno )
+               else
+                  call ctx%setmsg ( 'Could not read record #. IOSTAT was #.' )
+                  call ctx%errint ( '#', recno                               )
+                  call ctx%errint ( '#', -1_ip                               )
+                  call ctx%sigerr ( 'SPICE(DAFCRNOTFOUND)'                   )
+               end if
+            end associate
+            return
+         end if
+
          call zzddhhlu ( ctx, handle, 'DAF', .false., unit )
 
          if ( ctx%failed() ) return
@@ -18330,6 +18376,14 @@ contains
 !     Convert the DAF handle to its corresponding Fortran logical
 !     unit number for reading the comment records.
 !
+!
+!     PEPPER: a DAF built in memory has no comments.
+!
+      if ( daf_synthetic_slot ( ctx, handle ) > 0 ) then
+         n    = 0
+         done = .true.
+         return
+      end if
       call zzddhhlu ( ctx, handle, 'DAF', .false., daflun )
 
       if ( ctx%failed() ) return
@@ -18729,6 +18783,9 @@ contains
       allocate ( lines(0) )
       if ( ctx%failed() ) return
       call dafsih ( ctx, handle, 'READ' )
+      if ( ctx%failed() ) return
+      ! PEPPER: a DAF built in memory has no comments
+      if ( daf_synthetic_slot ( ctx, handle ) > 0 ) return
       call zzddhhlu ( ctx, handle, 'DAF', .false., daflun )
       call dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
       if ( ctx%failed() ) return

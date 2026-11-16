@@ -31,18 +31,46 @@ contains
    ! Ephemerides
    ! ----------------------------------------------------------------------
 
-   !> Add a programmatic ephemeris (PEPPER).
+   !> Add a programmatic ephemeris (PEPPER): it replaces the program's
+   !> earlier one of the body (not a kernel's: [[kb_add_ephemeris]]).
    module procedure spice_add_ephemeris
-      use pepper_containers, only: grow
       implicit none
       type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      if ( ctx%failed() ) return
+      call register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, 0_ip, virtual_ident, .true. )
+   end procedure spice_add_ephemeris
+
+   !> Register a programmatic ephemeris owned by a kernel (PEPPER).
+   module procedure register_owned_ephemeris
+      implicit none
+      call register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident, .false. )
+   end procedure register_owned_ephemeris
+
+   !> Register a programmatic ephemeris: check it, add its virtual file (one
+   !> segment, of type 100) to the SPK segment index (as SPKLEF indexes a
+   !> file's segments, so with the priority of a file loaded now), and keep
+   !> the provider. OWNER 0 (the program's, spice_add_ephemeris) replaces
+   !> the program's earlier ephemeris of the body (REPLACE); a kernel's
+   !> (OWNER its handle) does not.
+   subroutine register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident, replace )
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! its center
+      character(*), intent(in) :: frame  !! the frame of the states
+      real(wp), intent(in) :: tbeg  !! start of the coverage
+      real(wp), intent(in) :: tend  !! end of the coverage
+      class(ephemeris_provider), intent(in) :: provider  !! the source of the states
+      integer(ip), intent(in) :: owner  !! the kernel's handle (0: the program)
+      character(*), intent(in) :: ident  !! the segment identifier
+      logical, intent(in) :: replace  !! replace the program's earlier ephemeris of the body
       type(provided_ephemeris), allocatable :: tmp(:)
       real(wp) :: descr(5)
       integer(ip) :: frcode
       integer(ip) :: handle
       integer(ip) :: ic(6)
       integer(ip) :: n
-      ctx => this%context()
+      associate ( this => ctx%spice )
       if ( ctx%failed() ) return
       call namfrm ( ctx, frame, frcode )
       if ( ctx%failed() ) return
@@ -71,10 +99,10 @@ contains
          return
       end if
 !
-!     A body added again: its registration is replaced (and becomes the
-!     most recent).
+!     The program's ephemeris of a body added again: its registration is
+!     replaced (and becomes the most recent).
 !
-      call remove_ephemeris_entry ( ctx, body )
+      if ( replace ) call remove_ephemeris_entry ( ctx, body )
 !
 !     The virtual file: one segment, of type 100, in the SPK segment index
 !     (as SPKLEF indexes a file's segments).
@@ -86,7 +114,7 @@ contains
       call dafps ( ctx, 2, 6, [ tbeg, tend ], ic, descr )
       if ( ctx%failed() ) return
       this%segment_epoch = this%segment_epoch + 1
-      call this%spkbsr%index%add ( handle, body, tbeg, tend, descr, ic, virtual_ident )
+      call this%spkbsr%index%add ( handle, body, tbeg, tend, descr, ic, ident )
       call this%spkbsr%index%add_file ( handle )
 !
 !     The registration.
@@ -104,12 +132,15 @@ contains
       this%provided_spk(n)%tbeg   = tbeg
       this%provided_spk(n)%tend   = tend
       this%provided_spk(n)%handle = handle
+      this%provided_spk(n)%owner  = owner
       if ( allocated ( this%provided_spk(n)%provider ) ) deallocate ( this%provided_spk(n)%provider )
       allocate ( this%provided_spk(n)%provider, source=provider )
       this%nprovided_spk = n
-   end procedure spice_add_ephemeris
+      end associate
+   end subroutine register_ephemeris
 
-   !> Remove a programmatic ephemeris (PEPPER).
+   !> Remove a programmatic ephemeris (PEPPER): the program's of the body
+   !> (not a kernel's, which goes with its kernel).
    module procedure spice_remove_ephemeris
       implicit none
       type(pepper_context), pointer :: ctx
@@ -118,35 +149,52 @@ contains
       call remove_ephemeris_entry ( ctx, body )
    end procedure spice_remove_ephemeris
 
-   !> Remove a body's programmatic ephemeris, if it has one: its virtual
-   !> file leaves the segment index.
+   !> Remove the program's programmatic ephemeris of a body, if it has one.
    subroutine remove_ephemeris_entry ( ctx, body )
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: body  !! the body
       integer(ip) :: i
-      integer(ip) :: j
-      associate ( sp => ctx%spice )
-      do i = 1, sp%nprovided_spk
-         if ( sp%provided_spk(i)%body == body ) then
-            sp%segment_epoch = sp%segment_epoch + 1
-            if ( sp%spkbsr%index%ndescr > 0 ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
-            do j = i, sp%nprovided_spk - 1
-               sp%provided_spk(j)%body   = sp%provided_spk(j+1)%body
-               sp%provided_spk(j)%center = sp%provided_spk(j+1)%center
-               sp%provided_spk(j)%frame  = sp%provided_spk(j+1)%frame
-               sp%provided_spk(j)%tbeg   = sp%provided_spk(j+1)%tbeg
-               sp%provided_spk(j)%tend   = sp%provided_spk(j+1)%tend
-               sp%provided_spk(j)%handle = sp%provided_spk(j+1)%handle
-               call move_alloc ( sp%provided_spk(j+1)%provider, sp%provided_spk(j)%provider )
-            end do
-            if ( allocated ( sp%provided_spk(sp%nprovided_spk)%provider ) ) &
-               deallocate ( sp%provided_spk(sp%nprovided_spk)%provider )
-            sp%nprovided_spk = sp%nprovided_spk - 1
+      do i = 1, ctx%spice%nprovided_spk
+         if ( ctx%spice%provided_spk(i)%body == body .and. ctx%spice%provided_spk(i)%owner == 0 ) then
+            call remove_entry_at ( ctx, i )
             return
          end if
       end do
-      end associate
    end subroutine remove_ephemeris_entry
+
+   !> Remove the programmatic ephemerides a kernel owns (PEPPER).
+   module procedure remove_owned_ephemerides
+      implicit none
+      integer(ip) :: i
+      if ( owner == 0 ) return
+      do i = ctx%spice%nprovided_spk, 1, -1
+         if ( ctx%spice%provided_spk(i)%owner == owner ) call remove_entry_at ( ctx, i )
+      end do
+   end procedure remove_owned_ephemerides
+
+   !> Remove registration I: its virtual file leaves the segment index.
+   subroutine remove_entry_at ( ctx, i )
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: i  !! the registration
+      integer(ip) :: j
+      associate ( sp => ctx%spice )
+      sp%segment_epoch = sp%segment_epoch + 1
+      if ( sp%spkbsr%index%ndescr > 0 ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
+      do j = i, sp%nprovided_spk - 1
+         sp%provided_spk(j)%body   = sp%provided_spk(j+1)%body
+         sp%provided_spk(j)%center = sp%provided_spk(j+1)%center
+         sp%provided_spk(j)%frame  = sp%provided_spk(j+1)%frame
+         sp%provided_spk(j)%tbeg   = sp%provided_spk(j+1)%tbeg
+         sp%provided_spk(j)%tend   = sp%provided_spk(j+1)%tend
+         sp%provided_spk(j)%handle = sp%provided_spk(j+1)%handle
+         sp%provided_spk(j)%owner  = sp%provided_spk(j+1)%owner
+         call move_alloc ( sp%provided_spk(j+1)%provider, sp%provided_spk(j)%provider )
+      end do
+      if ( allocated ( sp%provided_spk(sp%nprovided_spk)%provider ) ) &
+         deallocate ( sp%provided_spk(sp%nprovided_spk)%provider )
+      sp%nprovided_spk = sp%nprovided_spk - 1
+      end associate
+   end subroutine remove_entry_at
 
    !> Remove every programmatic ephemeris (KCLEAR) (PEPPER).
    module procedure clear_provided_ephemerides
@@ -210,19 +258,45 @@ contains
    ! Frames
    ! ----------------------------------------------------------------------
 
-   !> Add a programmatic frame (PEPPER).
+   !> Add a programmatic frame (PEPPER): it replaces the program's earlier
+   !> one of the code (not a kernel's: [[kb_add_frame]]).
    module procedure spice_add_frame
-      use pepper_strings, only: ucase
       implicit none
       type(pepper_context), pointer :: ctx
-      type(provided_frame), allocatable :: tmp(:)
+      integer(ip) :: i
+      ctx => this%context()
+      if ( ctx%failed() ) return
+      call check_frame_definition ( ctx, name, code )
+      if ( ctx%failed() ) return
+!     The program's registration of the code is replaced (and becomes the
+!     most recent).
+      do i = this%nprovided_frames, 1, -1
+         if ( this%provided_frames(i)%code == code .and. this%provided_frames(i)%owner == 0 ) then
+            call remove_frame_at ( ctx, i )
+         end if
+      end do
+      call register_frame ( ctx, name, code, center, provider, 0_ip )
+   end procedure spice_add_frame
+
+   !> Register a programmatic frame owned by a kernel (PEPPER).
+   module procedure register_owned_frame
+      implicit none
+      call check_frame_definition ( ctx, name, code )
+      if ( ctx%failed() ) return
+      call register_frame ( ctx, name, code, center, provider, owner )
+   end procedure register_owned_frame
+
+   !> Check a programmatic frame's name and code (PEPPER): the name and the
+   !> code must not be those of another frame (a built-in frame, or a frame
+   !> of a kernel under another name or code); a programmatic frame of the
+   !> same name and code may be registered again.
+   module procedure check_frame_definition
+      use pepper_strings, only: ucase
+      implicit none
       character(len=len(name)) :: uname
       character(:), allocatable :: existing
       integer(ip) :: other
-      integer(ip) :: i
-      integer(ip) :: n
       logical :: found
-      ctx => this%context()
       if ( ctx%failed() ) return
       call ucase ( adjustl(name), uname )
       if ( uname == ' ' ) then
@@ -231,11 +305,6 @@ contains
          call ctx%sigerr ( 'SPICE(BLANKSTRING)' )
          return
       end if
-!
-!     The name and the code must not be those of another frame (a built-in
-!     frame, or a frame of a kernel under another name or code); a
-!     programmatic frame added again is replaced.
-!
       call namfrm ( ctx, trim(uname), other )
       if ( ctx%failed() ) return
       if ( other /= 0 .and. other /= code ) then
@@ -260,65 +329,118 @@ contains
             return
          end if
       end if
-!
-!     The registration (replaced if the code is registered).
-!
-      n = 0
-      do i = 1, this%nprovided_frames
-         if ( this%provided_frames(i)%code == code ) n = i
-      end do
-      if ( n == 0 ) then
-         n = this%nprovided_frames + 1
-         if ( .not. allocated ( this%provided_frames ) ) allocate ( this%provided_frames(4) )
-         if ( n > size(this%provided_frames) ) then
-            allocate ( tmp(2*size(this%provided_frames)) )
-            do i = 1, n - 1
-               tmp(i)%code = this%provided_frames(i)%code
-               call move_alloc ( this%provided_frames(i)%name, tmp(i)%name )
-               call move_alloc ( this%provided_frames(i)%provider, tmp(i)%provider )
-            end do
-            call move_alloc ( tmp, this%provided_frames )
-         end if
-         this%nprovided_frames = n
+   end procedure check_frame_definition
+
+   !> Append a programmatic frame's registration (the most recent), and
+   !> write its definition into the kernel pool.
+   subroutine register_frame ( ctx, name, code, center, provider, owner )
+      use pepper_strings, only: ucase
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
+      integer(ip), intent(in) :: center  !! its center
+      class(frame_provider), intent(in) :: provider  !! the source of its orientation
+      integer(ip), intent(in) :: owner  !! the kernel that owns it (0: the program)
+      type(provided_frame), allocatable :: tmp(:)
+      character(len=len(name)) :: uname
+      integer(ip) :: i
+      integer(ip) :: n
+      call ucase ( adjustl(name), uname )
+      associate ( this => ctx%spice )
+      n = this%nprovided_frames + 1
+      if ( .not. allocated ( this%provided_frames ) ) allocate ( this%provided_frames(4) )
+      if ( n > size(this%provided_frames) ) then
+         allocate ( tmp(2*size(this%provided_frames)) )
+         do i = 1, n - 1
+            call move_frame ( this%provided_frames(i), tmp(i) )
+         end do
+         call move_alloc ( tmp, this%provided_frames )
       end if
+      this%nprovided_frames = n
       this%provided_frames(n)%code = code
       this%provided_frames(n)%name = trim(uname)
       this%provided_frames(n)%center = center
+      this%provided_frames(n)%owner = owner
       if ( allocated ( this%provided_frames(n)%provider ) ) deallocate ( this%provided_frames(n)%provider )
       allocate ( this%provided_frames(n)%provider, source=provider )
 !
 !     Its definition in the kernel pool.
 !
       call write_frame_definition ( ctx, this%provided_frames(n) )
-   end procedure spice_add_frame
+      end associate
+   end subroutine register_frame
 
-   !> Remove a programmatic frame (PEPPER).
+   !> Move a frame's registration (its allocatable parts without copying).
+   subroutine move_frame ( from, to )
+      type(provided_frame), intent(inout) :: from  !! the registration moved
+      type(provided_frame), intent(inout) :: to  !! the registration replaced
+      to%code = from%code
+      to%center = from%center
+      to%owner = from%owner
+      call move_alloc ( from%name, to%name )
+      call move_alloc ( from%provider, to%provider )
+   end subroutine move_frame
+
+   !> Remove registration I of a programmatic frame; its definition leaves
+   !> the kernel pool if no other registration of the code remains.
+   subroutine remove_frame_at ( ctx, i )
+      use pepper_strings, only: intstr
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: i  !! the registration
+      character(16) :: scode
+      character(:), allocatable :: fname
+      integer(ip) :: code
+      integer(ip) :: j
+      associate ( this => ctx%spice )
+      code = this%provided_frames(i)%code
+      fname = this%provided_frames(i)%name
+      do j = i, this%nprovided_frames - 1
+         call move_frame ( this%provided_frames(j+1), this%provided_frames(j) )
+      end do
+      this%provided_frames(this%nprovided_frames) = provided_frame()
+      this%nprovided_frames = this%nprovided_frames - 1
+!     Another registration of the frame (another kernel's, or the
+!     program's) remains: its definition, the most recent's, is the
+!     frame's again (the center may differ).
+      do j = this%nprovided_frames, 1, -1
+         if ( this%provided_frames(j)%code == code ) then
+            call write_frame_definition ( ctx, this%provided_frames(j) )
+            return
+         end if
+      end do
+      call intstr ( code, scode )
+      call dvpool ( ctx, 'FRAME_' // fname )
+      call dvpool ( ctx, 'FRAME_' // trim(scode) // '_NAME' )
+      call dvpool ( ctx, 'FRAME_' // trim(scode) // '_CLASS' )
+      call dvpool ( ctx, 'FRAME_' // trim(scode) // '_CLASS_ID' )
+      call dvpool ( ctx, 'FRAME_' // trim(scode) // '_CENTER' )
+      end associate
+   end subroutine remove_frame_at
+
+   !> Remove the programmatic frames a kernel owns (PEPPER).
+   module procedure remove_owned_frames
+      implicit none
+      integer(ip) :: i
+      if ( owner == 0 ) return
+      do i = ctx%spice%nprovided_frames, 1, -1
+         if ( ctx%spice%provided_frames(i)%owner == owner ) call remove_frame_at ( ctx, i )
+      end do
+   end procedure remove_owned_frames
+
+   !> Remove a programmatic frame (PEPPER): the program's of the name (not
+   !> a kernel's, which goes with its kernel).
    module procedure spice_remove_frame
-      use pepper_strings, only: ucase, intstr
+      use pepper_strings, only: ucase
       implicit none
       type(pepper_context), pointer :: ctx
       character(len=len(name)) :: uname
-      character(16) :: scode
       integer(ip) :: i
-      integer(ip) :: j
       ctx => this%context()
       if ( ctx%failed() ) return
       call ucase ( adjustl(name), uname )
-      do i = 1, this%nprovided_frames
-         if ( this%provided_frames(i)%name == trim(uname) ) then
-            call intstr ( this%provided_frames(i)%code, scode )
-            call dvpool ( ctx, 'FRAME_' // trim(uname) )
-            call dvpool ( ctx, 'FRAME_' // trim(scode) // '_NAME' )
-            call dvpool ( ctx, 'FRAME_' // trim(scode) // '_CLASS' )
-            call dvpool ( ctx, 'FRAME_' // trim(scode) // '_CLASS_ID' )
-            call dvpool ( ctx, 'FRAME_' // trim(scode) // '_CENTER' )
-            do j = i, this%nprovided_frames - 1
-               this%provided_frames(j)%code   = this%provided_frames(j+1)%code
-               this%provided_frames(j)%center = this%provided_frames(j+1)%center
-               call move_alloc ( this%provided_frames(j+1)%name, this%provided_frames(j)%name )
-               call move_alloc ( this%provided_frames(j+1)%provider, this%provided_frames(j)%provider )
-            end do
-            this%nprovided_frames = this%nprovided_frames - 1
+      do i = this%nprovided_frames, 1, -1
+         if ( this%provided_frames(i)%name == trim(uname) .and. this%provided_frames(i)%owner == 0 ) then
+            call remove_frame_at ( ctx, i )
             return
          end if
       end do
@@ -381,18 +503,24 @@ contains
    module procedure provided_rotation
       implicit none
       integer(ip) :: i
+      logical :: known
       rotate = 0.0_wp
       outfrm = 0
       found  = .false.
       if ( ctx%failed() ) return
-      do i = 1, ctx%spice%nprovided_frames
+!     PEPPER: the most recent registration first; a kernel's that has no
+!     orientation at ET (outside its tables) gives way to the next.
+      known = .false.
+      do i = ctx%spice%nprovided_frames, 1, -1
          if ( ctx%spice%provided_frames(i)%code == frame ) then
+            known = .true.
             if ( .not. enter_provider ( ctx, 'frame', frame ) ) return
             call ctx%spice%provided_frames(i)%provider%rotation ( ctx, frame, et, rotate, outfrm, found )
             ctx%provider_depth = ctx%provider_depth - 1
-            return
+            if ( found .or. ctx%failed() ) return
          end if
       end do
+      if ( known ) return
 !
 !     A frame of class 7 (in a kernel, say) without a provider: no class
 !     of frame that this program can evaluate.
@@ -408,18 +536,24 @@ contains
    module procedure provided_transform
       implicit none
       integer(ip) :: i
+      logical :: known
       xform  = 0.0_wp
       outfrm = 0
       found  = .false.
       if ( ctx%failed() ) return
-      do i = 1, ctx%spice%nprovided_frames
+!     PEPPER: the most recent registration first; a kernel's that has no
+!     orientation at ET (outside its tables) gives way to the next.
+      known = .false.
+      do i = ctx%spice%nprovided_frames, 1, -1
          if ( ctx%spice%provided_frames(i)%code == frame ) then
+            known = .true.
             if ( .not. enter_provider ( ctx, 'frame', frame ) ) return
             call ctx%spice%provided_frames(i)%provider%transform ( ctx, frame, et, xform, outfrm, found )
             ctx%provider_depth = ctx%provider_depth - 1
-            return
+            if ( found .or. ctx%failed() ) return
          end if
       end do
+      if ( known ) return
 !
 !     A frame of class 7 (in a kernel, say) without a provider: no class
 !     of frame that this program can evaluate.
