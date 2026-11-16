@@ -6,7 +6,8 @@
   "sdn-module": "./dist/isomorphic/module.wasm",
   "exports": {
     "./plugin-manifest.json": "./plugin-manifest.json",
-    "./dist/*": "./dist/*"
+    "./dist/*": "./dist/*",
+    "./include/pepper.h": "./include/pepper.h"
   },
   "description": "WebAssembly SpaceDataStandards.org & space-data-module-sdk plugin build and browser demo for PEPPER",
   "scripts": {
@@ -25,5 +26,14 @@
     "playwright-core": "^1.58.2",
     "space-data-module-sdk": "^0.10.1",
     "spacedatastandards.org": "^1.279.0"
-  }
+  },
+  "files": [
+    "./plugin-manifest.json",
+    "./dist/isomorphic/module.wasm",
+    "./dist/guest-link/**",
+    "./include/pepper.h",
+    "./dist/include/pepper_wasm.h",
+    "./LICENSE",
+    "./README.md"
+  ]
 }

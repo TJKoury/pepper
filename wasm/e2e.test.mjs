@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, generateKeyPairSync } from "node:crypto";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -814,8 +814,14 @@ test("Space Data Module CLI & Ecosystem Lifecycle (repo check, flow check, Ed255
     assert.match(flowChk.stdout, /org\.spacedatastandards\.pepper:compute_ephemeris \(linked-direct\)/);
 
     // 3. Official CLI Ed25519 `sign` + `verify --require-signature`
-    const devKey = path.join(SDK_ROOT, "test", "support", "dev-module-signing-keypair.json");
-    if (fs.existsSync(devKey)) {
+    const devKey = path.join(tmpDir, "test-signing-keypair.json");
+    const { privateKey, publicKey } = generateKeyPairSync("ed25519");
+    await fsp.writeFile(devKey, JSON.stringify({
+      keyId: "pepper-lifecycle-test",
+      privateKeySeedHex: Buffer.from(privateKey.export({ format: "jwk" }).d, "base64url").toString("hex"),
+      publicKeyHex: Buffer.from(publicKey.export({ format: "jwk" }).x, "base64url").toString("hex"),
+    }), { mode: 0o600 });
+    {
       const signedOut = path.join(tmpDir, "module.signed.wasm");
       await execFileAsync(process.execPath, [
         sdmCli,

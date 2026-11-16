@@ -56,6 +56,8 @@ const { generateInvokeSupportHeader, generateInvokeSupportSource } = await impor
   pathToFileURL(path.join(SDK_ROOT, "src", "compiler", "invokeGlue.js")).href
 );
 
+import { ensureLlvmSource, verifyDownload } from "./toolchain-downloads.mjs";
+
 const FLANG_RELEASE_URL =
   "https://github.com/miinso/flang-releases/releases/download/v21.1.8/flang+llvm-21.1.8-arm64-apple-darwin.tar.xz";
 const FLANG_RELEASE_SHA256 =
@@ -150,31 +152,10 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
 
   if (!fs.existsSync(path.join(srcRoot, "flang-rt", "lib", "runtime"))) {
     await fsp.rm(srcRoot, { recursive: true, force: true });
-    await execFileAsync("git", [
-      "clone",
-      "--depth",
-      "1",
-      "--filter=blob:none",
-      "--sparse",
-      "--branch",
-      "llvmorg-21.1.8",
-      "https://github.com/llvm/llvm-project.git",
-      srcRoot,
-    ]);
-    await execFileAsync(
-      "git",
-      [
-        "sparse-checkout",
-        "set",
-        "flang-rt",
-        "flang/include/flang",
-        "flang/lib/Decimal",
-        "flang/module",
-      ],
-      { cwd: srcRoot },
-    );
-  } else if (!fs.existsSync(path.join(srcRoot, "flang", "module", "__fortran_builtins.f90"))) {
-    await execFileAsync("git", ["sparse-checkout", "add", "flang/module"], { cwd: srcRoot });
+    const sourceRoot = await ensureLlvmSource();
+    for (const rel of ["flang-rt", "flang/include/flang", "flang/lib/Decimal", "flang/module"]) {
+      await fsp.cp(path.join(sourceRoot, rel), path.join(srcRoot, rel), { recursive: true });
+    }
   }
 
   // Ensure 32-bit wasm32 intrinsic .mod files (c_ptr/c_funptr/c_size_t = 32-bit)
@@ -369,7 +350,7 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
     `-I${path.join(srcRoot, "flang", "include")}`,
   ];
   const objs = [];
-  await runPool(sources, Math.max(1, Math.min(8, os.availableParallelism())), async (src) => {
+  await runPool(sources, Math.max(1, Math.min(4, os.availableParallelism())), async (src) => {
     const isC = src.endsWith(".c");
     const obj = path.join(outDir, `${path.basename(src)}.o`);
     objs.push(obj);
@@ -518,7 +499,7 @@ async function compileFortranLibrary(flangDir, buildDir) {
       ),
     ),
   );
-  const concurrency = Math.max(1, Math.min(8, os.availableParallelism()));
+  const concurrency = Math.max(1, Math.min(4, os.availableParallelism()));
   const objPaths = [];
   let compiledCount = 0;
   let cachedCount = 0;
@@ -655,12 +636,16 @@ async function generateSdsAndBridgeSources(manifest, buildDir) {
       if (charPtrCount === 0) return full;
       const extras = Array.from(
         { length: charPtrCount },
-        (_, i) => `int32_t _flang_len_${i} = 1`,
+        (_, i) => `int32_t _flang_len_${i} PEPPER_FLANG_DEFAULT_LENGTH`,
       ).join(", ");
       return `${prefix}${params}, ${extras}${suffix}`;
     },
   );
-  await fsp.writeFile(path.join(genDir, "pepper_wasm.h"), wasmPepperH);
+  const publicWasmHeader = "#ifdef __cplusplus\n#define PEPPER_FLANG_DEFAULT_LENGTH = 1\n#else\n#define PEPPER_FLANG_DEFAULT_LENGTH\n#endif\n" + wasmPepperH + "\n#undef PEPPER_FLANG_DEFAULT_LENGTH\n";
+  await fsp.writeFile(path.join(genDir, "pepper_wasm.h"), publicWasmHeader);
+  const publicIncludeDir = path.join(ROOT, "dist", "include");
+  await fsp.mkdir(publicIncludeDir, { recursive: true });
+  await fsp.writeFile(path.join(publicIncludeDir, "pepper_wasm.h"), publicWasmHeader);
 
   return { incDir, genDir, manifestEmbeddedPath, invokeSourcePath };
 }
@@ -823,7 +808,10 @@ async function resolveSourceKernel(filename, naifSubpath) {
   ].filter(Boolean);
 
   for (const c of candidates) {
-    if (fs.existsSync(c)) return c;
+    if (fs.existsSync(c)) {
+      await verifyDownload(filename, c);
+      return c;
+    }
   }
 
   const cacheDest = path.join(ROOT, ".cache", "kernels", filename);
@@ -831,6 +819,7 @@ async function resolveSourceKernel(filename, naifSubpath) {
   const url = `https://naif.jpl.nasa.gov/pub/naif/generic_kernels/${naifSubpath}/${filename}`;
   console.log(`[wasm] Downloading NAIF kernel ${filename}...`);
   await downloadFile(url, cacheDest);
+  await verifyDownload(filename, cacheDest);
   return cacheDest;
 }
 
