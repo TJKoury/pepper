@@ -6182,9 +6182,6 @@ contains
       integer(ip) :: fxtyid
       integer(ip) :: fxcent
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether illumination angle is decreasing.
@@ -8632,9 +8629,6 @@ contains
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
       logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
@@ -9425,9 +9419,6 @@ contains
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
       logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
@@ -10697,9 +10688,6 @@ contains
       integer(ip) :: ctr2
       character(32), parameter :: svshap ( spshpn ) = &
          [ character(32) :: 'POINT', 'SPHERE' ]
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
@@ -12678,9 +12666,6 @@ contains
       real(wp) :: refval
 
       logical :: ok
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Time in TDB seconds for which to evaluate UDFUNC.
       logical, intent(out) :: isless  !! Boolean indicating if the scalar value is less than reference value.
@@ -15379,9 +15364,6 @@ contains
 
       integer(ip) :: count
       integer(ip) :: i
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: inst  !! Name of the instrument.
       character(*), intent(in) :: tshape  !! Type of shape model used for target body.
@@ -16621,9 +16603,6 @@ contains
 
       integer(ip) :: count
       integer(ip) :: i
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: occtyp  !! Type of occultation.
       character(*), intent(in) :: front  !! Name of body occulting the other.
@@ -19040,9 +19019,6 @@ contains
       real(wp) :: state  ( 6 )
       logical :: attblk ( nabcor )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether distance is decreasing.
@@ -19471,9 +19447,6 @@ contains
       real(wp) :: uvec (3)
       integer(ip) :: i
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
@@ -20163,9 +20136,6 @@ contains
       integer(ip) :: want
       integer(ip) :: winsiz
       logical :: need
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
       real(wp), intent(in) :: refval  !! Value used as reference for geometric quantity condition.
@@ -21198,9 +21168,6 @@ contains
       integer(ip) :: want
       integer(ip) :: winsiz
       logical :: need
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the scalar quantity value and a number.
       real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
@@ -22785,9 +22752,6 @@ contains
       integer(ip) :: n
       logical :: attblk ( nabcor )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! true if range rate is decreasing, false otherwise.
@@ -23462,9 +23426,6 @@ contains
 
       integer(ip) :: count
       integer(ip) :: i
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
       logical, intent(in) :: rpt  !! Progress report flag.
@@ -28443,9 +28404,6 @@ contains
       logical :: ok
 
 
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
       real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
@@ -29453,9 +29411,6 @@ contains
 !
       character(1) :: rptpre ( 2 )
       character(1) :: rptsuf ( 2 )
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
       real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
@@ -30575,9 +30530,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
@@ -30740,9 +30692,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
@@ -31140,9 +31089,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
@@ -31381,9 +31327,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
@@ -32364,9 +32307,6 @@ contains
       integer(ip) :: wwpool ( 2, lbpool : nwlong )
       logical :: flip
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: vecdef  !! Vector definition.
       character(*), intent(in) :: method  !! Computation method.
@@ -34761,9 +34701,6 @@ contains
       integer(ip) :: npass
       logical :: localx
       logical :: noadjx
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: vecdef  !! Vector definition.
       character(*), intent(in) :: method  !! Computation method.
@@ -36565,9 +36502,6 @@ contains
       logical :: noadjx
       real(wp) :: dvec   ( 3 )
       real(wp) :: spoint ( 3 )
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: gquant  !! Type of geometric quantity.
       integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.

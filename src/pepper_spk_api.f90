@@ -17928,9 +17928,6 @@ contains
       use pepper_math, only: vdot, vnorm
       use pepper_inc_zzabcorr
       implicit none
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
       real(wp), intent(in) :: et  !! Observer epoch.
@@ -19918,9 +19915,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
       integer(ip), intent(in) :: targ  !! Target body.
@@ -20383,9 +20377,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
       real(wp), intent(in) :: et  !! Observer epoch.
@@ -22009,9 +22000,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
       real(wp), intent(in) :: et  !! Observer epoch.
@@ -22826,9 +22814,6 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       implicit none
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zzspk_state) :: obssub  !! routine returning the observer's state (relative to the SSB)
       integer(ip), intent(in) :: targ  !! Target body.
@@ -25891,9 +25876,6 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       implicit none
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zzspk_state) :: trgsub  !! routine returning the target's state (relative to the SSB)
       real(wp), intent(in) :: et  !! Observer epoch.

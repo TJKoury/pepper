@@ -21133,9 +21133,6 @@ contains
       integer(ip) :: n
       real(wp) :: dfdx  (1)
       real(wp) :: udval (2)
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       real(wp), intent(in) :: x  !! Independent variable of UDFUNC.
@@ -33176,9 +33173,6 @@ contains
       real(wp) :: xform  ( 3, 3 )
       integer(ip) :: i
       integer(ip) :: nitr
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zzsfx_near) :: udnear  !! the [[zzsfx_near]] routine
       procedure(zzsfx_maxrad) :: udmaxr  !! the [[zzsfx_maxrad]] routine
@@ -35053,9 +35047,6 @@ contains
 !     case the user should use the default GFREFN function.
 !
       integer(ip), parameter :: mxloop = 1000
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(zztan_cond) :: udcond  !! the [[zztan_cond]] routine
       procedure(gf_step) :: udstep  !! the [[gf_step]] routine
@@ -45940,9 +45931,6 @@ contains
       implicit none
 
       real(wp) :: deriv
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       real(wp), intent(in) :: x  !! Independent variable of UDFUNC.

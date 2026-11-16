@@ -5073,9 +5073,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
       procedure(zzdsk_compare) :: cmpfun  !! Comparison function.
