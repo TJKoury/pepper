@@ -674,6 +674,82 @@ npm run test:wasm         # or: pixi run wasm-test (Node + WasmEdge + headless C
 npm run serve:wasm        # or: pixi run wasm-serve (http://127.0.0.1:8787/wasm.html)
 ```
 
+### Released WebAssembly package
+
+GitHub Releases named `wasm-v<version>` provide `pepper-wasm-<version>.tgz`,
+`module.wasm`, `plugin-manifest.json`, and `SHA256SUMS`. The module is unsigned.
+The package retains `private: true`; `npm pack` supports private packages.
+
+A consumer pins the release tarball in `package.json` and commits the generated
+`package-lock.json`, whose `resolved` URL and SHA-512 `integrity` identify the
+exact tarball:
+
+```json
+{
+  "dependencies": {
+    "pepper-wasm": "https://github.com/TJKoury/pepper/releases/download/wasm-v0.1.0/pepper-wasm-0.1.0.tgz"
+  }
+}
+```
+
+Load the installed module with the module SDK's isomorphic host. On the server,
+this host uses WasmEdge; a browser supplies a URL or bytes as `wasmSource`.
+
+```js
+import { loadModule } from "space-data-module-sdk/host/isomorphic";
+
+const module = await loadModule({
+  wasmSource: "node_modules/pepper-wasm/dist/isomorphic/module.wasm",
+});
+// Invoke the methods described by node_modules/pepper-wasm/plugin-manifest.json.
+await module.destroy?.();
+```
+
+For direct C API guest linking, include
+`node_modules/pepper-wasm/dist/include/pepper_wasm.h`. The original native header
+is `node_modules/pepper-wasm/include/pepper.h`. The generated WebAssembly header
+adds Flang's trailing character-element lengths: C++ defaults each to 1; C
+callers pass each 1 explicitly. These lengths are not string byte lengths.
+`pepper_pxform` returns a column-major matrix.
+
+With the SDK's WASI-threads clang, sysroot, and resource-directory flags, this
+reactor link combines a caller with the three required auxiliary objects:
+
+```sh
+pkg=node_modules/pepper-wasm
+wasm32-wasi-clang++ --target=wasm32-wasip1-threads \
+  --sysroot="$SDN_WASI_SYSROOT" -resource-dir="$SDN_WASI_RESOURCE_DIR" \
+  -O3 -mbulk-memory -std=c++17 -fno-exceptions \
+  -I"$pkg/dist/include" -c caller.cpp -o caller.o
+wasm32-wasi-clang++ --target=wasm32-wasip1-threads \
+  --sysroot="$SDN_WASI_SYSROOT" -resource-dir="$SDN_WASI_RESOURCE_DIR" \
+  -mbulk-memory -fno-exceptions caller.o \
+  "$pkg"/dist/guest-link/libraries/pepper_flang_shim-*.o \
+  "$pkg"/dist/guest-link/libraries/pepper_fortran-*.o \
+  "$pkg"/dist/guest-link/libraries/flang_rt_wasi-*.o \
+  -mexec-model=reactor -Wl,-O2 -Wl,--gc-sections -Wl,--strip-debug \
+  -Wl,--initial-memory=16777216 -Wl,--max-memory=2147483648 \
+  -Wl,-z,stack-size=4194304 -Wl,--export=malloc -Wl,--export=free \
+  -Wl,--export=caller_entry -o caller.wasm
+```
+
+The Fortran and Flang runtime files have `.o` names but contain archives; the
+shim is a WebAssembly object. WASI libc and libm come from the toolchain.
+`dist/guest-link/module-link.o` and `metadata.json` expose the SDK adapter;
+consumers linking that adapter also supply the three auxiliary objects. The
+raw C API link above uses its own adapter and does not need `module-link.o`.
+Each final link includes the runtime and shim once. The sequential execution
+contract does not establish concurrent mutation safety.
+
+The release workflow validates the requested version against `package.json`,
+`plugin-manifest.json`, and the manifest embedded in the built module. A manual
+run defaults to a dry run that uploads the same four assets as a workflow
+artifact. Publishing requires a matching version and a successful build and
+test run. Linux compiler, runtime, optimizer, browser, and kernel downloads
+have pinned versions and SHA-256 checks in `wasm/toolchain-downloads.mjs`.
+The first Linux build compiles Flang 21.1.8 from source; subsequent builds reuse
+an Actions cache keyed by the build scripts and locked dependencies.
+
 ### Other projects
 
 * [NAIF SPICE Toolkit](https://naif.jpl.nasa.gov/naif/toolkit.html) -- The original SPICE toolkit from NASA's NAIF

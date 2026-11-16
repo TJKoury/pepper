@@ -56,6 +56,8 @@ const { generateInvokeSupportHeader, generateInvokeSupportSource } = await impor
   pathToFileURL(path.join(SDK_ROOT, "src", "compiler", "invokeGlue.js")).href
 );
 
+import { ensureLlvmSource, verifyDownload } from "./toolchain-downloads.mjs";
+
 const FLANG_RELEASE_URL =
   "https://github.com/miinso/flang-releases/releases/download/v21.1.8/flang+llvm-21.1.8-arm64-apple-darwin.tar.xz";
 const FLANG_RELEASE_SHA256 =
@@ -137,8 +139,9 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
   }
   const cacheDir = path.join(ROOT, ".cache", "flang-wasm");
   const archivePath = path.join(cacheDir, "libflang_rt.wasi.a");
+  const runtimeSizeMarker = path.join(cacheDir, ".pepper-runtime-findloc-oz-v1");
   const wasm32ModMarkerCheck = path.join(flangDir, "include", "flang", ".pepper-wasm32-mods-v1");
-  if (fs.existsSync(archivePath) && fs.existsSync(wasm32ModMarkerCheck)) {
+  if (fs.existsSync(archivePath) && fs.existsSync(wasm32ModMarkerCheck) && fs.existsSync(runtimeSizeMarker)) {
     return archivePath;
   }
 
@@ -149,31 +152,10 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
 
   if (!fs.existsSync(path.join(srcRoot, "flang-rt", "lib", "runtime"))) {
     await fsp.rm(srcRoot, { recursive: true, force: true });
-    await execFileAsync("git", [
-      "clone",
-      "--depth",
-      "1",
-      "--filter=blob:none",
-      "--sparse",
-      "--branch",
-      "llvmorg-21.1.8",
-      "https://github.com/llvm/llvm-project.git",
-      srcRoot,
-    ]);
-    await execFileAsync(
-      "git",
-      [
-        "sparse-checkout",
-        "set",
-        "flang-rt",
-        "flang/include/flang",
-        "flang/lib/Decimal",
-        "flang/module",
-      ],
-      { cwd: srcRoot },
-    );
-  } else if (!fs.existsSync(path.join(srcRoot, "flang", "module", "__fortran_builtins.f90"))) {
-    await execFileAsync("git", ["sparse-checkout", "add", "flang/module"], { cwd: srcRoot });
+    const sourceRoot = await ensureLlvmSource();
+    for (const rel of ["flang-rt", "flang/include/flang", "flang/lib/Decimal", "flang/module"]) {
+      await fsp.cp(path.join(sourceRoot, rel), path.join(srcRoot, rel), { recursive: true });
+    }
   }
 
   // Ensure 32-bit wasm32 intrinsic .mod files (c_ptr/c_funptr/c_size_t = 32-bit)
@@ -368,14 +350,15 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
     `-I${path.join(srcRoot, "flang", "include")}`,
   ];
   const objs = [];
-  await runPool(sources, Math.max(1, Math.min(8, os.availableParallelism())), async (src) => {
+  await runPool(sources, Math.max(1, Math.min(4, os.availableParallelism())), async (src) => {
     const isC = src.endsWith(".c");
     const obj = path.join(outDir, `${path.basename(src)}.o`);
     objs.push(obj);
-    if (fs.existsSync(obj)) return;
+    const isFindloc = path.basename(src) === "findloc.cpp";
+    if (fs.existsSync(obj) && (!isFindloc || fs.existsSync(runtimeSizeMarker))) return;
     await execFileAsync(isC ? tc.clang : tc.clangxx, [
       ...tc.toolchainArgs,
-      "-O2",
+      isFindloc ? "-Oz" : "-O2",
       "-mbulk-memory",
       "-fno-exceptions",
       ...(isC ? ["-std=c11"] : ["-std=c++17", "-fno-rtti", "-Wno-c++11-narrowing"]),
@@ -395,6 +378,7 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
     : "ar";
   await fsp.rm(archivePath, { force: true });
   await execFileAsync(arBin, ["rcs", archivePath, ...objs.sort()]);
+  await fsp.writeFile(runtimeSizeMarker, "findloc.cpp: -Oz\n");
   return archivePath;
 }
 
@@ -515,7 +499,7 @@ async function compileFortranLibrary(flangDir, buildDir) {
       ),
     ),
   );
-  const concurrency = Math.max(1, Math.min(8, os.availableParallelism()));
+  const concurrency = Math.max(1, Math.min(4, os.availableParallelism()));
   const objPaths = [];
   let compiledCount = 0;
   let cachedCount = 0;
@@ -652,12 +636,16 @@ async function generateSdsAndBridgeSources(manifest, buildDir) {
       if (charPtrCount === 0) return full;
       const extras = Array.from(
         { length: charPtrCount },
-        (_, i) => `int32_t _flang_len_${i} = 1`,
+        (_, i) => `int32_t _flang_len_${i} PEPPER_FLANG_DEFAULT_LENGTH`,
       ).join(", ");
       return `${prefix}${params}, ${extras}${suffix}`;
     },
   );
-  await fsp.writeFile(path.join(genDir, "pepper_wasm.h"), wasmPepperH);
+  const publicWasmHeader = "#ifdef __cplusplus\n#define PEPPER_FLANG_DEFAULT_LENGTH = 1\n#else\n#define PEPPER_FLANG_DEFAULT_LENGTH\n#endif\n" + wasmPepperH + "\n#undef PEPPER_FLANG_DEFAULT_LENGTH\n";
+  await fsp.writeFile(path.join(genDir, "pepper_wasm.h"), publicWasmHeader);
+  const publicIncludeDir = path.join(ROOT, "dist", "include");
+  await fsp.mkdir(publicIncludeDir, { recursive: true });
+  await fsp.writeFile(path.join(publicIncludeDir, "pepper_wasm.h"), publicWasmHeader);
 
   return { incDir, genDir, manifestEmbeddedPath, invokeSourcePath };
 }
@@ -820,7 +808,10 @@ async function resolveSourceKernel(filename, naifSubpath) {
   ].filter(Boolean);
 
   for (const c of candidates) {
-    if (fs.existsSync(c)) return c;
+    if (fs.existsSync(c)) {
+      await verifyDownload(filename, c);
+      return c;
+    }
   }
 
   const cacheDest = path.join(ROOT, ".cache", "kernels", filename);
@@ -828,6 +819,7 @@ async function resolveSourceKernel(filename, naifSubpath) {
   const url = `https://naif.jpl.nasa.gov/pub/naif/generic_kernels/${naifSubpath}/${filename}`;
   console.log(`[wasm] Downloading NAIF kernel ${filename}...`);
   await downloadFile(url, cacheDest);
+  await verifyDownload(filename, cacheDest);
   return cacheDest;
 }
 
@@ -990,7 +982,8 @@ async function main() {
     "-fno-exceptions",
     "-Wl,-O2",
     "-Wl,--gc-sections",
-    "-Wl,--strip-debug",
+    "-Wl,--strip-all",
+    "-Wl,--compress-relocations",
     "-Wl,--initial-memory=67108864",
     "-Wl,--max-memory=2147483648",
     "-Wl,-z,stack-size=4194304",
@@ -1004,6 +997,17 @@ async function main() {
     "-o",
     rawLinkedPath,
   ]);
+
+  if (process.env.PEPPER_WASM_OPT === "1") {
+    const optimizedPath = path.join(buildDir, "module.optimized.wasm");
+    await execFileAsync("wasm-opt", [
+      "-Oz", "--enable-threads", "--enable-bulk-memory",
+      "--enable-mutable-globals", "--enable-sign-ext",
+      "--enable-nontrapping-float-to-int",
+      rawLinkedPath, "-o", optimizedPath,
+    ]);
+    await fsp.rename(optimizedPath, rawLinkedPath);
+  }
 
   const rawWasmBytes = new Uint8Array(await fsp.readFile(rawLinkedPath));
   const wasmBytes = appendWasmCustomSection(
