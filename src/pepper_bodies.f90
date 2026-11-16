@@ -9014,44 +9014,46 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BODC2S_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BODC2S_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)         NAME
-      !>              INTEGER                CODE (7)
-      !>              INTEGER                I
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)         NAME
+      !>      INTEGER                CODE (7)
+      !>      INTEGER                I
       !>
-      !>        C
-      !>        C     Assign an array of body IDs. Not all the listed IDs
-      !>        C     map to a body name.
-      !>        C
-      !>              CODE(1) = 399
-      !>              CODE(2) = 0
-      !>              CODE(3) = 3
-      !>              CODE(4) = -77
-      !>              CODE(5) = 11
-      !>              CODE(6) = -1
-      !>              CODE(7) = 6000001
+      !>C
+      !>C     Assign an array of body IDs. Not all the listed IDs
+      !>C     map to a body name.
+      !>C
+      !>      CODE(1) = 399
+      !>      CODE(2) = 0
+      !>      CODE(3) = 3
+      !>      CODE(4) = -77
+      !>      CODE(5) = 11
+      !>      CODE(6) = -1
+      !>      CODE(7) = 6000001
       !>
-      !>        C
-      !>        C     Loop over the CODE array, call BODC2S for each
-      !>        C     element of CODE.
-      !>        C
-      !>              WRITE(*,*) 'Code      Name'
-      !>              WRITE(*,*) '-------   -----------------------'
+      !>C
+      !>C     Loop over the CODE array, call BODC2S for each
+      !>C     element of CODE.
+      !>C
+      !>      WRITE(*,*) 'Code      Name'
+      !>      WRITE(*,*) '-------   -----------------------'
       !>
-      !>              DO I= 1, 7
+      !>      DO I= 1, 7
       !>
-      !>                 CALL BODC2S( CODE(I), NAME )
+      !>         CALL BODC2S( CODE(I), NAME )
       !>
-      !>                 WRITE(*, '(I8,3x,A)' ) CODE(I),  NAME
+      !>         WRITE(*, '(I8,3x,A)' ) CODE(I),  NAME
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -10159,60 +10161,62 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BODVAR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BODVAR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              LOGICAL               BODFND
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      LOGICAL               BODFND
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               BODYID
-      !>              PARAMETER           ( BODYID = 399 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               BODYID
+      !>      PARAMETER           ( BODYID = 399 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      RADII  (3)
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      RADII  (3)
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load a PCK file.
-      !>        C
-      !>              CALL FURNSH ( 'pck00008.tpc' )
+      !>C
+      !>C     Load a PCK file.
+      !>C
+      !>      CALL FURNSH ( 'pck00008.tpc' )
       !>
-      !>        C
-      !>        C     Test if Earth's radii values exist in the
-      !>        C     kernel pool.
-      !>        C
-      !>        C     The procedure searches for the kernel variable
-      !>        C     BODY399_RADII.
-      !>        C
-      !>              FOUND = BODFND( BODYID, 'RADII' )
+      !>C
+      !>C     Test if Earth's radii values exist in the
+      !>C     kernel pool.
+      !>C
+      !>C     The procedure searches for the kernel variable
+      !>C     BODY399_RADII.
+      !>C
+      !>      FOUND = BODFND( BODYID, 'RADII' )
       !>
-      !>        C
-      !>        C     If found, retrieve the values.
-      !>        C
-      !>              IF ( FOUND ) THEN
+      !>C
+      !>C     If found, retrieve the values.
+      !>C
+      !>      IF ( FOUND ) THEN
       !>
-      !>                 CALL BODVAR ( BODYID, 'RADII', DIM, RADII )
+      !>         CALL BODVAR ( BODYID, 'RADII', DIM, RADII )
       !>
-      !>                 WRITE(*,'(I3,A,3F11.3)') BODYID, ' RADII:', RADII(1),
-      !>             .                            RADII(2), RADII(3)
+      !>         WRITE(*,'(I3,A,3F11.3)') BODYID, ' RADII:', RADII(1),
+      !>     .                            RADII(2), RADII(3)
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'No RADII data found for object ', BODYID
+      !>         WRITE(*,*) 'No RADII data found for object ', BODYID
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -10427,52 +10431,54 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BODVCD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BODVCD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NVALS
-      !>              PARAMETER           ( NVALS = 3 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NVALS
+      !>      PARAMETER           ( NVALS = 3 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      VALUES (NVALS)
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      VALUES (NVALS)
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>        C
-      !>        C     Load a PCK.
-      !>        C
-      !>              CALL FURNSH ( 'pck00008.tpc' )
+      !>C
+      !>C     Load a PCK.
+      !>C
+      !>      CALL FURNSH ( 'pck00008.tpc' )
       !>
-      !>        C
-      !>        C     When the kernel variable
-      !>        C
-      !>        C        BODY399_RADII
-      !>        C
-      !>        C     is present in the kernel pool---normally because a PCK
-      !>        C     defining this variable has been loaded (as is the case
-      !>        C     here)---the call
-      !>        C
-      !>              CALL BODVCD ( 399, 'RADII', 3, DIM, VALUES )
+      !>C
+      !>C     When the kernel variable
+      !>C
+      !>C        BODY399_RADII
+      !>C
+      !>C     is present in the kernel pool---normally because a PCK
+      !>C     defining this variable has been loaded (as is the case
+      !>C     here)---the call
+      !>C
+      !>      CALL BODVCD ( 399, 'RADII', 3, DIM, VALUES )
       !>
-      !>        C
-      !>        C     returns the dimension and values associated with the
-      !>        C     variable 'BODY399_RADII'
-      !>        C
-      !>              WRITE(*,'(A,3F10.3)') '399 RADII: ', VALUES
+      !>C
+      !>C     returns the dimension and values associated with the
+      !>C     variable 'BODY399_RADII'
+      !>C
+      !>      WRITE(*,'(A,3F10.3)') '399 RADII: ', VALUES
       !>
-      !>        C
-      !>        C     The ITEM variable possesses case sensitivity. This
-      !>        C     call should cause an error.
-      !>        C
-      !>              CALL BODVRD ( 'EARTH', 'radii', 3, DIM, VALUES )
-      !>              WRITE(*,'(A,3F10.3)') '399 radii: ', VALUES
+      !>C
+      !>C     The ITEM variable possesses case sensitivity. This
+      !>C     call should cause an error.
+      !>C
+      !>      CALL BODVRD ( 'EARTH', 'radii', 3, DIM, VALUES )
+      !>      WRITE(*,'(A,3F10.3)') '399 radii: ', VALUES
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -10757,75 +10763,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BODVRD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BODVRD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NVALS
-      !>              PARAMETER           ( NVALS = 3 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NVALS
+      !>      PARAMETER           ( NVALS = 3 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      VALUES (NVALS)
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      VALUES (NVALS)
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>        C
-      !>        C     Load a PCK.
-      !>        C
-      !>              CALL FURNSH ( 'pck00008.tpc' )
+      !>C
+      !>C     Load a PCK.
+      !>C
+      !>      CALL FURNSH ( 'pck00008.tpc' )
       !>
-      !>        C
-      !>        C     When the kernel variable
-      !>        C
-      !>        C        BODY399_RADII
-      !>        C
-      !>        C     is present in the kernel pool---normally because a PCK
-      !>        C     defining this variable has been loaded (as is the case
-      !>        C     here)---the call
-      !>        C
-      !>              CALL BODVRD ( 'EARTH', 'RADII', 3, DIM, VALUES )
+      !>C
+      !>C     When the kernel variable
+      !>C
+      !>C        BODY399_RADII
+      !>C
+      !>C     is present in the kernel pool---normally because a PCK
+      !>C     defining this variable has been loaded (as is the case
+      !>C     here)---the call
+      !>C
+      !>      CALL BODVRD ( 'EARTH', 'RADII', 3, DIM, VALUES )
       !>
-      !>        C
-      !>        C     returns the dimension and values associated with the
-      !>        C     variable 'BODY399_RADII'
-      !>        C
-      !>              WRITE(*,'(A,3F10.3)') 'EARTH RADII: ', VALUES
+      !>C
+      !>C     returns the dimension and values associated with the
+      !>C     variable 'BODY399_RADII'
+      !>C
+      !>      WRITE(*,'(A,3F10.3)') 'EARTH RADII: ', VALUES
       !>
-      !>        C
-      !>        C     The call
-      !>        C
-      !>              CALL BODVRD ( 'earth', 'RADII', 3, DIM, VALUES )
+      !>C
+      !>C     The call
+      !>C
+      !>      CALL BODVRD ( 'earth', 'RADII', 3, DIM, VALUES )
       !>
-      !>        C
-      !>        C     will produce the same results since the case of the
-      !>        C     input argument BODYNM is not significant.
-      !>        C
-      !>              WRITE(*,'(A,3F10.3)') 'earth RADII: ', VALUES
+      !>C
+      !>C     will produce the same results since the case of the
+      !>C     input argument BODYNM is not significant.
+      !>C
+      !>      WRITE(*,'(A,3F10.3)') 'earth RADII: ', VALUES
       !>
-      !>        C
-      !>        C     The call
-      !>        C
-      !>              CALL BODVRD ( '399', 'RADII', 3, DIM, VALUES )
+      !>C
+      !>C     The call
+      !>C
+      !>      CALL BODVRD ( '399', 'RADII', 3, DIM, VALUES )
       !>
-      !>        C
-      !>        C     will also produce the same results since strings
-      !>        C     containing integer codes are accepted
-      !>        C     by this routine.
-      !>        C
-      !>              WRITE(*,'(A,3F10.3)') '''399'' RADII: ', VALUES
+      !>C
+      !>C     will also produce the same results since strings
+      !>C     containing integer codes are accepted
+      !>C     by this routine.
+      !>C
+      !>      WRITE(*,'(A,3F10.3)') '''399'' RADII: ', VALUES
       !>
-      !>        C
-      !>        C     The ITEM variable possesses case sensitivity. This
-      !>        C     call should cause an error.
-      !>        C
-      !>              CALL BODVRD ( 'EARTH', 'radii', 3, DIM, VALUES )
-      !>              WRITE(*,'(A,3F10.3)') 'EARTH radii: ', VALUES
+      !>C
+      !>C     The ITEM variable possesses case sensitivity. This
+      !>C     call should cause an error.
+      !>C
+      !>      CALL BODVRD ( 'EARTH', 'radii', 3, DIM, VALUES )
+      !>      WRITE(*,'(A,3F10.3)') 'EARTH radii: ', VALUES
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

@@ -713,104 +713,106 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM PCKBSR_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM PCKBSR_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              DOUBLE PRECISION      DELTA
-!>              PARAMETER           ( DELTA  = 50000000.D0 )
+!>C
+!>C     Local parameters
+!>C
+!>      DOUBLE PRECISION      DELTA
+!>      PARAMETER           ( DELTA  = 50000000.D0 )
 !>
-!>              INTEGER               BODY
-!>              PARAMETER           ( BODY   = 3000        )
+!>      INTEGER               BODY
+!>      PARAMETER           ( BODY   = 3000        )
 !>
-!>              INTEGER               DESCSZ
-!>              PARAMETER           ( DESCSZ = 5           )
+!>      INTEGER               DESCSZ
+!>      PARAMETER           ( DESCSZ = 5           )
 !>
-!>              INTEGER               IDSIZE
-!>              PARAMETER           ( IDSIZE = 40          )
+!>      INTEGER               IDSIZE
+!>      PARAMETER           ( IDSIZE = 40          )
 !>
-!>              INTEGER               NEPOCH
-!>              PARAMETER           ( NEPOCH = 10          )
+!>      INTEGER               NEPOCH
+!>      PARAMETER           ( NEPOCH = 10          )
 !>
-!>        C
-!>        C     Local variables
-!>        C
-!>              CHARACTER*(IDSIZE)    SEGID
+!>C
+!>C     Local variables
+!>C
+!>      CHARACTER*(IDSIZE)    SEGID
 !>
-!>              DOUBLE PRECISION      BEGET
-!>              DOUBLE PRECISION      DESCR ( DESCSZ )
-!>              DOUBLE PRECISION      ENDET
-!>              DOUBLE PRECISION      ET
+!>      DOUBLE PRECISION      BEGET
+!>      DOUBLE PRECISION      DESCR ( DESCSZ )
+!>      DOUBLE PRECISION      ENDET
+!>      DOUBLE PRECISION      ET
 !>
-!>              INTEGER               BADDR
-!>              INTEGER               BODYID
-!>              INTEGER               EADDR
-!>              INTEGER               FRAMID
-!>              INTEGER               HANDLE
-!>              INTEGER               I
-!>              INTEGER               PCKHDL
-!>              INTEGER               PCKTYP
+!>      INTEGER               BADDR
+!>      INTEGER               BODYID
+!>      INTEGER               EADDR
+!>      INTEGER               FRAMID
+!>      INTEGER               HANDLE
+!>      INTEGER               I
+!>      INTEGER               PCKHDL
+!>      INTEGER               PCKTYP
 !>
-!>              LOGICAL               FOUND
+!>      LOGICAL               FOUND
 !>
-!>        C
-!>        C     Load the PCK file.
-!>        C
-!>              CALL PCKLOF ( 'earth_latest_high_prec.bpc', PCKHDL )
+!>C
+!>C     Load the PCK file.
+!>C
+!>      CALL PCKLOF ( 'earth_latest_high_prec.bpc', PCKHDL )
 !>
-!>        C
-!>        C     Search for segments using evenly spaced epochs.
-!>        C
-!>              ET = -86400.D0
+!>C
+!>C     Search for segments using evenly spaced epochs.
+!>C
+!>      ET = -86400.D0
 !>
-!>              DO I = 1, NEPOCH
+!>      DO I = 1, NEPOCH
 !>
-!>                 WRITE(*,*) 'Epoch = ', ET
+!>         WRITE(*,*) 'Epoch = ', ET
 !>
-!>        C
-!>        C        Locate the applicable segment (handle and
-!>        C        descriptor).
-!>        C
-!>                 CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
+!>C
+!>C        Locate the applicable segment (handle and
+!>C        descriptor).
+!>C
+!>         CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
 !>
-!>                 IF ( FOUND ) THEN
+!>         IF ( FOUND ) THEN
 !>
-!>        C
-!>        C           Unpack the segment.
-!>        C
-!>                    CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
-!>             .                    BEGET, ENDET,  BADDR,  EADDR  )
+!>C
+!>C           Unpack the segment.
+!>C
+!>            CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
+!>     .                    BEGET, ENDET,  BADDR,  EADDR  )
 !>
-!>                    WRITE(*,*) '   Segment ID: ', SEGID
-!>                    WRITE(*,*) '   Body ID   : ', BODYID
-!>                    WRITE(*,*) '   Frame ID  : ', FRAMID
-!>                    WRITE(*,*) '   PCK Type  : ', PCKTYP
-!>                    WRITE(*,*) '   Start ET  : ', BEGET
-!>                    WRITE(*,*) '   End ET    : ', ENDET
+!>            WRITE(*,*) '   Segment ID: ', SEGID
+!>            WRITE(*,*) '   Body ID   : ', BODYID
+!>            WRITE(*,*) '   Frame ID  : ', FRAMID
+!>            WRITE(*,*) '   PCK Type  : ', PCKTYP
+!>            WRITE(*,*) '   Start ET  : ', BEGET
+!>            WRITE(*,*) '   End ET    : ', ENDET
 !>
-!>                 ELSE
+!>         ELSE
 !>
-!>                    WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
+!>            WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
 !>
-!>                 END IF
+!>         END IF
 !>
-!>                 WRITE(*,*) ' '
+!>         WRITE(*,*) ' '
 !>
-!>        C
-!>        C        Increment the epoch.
-!>        C
-!>                 ET = ET + DELTA
+!>C
+!>C        Increment the epoch.
+!>C
+!>         ET = ET + DELTA
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Unload the PCK file.
-!>        C
-!>              CALL PCKUOF ( PCKHDL )
+!>C
+!>C     Unload the PCK file.
+!>C
+!>      CALL PCKUOF ( PCKHDL )
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -905,108 +907,110 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM PCKBSR_EX2
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM PCKBSR_EX2
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              DOUBLE PRECISION      DELTA
-!>              PARAMETER           ( DELTA  = 50000000.D0 )
+!>C
+!>C     Local parameters
+!>C
+!>      DOUBLE PRECISION      DELTA
+!>      PARAMETER           ( DELTA  = 50000000.D0 )
 !>
-!>              INTEGER               BODY
-!>              PARAMETER           ( BODY   = 3000        )
+!>      INTEGER               BODY
+!>      PARAMETER           ( BODY   = 3000        )
 !>
-!>              INTEGER               DESCSZ
-!>              PARAMETER           ( DESCSZ = 5           )
+!>      INTEGER               DESCSZ
+!>      PARAMETER           ( DESCSZ = 5           )
 !>
-!>              INTEGER               IDSIZE
-!>              PARAMETER           ( IDSIZE = 40          )
+!>      INTEGER               IDSIZE
+!>      PARAMETER           ( IDSIZE = 40          )
 !>
-!>              INTEGER               NEPOCH
-!>              PARAMETER           ( NEPOCH = 10          )
+!>      INTEGER               NEPOCH
+!>      PARAMETER           ( NEPOCH = 10          )
 !>
-!>        C
-!>        C     Local variables
-!>        C
-!>              CHARACTER*(IDSIZE)    SEGID
+!>C
+!>C     Local variables
+!>C
+!>      CHARACTER*(IDSIZE)    SEGID
 !>
-!>              DOUBLE PRECISION      BEGET
-!>              DOUBLE PRECISION      DESCR ( DESCSZ )
-!>              DOUBLE PRECISION      ENDET
-!>              DOUBLE PRECISION      ET
+!>      DOUBLE PRECISION      BEGET
+!>      DOUBLE PRECISION      DESCR ( DESCSZ )
+!>      DOUBLE PRECISION      ENDET
+!>      DOUBLE PRECISION      ET
 !>
-!>              INTEGER               BADDR
-!>              INTEGER               BODYID
-!>              INTEGER               EADDR
-!>              INTEGER               FRAMID
-!>              INTEGER               HANDLE
-!>              INTEGER               I
-!>              INTEGER               PCKHD1
-!>              INTEGER               PCKHD2
-!>              INTEGER               PCKTYP
+!>      INTEGER               BADDR
+!>      INTEGER               BODYID
+!>      INTEGER               EADDR
+!>      INTEGER               FRAMID
+!>      INTEGER               HANDLE
+!>      INTEGER               I
+!>      INTEGER               PCKHD1
+!>      INTEGER               PCKHD2
+!>      INTEGER               PCKTYP
 !>
-!>              LOGICAL               FOUND
+!>      LOGICAL               FOUND
 !>
-!>        C
-!>        C     Load the PCK files.
-!>        C
-!>              CALL PCKLOF ( 'earth_latest_high_prec.bpc', PCKHD1 )
-!>              CALL PCKLOF ( 'earth_720101_070426.bpc',    PCKHD2 )
+!>C
+!>C     Load the PCK files.
+!>C
+!>      CALL PCKLOF ( 'earth_latest_high_prec.bpc', PCKHD1 )
+!>      CALL PCKLOF ( 'earth_720101_070426.bpc',    PCKHD2 )
 !>
-!>        C
-!>        C     Search for segments using evenly spaced epochs.
-!>        C
-!>              ET = -86400.D0
+!>C
+!>C     Search for segments using evenly spaced epochs.
+!>C
+!>      ET = -86400.D0
 !>
-!>              DO I = 1, NEPOCH
+!>      DO I = 1, NEPOCH
 !>
-!>                 WRITE(*,*) 'Epoch = ', ET
+!>         WRITE(*,*) 'Epoch = ', ET
 !>
-!>        C
-!>        C        Locate the applicable segment (handle and
-!>        C        descriptor).
-!>        C
-!>                 CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
+!>C
+!>C        Locate the applicable segment (handle and
+!>C        descriptor).
+!>C
+!>         CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
 !>
-!>                 IF ( FOUND ) THEN
+!>         IF ( FOUND ) THEN
 !>
-!>        C
-!>        C           Unpack the segment.
-!>        C
-!>                    CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
-!>             .                    BEGET, ENDET,  BADDR,  EADDR  )
+!>C
+!>C           Unpack the segment.
+!>C
+!>            CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
+!>     .                    BEGET, ENDET,  BADDR,  EADDR  )
 !>
-!>                    WRITE(*,*) '   Handle    : ', HANDLE
-!>                    WRITE(*,*) '   Segment ID: ', SEGID
-!>                    WRITE(*,*) '   Body ID   : ', BODYID
-!>                    WRITE(*,*) '   Frame ID  : ', FRAMID
-!>                    WRITE(*,*) '   PCK Type  : ', PCKTYP
-!>                    WRITE(*,*) '   Start ET  : ', BEGET
-!>                    WRITE(*,*) '   End ET    : ', ENDET
+!>            WRITE(*,*) '   Handle    : ', HANDLE
+!>            WRITE(*,*) '   Segment ID: ', SEGID
+!>            WRITE(*,*) '   Body ID   : ', BODYID
+!>            WRITE(*,*) '   Frame ID  : ', FRAMID
+!>            WRITE(*,*) '   PCK Type  : ', PCKTYP
+!>            WRITE(*,*) '   Start ET  : ', BEGET
+!>            WRITE(*,*) '   End ET    : ', ENDET
 !>
-!>                 ELSE
+!>         ELSE
 !>
-!>                    WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
+!>            WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
 !>
-!>                 END IF
+!>         END IF
 !>
-!>                 WRITE(*,*) ' '
+!>         WRITE(*,*) ' '
 !>
-!>        C
-!>        C        Increment the epoch.
-!>        C
-!>                 ET = ET + DELTA
+!>C
+!>C        Increment the epoch.
+!>C
+!>         ET = ET + DELTA
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Unload the PCK files.
-!>        C
-!>              CALL PCKUOF ( PCKHD1 )
-!>              CALL PCKUOF ( PCKHD2 )
+!>C
+!>C     Unload the PCK files.
+!>C
+!>      CALL PCKUOF ( PCKHD1 )
+!>      CALL PCKUOF ( PCKHD2 )
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -1542,183 +1546,185 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM CKBSR_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM CKBSR_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Local parameters.
-!>        C
-!>              INTEGER               NPICS
-!>              PARAMETER           ( NPICS  = 5  )
+!>C
+!>C     Local parameters.
+!>C
+!>      INTEGER               NPICS
+!>      PARAMETER           ( NPICS  = 5  )
 !>
-!>              INTEGER               TIMLEN
-!>              PARAMETER           ( TIMLEN = 24 )
+!>      INTEGER               TIMLEN
+!>      PARAMETER           ( TIMLEN = 24 )
 !>
-!>        C
-!>        C     Local variables.
-!>        C
-!>              INTEGER               HANDLE
-!>              INTEGER               HNORIG
-!>              INTEGER               HUPDT
-!>              INTEGER               UPDATE
-!>              INTEGER               INST
-!>              INTEGER               SC
-!>              INTEGER               I
+!>C
+!>C     Local variables.
+!>C
+!>      INTEGER               HANDLE
+!>      INTEGER               HNORIG
+!>      INTEGER               HUPDT
+!>      INTEGER               UPDATE
+!>      INTEGER               INST
+!>      INTEGER               SC
+!>      INTEGER               I
 !>
-!>              DOUBLE PRECISION      ET
-!>              DOUBLE PRECISION      DESCR    (    5 )
-!>              DOUBLE PRECISION      SCLKDP
-!>              DOUBLE PRECISION      TOL
-!>              DOUBLE PRECISION      CLKOUT
-!>              DOUBLE PRECISION      CMAT     ( 3, 3 )
-!>              DOUBLE PRECISION      AV       (    3 )
+!>      DOUBLE PRECISION      ET
+!>      DOUBLE PRECISION      DESCR    (    5 )
+!>      DOUBLE PRECISION      SCLKDP
+!>      DOUBLE PRECISION      TOL
+!>      DOUBLE PRECISION      CLKOUT
+!>      DOUBLE PRECISION      CMAT     ( 3, 3 )
+!>      DOUBLE PRECISION      AV       (    3 )
 !>
-!>              CHARACTER*(TIMLEN)    FDS      ( NPICS )
-!>              CHARACTER*(25)        FNAME
-!>              CHARACTER*(40)        SEGID
-!>              CHARACTER*(16)        OUTFDS
-!>              CHARACTER*(14)        TOLSTR
-!>              CHARACTER*(25)        UDFILE   (    2 )
+!>      CHARACTER*(TIMLEN)    FDS      ( NPICS )
+!>      CHARACTER*(25)        FNAME
+!>      CHARACTER*(40)        SEGID
+!>      CHARACTER*(16)        OUTFDS
+!>      CHARACTER*(14)        TOLSTR
+!>      CHARACTER*(25)        UDFILE   (    2 )
 !>
-!>              LOGICAL               PFOUND
-!>              LOGICAL               SFOUND
-!>              LOGICAL               NEEDAV
+!>      LOGICAL               PFOUND
+!>      LOGICAL               SFOUND
+!>      LOGICAL               NEEDAV
 !>
-!>        C
-!>        C     Set the times for the pictures.
-!>        C
-!>              DATA                  FDS /
-!>             .                 '1976 OCT 31 22:07:21.000',
-!>             .                 '1977-JAN-09 18:33:13.707',
-!>             .                 '1977 APR 24 11:48:05.000',
-!>             .                 '1977 JUN 07 00:13:15.000',
-!>             .                 '1977-AUG-07 14:55:12.019' /
+!>C
+!>C     Set the times for the pictures.
+!>C
+!>      DATA                  FDS /
+!>     .                 '1976 OCT 31 22:07:21.000',
+!>     .                 '1977-JAN-09 18:33:13.707',
+!>     .                 '1977 APR 24 11:48:05.000',
+!>     .                 '1977 JUN 07 00:13:15.000',
+!>     .                 '1977-AUG-07 14:55:12.019' /
 !>
-!>              UDFILE ( 1 ) = 'vo2_swu.bc'
-!>              UDFILE ( 2 ) = 'vo2_swu_ck2.bc'
+!>      UDFILE ( 1 ) = 'vo2_swu.bc'
+!>      UDFILE ( 2 ) = 'vo2_swu_ck2.bc'
 !>
-!>        C
-!>        C     The NAIF integer ID codes for the Viking Orbiter 2
-!>        C     spacecraft and scan platform on Viking Orbiter 2 are
-!>        C     -30 and -30000, respectively.
-!>        C
-!>              SC           = -30
-!>              INST         = -30000
+!>C
+!>C     The NAIF integer ID codes for the Viking Orbiter 2
+!>C     spacecraft and scan platform on Viking Orbiter 2 are
+!>C     -30 and -30000, respectively.
+!>C
+!>      SC           = -30
+!>      INST         = -30000
 !>
-!>        C
-!>        C     Load the LSK and Viking 2 SCLK files.
-!>        C
-!>              CALL FURNSH ( 'ckbsr_ex1.tm' )
+!>C
+!>C     Load the LSK and Viking 2 SCLK files.
+!>C
+!>      CALL FURNSH ( 'ckbsr_ex1.tm' )
 !>
-!>        C
-!>        C     Allow a time tolerance of 500 milliseconds.  Convert
-!>        C     the tolerance to 'ticks', the units of encoded
-!>        C     spacecraft clock time.
-!>        C
-!>              TOLSTR  = '0.500'
-!>              CALL SCTIKS ( SC, TOLSTR, TOL )
+!>C
+!>C     Allow a time tolerance of 500 milliseconds.  Convert
+!>C     the tolerance to 'ticks', the units of encoded
+!>C     spacecraft clock time.
+!>C
+!>      TOLSTR  = '0.500'
+!>      CALL SCTIKS ( SC, TOLSTR, TOL )
 !>
-!>        C
-!>        C     Don't care about angular velocity data.
-!>        C
-!>              NEEDAV = .FALSE.
+!>C
+!>C     Don't care about angular velocity data.
+!>C
+!>      NEEDAV = .FALSE.
 !>
-!>        C
-!>        C     Load the original CK file first.
-!>        C
-!>              CALL CKLPF ( 'vo2_sedr_ck2.bc', HNORIG )
+!>C
+!>C     Load the original CK file first.
+!>C
+!>      CALL CKLPF ( 'vo2_sedr_ck2.bc', HNORIG )
 !>
-!>        C
-!>        C     Write banner.
-!>        C
-!>              WRITE(*,'(A)') '     Input UTC time       '
-!>             .            // 'Pointing found in      SCLK time'
-!>              WRITE(*,'(A)') '------------------------  '
-!>             .            // '-----------------  ----------------'
+!>C
+!>C     Write banner.
+!>C
+!>      WRITE(*,'(A)') '     Input UTC time       '
+!>     .            // 'Pointing found in      SCLK time'
+!>      WRITE(*,'(A)') '------------------------  '
+!>     .            // '-----------------  ----------------'
 !>
-!>              DO UPDATE = 1, 2
-!>        C
-!>        C        Load the update file.  Last-loaded files get searched
-!>        C        first, so the update file will be searched before
-!>        C        the original file.
-!>        C
-!>                 CALL CKLPF ( UDFILE ( UPDATE ), HUPDT )
+!>      DO UPDATE = 1, 2
+!>C
+!>C        Load the update file.  Last-loaded files get searched
+!>C        first, so the update file will be searched before
+!>C        the original file.
+!>C
+!>         CALL CKLPF ( UDFILE ( UPDATE ), HUPDT )
 !>
-!>                 DO I = 1, NPICS
+!>         DO I = 1, NPICS
 !>
-!>        C
-!>        C           Encode the character string representation of
-!>        C           spacecraft clock time in FDS.
-!>        C
-!>                    CALL STR2ET ( FDS( I ) , ET  )
-!>                    CALL SCE2C  ( SC, ET, SCLKDP )
+!>C
+!>C           Encode the character string representation of
+!>C           spacecraft clock time in FDS.
+!>C
+!>            CALL STR2ET ( FDS( I ) , ET  )
+!>            CALL SCE2C  ( SC, ET, SCLKDP )
 !>
-!>        C
-!>        C           Begin a search for this instrument and time, and
-!>        C           get the first applicable segment.
-!>        C
-!>                    CALL CKBSS ( INST,   SCLKDP, TOL,   NEEDAV  )
-!>                    CALL CKSNS ( HANDLE, DESCR,  SEGID, SFOUND  )
+!>C
+!>C           Begin a search for this instrument and time, and
+!>C           get the first applicable segment.
+!>C
+!>            CALL CKBSS ( INST,   SCLKDP, TOL,   NEEDAV  )
+!>            CALL CKSNS ( HANDLE, DESCR,  SEGID, SFOUND  )
 !>
-!>        C
-!>        C           Keep trying candidate segments until a segment can
-!>        C           produce a pointing instance within the specified
-!>        C           time tolerance of SCLKDP, the encoded spacecraft
-!>        C           clock time.
-!>        C
-!>                    PFOUND = .FALSE.
-!>                    DO WHILE (  SFOUND .AND. ( .NOT. PFOUND )  )
+!>C
+!>C           Keep trying candidate segments until a segment can
+!>C           produce a pointing instance within the specified
+!>C           time tolerance of SCLKDP, the encoded spacecraft
+!>C           clock time.
+!>C
+!>            PFOUND = .FALSE.
+!>            DO WHILE (  SFOUND .AND. ( .NOT. PFOUND )  )
 !>
-!>                       CALL CKPFS ( HANDLE, DESCR,  SCLKDP,
-!>             .                      TOL,    NEEDAV, CMAT,
-!>             .                      AV,     CLKOUT, PFOUND )
+!>               CALL CKPFS ( HANDLE, DESCR,  SCLKDP,
+!>     .                      TOL,    NEEDAV, CMAT,
+!>     .                      AV,     CLKOUT, PFOUND )
 !>
-!>                       IF ( PFOUND ) THEN
+!>               IF ( PFOUND ) THEN
 !>
-!>        C
-!>        C                 Get the name of the file from whence the
-!>        C                 pointing instance came, decode the
-!>        C                 spacecraft clock time associated with the
-!>        C                 instance, and write the results to the
-!>        C                 table.
-!>        C
-!>                          CALL DAFHFN ( HANDLE, FNAME          )
-!>                          CALL SCDECD ( SC,     CLKOUT, OUTFDS )
+!>C
+!>C                 Get the name of the file from whence the
+!>C                 pointing instance came, decode the
+!>C                 spacecraft clock time associated with the
+!>C                 instance, and write the results to the
+!>C                 table.
+!>C
+!>                  CALL DAFHFN ( HANDLE, FNAME          )
+!>                  CALL SCDECD ( SC,     CLKOUT, OUTFDS )
 !>
-!>                          WRITE(*,'(A,2X,A17,2X,A)') FDS( I ), FNAME,
-!>             .                                       OUTFDS
+!>                  WRITE(*,'(A,2X,A17,2X,A)') FDS( I ), FNAME,
+!>     .                                       OUTFDS
 !>
-!>                       ELSE
+!>               ELSE
 !>
-!>        C
-!>        C                 Look for another candidate segment.
-!>        C
-!>                          CALL CKSNS ( HANDLE, DESCR, SEGID, SFOUND )
+!>C
+!>C                 Look for another candidate segment.
+!>C
+!>                  CALL CKSNS ( HANDLE, DESCR, SEGID, SFOUND )
 !>
-!>                       END IF
+!>               END IF
 !>
-!>                    END DO
+!>            END DO
 !>
-!>                    IF ( .NOT. PFOUND ) THEN
+!>            IF ( .NOT. PFOUND ) THEN
 !>
-!>                       WRITE(*,'(A)') FDS( I ) // '  pointing not '
-!>             .                     // 'found in any file.'
+!>               WRITE(*,'(A)') FDS( I ) // '  pointing not '
+!>     .                     // 'found in any file.'
 !>
-!>                    END IF
+!>            END IF
 !>
-!>                 END DO
+!>         END DO
 !>
-!>                 WRITE(*,*) ' '
+!>         WRITE(*,*) ' '
 !>
-!>        C
-!>        C        Unload the update file. The original file stays
-!>        C        loaded.
-!>        C
-!>                 CALL CKUPF  ( HUPDT )
+!>C
+!>C        Unload the update file. The original file stays
+!>C        loaded.
+!>C
+!>         CALL CKUPF  ( HUPDT )
 !>
-!>              END DO
+!>      END DO
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -4543,38 +4549,40 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKHAVE_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKHAVE_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              LOGICAL               LOADED
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      LOGICAL               LOADED
       !>
-      !>        C
-      !>        C     We have not loaded any CK.
-      !>        C
-      !>              CALL CKHAVE ( LOADED )
+      !>C
+      !>C     We have not loaded any CK.
+      !>C
+      !>      CALL CKHAVE ( LOADED )
       !>
-      !>              IF ( LOADED ) THEN
+      !>      IF ( LOADED ) THEN
       !>
-      !>        C
-      !>        C        Here we could be calling CK readers. For this
-      !>        C        example, just display a message indicating that
-      !>        C        at least one CK has been loaded.
-      !>        C
-      !>                 WRITE(*,*) 'At least one CK has been loaded. '
-      !>             .          //  'You may call CK readers.'
+      !>C
+      !>C        Here we could be calling CK readers. For this
+      !>C        example, just display a message indicating that
+      !>C        at least one CK has been loaded.
+      !>C
+      !>         WRITE(*,*) 'At least one CK has been loaded. '
+      !>     .          //  'You may call CK readers.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'No CK has been loaded.'
-      !>                 WRITE(*,*) 'Calling CK readers will result in an '
-      !>             .          //  'error.'
+      !>         WRITE(*,*) 'No CK has been loaded.'
+      !>         WRITE(*,*) 'Calling CK readers will result in an '
+      !>     .          //  'error.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

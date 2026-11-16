@@ -172,158 +172,160 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM KEEPER_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM KEEPER_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Local constants.
-!>        C
-!>              INTEGER               FNAMLN
-!>              PARAMETER           ( FNAMLN = 256 )
+!>C
+!>C     Local constants.
+!>C
+!>      INTEGER               FNAMLN
+!>      PARAMETER           ( FNAMLN = 256 )
 !>
-!>              INTEGER               FTYPLN
-!>              PARAMETER           ( FTYPLN = 33 )
+!>      INTEGER               FTYPLN
+!>      PARAMETER           ( FTYPLN = 33 )
 !>
-!>              INTEGER               SRCLEN
-!>              PARAMETER           ( SRCLEN = 256 )
+!>      INTEGER               SRCLEN
+!>      PARAMETER           ( SRCLEN = 256 )
 !>
-!>        C
-!>        C     Local variables.
-!>        C
-!>              CHARACTER*(FNAMLN)    FILE
-!>              CHARACTER*(FTYPLN)    FILTYP
-!>              CHARACTER*(SRCLEN)    SRCFIL
+!>C
+!>C     Local variables.
+!>C
+!>      CHARACTER*(FNAMLN)    FILE
+!>      CHARACTER*(FTYPLN)    FILTYP
+!>      CHARACTER*(SRCLEN)    SRCFIL
 !>
-!>              INTEGER               COUNT
-!>              INTEGER               HANDLE
-!>              INTEGER               WHICH
+!>      INTEGER               COUNT
+!>      INTEGER               HANDLE
+!>      INTEGER               WHICH
 !>
-!>              LOGICAL               FOUND
+!>      LOGICAL               FOUND
 !>
-!>        C
-!>        C     Load several kernel files.
-!>        C
-!>              CALL FURNSH ( 'keeper_ex1.tm'              )
-!>              CALL FURNSH ( 'RSSD0002.TF'                )
-!>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+!>C
+!>C     Load several kernel files.
+!>C
+!>      CALL FURNSH ( 'keeper_ex1.tm'              )
+!>      CALL FURNSH ( 'RSSD0002.TF'                )
+!>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
 !>
-!>        C
-!>        C     Count the number of loaded kernel files.
-!>        C
-!>              CALL KTOTAL ( 'ALL', COUNT )
+!>C
+!>C     Count the number of loaded kernel files.
+!>C
+!>      CALL KTOTAL ( 'ALL', COUNT )
 !>
-!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!>             . //               'final FURNSH: ', COUNT
-!>              WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>     . //               'final FURNSH: ', COUNT
+!>      WRITE(*,*) ' '
 !>
-!>        C
-!>        C     Retrieve the data for all the loaded kernels and
-!>        C     test an index for which there should be no kernel.
-!>        C
-!>              WRITE(*,'(A)') 'Overview of loaded kernels, by index:'
-!>              WRITE(*,*) ' '
+!>C
+!>C     Retrieve the data for all the loaded kernels and
+!>C     test an index for which there should be no kernel.
+!>C
+!>      WRITE(*,'(A)') 'Overview of loaded kernels, by index:'
+!>      WRITE(*,*) ' '
 !>
-!>              DO WHICH= 1, COUNT + 1
+!>      DO WHICH= 1, COUNT + 1
 !>
-!>                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
-!>             .                SRCFIL, HANDLE, FOUND        )
+!>         CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
+!>     .                SRCFIL, HANDLE, FOUND        )
 !>
-!>                 IF ( FOUND ) THEN
+!>         IF ( FOUND ) THEN
 !>
-!>                    WRITE(*,*) '  Index : ', WHICH
-!>                    WRITE(*,*) '  File  : ', FILE
-!>                    WRITE(*,*) '  Type  : ', FILTYP
-!>                    WRITE(*,*) '  Source: ', SRCFIL
-!>                    WRITE(*,*) '  Handle: ', HANDLE
-!>                    WRITE(*,*) ' '
+!>            WRITE(*,*) '  Index : ', WHICH
+!>            WRITE(*,*) '  File  : ', FILE
+!>            WRITE(*,*) '  Type  : ', FILTYP
+!>            WRITE(*,*) '  Source: ', SRCFIL
+!>            WRITE(*,*) '  Handle: ', HANDLE
+!>            WRITE(*,*) ' '
 !>
-!>                 ELSE
+!>         ELSE
 !>
-!>                    WRITE(*,*) '  No kernel found with index: ', WHICH
+!>            WRITE(*,*) '  No kernel found with index: ', WHICH
 !>
-!>                 END IF
+!>         END IF
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Unload the text kernels.
-!>        C
-!>              CALL KTOTAL ( 'TEXT', COUNT )
+!>C
+!>C     Unload the text kernels.
+!>C
+!>      CALL KTOTAL ( 'TEXT', COUNT )
 !>
-!>              WRITE(*,*) ' '
-!>              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
-!>             .                    ' text kernels...'
-!>              WRITE(*,*) ' '
+!>      WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
+!>     .                    ' text kernels...'
+!>      WRITE(*,*) ' '
 !>
-!>              DO WHILE ( COUNT .NE. 0 )
+!>      DO WHILE ( COUNT .NE. 0 )
 !>
-!>                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
-!>             .                SRCFIL, HANDLE, FOUND        )
+!>         CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
+!>     .                SRCFIL, HANDLE, FOUND        )
 !>
-!>        C
-!>        C        If the kernel is found in the pool, unload it.
-!>        C
-!>                 IF ( FOUND ) THEN
+!>C
+!>C        If the kernel is found in the pool, unload it.
+!>C
+!>         IF ( FOUND ) THEN
 !>
-!>                    CALL UNLOAD ( FILE )
+!>            CALL UNLOAD ( FILE )
 !>
-!>        C
-!>        C           Check if the file has been unloaded.
-!>        C
-!>                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+!>C
+!>C           Check if the file has been unloaded.
+!>C
+!>            CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
 !>
-!>                    IF ( FOUND ) THEN
+!>            IF ( FOUND ) THEN
 !>
-!>                       WRITE(*,'(A)') '  Error unloading ' // FILE
+!>               WRITE(*,'(A)') '  Error unloading ' // FILE
 !>
-!>                    ELSE
+!>            ELSE
 !>
-!>                       WRITE(*,'(A)') '  Success unloading ' // FILE
+!>               WRITE(*,'(A)') '  Success unloading ' // FILE
 !>
-!>                    END IF
+!>            END IF
 !>
-!>        C
-!>        C        Something is not working. Inform NAIF.
-!>        C
-!>                 ELSE
+!>C
+!>C        Something is not working. Inform NAIF.
+!>C
+!>         ELSE
 !>
-!>                    WRITE(*,*) ' ERROR: No kernel found with index: ',
-!>             .                 WHICH
+!>            WRITE(*,*) ' ERROR: No kernel found with index: ',
+!>     .                 WHICH
 !>
-!>                 END IF
+!>         END IF
 !>
-!>        C
-!>        C        Check if we have more text kernels to unload from
-!>        C        the kernel pool. Note that unloading a text kernel
-!>        C        or meta-kernel implies that the kernel pool is
-!>        C        cleared, and any kernel(s) that were not to be
-!>        C        unloaded are re-loaded. Therefore the COUNT value
-!>        C        changes, and the indexing of the files within the
-!>        C        kernel pool too.
-!>        C
-!>                 CALL KTOTAL ( 'TEXT', COUNT )
+!>C
+!>C        Check if we have more text kernels to unload from
+!>C        the kernel pool. Note that unloading a text kernel
+!>C        or meta-kernel implies that the kernel pool is
+!>C        cleared, and any kernel(s) that were not to be
+!>C        unloaded are re-loaded. Therefore the COUNT value
+!>C        changes, and the indexing of the files within the
+!>C        kernel pool too.
+!>C
+!>         CALL KTOTAL ( 'TEXT', COUNT )
 !>
-!>              END DO
+!>      END DO
 !>
-!>              CALL KTOTAL ( 'ALL', COUNT )
+!>      CALL KTOTAL ( 'ALL', COUNT )
 !>
-!>              WRITE(*,*) ' '
-!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!>             . //               'UNLOAD calls: ', COUNT
+!>      WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>     . //               'UNLOAD calls: ', COUNT
 !>
-!>        C
-!>        C     Clear the KEEPER system, retrieve the number of loaded
-!>        C     after the clear.
-!>        C
-!>              CALL KCLEAR()
+!>C
+!>C     Clear the KEEPER system, retrieve the number of loaded
+!>C     after the clear.
+!>C
+!>      CALL KCLEAR()
 !>
-!>              CALL KTOTAL ( 'ALL', COUNT )
+!>      CALL KTOTAL ( 'ALL', COUNT )
 !>
-!>              WRITE(*,*) ' '
-!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!>             . //               'KCLEAR      : ', COUNT
+!>      WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>     . //               'KCLEAR      : ', COUNT
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -1090,62 +1092,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMOT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMOT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Uppercase
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'INVALID COMMAND. # WORD NOT RECOGNIZED.'
+      !>C
+      !>C     1. Uppercase
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'INVALID COMMAND. # WORD NOT RECOGNIZED.'
       !>
-      !>              CALL REPMOT ( INSTR, MARKER, 5, 'U', OUTSTR )
+      !>      CALL REPMOT ( INSTR, MARKER, 5, 'U', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Replacement text in uppercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 1: Replacement text in uppercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Lowercase
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'The XX word of the XX sentence was ...'
+      !>C
+      !>C     2. Lowercase
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'The XX word of the XX sentence was ...'
       !>
-      !>              CALL REPMOT ( INSTR, MARKER, 5, 'L', OUTSTR )
+      !>      CALL REPMOT ( INSTR, MARKER, 5, 'L', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Replacement text in lowercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 2: Replacement text in lowercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Capitalized
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Name:  YY.  Rank:  XX.'
+      !>C
+      !>C     2. Capitalized
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Name:  YY.  Rank:  XX.'
       !>
-      !>              CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
-      !>              CALL REPMOT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
+      !>      CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
+      !>      CALL REPMOT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 3: Replacement text capitalized.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) 'Case 3: Replacement text capitalized.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2937,50 +2941,52 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EXISTS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EXISTS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 EXISTS
-      !>              INTEGER                 RTRIM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 EXISTS
+      !>      INTEGER                 RTRIM
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 FILEN
-      !>              PARAMETER             ( FILEN = 14 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 FILEN
+      !>      PARAMETER             ( FILEN = 14 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FILEN)       FNAME  ( 2 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FILEN)       FNAME  ( 2 )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Define an array of file names.
-      !>        C
-      !>              DATA                    FNAME / 'exists_ex1.txt',
-      !>             .                                'exists_ex1.pgm' /
+      !>C
+      !>C     Define an array of file names.
+      !>C
+      !>      DATA                    FNAME / 'exists_ex1.txt',
+      !>     .                                'exists_ex1.pgm' /
       !>
-      !>              DO I = 1, 2
+      !>      DO I = 1, 2
       !>
-      !>                 IF ( EXISTS ( FNAME(I) ) ) THEN
+      !>         IF ( EXISTS ( FNAME(I) ) ) THEN
       !>
-      !>                    WRITE(*,*) 'The file ', FNAME(I)(:RTRIM(FNAME(I))),
-      !>             .                 ' exists.'
+      !>            WRITE(*,*) 'The file ', FNAME(I)(:RTRIM(FNAME(I))),
+      !>     .                 ' exists.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Cannot find the file ', FNAME(I)
+      !>            WRITE(*,*) 'Cannot find the file ', FNAME(I)
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4010,41 +4016,43 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM FURNSH_EX5
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM FURNSH_EX5
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               COUNT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               COUNT
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'furnsh_ex5.tm'              )
-      !>              CALL FURNSH ( 'RSSD0002.TF'                )
-      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'furnsh_ex5.tm'              )
+      !>      CALL FURNSH ( 'RSSD0002.TF'                )
+      !>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final FURNSH: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final FURNSH: ', COUNT
       !>
-      !>        C
-      !>        C     Clear the KEEPER system, retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL KCLEAR()
+      !>C
+      !>C     Clear the KEEPER system, retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL KCLEAR()
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'KCLEAR      : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'KCLEAR      : ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4692,65 +4700,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KTOTAL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KTOTAL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               COUNT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               COUNT
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'ktotal_ex1.tm'              )
-      !>              CALL FURNSH ( 'RSSD0002.TF'                )
-      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'ktotal_ex1.tm'              )
+      !>      CALL FURNSH ( 'RSSD0002.TF'                )
+      !>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final FURNSH: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final FURNSH: ', COUNT
       !>
-      !>        C
-      !>        C     Count the number of meta-kernels.
-      !>        C
-      !>              CALL KTOTAL ( 'META', COUNT )
+      !>C
+      !>C     Count the number of meta-kernels.
+      !>C
+      !>      CALL KTOTAL ( 'META', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of meta-kernels  '
-      !>             . //               '            : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of meta-kernels  '
+      !>     . //               '            : ', COUNT
       !>
-      !>        C
-      !>        C     Count the number of text kernels.
-      !>        C
-      !>              CALL KTOTAL ( 'TEXT', COUNT )
+      !>C
+      !>C     Count the number of text kernels.
+      !>C
+      !>      CALL KTOTAL ( 'TEXT', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of text kernels  '
-      !>             . //               '            : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of text kernels  '
+      !>     . //               '            : ', COUNT
       !>
-      !>        C
-      !>        C     Count the number of binary kernels. These kernels
-      !>        C     are of type CK, DSK, EK, PCK or SPK.
-      !>        C
-      !>              CALL KTOTAL ( 'CK DSK EK PCK SPK', COUNT )
-      !>              WRITE(*,'(A,I2)') 'The total number of binary kernels'
-      !>             . //               '            : ', COUNT
+      !>C
+      !>C     Count the number of binary kernels. These kernels
+      !>C     are of type CK, DSK, EK, PCK or SPK.
+      !>C
+      !>      CALL KTOTAL ( 'CK DSK EK PCK SPK', COUNT )
+      !>      WRITE(*,'(A,I2)') 'The total number of binary kernels'
+      !>     . //               '            : ', COUNT
       !>
-      !>        C
-      !>        C     Clear the KEEPER system, retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL KCLEAR()
+      !>C
+      !>C     Clear the KEEPER system, retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL KCLEAR()
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'KCLEAR      : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'KCLEAR      : ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5069,67 +5079,69 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KDATA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KDATA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               FNAMLN
-      !>              PARAMETER           ( FNAMLN = 256 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               FNAMLN
+      !>      PARAMETER           ( FNAMLN = 256 )
       !>
-      !>              INTEGER               FTYPLN
-      !>              PARAMETER           ( FTYPLN = 33 )
+      !>      INTEGER               FTYPLN
+      !>      PARAMETER           ( FTYPLN = 33 )
       !>
-      !>              INTEGER               SRCLEN
-      !>              PARAMETER           ( SRCLEN = 256 )
+      !>      INTEGER               SRCLEN
+      !>      PARAMETER           ( SRCLEN = 256 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FNAMLN)    FILE
-      !>              CHARACTER*(FTYPLN)    FILTYP
-      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FNAMLN)    FILE
+      !>      CHARACTER*(FTYPLN)    FILTYP
+      !>      CHARACTER*(SRCLEN)    SRCFIL
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               WHICH
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               WHICH
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'kdata_ex1.tm' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'kdata_ex1.tm' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              DO WHICH= 1, COUNT + 1
+      !>      DO WHICH= 1, COUNT + 1
       !>
-      !>                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
-      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>         CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
+      !>     .                SRCFIL, HANDLE, FOUND        )
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    WRITE(*,*) 'Index : ', WHICH
-      !>                    WRITE(*,*) 'File  : ', FILE
-      !>                    WRITE(*,*) 'Type  : ', FILTYP
-      !>                    WRITE(*,*) 'Source: ', SRCFIL
-      !>                    WRITE(*,*) 'Handle: ', HANDLE
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Index : ', WHICH
+      !>            WRITE(*,*) 'File  : ', FILE
+      !>            WRITE(*,*) 'Type  : ', FILTYP
+      !>            WRITE(*,*) 'Source: ', SRCFIL
+      !>            WRITE(*,*) 'Handle: ', HANDLE
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'No kernel found with index: ', WHICH
+      !>            WRITE(*,*) 'No kernel found with index: ', WHICH
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5470,104 +5482,106 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KINFO_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KINFO_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              LOGICAL               EQSTR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      LOGICAL               EQSTR
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               FILLEN
-      !>              PARAMETER           ( FILLEN = 32 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               FILLEN
+      !>      PARAMETER           ( FILLEN = 32 )
       !>
-      !>              INTEGER               TYPLEN
-      !>              PARAMETER           ( TYPLEN = 33 )
+      !>      INTEGER               TYPLEN
+      !>      PARAMETER           ( TYPLEN = 33 )
       !>
-      !>              INTEGER               SRCLEN
-      !>              PARAMETER           ( SRCLEN = 256 )
+      !>      INTEGER               SRCLEN
+      !>      PARAMETER           ( SRCLEN = 256 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FILLEN)    FILE
-      !>              CHARACTER*(TYPLEN)    FILTYP
-      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FILLEN)    FILE
+      !>      CHARACTER*(TYPLEN)    FILTYP
+      !>      CHARACTER*(SRCLEN)    SRCFIL
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               WHICH
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               WHICH
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( 'kinfo_ex1.tm' )
+      !>C
+      !>C     Load the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( 'kinfo_ex1.tm' )
       !>
-      !>        C
-      !>        C     Find out the total number of kernels in the kernel pool.
-      !>        C
-      !>              CALL KTOTAL ( 'all', COUNT )
+      !>C
+      !>C     Find out the total number of kernels in the kernel pool.
+      !>C
+      !>      CALL KTOTAL ( 'all', COUNT )
       !>
-      !>              IF ( COUNT .EQ. 0 ) THEN
+      !>      IF ( COUNT .EQ. 0 ) THEN
       !>
-      !>                 WRITE(*,*) 'No files loaded at this time.'
+      !>         WRITE(*,*) 'No files loaded at this time.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'The loaded files files are: '
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) 'The loaded files files are: '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Find the file name, type and source for each of the
-      !>        C     kernels in the kernel pool and print its type.
-      !>        C
-      !>              DO WHICH= 1, COUNT
+      !>C
+      !>C     Find the file name, type and source for each of the
+      !>C     kernels in the kernel pool and print its type.
+      !>C
+      !>      DO WHICH= 1, COUNT
       !>
-      !>                 CALL KDATA ( WHICH,  'all',  FILE, FILTYP,
-      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>         CALL KDATA ( WHICH,  'all',  FILE, FILTYP,
+      !>     .                SRCFIL, HANDLE, FOUND        )
       !>
-      !>                 CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      !>         CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
       !>
-      !>                 IF ( EQSTR( FILTYP, "SPK" ) ) THEN
+      !>         IF ( EQSTR( FILTYP, "SPK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is an SPK file.'
+      !>            WRITE(*,*) FILE, ' is an SPK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "CK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "CK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a CK file.'
+      !>            WRITE(*,*) FILE, ' is a CK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "PCK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "PCK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a PCK file.'
+      !>            WRITE(*,*) FILE, ' is a PCK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "DSK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "DSK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a DSK file.'
+      !>            WRITE(*,*) FILE, ' is a DSK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "EK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "EK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is an EK file.'
+      !>            WRITE(*,*) FILE, ' is an EK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "META" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "META" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a meta-kernel file.'
+      !>            WRITE(*,*) FILE, ' is a meta-kernel file.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) FILE, ' is a text kernel.'
+      !>            WRITE(*,*) FILE, ' is a text kernel.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5863,39 +5877,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KCLEAR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KCLEAR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               COUNT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               COUNT
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'kclear_ex1.tm' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'kclear_ex1.tm' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'FURNSH: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'FURNSH: ', COUNT
       !>
-      !>        C
-      !>        C     Clear the KEEPER system, retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL KCLEAR()
+      !>C
+      !>C     Clear the KEEPER system, retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL KCLEAR()
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'KCLEAR: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'KCLEAR: ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6324,128 +6340,130 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM UNLOAD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM UNLOAD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               FNAMLN
-      !>              PARAMETER           ( FNAMLN = 256 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               FNAMLN
+      !>      PARAMETER           ( FNAMLN = 256 )
       !>
-      !>              INTEGER               FTYPLN
-      !>              PARAMETER           ( FTYPLN = 33 )
+      !>      INTEGER               FTYPLN
+      !>      PARAMETER           ( FTYPLN = 33 )
       !>
-      !>              INTEGER               SRCLEN
-      !>              PARAMETER           ( SRCLEN = 256 )
+      !>      INTEGER               SRCLEN
+      !>      PARAMETER           ( SRCLEN = 256 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FNAMLN)    FILE
-      !>              CHARACTER*(FTYPLN)    FILTYP
-      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FNAMLN)    FILE
+      !>      CHARACTER*(FTYPLN)    FILTYP
+      !>      CHARACTER*(SRCLEN)    SRCFIL
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'unload_ex1.tm'              )
-      !>              CALL FURNSH ( 'RSSD0002.TF'                )
-      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'unload_ex1.tm'              )
+      !>      CALL FURNSH ( 'RSSD0002.TF'                )
+      !>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final FURNSH: ', COUNT
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final FURNSH: ', COUNT
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Unload the text kernels.
-      !>        C
-      !>              CALL KTOTAL ( 'TEXT', COUNT )
+      !>C
+      !>C     Unload the text kernels.
+      !>C
+      !>      CALL KTOTAL ( 'TEXT', COUNT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
-      !>             .                    ' text kernels...'
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
+      !>     .                    ' text kernels...'
+      !>      WRITE(*,*) ' '
       !>
-      !>              DO WHILE ( COUNT .NE. 0 )
+      !>      DO WHILE ( COUNT .NE. 0 )
       !>
-      !>                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
-      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>         CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
+      !>     .                SRCFIL, HANDLE, FOUND        )
       !>
-      !>        C
-      !>        C        If the kernel is found in the pool, unload it.
-      !>        C
-      !>                 IF ( FOUND ) THEN
+      !>C
+      !>C        If the kernel is found in the pool, unload it.
+      !>C
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    CALL UNLOAD ( FILE )
+      !>            CALL UNLOAD ( FILE )
       !>
-      !>        C
-      !>        C           Check if the file has been unloaded.
-      !>        C
-      !>                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      !>C
+      !>C           Check if the file has been unloaded.
+      !>C
+      !>            CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
       !>
-      !>                    IF ( FOUND ) THEN
+      !>            IF ( FOUND ) THEN
       !>
-      !>                       WRITE(*,'(A)') '  Error unloading ' // FILE
+      !>               WRITE(*,'(A)') '  Error unloading ' // FILE
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A)') '  Success unloading ' // FILE
+      !>               WRITE(*,'(A)') '  Success unloading ' // FILE
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C        Something is not working. Inform NAIF.
-      !>        C
-      !>                 ELSE
+      !>C
+      !>C        Something is not working. Inform NAIF.
+      !>C
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) ' ERROR: No kernel found but KTOTAL '
-      !>             .      //         'returns ', COUNT
+      !>            WRITE(*,*) ' ERROR: No kernel found but KTOTAL '
+      !>     .      //         'returns ', COUNT
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Check if we have more text kernels to unload from
-      !>        C        the kernel pool. Note that unloading a text kernel
-      !>        C        or meta-kernel implies that the kernel pool is
-      !>        C        cleared, and any kernel(s) that were not to be
-      !>        C        unloaded are re-loaded. Therefore the COUNT value
-      !>        C        changes, and the indexing of the files within the
-      !>        C        kernel pool too.
-      !>        C
-      !>                 CALL KTOTAL ( 'TEXT', COUNT )
+      !>C
+      !>C        Check if we have more text kernels to unload from
+      !>C        the kernel pool. Note that unloading a text kernel
+      !>C        or meta-kernel implies that the kernel pool is
+      !>C        cleared, and any kernel(s) that were not to be
+      !>C        unloaded are re-loaded. Therefore the COUNT value
+      !>C        changes, and the indexing of the files within the
+      !>C        kernel pool too.
+      !>C
+      !>         CALL KTOTAL ( 'TEXT', COUNT )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'UNLOAD calls: ', COUNT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'UNLOAD calls: ', COUNT
       !>
-      !>        C
-      !>        C     Unload the meta-kernel and retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL UNLOAD ( 'unload_ex1.tm' )
+      !>C
+      !>C     Unload the meta-kernel and retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL UNLOAD ( 'unload_ex1.tm' )
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final UNLOAD: ', COUNT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final UNLOAD: ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

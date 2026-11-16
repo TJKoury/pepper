@@ -397,64 +397,66 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Single marker, two significant digits.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     1. Single marker, two significant digits.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMD ( INSTR, MARKER, 5.0D1, 2, OUTSTR )
+      !>      CALL REPMD ( INSTR, MARKER, 5.0D1, 2, OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Single marker, two significant '
-      !>             .        // 'digits.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 1: Single marker, two significant '
+      !>     .        // 'digits.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     2. Multiple markers, three significant digits.
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
+      !>C
+      !>C     2. Multiple markers, three significant digits.
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
       !>
-      !>              CALL REPMD ( INSTR, MARKER, -5.2D-9, 3, OUTSTR )
+      !>      CALL REPMD ( INSTR, MARKER, -5.2D-9, 3, OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Multiple markers, three '
-      !>             .        // 'significant digits.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 2: Multiple markers, three '
+      !>     .        // 'significant digits.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     3. Excessive significant digits.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     3. Excessive significant digits.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMD ( INSTR, MARKER, 5.0D1, 100, OUTSTR )
+      !>      CALL REPMD ( INSTR, MARKER, 5.0D1, 100, OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 3: Excessive significant digits.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 3: Excessive significant digits.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -690,49 +692,51 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Single marker
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     1. Single marker
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMI ( INSTR, MARKER, 75, OUTSTR )
+      !>      CALL REPMI ( INSTR, MARKER, 75, OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Single marker.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 1: Single marker.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     2. Multiple markers
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
+      !>C
+      !>C     2. Multiple markers
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
       !>
-      !>              CALL REPMI ( INSTR, MARKER, 2035, OUTSTR )
+      !>      CALL REPMI ( INSTR, MARKER, 2035, OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Multiple markers.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 2: Multiple markers.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1384,37 +1388,39 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INSSUB_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INSSUB_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               STRSZ
-      !>              PARAMETER           ( STRSZ = 20 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               STRSZ
+      !>      PARAMETER           ( STRSZ = 20 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRSZ)     STRIN
-      !>              CHARACTER*(STRSZ)     STROUT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRSZ)     STRIN
+      !>      CHARACTER*(STRSZ)     STROUT
       !>
-      !>        C
-      !>        C     Assign the input string.
-      !>        C
-      !>              DATA                  STRIN / '0123456789         .' /
+      !>C
+      !>C     Assign the input string.
+      !>C
+      !>      DATA                  STRIN / '0123456789         .' /
       !>
-      !>        C
-      !>        C     Insert a substring at index 17. This should leave 5
-      !>        C     blanks after the sequence of numbers. Note that the
-      !>        C     resulting string is truncated.
-      !>        C
-      !>              CALL INSSUB ( STRIN, '--->', 17, STROUT )
+      !>C
+      !>C     Insert a substring at index 17. This should leave 5
+      !>C     blanks after the sequence of numbers. Note that the
+      !>C     resulting string is truncated.
+      !>C
+      !>      CALL INSSUB ( STRIN, '--->', 17, STROUT )
       !>
-      !>              WRITE(*,*) 'Input string:  ', STRIN
-      !>              WRITE(*,*) 'Output string: ', STROUT
+      !>      WRITE(*,*) 'Input string:  ', STRIN
+      !>      WRITE(*,*) 'Output string: ', STROUT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

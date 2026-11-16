@@ -3792,43 +3792,45 @@ contains
       !>
       !>          Example code begins here.
       !>
-      !>                PROGRAM FRINFO_EX1
-      !>                IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM FRINFO_EX1
+      !>      IMPLICIT NONE
       !>
-      !>          C
-      !>          C     Local parameters.
-      !>          C
-      !>                INTEGER               FRCODE
-      !>                PARAMETER           ( FRCODE = 13000 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               FRCODE
+      !>      PARAMETER           ( FRCODE = 13000 )
       !>
-      !>          C
-      !>          C     Local variables.
-      !>          C
-      !>                INTEGER               CENTER
-      !>                INTEGER               CLSSID
-      !>                INTEGER               FRCLSS
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               CENTER
+      !>      INTEGER               CLSSID
+      !>      INTEGER               FRCLSS
       !>
-      !>                LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>          C
-      !>          C     Retrieve the information for frame ID 13000.
-      !>          C
-      !>                CALL FRINFO ( FRCODE, CENTER, FRCLSS, CLSSID, FOUND )
+      !>C
+      !>C     Retrieve the information for frame ID 13000.
+      !>C
+      !>      CALL FRINFO ( FRCODE, CENTER, FRCLSS, CLSSID, FOUND )
       !>
-      !>                IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>                   WRITE(*,'(A,I6)') 'Frame center  : ', CENTER
-      !>                   WRITE(*,'(A,I6)') 'Frame class   : ', FRCLSS
-      !>                   WRITE(*,'(A,I6)') 'Frame class ID: ', CLSSID
+      !>         WRITE(*,'(A,I6)') 'Frame center  : ', CENTER
+      !>         WRITE(*,'(A,I6)') 'Frame class   : ', FRCLSS
+      !>         WRITE(*,'(A,I6)') 'Frame class ID: ', CLSSID
       !>
-      !>                ELSE
+      !>      ELSE
       !>
-      !>                   WRITE (*,'(A,I6)') 'There is insufficient data '
-      !>               .                   // 'for frame ', FRCODE
+      !>         WRITE (*,'(A,I6)') 'There is insufficient data '
+      !>     .                   // 'for frame ', FRCODE
       !>
-      !>                END IF
+      !>      END IF
       !>
-      !>                END
+      !>      END
+      !>```
       !>
       !>          When this program was executed on a Mac/Intel/gfortran/64-bit
       !>          platform, the output was:
@@ -4635,75 +4637,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CCIFRM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CCIFRM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               FRNLEN
-      !>              PARAMETER           ( FRNLEN = 32 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               FRNLEN
+      !>      PARAMETER           ( FRNLEN = 32 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FRNLEN)    FRNAME
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FRNLEN)    FRNAME
       !>
-      !>              INTEGER               CENTR1
-      !>              INTEGER               CENTR2
-      !>              INTEGER               CLSS
-      !>              INTEGER               CLSSID
-      !>              INTEGER               FRCOD1
-      !>              INTEGER               FRCOD2
+      !>      INTEGER               CENTR1
+      !>      INTEGER               CENTR2
+      !>      INTEGER               CLSS
+      !>      INTEGER               CLSSID
+      !>      INTEGER               FRCOD1
+      !>      INTEGER               FRCOD2
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Find the frame code associated with ITRF93
-      !>        C
-      !>              FRNAME = 'ITRF93'
-      !>              CALL NAMFRM ( FRNAME, FRCOD1 )
+      !>C
+      !>C     Find the frame code associated with ITRF93
+      !>C
+      !>      FRNAME = 'ITRF93'
+      !>      CALL NAMFRM ( FRNAME, FRCOD1 )
       !>
-      !>        C
-      !>        C     Get the frame information.
-      !>        C
-      !>              CALL FRINFO ( FRCOD1, CENTR1, CLSS, CLSSID, FOUND )
+      !>C
+      !>C     Get the frame information.
+      !>C
+      !>      CALL FRINFO ( FRCOD1, CENTR1, CLSS, CLSSID, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                    WRITE(*,*) 'No info found for frame ', FRCOD1
-      !>                    STOP
+      !>            WRITE(*,*) 'No info found for frame ', FRCOD1
+      !>            STOP
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              WRITE(*,'(A)')    'Frame ITRF93 info:'
-      !>              WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD1
-      !>              WRITE(*,'(A,I6)') '   Center ID : ', CENTR1
-      !>              WRITE(*,'(A,I6)') '   Class     : ', CLSS
-      !>              WRITE(*,'(A,I6)') '   Class ID  : ', CLSSID
+      !>      WRITE(*,'(A)')    'Frame ITRF93 info:'
+      !>      WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD1
+      !>      WRITE(*,'(A,I6)') '   Center ID : ', CENTR1
+      !>      WRITE(*,'(A,I6)') '   Class     : ', CLSS
+      !>      WRITE(*,'(A,I6)') '   Class ID  : ', CLSSID
       !>
-      !>        C
-      !>        C     Return the frame name, frame ID, and center associated
-      !>        C     with the frame CLSS and CLSSID.
-      !>        C
-      !>              CALL CCIFRM ( CLSS,   CLSSID, FRCOD2,
-      !>             .              FRNAME, CENTR2, FOUND  )
+      !>C
+      !>C     Return the frame name, frame ID, and center associated
+      !>C     with the frame CLSS and CLSSID.
+      !>C
+      !>      CALL CCIFRM ( CLSS,   CLSSID, FRCOD2,
+      !>     .              FRNAME, CENTR2, FOUND  )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                    WRITE(*,*) 'No info found for type ', CLSS,
-      !>             .                 ' frame ', CLSSID
-      !>                    STOP
+      !>            WRITE(*,*) 'No info found for type ', CLSS,
+      !>     .                 ' frame ', CLSSID
+      !>            STOP
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              WRITE(*,'(A,I3,A,I6,A)') 'Type', CLSS, ' frame', CLSSID,
-      !>             .                         ' info:'
-      !>              WRITE(*,'(2A)')   '   Frame name: ', FRNAME
-      !>              WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD2
-      !>              WRITE(*,'(A,I6)') '   Center ID : ', CENTR2
+      !>      WRITE(*,'(A,I3,A,I6,A)') 'Type', CLSS, ' frame', CLSSID,
+      !>     .                         ' info:'
+      !>      WRITE(*,'(2A)')   '   Frame name: ', FRNAME
+      !>      WRITE(*,'(A,I6)') '   Frame Code: ', FRCOD2
+      !>      WRITE(*,'(A,I6)') '   Center ID : ', CENTR2
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

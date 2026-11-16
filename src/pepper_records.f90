@@ -7603,134 +7603,136 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKR02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKR02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 31004 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 31004 )
       !>
-      !>              INTEGER               DESCSZ
-      !>              PARAMETER           ( DESCSZ = 5     )
+      !>      INTEGER               DESCSZ
+      !>      PARAMETER           ( DESCSZ = 5     )
       !>
-      !>              INTEGER               IDSIZE
-      !>              PARAMETER           ( IDSIZE = 40    )
+      !>      INTEGER               IDSIZE
+      !>      PARAMETER           ( IDSIZE = 40    )
       !>
-      !>        C
-      !>        C     Set the maximum record size:
-      !>        C
-      !>        C        RSIZE = 2 + 3 * (PDEG +1)
-      !>        C
-      !>        C     Assume a maximum polynomial degree of 25, and
-      !>        C     knowing that PCKR02 returns RSIZE as first element
-      !>        C     of the output record...
-      !>        C
-      !>              INTEGER               RECRSZ
-      !>              PARAMETER           ( RECRSZ = 81    )
+      !>C
+      !>C     Set the maximum record size:
+      !>C
+      !>C        RSIZE = 2 + 3 * (PDEG +1)
+      !>C
+      !>C     Assume a maximum polynomial degree of 25, and
+      !>C     knowing that PCKR02 returns RSIZE as first element
+      !>C     of the output record...
+      !>C
+      !>      INTEGER               RECRSZ
+      !>      PARAMETER           ( RECRSZ = 81    )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(IDSIZE)    SEGID
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(IDSIZE)    SEGID
       !>
-      !>              DOUBLE PRECISION      BEGET
-      !>              DOUBLE PRECISION      DESCR  ( DESCSZ )
-      !>              DOUBLE PRECISION      ENDET
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RECORD ( RECRSZ )
+      !>      DOUBLE PRECISION      BEGET
+      !>      DOUBLE PRECISION      DESCR  ( DESCSZ )
+      !>      DOUBLE PRECISION      ENDET
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RECORD ( RECRSZ )
       !>
-      !>              INTEGER               BADDR
-      !>              INTEGER               BODYID
-      !>              INTEGER               EADDR
-      !>              INTEGER               FRAMID
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               INDEX
-      !>              INTEGER               PCKHDL
-      !>              INTEGER               PCKTYP
-      !>              INTEGER               PDEG
-      !>              INTEGER               RSIZE
+      !>      INTEGER               BADDR
+      !>      INTEGER               BODYID
+      !>      INTEGER               EADDR
+      !>      INTEGER               FRAMID
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               INDEX
+      !>      INTEGER               PCKHDL
+      !>      INTEGER               PCKTYP
+      !>      INTEGER               PDEG
+      !>      INTEGER               RSIZE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the PCK file.
-      !>        C
-      !>              CALL PCKLOF ( 'moon_pa_de418_1950-2050.bpc', PCKHDL )
+      !>C
+      !>C     Load the PCK file.
+      !>C
+      !>      CALL PCKLOF ( 'moon_pa_de418_1950-2050.bpc', PCKHDL )
       !>
-      !>        C
-      !>        C     Set the epoch. Use ephemeris time of J2000 epoch.
-      !>        C
-      !>              ET = 0.D0
+      !>C
+      !>C     Set the epoch. Use ephemeris time of J2000 epoch.
+      !>C
+      !>      ET = 0.D0
       !>
-      !>        C
-      !>        C     Get a segment applicable to a specified body and epoch.
-      !>        C
-      !>              CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
+      !>C
+      !>C     Get a segment applicable to a specified body and epoch.
+      !>C
+      !>      CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>        C
-      !>        C        Unpack the segment.
-      !>        C
-      !>                 CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
-      !>             .                 BEGET, ENDET,  BADDR,  EADDR  )
+      !>C
+      !>C        Unpack the segment.
+      !>C
+      !>         CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
+      !>     .                 BEGET, ENDET,  BADDR,  EADDR  )
       !>
-      !>                 IF ( PCKTYP .EQ. 2 ) THEN
+      !>         IF ( PCKTYP .EQ. 2 ) THEN
       !>
-      !>                    CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
+      !>            CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
       !>
-      !>                    RSIZE = RECORD(1)
-      !>                    PDEG  = ( RSIZE - 2 ) / 3 - 1
+      !>            RSIZE = RECORD(1)
+      !>            PDEG  = ( RSIZE - 2 ) / 3 - 1
       !>
-      !>        C
-      !>        C           Output the data.
-      !>        C
-      !>                    WRITE(*,*) 'Record size      : ', RSIZE
-      !>                    WRITE(*,*) 'Polynomial degree: ', PDEG
+      !>C
+      !>C           Output the data.
+      !>C
+      !>            WRITE(*,*) 'Record size      : ', RSIZE
+      !>            WRITE(*,*) 'Polynomial degree: ', PDEG
       !>
-      !>                    WRITE(*,*) 'Record data      :'
-      !>                    WRITE(*,*) '   Interval midpoint: ', RECORD(2)
-      !>                    WRITE(*,*) '   Interval radius  : ', RECORD(3)
+      !>            WRITE(*,*) 'Record data      :'
+      !>            WRITE(*,*) '   Interval midpoint: ', RECORD(2)
+      !>            WRITE(*,*) '   Interval radius  : ', RECORD(3)
       !>
-      !>                    INDEX = 4
-      !>                    WRITE(*,*) '   RA coefficients  : '
-      !>                    DO I = 0, PDEG
-      !>                       WRITE(*,*) '      ', RECORD(INDEX+I)
-      !>                    END DO
+      !>            INDEX = 4
+      !>            WRITE(*,*) '   RA coefficients  : '
+      !>            DO I = 0, PDEG
+      !>               WRITE(*,*) '      ', RECORD(INDEX+I)
+      !>            END DO
       !>
-      !>                    INDEX = 4 + ( PDEG + 1 )
-      !>                    WRITE(*,*) '   DEC coefficients : '
-      !>                    DO I = 0, PDEG
-      !>                       WRITE(*,*) '      ', RECORD(INDEX+I)
-      !>                    END DO
+      !>            INDEX = 4 + ( PDEG + 1 )
+      !>            WRITE(*,*) '   DEC coefficients : '
+      !>            DO I = 0, PDEG
+      !>               WRITE(*,*) '      ', RECORD(INDEX+I)
+      !>            END DO
       !>
-      !>                    INDEX = 4 + 2 * ( PDEG + 1 )
-      !>                    WRITE(*,*) '   W coefficients   : '
-      !>                    DO I = 0, PDEG
-      !>                       WRITE(*,*) '      ', RECORD(INDEX+I)
-      !>                    END DO
+      !>            INDEX = 4 + 2 * ( PDEG + 1 )
+      !>            WRITE(*,*) '   W coefficients   : '
+      !>            DO I = 0, PDEG
+      !>               WRITE(*,*) '      ', RECORD(INDEX+I)
+      !>            END DO
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'PCK is not type 2'
+      !>            WRITE(*,*) 'PCK is not type 2'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
+      !>         WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Unload the PCK file.
-      !>        C
-      !>              CALL PCKUOF ( PCKHDL )
+      !>C
+      !>C     Unload the PCK file.
+      !>C
+      !>      CALL PCKUOF ( PCKHDL )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20088,88 +20090,90 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKMETA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKMETA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>        C     -- The code for CASSINI spacecraft reference frame is
-      !>        C        -82000.
-      !>        C
-      !>        C     -- The reference frame we want is J2000.
-      !>        C
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF = 'J2000' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>C     -- The code for CASSINI spacecraft reference frame is
+      !>C        -82000.
+      !>C
+      !>C     -- The reference frame we want is J2000.
+      !>C
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF = 'J2000' )
       !>
-      !>              INTEGER               CKID
-      !>              PARAMETER           ( CKID = -82000  )
+      !>      INTEGER               CKID
+      !>      PARAMETER           ( CKID = -82000  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      AV     ( 3 )
-      !>              DOUBLE PRECISION      CLKOUT
-      !>              DOUBLE PRECISION      CMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ETOUT
-      !>              DOUBLE PRECISION      SECTOL
-      !>              DOUBLE PRECISION      TICKS
-      !>              DOUBLE PRECISION      TICK2
-      !>              DOUBLE PRECISION      TOL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      AV     ( 3 )
+      !>      DOUBLE PRECISION      CLKOUT
+      !>      DOUBLE PRECISION      CMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ETOUT
+      !>      DOUBLE PRECISION      SECTOL
+      !>      DOUBLE PRECISION      TICKS
+      !>      DOUBLE PRECISION      TICK2
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               IDCODE
+      !>      INTEGER               IDCODE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Initial values.
-      !>        C
-      !>              DATA                  ET      / 141162208.034340D0 /
-      !>              DATA                  SECTOL  / 0.5D0 /
+      !>C
+      !>C     Initial values.
+      !>C
+      !>      DATA                  ET      / 141162208.034340D0 /
+      !>      DATA                  SECTOL  / 0.5D0 /
       !>
-      !>        C
-      !>        C     First load the CK, LSK and SCLK files.
-      !>        C
-      !>              CALL FURNSH ( 'ckmeta_ex1.tm' )
+      !>C
+      !>C     First load the CK, LSK and SCLK files.
+      !>C
+      !>      CALL FURNSH ( 'ckmeta_ex1.tm' )
       !>
-      !>        C
-      !>        C     Get the SCLK identifier of the spacecraft clock required
-      !>        C     to convert from ET to TICKS.
-      !>        C
-      !>              CALL CKMETA ( CKID, 'SCLK', IDCODE )
+      !>C
+      !>C     Get the SCLK identifier of the spacecraft clock required
+      !>C     to convert from ET to TICKS.
+      !>C
+      !>      CALL CKMETA ( CKID, 'SCLK', IDCODE )
       !>
-      !>        C
-      !>        C     Convert ET and ET+SECTOL to spacecraft clock ticks.
-      !>        C
-      !>              CALL SCE2C  ( IDCODE, ET,        TICKS  )
-      !>              CALL SCE2C  ( IDCODE, ET+SECTOL, TICK2  )
+      !>C
+      !>C     Convert ET and ET+SECTOL to spacecraft clock ticks.
+      !>C
+      !>      CALL SCE2C  ( IDCODE, ET,        TICKS  )
+      !>      CALL SCE2C  ( IDCODE, ET+SECTOL, TICK2  )
       !>
-      !>        C
-      !>        C     Compute the tolerance in spacecraft clock ticks.
-      !>        C
-      !>              TOL = TICK2 - TICKS
+      !>C
+      !>C     Compute the tolerance in spacecraft clock ticks.
+      !>C
+      !>      TOL = TICK2 - TICKS
       !>
-      !>        C
-      !>        C     Look the attitude up.
-      !>        C
-      !>              CALL CKGPAV ( CKID, TICKS, TOL,    REF,
-      !>             .              CMAT, AV,    CLKOUT, FOUND )
+      !>C
+      !>C     Look the attitude up.
+      !>C
+      !>      CALL CKGPAV ( CKID, TICKS, TOL,    REF,
+      !>     .              CMAT, AV,    CLKOUT, FOUND )
       !>
-      !>              WRITE(*,'(A,F20.6)')    'Input ET:            ', ET
+      !>      WRITE(*,'(A,F20.6)')    'Input ET:            ', ET
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>                 CALL SCT2E ( IDCODE, CLKOUT, ETOUT )
-      !>                 WRITE(*,'(A,F20.6)') 'Attitude found at ET:', ETOUT
+      !>         CALL SCT2E ( IDCODE, CLKOUT, ETOUT )
+      !>         WRITE(*,'(A,F20.6)') 'Attitude found at ET:', ETOUT
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(A)') 'No attitude found at ET.'
+      !>         WRITE(*,'(A)') 'No attitude found at ET.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -21192,62 +21196,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PROP2B_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PROP2B_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      PI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      PI
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      MU
-      !>              DOUBLE PRECISION      PVINIT ( 6 )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      SPEED
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      T
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      MU
+      !>      DOUBLE PRECISION      PVINIT ( 6 )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      SPEED
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      T
       !>
-      !>        C
-      !>        C     Initial values.
-      !>        C
-      !>              MU    =  3.9860043543609598D+05
-      !>              R     =  1.0D+08
-      !>              SPEED =  SQRT( MU / R )
-      !>              T     =  PI( )*R/SPEED
+      !>C
+      !>C     Initial values.
+      !>C
+      !>      MU    =  3.9860043543609598D+05
+      !>      R     =  1.0D+08
+      !>      SPEED =  SQRT( MU / R )
+      !>      T     =  PI( )*R/SPEED
       !>
-      !>              PVINIT(1) =  0.0D0
-      !>              PVINIT(2) =  R/SQRT(2.0D0)
-      !>              PVINIT(3) =  R/SQRT(2.0D0)
-      !>              PVINIT(4) =  0.0D0
-      !>              PVINIT(5) = -SPEED/SQRT(2.0D0)
-      !>              PVINIT(6) =  SPEED/SQRT(2.0D0)
+      !>      PVINIT(1) =  0.0D0
+      !>      PVINIT(2) =  R/SQRT(2.0D0)
+      !>      PVINIT(3) =  R/SQRT(2.0D0)
+      !>      PVINIT(4) =  0.0D0
+      !>      PVINIT(5) = -SPEED/SQRT(2.0D0)
+      !>      PVINIT(6) =  SPEED/SQRT(2.0D0)
       !>
-      !>        C
-      !>        C     Calculate the state of the body at 0.5 period
-      !>        C     after the epoch.
-      !>        C
-      !>              CALL PROP2B ( MU, PVINIT, T, STATE )
+      !>C
+      !>C     Calculate the state of the body at 0.5 period
+      !>C     after the epoch.
+      !>C
+      !>      CALL PROP2B ( MU, PVINIT, T, STATE )
       !>
-      !>        C
-      !>        C     The `state' vector should equal -pvinit
-      !>        C
-      !>              WRITE(*,*) 'State at t0:'
-      !>              WRITE(*,'(A,3F17.5)') '   R   (km):',
-      !>             .                 PVINIT(1), PVINIT(2), PVINIT(3)
-      !>              WRITE(*,'(A,3F17.5)') '   V (km/s):',
-      !>             .                 PVINIT(4), PVINIT(5), PVINIT(6)
+      !>C
+      !>C     The `state' vector should equal -pvinit
+      !>C
+      !>      WRITE(*,*) 'State at t0:'
+      !>      WRITE(*,'(A,3F17.5)') '   R   (km):',
+      !>     .                 PVINIT(1), PVINIT(2), PVINIT(3)
+      !>      WRITE(*,'(A,3F17.5)') '   V (km/s):',
+      !>     .                 PVINIT(4), PVINIT(5), PVINIT(6)
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'State at tau/2:'
-      !>              WRITE(*,'(A,3F17.5)') '   R   (km):',
-      !>             .                    STATE(1), STATE(2), STATE(3)
-      !>              WRITE(*,'(A,3F17.5)') '   V (km/s):',
-      !>             .                    STATE(4), STATE(5), STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'State at tau/2:'
+      !>      WRITE(*,'(A,3F17.5)') '   R   (km):',
+      !>     .                    STATE(1), STATE(2), STATE(3)
+      !>      WRITE(*,'(A,3F17.5)') '   V (km/s):',
+      !>     .                    STATE(4), STATE(5), STATE(6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

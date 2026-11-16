@@ -4570,59 +4570,61 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TPARCH_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TPARCH_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         TIMSTR
-      !>              PARAMETER           ( TIMSTR = 'FEB 34, 1993' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         TIMSTR
+      !>      PARAMETER           ( TIMSTR = 'FEB 34, 1993' )
       !>
-      !>              INTEGER               ERRMLN
-      !>              PARAMETER           ( ERRMLN = 1000 )
+      !>      INTEGER               ERRMLN
+      !>      PARAMETER           ( ERRMLN = 1000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(ERRMLN)    ERRMSG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(ERRMLN)    ERRMSG
       !>
-      !>              DOUBLE PRECISION      SP2000
+      !>      DOUBLE PRECISION      SP2000
       !>
-      !>        C
-      !>        C     First, demonstrate the default behavior of SPICE.
-      !>        C     Let's get the number of UTC seconds past J2000 epoch.
-      !>        C
-      !>              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
+      !>C
+      !>C     First, demonstrate the default behavior of SPICE.
+      !>C     Let's get the number of UTC seconds past J2000 epoch.
+      !>C
+      !>      CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
       !>
-      !>              IF ( ERRMSG .EQ. ' ' ) THEN
+      !>      IF ( ERRMSG .EQ. ' ' ) THEN
       !>
-      !>                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
+      !>         WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
+      !>         WRITE(*,'(2A)') 'Error  : ', ERRMSG
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Now, turn error checking on and parse the time string
-      !>        C     again.
-      !>        C
-      !>              CALL TPARCH ( 'YES' )
-      !>              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
+      !>C
+      !>C     Now, turn error checking on and parse the time string
+      !>C     again.
+      !>C
+      !>      CALL TPARCH ( 'YES' )
+      !>      CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
       !>
-      !>              IF ( ERRMSG .EQ. ' ' ) THEN
+      !>      IF ( ERRMSG .EQ. ' ' ) THEN
       !>
-      !>                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
+      !>         WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
+      !>         WRITE(*,'(2A)') 'Error  : ', ERRMSG
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4908,72 +4910,74 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TEXPYR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TEXPYR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NYEARS
-      !>              PARAMETER           ( NYEARS = 10 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NYEARS
+      !>      PARAMETER           ( NYEARS = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               I
-      !>              INTEGER               EXYEAR
-      !>              INTEGER               YEARS  ( NYEARS )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               I
+      !>      INTEGER               EXYEAR
+      !>      INTEGER               YEARS  ( NYEARS )
       !>
-      !>        C
-      !>        C     Set the input years.
-      !>        C
-      !>              DATA                  YEARS /  0,  1, 68, 69, 70,
-      !>             .                              78, 79, 80, 81, 99  /
+      !>C
+      !>C     Set the input years.
+      !>C
+      !>      DATA                  YEARS /  0,  1, 68, 69, 70,
+      !>     .                              78, 79, 80, 81, 99  /
       !>
-      !>        C
-      !>        C     Display the default behavior.
-      !>        C
-      !>              WRITE(*,'(A)') 'Default behavior:'
-      !>              WRITE(*,*)
+      !>C
+      !>C     Display the default behavior.
+      !>C
+      !>      WRITE(*,'(A)') 'Default behavior:'
+      !>      WRITE(*,*)
       !>
-      !>              WRITE(*,'(A)') 'In  Expansion'
-      !>              WRITE(*,'(A)') '--  ---------'
+      !>      WRITE(*,'(A)') 'In  Expansion'
+      !>      WRITE(*,'(A)') '--  ---------'
       !>
-      !>              DO I=1, NYEARS
+      !>      DO I=1, NYEARS
       !>
-      !>                 EXYEAR = YEARS(I)
-      !>                 CALL TEXPYR ( EXYEAR )
+      !>         EXYEAR = YEARS(I)
+      !>         CALL TEXPYR ( EXYEAR )
       !>
-      !>                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
+      !>         WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Set up the lower bound for the expansion of abbreviated
-      !>        C     years to 1980.
-      !>        C
-      !>              CALL TSETYR ( 1980 )
+      !>C
+      !>C     Set up the lower bound for the expansion of abbreviated
+      !>C     years to 1980.
+      !>C
+      !>      CALL TSETYR ( 1980 )
       !>
-      !>        C
-      !>        C     Display the new behavior.
-      !>        C
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Lower bound for expansion set to 1980:'
-      !>              WRITE(*,*)
+      !>C
+      !>C     Display the new behavior.
+      !>C
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Lower bound for expansion set to 1980:'
+      !>      WRITE(*,*)
       !>
-      !>              WRITE(*,'(A)') 'In  Expansion'
-      !>              WRITE(*,'(A)') '--  ---------'
+      !>      WRITE(*,'(A)') 'In  Expansion'
+      !>      WRITE(*,'(A)') '--  ---------'
       !>
-      !>              DO I=1, NYEARS
+      !>      DO I=1, NYEARS
       !>
-      !>                 EXYEAR = YEARS(I)
-      !>                 CALL TEXPYR ( EXYEAR )
+      !>         EXYEAR = YEARS(I)
+      !>         CALL TEXPYR ( EXYEAR )
       !>
-      !>                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
+      !>         WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5114,66 +5118,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TSETYR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TSETYR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               DATELN
-      !>              PARAMETER           ( DATELN = 11 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               DATELN
+      !>      PARAMETER           ( DATELN = 11 )
       !>
-      !>              INTEGER               NTSTRS
-      !>              PARAMETER           ( NTSTRS = 7 )
+      !>      INTEGER               NTSTRS
+      !>      PARAMETER           ( NTSTRS = 7 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(DATELN)    DATE   (NTSTRS)
-      !>              CHARACTER*(DATELN)    TIMSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(DATELN)    DATE   (NTSTRS)
+      !>      CHARACTER*(DATELN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Assign an array of calendar dates.
-      !>        C
-      !>              DATA                  DATE   / '00 JAN 21',
-      !>             .                               '01 FEB 22',
-      !>             .                               '48 MAR 23',
-      !>             .                               '49 APR 24',
-      !>             .                               '79 JUL 14',
-      !>             .                               '80 FEB 02',
-      !>             .                               '99 DEC 31' /
+      !>C
+      !>C     Assign an array of calendar dates.
+      !>C
+      !>      DATA                  DATE   / '00 JAN 21',
+      !>     .                               '01 FEB 22',
+      !>     .                               '48 MAR 23',
+      !>     .                               '49 APR 24',
+      !>     .                               '79 JUL 14',
+      !>     .                               '80 FEB 02',
+      !>     .                               '99 DEC 31' /
       !>
-      !>        C
-      !>        C     Load the required LSK.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load the required LSK.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Set up the lower bound for the
-      !>        C     expansion of abbreviated years.
-      !>        C
-      !>              CALL TSETYR ( 1980 )
+      !>C
+      !>C     Set up the lower bound for the
+      !>C     expansion of abbreviated years.
+      !>C
+      !>      CALL TSETYR ( 1980 )
       !>
-      !>        C
-      !>        C     Expand the years in input time strings.
-      !>        C
-      !>              WRITE(*,*) 'Time string    Expansion'
-      !>              WRITE(*,*) '-----------    -----------'
+      !>C
+      !>C     Expand the years in input time strings.
+      !>C
+      !>      WRITE(*,*) 'Time string    Expansion'
+      !>      WRITE(*,*) '-----------    -----------'
       !>
-      !>              DO I = 1, NTSTRS
+      !>      DO I = 1, NTSTRS
       !>
-      !>                 CALL STR2ET ( DATE(I), ET )
-      !>                 CALL TIMOUT ( ET, 'YYYY MON DD', TIMSTR )
+      !>         CALL STR2ET ( DATE(I), ET )
+      !>         CALL TIMOUT ( ET, 'YYYY MON DD', TIMSTR )
       !>
-      !>                 WRITE(*,*) DATE(I), '    ', TIMSTR
+      !>         WRITE(*,*) DATE(I), '    ', TIMSTR
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -9768,65 +9774,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TPARSE_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TPARSE_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              INTEGER               ERRMLN
-      !>              PARAMETER           ( ERRMLN = 36 )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      INTEGER               ERRMLN
+      !>      PARAMETER           ( ERRMLN = 36 )
       !>
-      !>              INTEGER               DATELN
-      !>              PARAMETER           ( DATELN = 22 )
+      !>      INTEGER               DATELN
+      !>      PARAMETER           ( DATELN = 22 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(DATELN)    DATE   (7)
-      !>              CHARACTER*(ERRMLN)    ERRMSG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(DATELN)    DATE   (7)
+      !>      CHARACTER*(ERRMLN)    ERRMSG
       !>
-      !>              DOUBLE PRECISION      SP2000
+      !>      DOUBLE PRECISION      SP2000
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Assign an array of calendar dates. Not all of them are
-      !>        C     valid.
-      !>        C
-      !>              DATA                  DATE   / '1986-01-18T12:19:52.18',
-      !>             .                               '17JUN1982 18:28:28',
-      !>             .                               '182-''92/ 12:28:29.182',
-      !>             .                               '''67-271/ 12:28:30.291',
-      !>             .                               '-467-14-25 26:00:75',
-      !>             .                               '1993 FEB 35',
-      !>             .                               '1993 MAR 7' /
+      !>C
+      !>C     Assign an array of calendar dates. Not all of them are
+      !>C     valid.
+      !>C
+      !>      DATA                  DATE   / '1986-01-18T12:19:52.18',
+      !>     .                               '17JUN1982 18:28:28',
+      !>     .                               '182-''92/ 12:28:29.182',
+      !>     .                               '''67-271/ 12:28:30.291',
+      !>     .                               '-467-14-25 26:00:75',
+      !>     .                               '1993 FEB 35',
+      !>     .                               '1993 MAR 7' /
       !>
-      !>        C
-      !>        C     Loop over the DATE array, call TPARSE for each element.
-      !>        C
-      !>              WRITE(*,'(A)') '    Input string        '
-      !>             .            // 'UTC sec past J2000'
-      !>              WRITE(*,'(A)') '----------------------  '
-      !>             .            // '------------------'
+      !>C
+      !>C     Loop over the DATE array, call TPARSE for each element.
+      !>C
+      !>      WRITE(*,'(A)') '    Input string        '
+      !>     .            // 'UTC sec past J2000'
+      !>      WRITE(*,'(A)') '----------------------  '
+      !>     .            // '------------------'
       !>
-      !>              DO I= 1, 7
+      !>      DO I= 1, 7
       !>
-      !>                 CALL TPARSE ( DATE(I), SP2000, ERRMSG )
+      !>         CALL TPARSE ( DATE(I), SP2000, ERRMSG )
       !>
-      !>                 IF ( ERRMSG .EQ. ' ' ) THEN
+      !>         IF ( ERRMSG .EQ. ' ' ) THEN
       !>
-      !>                    WRITE(*,'(A22,2X,F18.6)') DATE(I), SP2000
+      !>            WRITE(*,'(A22,2X,F18.6)') DATE(I), SP2000
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A22,2X,A)') DATE(I), ERRMSG
+      !>            WRITE(*,'(A22,2X,A)') DATE(I), ERRMSG
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, the output was:
@@ -12320,66 +12328,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CLPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CLPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DVALS ( 1 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DVALS ( 1 )
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Place a value into the kernel pool. Recall the routines
-      !>        C     for direct insertion of pool assignments have arrays for
-      !>        C     input.
-      !>        C
-      !>              DVALS( 1 ) = -666.D0
-      !>              CALL PDPOOL ( 'TEST_VAR', 1, DVALS )
+      !>C
+      !>C     Place a value into the kernel pool. Recall the routines
+      !>C     for direct insertion of pool assignments have arrays for
+      !>C     input.
+      !>C
+      !>      DVALS( 1 ) = -666.D0
+      !>      CALL PDPOOL ( 'TEST_VAR', 1, DVALS )
       !>
-      !>        C
-      !>        C     Check for the variable assignment to TEST_VAR.
-      !>        C
-      !>              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
+      !>C
+      !>C     Check for the variable assignment to TEST_VAR.
+      !>C
+      !>      CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
       !>
-      !>              WRITE(*,'(A)') 'First call to GDPOOL:'
+      !>      WRITE(*,'(A)') 'First call to GDPOOL:'
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>                 WRITE(*,'(A,F8.2)') '   TEST_VAR value:', DVALS(1)
+      !>         WRITE(*,'(A,F8.2)') '   TEST_VAR value:', DVALS(1)
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
+      !>         WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Now clear the kernel pool.
-      !>        C
-      !>              CALL CLPOOL ()
+      !>C
+      !>C     Now clear the kernel pool.
+      !>C
+      !>      CALL CLPOOL ()
       !>
-      !>        C
-      !>        C     Again, check for the TEST_VAR assignment.
-      !>        C
-      !>              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
+      !>C
+      !>C     Again, check for the TEST_VAR assignment.
+      !>C
+      !>      CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
       !>
-      !>              WRITE(*,'(A)') 'Second call to GDPOOL:'
+      !>      WRITE(*,'(A)') 'Second call to GDPOOL:'
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>                 WRITE(*,'(A,F6.2)') '   TEST_VAR value:', DVALS(1)
+      !>         WRITE(*,'(A,F6.2)') '   TEST_VAR value:', DVALS(1)
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
+      !>         WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12619,74 +12629,76 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LDPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LDPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256 )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256 )
       !>
-      !>              INTEGER               KVNMLN
-      !>              PARAMETER           ( KVNMLN = 33 )
+      !>      INTEGER               KVNMLN
+      !>      PARAMETER           ( KVNMLN = 33 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(KVNMLN)    VARNAM
-      !>              CHARACTER*(1)         VTYPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(KVNMLN)    VARNAM
+      !>      CHARACTER*(1)         VTYPE
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of a text-kernel file.
-      !>        C
-      !>              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
+      !>C
+      !>C     Prompt for the name of a text-kernel file.
+      !>C
+      !>      CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
       !>
-      !>        C
-      !>        C     Load the kernel. The same operation could be done using
-      !>        C     a FURNSH call.
-      !>        C
-      !>              CALL LDPOOL ( FNAME )
+      !>C
+      !>C     Load the kernel. The same operation could be done using
+      !>C     a FURNSH call.
+      !>C
+      !>      CALL LDPOOL ( FNAME )
       !>
-      !>              CALL PROMPT ( 'Enter name of kernel variable > ',
-      !>             .               VARNAM )
+      !>      CALL PROMPT ( 'Enter name of kernel variable > ',
+      !>     .               VARNAM )
       !>
-      !>              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
+      !>      CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
       !>
-      !>              IF ( FOUND ) THEN
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Properties of variable ',
-      !>             .               VARNAM(:RTRIM(VARNAM)), ':'
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Size:   ', N
+      !>      IF ( FOUND ) THEN
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Properties of variable ',
+      !>     .               VARNAM(:RTRIM(VARNAM)), ':'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Size:   ', N
       !>
-      !>                 IF ( VTYPE .EQ. 'C' ) THEN
+      !>         IF ( VTYPE .EQ. 'C' ) THEN
       !>
-      !>                    WRITE(*,*) '   Type:   Character'
+      !>            WRITE(*,*) '   Type:   Character'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) '   Type:   Numeric'
-      !>                 END IF
+      !>            WRITE(*,*) '   Type:   Numeric'
+      !>         END IF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) VARNAM,
-      !>             .              ' is not present in the kernel pool.'
+      !>         WRITE(*,*) VARNAM,
+      !>     .              ' is not present in the kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the PCK file gm_de431.tpc to ask for the
@@ -13230,68 +13242,70 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EXPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EXPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         IKNAME
-      !>              PARAMETER           ( IKNAME = 'expool_ex1.ti' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         IKNAME
+      !>      PARAMETER           ( IKNAME = 'expool_ex1.ti' )
       !>
-      !>              INTEGER               KPVNLN
-      !>              PARAMETER           ( KPVNLN = 32 )
+      !>      INTEGER               KPVNLN
+      !>      PARAMETER           ( KPVNLN = 32 )
       !>
-      !>              INTEGER               NKPVNM
-      !>              PARAMETER           ( NKPVNM = 3  )
+      !>      INTEGER               NKPVNM
+      !>      PARAMETER           ( NKPVNM = 3  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(KPVNLN)    KEYWRD ( NKPVNM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(KPVNLN)    KEYWRD ( NKPVNM )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Define the variable names
-      !>        C
-      !>              DATA                  KEYWRD   /
-      !>             .                             'INS-999001_FREQ_RGB',
-      !>             .                             'NOT_IN_THE_POOL',
-      !>             .                             'INS-999001_FREQ_UNITS' /
+      !>C
+      !>C     Define the variable names
+      !>C
+      !>      DATA                  KEYWRD   /
+      !>     .                             'INS-999001_FREQ_RGB',
+      !>     .                             'NOT_IN_THE_POOL',
+      !>     .                             'INS-999001_FREQ_UNITS' /
       !>
-      !>        C
-      !>        C     Load the instrument kernel.
-      !>        C
-      !>              CALL FURNSH ( IKNAME )
+      !>C
+      !>C     Load the instrument kernel.
+      !>C
+      !>      CALL FURNSH ( IKNAME )
       !>
-      !>              DO I = 1, NKPVNM
+      !>      DO I = 1, NKPVNM
       !>
-      !>        C
-      !>        C        Check if the variable is numeric and present
-      !>        C        in the kernel pool.
-      !>        C
-      !>                 CALL EXPOOL ( KEYWRD(I), FOUND )
+      !>C
+      !>C        Check if the variable is numeric and present
+      !>C        in the kernel pool.
+      !>C
+      !>         CALL EXPOOL ( KEYWRD(I), FOUND )
       !>
-      !>                 WRITE(*,*) 'Variable name: ', KEYWRD(I)
+      !>         WRITE(*,*) 'Variable name: ', KEYWRD(I)
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    WRITE(*,*) '   It is numeric and exists in the '
-      !>             .              // 'kernel pool.'
+      !>            WRITE(*,*) '   It is numeric and exists in the '
+      !>     .              // 'kernel pool.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) '   Either it is not numeric or it is '
-      !>             .              // 'not in the kernel pool.'
+      !>            WRITE(*,*) '   Either it is not numeric or it is '
+      !>     .              // 'not in the kernel pool.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -15630,73 +15644,75 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DTPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DTPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256 )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256 )
       !>
-      !>              INTEGER               KVNMLN
-      !>              PARAMETER           ( KVNMLN = 33 )
+      !>      INTEGER               KVNMLN
+      !>      PARAMETER           ( KVNMLN = 33 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(KVNMLN)    VARNAM
-      !>              CHARACTER*(1)         VTYPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(KVNMLN)    VARNAM
+      !>      CHARACTER*(1)         VTYPE
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of a text-kernel file.
-      !>        C
-      !>              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
+      !>C
+      !>C     Prompt for the name of a text-kernel file.
+      !>C
+      !>      CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
       !>
-      !>        C
-      !>        C     Load the kernel.
-      !>        C
-      !>              CALL FURNSH ( FNAME )
+      !>C
+      !>C     Load the kernel.
+      !>C
+      !>      CALL FURNSH ( FNAME )
       !>
-      !>              CALL PROMPT ( 'Enter name of kernel variable > ',
-      !>             .               VARNAM )
+      !>      CALL PROMPT ( 'Enter name of kernel variable > ',
+      !>     .               VARNAM )
       !>
-      !>              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
+      !>      CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
       !>
-      !>              IF ( FOUND ) THEN
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Properties of variable ',
-      !>             .               VARNAM(:RTRIM(VARNAM)), ':'
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Size:   ', N
+      !>      IF ( FOUND ) THEN
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Properties of variable ',
+      !>     .               VARNAM(:RTRIM(VARNAM)), ':'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Size:   ', N
       !>
-      !>                 IF ( VTYPE .EQ. 'C' ) THEN
+      !>         IF ( VTYPE .EQ. 'C' ) THEN
       !>
-      !>                    WRITE(*,*) '   Type:   Character'
+      !>            WRITE(*,*) '   Type:   Character'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) '   Type:   Numeric'
-      !>                 END IF
+      !>            WRITE(*,*) '   Type:   Numeric'
+      !>         END IF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) VARNAM,
-      !>             .              ' is not present in the kernel pool.'
+      !>         WRITE(*,*) VARNAM,
+      !>     .              ' is not present in the kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the FK file named cas_v40.tf to ask for the

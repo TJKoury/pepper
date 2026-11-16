@@ -389,66 +389,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCFMT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCFMT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the parameters that define the sizes and limits
-      !>        C     of the SCLK system.
-      !>        C
-      !>              INCLUDE 'sclk.inc'
+      !>C
+      !>C     Include the parameters that define the sizes and limits
+      !>C     of the SCLK system.
+      !>C
+      !>      INCLUDE 'sclk.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               CLKLEN
-      !>              PARAMETER           ( CLKLEN = 30 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               CLKLEN
+      !>      PARAMETER           ( CLKLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(CLKLEN)    START
-      !>              CHARACTER*(CLKLEN)    STOP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(CLKLEN)    START
+      !>      CHARACTER*(CLKLEN)    STOP
       !>
-      !>              DOUBLE PRECISION      PSTART (MXPART)
-      !>              DOUBLE PRECISION      PSTOP  (MXPART)
+      !>      DOUBLE PRECISION      PSTART (MXPART)
+      !>      DOUBLE PRECISION      PSTOP  (MXPART)
       !>
-      !>              INTEGER               I
-      !>              INTEGER               NPARTS
-      !>              INTEGER               SC
+      !>      INTEGER               I
+      !>      INTEGER               NPARTS
+      !>      INTEGER               SC
       !>
-      !>        C
-      !>        C     Assign the value for the Stardust spacecraft ID.
-      !>        C
-      !>              SC = -29
+      !>C
+      !>C     Assign the value for the Stardust spacecraft ID.
+      !>C
+      !>      SC = -29
       !>
-      !>        C
-      !>        C     Load the SCLK file.
-      !>        C
-      !>              CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
+      !>C
+      !>C     Load the SCLK file.
+      !>C
+      !>      CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
       !>
-      !>        C
-      !>        C     Retrieve the arrays for PSTART and PSTOP and the
-      !>        C     number of partitions within the SCLK.
-      !>        C
-      !>              CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
+      !>C
+      !>C     Retrieve the arrays for PSTART and PSTOP and the
+      !>C     number of partitions within the SCLK.
+      !>C
+      !>      CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
       !>
-      !>        C
-      !>        C     Loop over each array value.
-      !>        C
-      !>              DO I= 1, NPARTS
+      !>C
+      !>C     Loop over each array value.
+      !>C
+      !>      DO I= 1, NPARTS
       !>
-      !>                 CALL SCFMT ( SC, PSTART( I ), START )
-      !>                 CALL SCFMT ( SC, PSTOP ( I ), STOP )
+      !>         CALL SCFMT ( SC, PSTART( I ), START )
+      !>         CALL SCFMT ( SC, PSTOP ( I ), STOP )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,*) 'Partition: ', I
-      !>                 WRITE(*,*) '   Start : ', START
-      !>                 WRITE(*,*) '   Stop  : ', STOP
+      !>         WRITE(*,*)
+      !>         WRITE(*,*) 'Partition: ', I
+      !>         WRITE(*,*) '   Start : ', START
+      !>         WRITE(*,*) '   Stop  : ', STOP
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -695,66 +697,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCPART_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCPART_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the parameters that define the sizes and limits
-      !>        C     of the SCLK system.
-      !>        C
-      !>              INCLUDE 'sclk.inc'
+      !>C
+      !>C     Include the parameters that define the sizes and limits
+      !>C     of the SCLK system.
+      !>C
+      !>      INCLUDE 'sclk.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               CLKLEN
-      !>              PARAMETER           ( CLKLEN = 30 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               CLKLEN
+      !>      PARAMETER           ( CLKLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(CLKLEN)    START
-      !>              CHARACTER*(CLKLEN)    STOP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(CLKLEN)    START
+      !>      CHARACTER*(CLKLEN)    STOP
       !>
-      !>              DOUBLE PRECISION      PSTART (MXPART)
-      !>              DOUBLE PRECISION      PSTOP  (MXPART)
+      !>      DOUBLE PRECISION      PSTART (MXPART)
+      !>      DOUBLE PRECISION      PSTOP  (MXPART)
       !>
-      !>              INTEGER               I
-      !>              INTEGER               NPARTS
-      !>              INTEGER               SC
+      !>      INTEGER               I
+      !>      INTEGER               NPARTS
+      !>      INTEGER               SC
       !>
-      !>        C
-      !>        C     Assign the value for the Stardust spacecraft ID.
-      !>        C
-      !>              SC = -29
+      !>C
+      !>C     Assign the value for the Stardust spacecraft ID.
+      !>C
+      !>      SC = -29
       !>
-      !>        C
-      !>        C     Load the SCLK file.
-      !>        C
-      !>              CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
+      !>C
+      !>C     Load the SCLK file.
+      !>C
+      !>      CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
       !>
-      !>        C
-      !>        C     Retrieve the arrays for PSTART and PSTOP and the
-      !>        C     number of partitions within the SCLK.
-      !>        C
-      !>              CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
+      !>C
+      !>C     Retrieve the arrays for PSTART and PSTOP and the
+      !>C     number of partitions within the SCLK.
+      !>C
+      !>      CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
       !>
-      !>        C
-      !>        C     Loop over each array value.
-      !>        C
-      !>              DO I= 1, NPARTS
+      !>C
+      !>C     Loop over each array value.
+      !>C
+      !>      DO I= 1, NPARTS
       !>
-      !>                 CALL SCFMT ( SC, PSTART( I ), START )
-      !>                 CALL SCFMT ( SC, PSTOP ( I ), STOP )
+      !>         CALL SCFMT ( SC, PSTART( I ), START )
+      !>         CALL SCFMT ( SC, PSTOP ( I ), STOP )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,*) 'Partition: ', I
-      !>                 WRITE(*,*) '   Start : ', START
-      !>                 WRITE(*,*) '   Stop  : ', STOP
+      !>         WRITE(*,*)
+      !>         WRITE(*,*) 'Partition: ', I
+      !>         WRITE(*,*) '   Start : ', START
+      !>         WRITE(*,*) '   Stop  : ', STOP
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1655,112 +1659,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCDECD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCDECD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>        C     The instrument we want pointing for is the CASSINI
-      !>        C     spacecraft. The reference frame we want is
-      !>        C     J2000. The spacecraft is CASSINI.
-      !>        C
-      !>              INTEGER               SC
-      !>              PARAMETER           ( SC     = -82 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>C     The instrument we want pointing for is the CASSINI
+      !>C     spacecraft. The reference frame we want is
+      !>C     J2000. The spacecraft is CASSINI.
+      !>C
+      !>      INTEGER               SC
+      !>      PARAMETER           ( SC     = -82 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -82000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -82000 )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000' )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000' )
       !>
-      !>              CHARACTER*(*)         CK
-      !>              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
+      !>      CHARACTER*(*)         CK
+      !>      PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
       !>
-      !>              CHARACTER*(*)         SCLK
-      !>              PARAMETER           ( SCLK   = 'cas00071.tsc' )
+      !>      CHARACTER*(*)         SCLK
+      !>      PARAMETER           ( SCLK   = 'cas00071.tsc' )
       !>
-      !>              INTEGER               NPICS
-      !>              PARAMETER           ( NPICS  = 4 )
+      !>      INTEGER               NPICS
+      !>      PARAMETER           ( NPICS  = 4 )
       !>
-      !>              CHARACTER*(*)         CLKTOL
-      !>              PARAMETER           ( CLKTOL = '1.0' )
+      !>      CHARACTER*(*)         CLKTOL
+      !>      PARAMETER           ( CLKTOL = '1.0' )
       !>
-      !>              INTEGER               MAXLEN
-      !>              PARAMETER           ( MAXLEN = 30 )
+      !>      INTEGER               MAXLEN
+      !>      PARAMETER           ( MAXLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(25)        SCLKIN (4)
-      !>              CHARACTER*(25)        SCLKOUT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(25)        SCLKIN (4)
+      !>      CHARACTER*(25)        SCLKOUT
       !>
-      !>              DOUBLE PRECISION      CMAT   (3,3)
-      !>              DOUBLE PRECISION      TIMEIN
-      !>              DOUBLE PRECISION      TIMEOUT
-      !>              DOUBLE PRECISION      TOL
+      !>      DOUBLE PRECISION      CMAT   (3,3)
+      !>      DOUBLE PRECISION      TIMEIN
+      !>      DOUBLE PRECISION      TIMEOUT
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Set the input SCLK strings.
-      !>        C
-      !>              DATA                  SCLKIN /  '1/1465644279.0',
-      !>             .                                '1/1465644281.0',
-      !>             .                                '1/1465644351.0',
-      !>             .                                '1/1465644361.0'  /
+      !>C
+      !>C     Set the input SCLK strings.
+      !>C
+      !>      DATA                  SCLKIN /  '1/1465644279.0',
+      !>     .                                '1/1465644281.0',
+      !>     .                                '1/1465644351.0',
+      !>     .                                '1/1465644361.0'  /
       !>
-      !>        C
-      !>        C     Load the appropriate files. We need
-      !>        C
-      !>        C        1. CK file containing pointing data.
-      !>        C        2. Spacecraft clock kernel file.
-      !>        C
-      !>              CALL FURNSH ( CK   )
-      !>              CALL FURNSH ( SCLK )
+      !>C
+      !>C     Load the appropriate files. We need
+      !>C
+      !>C        1. CK file containing pointing data.
+      !>C        2. Spacecraft clock kernel file.
+      !>C
+      !>      CALL FURNSH ( CK   )
+      !>      CALL FURNSH ( SCLK )
       !>
-      !>        C
-      !>        C     Convert the tolerance string to ticks.
-      !>        C
-      !>              CALL SCTIKS ( SC, CLKTOL, TOL )
+      !>C
+      !>C     Convert the tolerance string to ticks.
+      !>C
+      !>      CALL SCTIKS ( SC, CLKTOL, TOL )
       !>
-      !>              DO I= 1, NPICS
+      !>      DO I= 1, NPICS
       !>
-      !>                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
+      !>         CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
       !>
-      !>                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
-      !>             .               CMAT, TIMEOUT, FOUND     )
+      !>         CALL CKGP ( INST, TIMEIN,  TOL,  REF,
+      !>     .               CMAT, TIMEOUT, FOUND     )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
+      !>         WRITE(*,*)
+      !>         WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
+      !>            CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
       !>
-      !>                    WRITE(*,'(2A)') 'Output s/c clock count: ',
-      !>             .                                          SCLKOUT
-      !>                    WRITE(*,'(A)') 'Output C-Matrix:'
+      !>            WRITE(*,'(2A)') 'Output s/c clock count: ',
+      !>     .                                          SCLKOUT
+      !>            WRITE(*,'(A)') 'Output C-Matrix:'
       !>
-      !>                    DO J = 1, 3
+      !>            DO J = 1, 3
       !>
-      !>                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
+      !>               WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A)') 'No pointing found.'
+      !>            WRITE(*,'(A)') 'No pointing found.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2253,112 +2259,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCENCD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCENCD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>        C     The instrument we want pointing for is the CASSINI
-      !>        C     spacecraft. The reference frame we want is
-      !>        C     J2000. The spacecraft is CASSINI.
-      !>        C
-      !>              INTEGER               SC
-      !>              PARAMETER           ( SC     = -82 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>C     The instrument we want pointing for is the CASSINI
+      !>C     spacecraft. The reference frame we want is
+      !>C     J2000. The spacecraft is CASSINI.
+      !>C
+      !>      INTEGER               SC
+      !>      PARAMETER           ( SC     = -82 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -82000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -82000 )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000' )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000' )
       !>
-      !>              CHARACTER*(*)         CK
-      !>              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
+      !>      CHARACTER*(*)         CK
+      !>      PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
       !>
-      !>              CHARACTER*(*)         SCLK
-      !>              PARAMETER           ( SCLK   = 'cas00071.tsc' )
+      !>      CHARACTER*(*)         SCLK
+      !>      PARAMETER           ( SCLK   = 'cas00071.tsc' )
       !>
-      !>              INTEGER               NPICS
-      !>              PARAMETER           ( NPICS  = 4 )
+      !>      INTEGER               NPICS
+      !>      PARAMETER           ( NPICS  = 4 )
       !>
-      !>              CHARACTER*(*)         CLKTOL
-      !>              PARAMETER           ( CLKTOL = '1.0' )
+      !>      CHARACTER*(*)         CLKTOL
+      !>      PARAMETER           ( CLKTOL = '1.0' )
       !>
-      !>              INTEGER               MAXLEN
-      !>              PARAMETER           ( MAXLEN = 30 )
+      !>      INTEGER               MAXLEN
+      !>      PARAMETER           ( MAXLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(25)        SCLKIN (4)
-      !>              CHARACTER*(25)        SCLKOUT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(25)        SCLKIN (4)
+      !>      CHARACTER*(25)        SCLKOUT
       !>
-      !>              DOUBLE PRECISION      CMAT   (3,3)
-      !>              DOUBLE PRECISION      TIMEIN
-      !>              DOUBLE PRECISION      TIMEOUT
-      !>              DOUBLE PRECISION      TOL
+      !>      DOUBLE PRECISION      CMAT   (3,3)
+      !>      DOUBLE PRECISION      TIMEIN
+      !>      DOUBLE PRECISION      TIMEOUT
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Set the input SCLK strings.
-      !>        C
-      !>              DATA                  SCLKIN /  '1/1465644279.0',
-      !>             .                                '1/1465644281.0',
-      !>             .                                '1/1465644351.0',
-      !>             .                                '1/1465644361.0'  /
+      !>C
+      !>C     Set the input SCLK strings.
+      !>C
+      !>      DATA                  SCLKIN /  '1/1465644279.0',
+      !>     .                                '1/1465644281.0',
+      !>     .                                '1/1465644351.0',
+      !>     .                                '1/1465644361.0'  /
       !>
-      !>        C
-      !>        C     Load the appropriate files. We need
-      !>        C
-      !>        C        1. CK file containing pointing data.
-      !>        C        2. Spacecraft clock kernel file.
-      !>        C
-      !>              CALL FURNSH ( CK   )
-      !>              CALL FURNSH ( SCLK )
+      !>C
+      !>C     Load the appropriate files. We need
+      !>C
+      !>C        1. CK file containing pointing data.
+      !>C        2. Spacecraft clock kernel file.
+      !>C
+      !>      CALL FURNSH ( CK   )
+      !>      CALL FURNSH ( SCLK )
       !>
-      !>        C
-      !>        C     Convert the tolerance string to ticks.
-      !>        C
-      !>              CALL SCTIKS ( SC, CLKTOL, TOL )
+      !>C
+      !>C     Convert the tolerance string to ticks.
+      !>C
+      !>      CALL SCTIKS ( SC, CLKTOL, TOL )
       !>
-      !>              DO I= 1, NPICS
+      !>      DO I= 1, NPICS
       !>
-      !>                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
+      !>         CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
       !>
-      !>                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
-      !>             .               CMAT, TIMEOUT, FOUND     )
+      !>         CALL CKGP ( INST, TIMEIN,  TOL,  REF,
+      !>     .               CMAT, TIMEOUT, FOUND     )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
+      !>         WRITE(*,*)
+      !>         WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
+      !>            CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
       !>
-      !>                    WRITE(*,'(2A)') 'Output s/c clock count: ',
-      !>             .                                          SCLKOUT
-      !>                    WRITE(*,'(A)') 'Output C-Matrix:'
+      !>            WRITE(*,'(2A)') 'Output s/c clock count: ',
+      !>     .                                          SCLKOUT
+      !>            WRITE(*,'(A)') 'Output C-Matrix:'
       !>
-      !>                    DO J = 1, 3
+      !>            DO J = 1, 3
       !>
-      !>                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
+      !>               WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A)') 'No pointing found.'
+      !>            WRITE(*,'(A)') 'No pointing found.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

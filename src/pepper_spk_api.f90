@@ -3957,143 +3957,145 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKCOV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKCOV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               CARDI
-      !>              INTEGER               WNCARD
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C
-      !>        C     Declare the coverage window. Make enough room
-      !>        C     for MAXIV intervals.
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               CARDI
+      !>      INTEGER               WNCARD
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C
+      !>C     Declare the coverage window. Make enough room
+      !>C     for MAXIV intervals.
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXIV
-      !>              PARAMETER           ( MAXIV  = 1000 )
+      !>      INTEGER               MAXIV
+      !>      PARAMETER           ( MAXIV  = 1000 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 2 * MAXIV )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 2 * MAXIV )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               MAXOBJ
-      !>              PARAMETER           ( MAXOBJ = 1000 )
+      !>      INTEGER               MAXOBJ
+      !>      PARAMETER           ( MAXOBJ = 1000 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    LSK
-      !>              CHARACTER*(FILSIZ)    SPKFNM
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    LSK
+      !>      CHARACTER*(FILSIZ)    SPKFNM
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDS   ( LBCELL : MAXOBJ )
-      !>              INTEGER               J
-      !>              INTEGER               NIV
+      !>      INTEGER               I
+      !>      INTEGER               IDS   ( LBCELL : MAXOBJ )
+      !>      INTEGER               J
+      !>      INTEGER               NIV
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for output time conversion.
-      !>        C     SPKCOV itself does not require a leapseconds kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
-      !>              CALL FURNSH ( LSK )
+      !>C
+      !>C     Load a leapseconds kernel for output time conversion.
+      !>C     SPKCOV itself does not require a leapseconds kernel.
+      !>C
+      !>      CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
+      !>      CALL FURNSH ( LSK )
       !>
-      !>        C
-      !>        C     Get name of SPK file.
-      !>        C
-      !>              CALL PROMPT ( 'Name of SPK file           > ', SPKFNM )
+      !>C
+      !>C     Get name of SPK file.
+      !>C
+      !>      CALL PROMPT ( 'Name of SPK file           > ', SPKFNM )
       !>
-      !>        C
-      !>        C     Initialize the set IDS.
-      !>        C
-      !>              CALL SSIZEI ( MAXOBJ, IDS )
+      !>C
+      !>C     Initialize the set IDS.
+      !>C
+      !>      CALL SSIZEI ( MAXOBJ, IDS )
       !>
-      !>        C
-      !>        C     Initialize the window COVER.
-      !>        C
-      !>              CALL SSIZED ( WINSIZ, COVER )
+      !>C
+      !>C     Initialize the window COVER.
+      !>C
+      !>      CALL SSIZED ( WINSIZ, COVER )
       !>
-      !>        C
-      !>        C     Find the set of objects in the SPK file.
-      !>        C
-      !>              CALL SPKOBJ ( SPKFNM, IDS )
+      !>C
+      !>C     Find the set of objects in the SPK file.
+      !>C
+      !>      CALL SPKOBJ ( SPKFNM, IDS )
       !>
-      !>        C
-      !>        C     We want to display the coverage for each object.  Loop
-      !>        C     over the contents of the ID code set, find the coverage
-      !>        C     for each item in the set, and display the coverage.
-      !>        C
-      !>              DO I = 1, CARDI( IDS )
-      !>        C
-      !>        C        Find the coverage window for the current
-      !>        C        object. Empty the coverage window each time
-      !>        C        so we don't include data for the previous object.
-      !>        C
-      !>                 CALL SCARDD ( 0,      COVER )
-      !>                 CALL SPKCOV ( SPKFNM, IDS(I), COVER )
+      !>C
+      !>C     We want to display the coverage for each object.  Loop
+      !>C     over the contents of the ID code set, find the coverage
+      !>C     for each item in the set, and display the coverage.
+      !>C
+      !>      DO I = 1, CARDI( IDS )
+      !>C
+      !>C        Find the coverage window for the current
+      !>C        object. Empty the coverage window each time
+      !>C        so we don't include data for the previous object.
+      !>C
+      !>         CALL SCARDD ( 0,      COVER )
+      !>         CALL SPKCOV ( SPKFNM, IDS(I), COVER )
       !>
-      !>        C
-      !>        C        Get the number of intervals in the coverage
-      !>        C        window.
-      !>        C
-      !>                 NIV = WNCARD ( COVER )
+      !>C
+      !>C        Get the number of intervals in the coverage
+      !>C        window.
+      !>C
+      !>         NIV = WNCARD ( COVER )
       !>
-      !>        C
-      !>        C        Display a simple banner.
-      !>        C
-      !>                 WRITE (*,*) '========================================'
-      !>                 WRITE (*,*) 'Coverage for object ', IDS(I)
+      !>C
+      !>C        Display a simple banner.
+      !>C
+      !>         WRITE (*,*) '========================================'
+      !>         WRITE (*,*) 'Coverage for object ', IDS(I)
       !>
-      !>        C
-      !>        C        Convert the coverage interval start and stop
-      !>        C        times to TDB calendar strings.
-      !>        C
-      !>                 DO J = 1, NIV
-      !>        C
-      !>        C           Get the endpoints of the Jth interval.
-      !>        C
-      !>                    CALL WNFETD ( COVER, J, B, E )
-      !>        C
-      !>        C           Convert the endpoints to TDB calendar
-      !>        C           format time strings and display them.
-      !>        C
-      !>                    CALL TIMOUT ( B,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) 'Interval: ', J
-      !>                    WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C        Convert the coverage interval start and stop
+      !>C        times to TDB calendar strings.
+      !>C
+      !>         DO J = 1, NIV
+      !>C
+      !>C           Get the endpoints of the Jth interval.
+      !>C
+      !>            CALL WNFETD ( COVER, J, B, E )
+      !>C
+      !>C           Convert the endpoints to TDB calendar
+      !>C           format time strings and display them.
+      !>C
+      !>            CALL TIMOUT ( B,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) 'Interval: ', J
+      !>            WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                    CALL TIMOUT ( E,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                    WRITE (*,*) ' '
+      !>            CALL TIMOUT ( E,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) 'Stop:     ', TIMSTR
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) '========================================'
+      !>         WRITE (*,*) '========================================'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the LSK file named naif0012.tls and the SPK
@@ -4197,136 +4199,138 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKCOV_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>```fortran
+      !>      PROGRAM SPKCOV_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               MAXCOV
-      !>              PARAMETER           ( MAXCOV = 100000 )
+      !>      INTEGER               MAXCOV
+      !>      PARAMETER           ( MAXCOV = 100000 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FILE
-      !>              CHARACTER*(LNSIZE)    IDCH
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(FILSIZ)    SOURCE
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(LNSIZE)    TYPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FILE
+      !>      CHARACTER*(LNSIZE)    IDCH
+      !>      CHARACTER*(FILSIZ)    META
+      !>      CHARACTER*(FILSIZ)    SOURCE
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(LNSIZE)    TYPE
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER  ( LBCELL : 2*MAXCOV )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER  ( LBCELL : 2*MAXCOV )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IDCODE
-      !>              INTEGER               NIV
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IDCODE
+      !>      INTEGER               NIV
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the metakernel name; load the metakernel.
-      !>        C     The metakernel lists the SPK files whose coverage
-      !>        C     for IDCODE we'd like to determine.  The metakernel
-      !>        C     must also specify a leapseconds kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of metakernel > ', META )
+      !>C
+      !>C     Prompt for the metakernel name; load the metakernel.
+      !>C     The metakernel lists the SPK files whose coverage
+      !>C     for IDCODE we'd like to determine.  The metakernel
+      !>C     must also specify a leapseconds kernel.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of metakernel > ', META )
       !>
-      !>              CALL FURNSH ( META )
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Get the ID code of interest.
-      !>        C
-      !>              CALL PROMPT ( 'Enter ID code            > ', IDCH )
+      !>C
+      !>C     Get the ID code of interest.
+      !>C
+      !>      CALL PROMPT ( 'Enter ID code            > ', IDCH )
       !>
-      !>              CALL PRSINT ( IDCH,  IDCODE )
+      !>      CALL PRSINT ( IDCH,  IDCODE )
       !>
-      !>        C
-      !>        C     Initialize the coverage window.
-      !>        C
-      !>              CALL SSIZED ( MAXCOV, COVER )
+      !>C
+      !>C     Initialize the coverage window.
+      !>C
+      !>      CALL SSIZED ( MAXCOV, COVER )
       !>
-      !>        C
-      !>        C     Find out how many kernels are loaded.  Loop over the
-      !>        C     kernels:  for each loaded SPK file, add its coverage
-      !>        C     for IDCODE, if any, to the coverage window.
-      !>        C
-      !>              CALL KTOTAL ( 'SPK', COUNT )
+      !>C
+      !>C     Find out how many kernels are loaded.  Loop over the
+      !>C     kernels:  for each loaded SPK file, add its coverage
+      !>C     for IDCODE, if any, to the coverage window.
+      !>C
+      !>      CALL KTOTAL ( 'SPK', COUNT )
       !>
-      !>              DO I = 1, COUNT
+      !>      DO I = 1, COUNT
       !>
-      !>                 CALL KDATA  ( I,       'SPK',   FILE,  TYPE,
-      !>             .                 SOURCE,  HANDLE,  FOUND       )
+      !>         CALL KDATA  ( I,       'SPK',   FILE,  TYPE,
+      !>     .                 SOURCE,  HANDLE,  FOUND       )
       !>
-      !>                 CALL SPKCOV ( FILE,    IDCODE,  COVER )
+      !>         CALL SPKCOV ( FILE,    IDCODE,  COVER )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Display results.
-      !>        C
-      !>        C     Get the number of intervals in the coverage
-      !>        C     window.
-      !>        C
-      !>              NIV = WNCARD ( COVER )
+      !>C
+      !>C     Display results.
+      !>C
+      !>C     Get the number of intervals in the coverage
+      !>C     window.
+      !>C
+      !>      NIV = WNCARD ( COVER )
       !>
-      !>        C
-      !>        C     Display a simple banner.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Coverage for object ', IDCODE
+      !>C
+      !>C     Display a simple banner.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Coverage for object ', IDCODE
       !>
-      !>        C
-      !>        C     Convert the coverage interval start and stop
-      !>        C     times to TDB calendar strings.
-      !>        C
-      !>              DO I = 1, NIV
-      !>        C
-      !>        C        Get the endpoints of the Ith interval.
-      !>        C
-      !>                 CALL WNFETD ( COVER, I, B, E )
-      !>        C
-      !>        C        Convert the endpoints to TDB calendar
-      !>        C        format time strings and display them.
-      !>        C
-      !>                 CALL TIMOUT ( B,
-      !>             .                 'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                 '(TDB) ::TDB',
-      !>             .                 TIMSTR                        )
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Interval: ', I
-      !>                 WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C     Convert the coverage interval start and stop
+      !>C     times to TDB calendar strings.
+      !>C
+      !>      DO I = 1, NIV
+      !>C
+      !>C        Get the endpoints of the Ith interval.
+      !>C
+      !>         CALL WNFETD ( COVER, I, B, E )
+      !>C
+      !>C        Convert the endpoints to TDB calendar
+      !>C        format time strings and display them.
+      !>C
+      !>         CALL TIMOUT ( B,
+      !>     .                 'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                 '(TDB) ::TDB',
+      !>     .                 TIMSTR                        )
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Interval: ', I
+      !>         WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                 CALL TIMOUT ( E,
-      !>             .                 'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                 '(TDB) ::TDB',
-      !>             .                 TIMSTR                        )
-      !>                 WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                 WRITE (*,*) ' '
+      !>         CALL TIMOUT ( E,
+      !>     .                 'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                 '(TDB) ::TDB',
+      !>     .                 TIMSTR                        )
+      !>         WRITE (*,*) 'Stop:     ', TIMSTR
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the meta-kernel named spkcov_ex2.tm provided
@@ -4696,83 +4700,85 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKGEO_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKGEO_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      VNORM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 32 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 26 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 26 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(TIMLEN)    EPOCH
-      !>              CHARACTER*(NAMLEN)    REFFRM
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(TIMLEN)    EPOCH
+      !>      CHARACTER*(NAMLEN)    REFFRM
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE ( 6 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE ( 6 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               OBSRVR
-      !>              INTEGER               TARGET
+      !>      INTEGER               I
+      !>      INTEGER               OBSRVR
+      !>      INTEGER               TARGET
       !>
-      !>        C
-      !>        C     Load a set of kernels: an SPK file, a PCK
-      !>        C     file and a leapseconds file. Use a meta
-      !>        C     kernel for convenience.
-      !>        C
-      !>              CALL FURNSH ( 'spkgeo_ex1.tm' )
+      !>C
+      !>C     Load a set of kernels: an SPK file, a PCK
+      !>C     file and a leapseconds file. Use a meta
+      !>C     kernel for convenience.
+      !>C
+      !>      CALL FURNSH ( 'spkgeo_ex1.tm' )
       !>
-      !>        C
-      !>        C     Define parameters for a state lookup.
-      !>        C
-      !>              TARGET = 499
-      !>              EPOCH  = 'July 4, 2003 11:00 AM PST'
-      !>              REFFRM = 'J2000'
-      !>              OBSRVR = 399
+      !>C
+      !>C     Define parameters for a state lookup.
+      !>C
+      !>      TARGET = 499
+      !>      EPOCH  = 'July 4, 2003 11:00 AM PST'
+      !>      REFFRM = 'J2000'
+      !>      OBSRVR = 399
       !>
-      !>        C
-      !>        C     Convert the epoch to ephemeris time.
-      !>        C
-      !>              CALL STR2ET ( EPOCH, ET )
+      !>C
+      !>C     Convert the epoch to ephemeris time.
+      !>C
+      !>      CALL STR2ET ( EPOCH, ET )
       !>
-      !>        C
-      !>        C     Look-up the state for the defined parameters.
-      !>        C
-      !>              CALL SPKGEO ( TARGET, ET, REFFRM, OBSRVR, STATE, LT )
+      !>C
+      !>C     Look-up the state for the defined parameters.
+      !>C
+      !>      CALL SPKGEO ( TARGET, ET, REFFRM, OBSRVR, STATE, LT )
       !>
-      !>        C
-      !>        C     Output...
-      !>        C
-      !>              WRITE(*,'(A,I3)') 'The position of    : ', TARGET
-      !>              WRITE(*,'(A,I3)') 'As observed from   : ', OBSRVR
-      !>              WRITE(*,'(2A)')   'In reference frame : ', REFFRM
-      !>              WRITE(*,'(2A)')   'At epoch           : ', EPOCH
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output...
+      !>C
+      !>      WRITE(*,'(A,I3)') 'The position of    : ', TARGET
+      !>      WRITE(*,'(A,I3)') 'As observed from   : ', OBSRVR
+      !>      WRITE(*,'(2A)')   'In reference frame : ', REFFRM
+      !>      WRITE(*,'(2A)')   'At epoch           : ', EPOCH
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     The first three entries of state contain the
-      !>        C     X, Y, Z position components. The final three contain
-      !>        C     the Vx, Vy, Vz velocity components.
-      !>        C
-      !>              WRITE(*,'(A,3F18.6)') 'R   (km):', ( STATE(I), I=1,3 )
-      !>              WRITE(*,'(A,3F18.6)') 'V (km/s):', ( STATE(I), I=4,6 )
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(A,F19.14)') 'Light time (s) between observer '
-      !>             .                   // 'and target: ', LT
+      !>C
+      !>C     The first three entries of state contain the
+      !>C     X, Y, Z position components. The final three contain
+      !>C     the Vx, Vy, Vz velocity components.
+      !>C
+      !>      WRITE(*,'(A,3F18.6)') 'R   (km):', ( STATE(I), I=1,3 )
+      !>      WRITE(*,'(A,3F18.6)') 'V (km/s):', ( STATE(I), I=4,6 )
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(A,F19.14)') 'Light time (s) between observer '
+      !>     .                   // 'and target: ', LT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6481,143 +6487,145 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKOBJ_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKOBJ_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               CARDI
-      !>              INTEGER               WNCARD
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C
-      !>        C     Declare the coverage window.  Make enough room
-      !>        C     for MAXIV intervals.
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               CARDI
+      !>      INTEGER               WNCARD
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C
+      !>C     Declare the coverage window.  Make enough room
+      !>C     for MAXIV intervals.
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXIV
-      !>              PARAMETER           ( MAXIV  = 1000 )
+      !>      INTEGER               MAXIV
+      !>      PARAMETER           ( MAXIV  = 1000 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 2 * MAXIV )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 2 * MAXIV )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               MAXOBJ
-      !>              PARAMETER           ( MAXOBJ = 1000 )
+      !>      INTEGER               MAXOBJ
+      !>      PARAMETER           ( MAXOBJ = 1000 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    LSK
-      !>              CHARACTER*(FILSIZ)    SPKFNM
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    LSK
+      !>      CHARACTER*(FILSIZ)    SPKFNM
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDS   ( LBCELL : MAXOBJ )
-      !>              INTEGER               J
-      !>              INTEGER               NIV
+      !>      INTEGER               I
+      !>      INTEGER               IDS   ( LBCELL : MAXOBJ )
+      !>      INTEGER               J
+      !>      INTEGER               NIV
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for output time conversion.
-      !>        C     SPKCOV itself does not require a leapseconds kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
-      !>              CALL FURNSH ( LSK )
+      !>C
+      !>C     Load a leapseconds kernel for output time conversion.
+      !>C     SPKCOV itself does not require a leapseconds kernel.
+      !>C
+      !>      CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
+      !>      CALL FURNSH ( LSK )
       !>
-      !>        C
-      !>        C     Get name of SPK file.
-      !>        C
-      !>              CALL PROMPT ( 'Name of SPK file           > ', SPKFNM )
+      !>C
+      !>C     Get name of SPK file.
+      !>C
+      !>      CALL PROMPT ( 'Name of SPK file           > ', SPKFNM )
       !>
-      !>        C
-      !>        C     Initialize the set IDS.
-      !>        C
-      !>              CALL SSIZEI ( MAXOBJ, IDS )
+      !>C
+      !>C     Initialize the set IDS.
+      !>C
+      !>      CALL SSIZEI ( MAXOBJ, IDS )
       !>
-      !>        C
-      !>        C     Initialize the window COVER.
-      !>        C
-      !>              CALL SSIZED ( WINSIZ, COVER )
+      !>C
+      !>C     Initialize the window COVER.
+      !>C
+      !>      CALL SSIZED ( WINSIZ, COVER )
       !>
-      !>        C
-      !>        C     Find the set of objects in the SPK file.
-      !>        C
-      !>              CALL SPKOBJ ( SPKFNM, IDS )
+      !>C
+      !>C     Find the set of objects in the SPK file.
+      !>C
+      !>      CALL SPKOBJ ( SPKFNM, IDS )
       !>
-      !>        C
-      !>        C     We want to display the coverage for each object.  Loop
-      !>        C     over the contents of the ID code set, find the coverage
-      !>        C     for each item in the set, and display the coverage.
-      !>        C
-      !>              DO I = 1, CARDI( IDS )
-      !>        C
-      !>        C        Find the coverage window for the current
-      !>        C        object. Empty the coverage window each time
-      !>        C        so we don't include data for the previous object.
-      !>        C
-      !>                 CALL SCARDD ( 0,      COVER )
-      !>                 CALL SPKCOV ( SPKFNM, IDS(I), COVER )
+      !>C
+      !>C     We want to display the coverage for each object.  Loop
+      !>C     over the contents of the ID code set, find the coverage
+      !>C     for each item in the set, and display the coverage.
+      !>C
+      !>      DO I = 1, CARDI( IDS )
+      !>C
+      !>C        Find the coverage window for the current
+      !>C        object. Empty the coverage window each time
+      !>C        so we don't include data for the previous object.
+      !>C
+      !>         CALL SCARDD ( 0,      COVER )
+      !>         CALL SPKCOV ( SPKFNM, IDS(I), COVER )
       !>
-      !>        C
-      !>        C        Get the number of intervals in the coverage
-      !>        C        window.
-      !>        C
-      !>                 NIV = WNCARD ( COVER )
+      !>C
+      !>C        Get the number of intervals in the coverage
+      !>C        window.
+      !>C
+      !>         NIV = WNCARD ( COVER )
       !>
-      !>        C
-      !>        C        Display a simple banner.
-      !>        C
-      !>                 WRITE (*,*) '========================================'
-      !>                 WRITE (*,*) 'Coverage for object ', IDS(I)
+      !>C
+      !>C        Display a simple banner.
+      !>C
+      !>         WRITE (*,*) '========================================'
+      !>         WRITE (*,*) 'Coverage for object ', IDS(I)
       !>
-      !>        C
-      !>        C        Convert the coverage interval start and stop
-      !>        C        times to TDB calendar strings.
-      !>        C
-      !>                 DO J = 1, NIV
-      !>        C
-      !>        C           Get the endpoints of the Jth interval.
-      !>        C
-      !>                    CALL WNFETD ( COVER, J, B, E )
-      !>        C
-      !>        C           Convert the endpoints to TDB calendar
-      !>        C           format time strings and display them.
-      !>        C
-      !>                    CALL TIMOUT ( B,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) 'Interval: ', J
-      !>                    WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C        Convert the coverage interval start and stop
+      !>C        times to TDB calendar strings.
+      !>C
+      !>         DO J = 1, NIV
+      !>C
+      !>C           Get the endpoints of the Jth interval.
+      !>C
+      !>            CALL WNFETD ( COVER, J, B, E )
+      !>C
+      !>C           Convert the endpoints to TDB calendar
+      !>C           format time strings and display them.
+      !>C
+      !>            CALL TIMOUT ( B,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) 'Interval: ', J
+      !>            WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                    CALL TIMOUT ( E,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                    WRITE (*,*) ' '
+      !>            CALL TIMOUT ( E,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) 'Stop:     ', TIMSTR
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) '========================================'
+      !>         WRITE (*,*) '========================================'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the LSK file named naif0012.tls and the SPK
@@ -11339,114 +11347,116 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>           PROGRAM EX1
-      !>           IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EX1
+      !>      IMPLICIT NONE
       !>
-      !>     C
-      !>     C     Local variables
-      !>     C
-      !>           DOUBLE PRECISION      ET
-      !>           DOUBLE PRECISION      LT
-      !>           DOUBLE PRECISION      DLT
-      !>           DOUBLE PRECISION      XFORM  ( 6, 6 )
-      !>           DOUBLE PRECISION      CORXFM ( 6, 6 )
-      !>           DOUBLE PRECISION      STATE0 ( 6 )
-      !>           DOUBLE PRECISION      STATE1 ( 6 )
-      !>           DOUBLE PRECISION      STATE2 ( 6 )
-      !>           DOUBLE PRECISION      STATE3 ( 6 )
-      !>           DOUBLE PRECISION      VELDIF ( 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      DLT
+      !>      DOUBLE PRECISION      XFORM  ( 6, 6 )
+      !>      DOUBLE PRECISION      CORXFM ( 6, 6 )
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE1 ( 6 )
+      !>      DOUBLE PRECISION      STATE2 ( 6 )
+      !>      DOUBLE PRECISION      STATE3 ( 6 )
+      !>      DOUBLE PRECISION      VELDIF ( 3 )
       !>
-      !>           INTEGER               I
+      !>      INTEGER               I
       !>
-      !>     C
-      !>     C     Load kernels.
-      !>     C
-      !>           CALL FURNSH ( 'corsxf_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'corsxf_ex1.tm' )
       !>
-      !>     C
-      !>     C     Convert an observation epoch to TDB.
-      !>     C
-      !>           CALL STR2ET ( '2008 MAR 23', ET )
+      !>C
+      !>C     Convert an observation epoch to TDB.
+      !>C
+      !>      CALL STR2ET ( '2008 MAR 23', ET )
       !>
-      !>     C
-      !>     C     Look up the aberration-corrected state
-      !>     C     of Mars as seen from the Earth at ET
-      !>     C     in the J2000 frame. Use SPKACS since this
-      !>     C     routine returns the light time derivative.
-      !>     C
-      !>           CALL SPKACS ( 499, ET,     'J2000', 'LT+S',
-      !>          .              399, STATE0, LT,      DLT     )
+      !>C
+      !>C     Look up the aberration-corrected state
+      !>C     of Mars as seen from the Earth at ET
+      !>C     in the J2000 frame. Use SPKACS since this
+      !>C     routine returns the light time derivative.
+      !>C
+      !>      CALL SPKACS ( 499, ET,     'J2000', 'LT+S',
+      !>     .              399, STATE0, LT,      DLT     )
       !>
-      !>           WRITE (*,*) ' '
-      !>           WRITE (*,*) 'Mars-Earth light time derivative = ', DLT
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Mars-Earth light time derivative = ', DLT
       !>
-      !>     C
-      !>     C     Convert the state into the IAU_MARS frame at
-      !>     C     ET-LT. This gives us the state without accounting
-      !>     C     for the rate of change of light time.
-      !>     C
-      !>           CALL SXFORM ( 'J2000', 'IAU_MARS', ET-LT, XFORM  )
-      !>           CALL MXVG   ( XFORM,   STATE0,     6,  6, STATE1 )
+      !>C
+      !>C     Convert the state into the IAU_MARS frame at
+      !>C     ET-LT. This gives us the state without accounting
+      !>C     for the rate of change of light time.
+      !>C
+      !>      CALL SXFORM ( 'J2000', 'IAU_MARS', ET-LT, XFORM  )
+      !>      CALL MXVG   ( XFORM,   STATE0,     6,  6, STATE1 )
       !>
-      !>     C
-      !>     C     Display the velocity portion of the state.
-      !>     C
-      !>           WRITE (*,*) ' '
-      !>           WRITE (*,*) 'IAU_MARS-relative velocity obtained '
-      !>           WRITE (*,*) 'using SPKACS and SXFORM (km/s):'
+      !>C
+      !>C     Display the velocity portion of the state.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'IAU_MARS-relative velocity obtained '
+      !>      WRITE (*,*) 'using SPKACS and SXFORM (km/s):'
       !>
-      !>           WRITE (*, '(E24.16)' ) ( STATE1(I), I = 4, 6 )
+      !>      WRITE (*, '(E24.16)' ) ( STATE1(I), I = 4, 6 )
       !>
-      !>     C
-      !>     C     Obtain the correct state transformation matrix
-      !>     C     from ZZCORSXF; transform the state using this matrix.
-      !>     C
-      !>           CALL ZZCORSXF ( .FALSE., DLT,     XFORM, CORXFM )
-      !>           CALL MXVG     ( CORXFM,   STATE0, 6,  6, STATE2 )
+      !>C
+      !>C     Obtain the correct state transformation matrix
+      !>C     from ZZCORSXF; transform the state using this matrix.
+      !>C
+      !>      CALL ZZCORSXF ( .FALSE., DLT,     XFORM, CORXFM )
+      !>      CALL MXVG     ( CORXFM,   STATE0, 6,  6, STATE2 )
       !>
-      !>     C
-      !>     C     Display the velocity portion of the state.
-      !>     C
-      !>           WRITE (*,*) ' '
-      !>           WRITE (*,*) 'IAU_MARS-relative velocity obtained '
-      !>          .//          'using ZZCORSXF (km/s):'
+      !>C
+      !>C     Display the velocity portion of the state.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'IAU_MARS-relative velocity obtained '
+      !>     .//          'using ZZCORSXF (km/s):'
       !>
-      !>           WRITE (*, '(E24.16)' ) ( STATE2(I), I = 4, 6 )
+      !>      WRITE (*, '(E24.16)' ) ( STATE2(I), I = 4, 6 )
       !>
-      !>     C
-      !>     C     Display the velocity difference:
-      !>     C
-      !>           CALL VSUB ( STATE2(4), STATE1(4), VELDIF )
+      !>C
+      !>C     Display the velocity difference:
+      !>C
+      !>      CALL VSUB ( STATE2(4), STATE1(4), VELDIF )
       !>
-      !>           WRITE (*,*) ' '
-      !>           WRITE (*,*) 'Velocity difference (km/s):'
-      !>           WRITE (*, '(E24.16)' ) ( VELDIF(I), I = 1, 3 )
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Velocity difference (km/s):'
+      !>      WRITE (*, '(E24.16)' ) ( VELDIF(I), I = 1, 3 )
       !>
-      !>     C
-      !>     C     Look up the desired state using SPKEZR for comparison.
-      !>     C
-      !>           CALL SPKEZR ( 'MARS',  ET,     'IAU_MARS', 'LT+S',
-      !>          .              'EARTH', STATE3, LT                 )
+      !>C
+      !>C     Look up the desired state using SPKEZR for comparison.
+      !>C
+      !>      CALL SPKEZR ( 'MARS',  ET,     'IAU_MARS', 'LT+S',
+      !>     .              'EARTH', STATE3, LT                 )
       !>
-      !>     C
-      !>     C     Display the velocity portion of the state.
-      !>     C
-      !>           WRITE (*,*) ' '
-      !>           WRITE (*,*) 'IAU_MARS-relative velocity obtained '
-      !>          .//          'using SPKEZR (km/s):'
+      !>C
+      !>C     Display the velocity portion of the state.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'IAU_MARS-relative velocity obtained '
+      !>     .//          'using SPKEZR (km/s):'
       !>
-      !>           WRITE (*, '(E24.16)' ) ( STATE3(I), I = 4, 6 )
+      !>      WRITE (*, '(E24.16)' ) ( STATE3(I), I = 4, 6 )
       !>
-      !>     C
-      !>     C     Display the velocity difference:
-      !>     C
-      !>           CALL VSUB ( STATE3(4), STATE2(4), VELDIF )
+      !>C
+      !>C     Display the velocity difference:
+      !>C
+      !>      CALL VSUB ( STATE3(4), STATE2(4), VELDIF )
       !>
-      !>           WRITE (*,*) ' '
-      !>           WRITE (*,*) 'SPKEZR vs ZZCORSXF velocity difference (km/s):'
-      !>           WRITE (*, '(E24.16)' ) ( VELDIF(I), I = 1, 3 )
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'SPKEZR vs ZZCORSXF velocity difference (km/s):'
+      !>      WRITE (*, '(E24.16)' ) ( VELDIF(I), I = 1, 3 )
       !>
-      !>           END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/g77 system, the
       !>        output was
@@ -11938,133 +11948,135 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPK14A_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPK14A_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK14
-      !>              PARAMETER           ( SPK14  = 'spk14a_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK14
+      !>      PARAMETER           ( SPK14  = 'spk14a_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               CHBDEG
-      !>              PARAMETER           ( CHBDEG = 2  )
+      !>      INTEGER               CHBDEG
+      !>      PARAMETER           ( CHBDEG = 2  )
       !>
-      !>              INTEGER               NRECS
-      !>              PARAMETER           ( NRECS  = 4  )
+      !>      INTEGER               NRECS
+      !>      PARAMETER           ( NRECS  = 4  )
       !>
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+      !>      DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the epochs and coefficients.
-      !>        C
-      !>              DATA                  EPOCHS /
-      !>             .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
+      !>C
+      !>C     Define the epochs and coefficients.
+      !>C
+      !>      DATA                  EPOCHS /
+      !>     .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
       !>
-      !>              DATA                  RECRDS /
-      !>             .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
-      !>             .                      1.0201D0, 1.0202D0, 1.0203D0,
-      !>             .                      1.0301D0, 1.0302D0, 1.0303D0,
-      !>             .                      1.0401D0, 1.0402D0, 1.0403D0,
-      !>             .                      1.0501D0, 1.0502D0, 1.0503D0,
-      !>             .                      1.0601D0, 1.0602D0, 1.0603D0,
-      !>             .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
-      !>             .                      2.0201D0, 2.0202D0, 2.0203D0,
-      !>             .                      2.0301D0, 2.0302D0, 2.0303D0,
-      !>             .                      2.0401D0, 2.0402D0, 2.0403D0,
-      !>             .                      2.0501D0, 2.0502D0, 2.0503D0,
-      !>             .                      2.0601D0, 2.0602D0, 2.0603D0,
-      !>             .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
-      !>             .                      3.0201D0, 3.0202D0, 3.0203D0,
-      !>             .                      3.0301D0, 3.0302D0, 3.0303D0,
-      !>             .                      3.0401D0, 3.0402D0, 3.0403D0,
-      !>             .                      3.0501D0, 3.0502D0, 3.0503D0,
-      !>             .                      3.0601D0, 3.0602D0, 3.0603D0,
-      !>             .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
-      !>             .                      4.0201D0, 4.0202D0, 4.0203D0,
-      !>             .                      4.0301D0, 4.0302D0, 4.0303D0,
-      !>             .                      4.0401D0, 4.0402D0, 4.0403D0,
-      !>             .                      4.0501D0, 4.0502D0, 4.0503D0,
-      !>             .                      4.0601D0, 4.0602D0, 4.0603D0 /
+      !>      DATA                  RECRDS /
+      !>     .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
+      !>     .                      1.0201D0, 1.0202D0, 1.0203D0,
+      !>     .                      1.0301D0, 1.0302D0, 1.0303D0,
+      !>     .                      1.0401D0, 1.0402D0, 1.0403D0,
+      !>     .                      1.0501D0, 1.0502D0, 1.0503D0,
+      !>     .                      1.0601D0, 1.0602D0, 1.0603D0,
+      !>     .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
+      !>     .                      2.0201D0, 2.0202D0, 2.0203D0,
+      !>     .                      2.0301D0, 2.0302D0, 2.0303D0,
+      !>     .                      2.0401D0, 2.0402D0, 2.0403D0,
+      !>     .                      2.0501D0, 2.0502D0, 2.0503D0,
+      !>     .                      2.0601D0, 2.0602D0, 2.0603D0,
+      !>     .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
+      !>     .                      3.0201D0, 3.0202D0, 3.0203D0,
+      !>     .                      3.0301D0, 3.0302D0, 3.0303D0,
+      !>     .                      3.0401D0, 3.0402D0, 3.0403D0,
+      !>     .                      3.0501D0, 3.0502D0, 3.0503D0,
+      !>     .                      3.0601D0, 3.0602D0, 3.0603D0,
+      !>     .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
+      !>     .                      4.0201D0, 4.0202D0, 4.0203D0,
+      !>     .                      4.0301D0, 4.0302D0, 4.0303D0,
+      !>     .                      4.0401D0, 4.0402D0, 4.0403D0,
+      !>     .                      4.0501D0, 4.0502D0, 4.0503D0,
+      !>     .                      4.0601D0, 4.0602D0, 4.0603D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment.
-      !>        C
-      !>              FIRST = EPOCHS(1)
-      !>              LAST  = EPOCHS(NRECS + 1)
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment.
+      !>C
+      !>      FIRST = EPOCHS(1)
+      !>      LAST  = EPOCHS(NRECS + 1)
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 14 SPK internal file name.'
-      !>              SEGID  = 'SPK type 14 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 14 SPK internal file name.'
+      !>      SEGID  = 'SPK type 14 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Begin the segment.
-      !>        C
-      !>              CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
-      !>             .              FIRST,  LAST,  CHBDEG            )
+      !>C
+      !>C     Begin the segment.
+      !>C
+      !>      CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
+      !>     .              FIRST,  LAST,  CHBDEG            )
       !>
-      !>        C
-      !>        C     Add the data to the segment all at once.
-      !>        C
-      !>              CALL SPK14A ( HANDLE, NRECS, RECRDS, EPOCHS )
+      !>C
+      !>C     Add the data to the segment all at once.
+      !>C
+      !>      CALL SPK14A ( HANDLE, NRECS, RECRDS, EPOCHS )
       !>
-      !>        C
-      !>        C     End the segment, making the segment a permanent addition
-      !>        C     to the SPK file.
-      !>        C
-      !>              CALL SPK14E ( HANDLE )
+      !>C
+      !>C     End the segment, making the segment a permanent addition
+      !>C     to the SPK file.
+      !>C
+      !>      CALL SPK14E ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 14 exists in
@@ -12078,139 +12090,141 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPK14A_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPK14A_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK14
-      !>              PARAMETER           ( SPK14  = 'spk14a_ex2.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK14
+      !>      PARAMETER           ( SPK14  = 'spk14a_ex2.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               CHBDEG
-      !>              PARAMETER           ( CHBDEG = 2  )
+      !>      INTEGER               CHBDEG
+      !>      PARAMETER           ( CHBDEG = 2  )
       !>
-      !>              INTEGER               NRECS
-      !>              PARAMETER           ( NRECS  = 4  )
+      !>      INTEGER               NRECS
+      !>      PARAMETER           ( NRECS  = 4  )
       !>
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+      !>      DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the epochs and coefficients.
-      !>        C
-      !>              DATA                  EPOCHS /
-      !>             .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
+      !>C
+      !>C     Define the epochs and coefficients.
+      !>C
+      !>      DATA                  EPOCHS /
+      !>     .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
       !>
-      !>              DATA                  RECRDS /
-      !>             .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
-      !>             .                      1.0201D0, 1.0202D0, 1.0203D0,
-      !>             .                      1.0301D0, 1.0302D0, 1.0303D0,
-      !>             .                      1.0401D0, 1.0402D0, 1.0403D0,
-      !>             .                      1.0501D0, 1.0502D0, 1.0503D0,
-      !>             .                      1.0601D0, 1.0602D0, 1.0603D0,
-      !>             .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
-      !>             .                      2.0201D0, 2.0202D0, 2.0203D0,
-      !>             .                      2.0301D0, 2.0302D0, 2.0303D0,
-      !>             .                      2.0401D0, 2.0402D0, 2.0403D0,
-      !>             .                      2.0501D0, 2.0502D0, 2.0503D0,
-      !>             .                      2.0601D0, 2.0602D0, 2.0603D0,
-      !>             .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
-      !>             .                      3.0201D0, 3.0202D0, 3.0203D0,
-      !>             .                      3.0301D0, 3.0302D0, 3.0303D0,
-      !>             .                      3.0401D0, 3.0402D0, 3.0403D0,
-      !>             .                      3.0501D0, 3.0502D0, 3.0503D0,
-      !>             .                      3.0601D0, 3.0602D0, 3.0603D0,
-      !>             .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
-      !>             .                      4.0201D0, 4.0202D0, 4.0203D0,
-      !>             .                      4.0301D0, 4.0302D0, 4.0303D0,
-      !>             .                      4.0401D0, 4.0402D0, 4.0403D0,
-      !>             .                      4.0501D0, 4.0502D0, 4.0503D0,
-      !>             .                      4.0601D0, 4.0602D0, 4.0603D0 /
+      !>      DATA                  RECRDS /
+      !>     .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
+      !>     .                      1.0201D0, 1.0202D0, 1.0203D0,
+      !>     .                      1.0301D0, 1.0302D0, 1.0303D0,
+      !>     .                      1.0401D0, 1.0402D0, 1.0403D0,
+      !>     .                      1.0501D0, 1.0502D0, 1.0503D0,
+      !>     .                      1.0601D0, 1.0602D0, 1.0603D0,
+      !>     .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
+      !>     .                      2.0201D0, 2.0202D0, 2.0203D0,
+      !>     .                      2.0301D0, 2.0302D0, 2.0303D0,
+      !>     .                      2.0401D0, 2.0402D0, 2.0403D0,
+      !>     .                      2.0501D0, 2.0502D0, 2.0503D0,
+      !>     .                      2.0601D0, 2.0602D0, 2.0603D0,
+      !>     .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
+      !>     .                      3.0201D0, 3.0202D0, 3.0203D0,
+      !>     .                      3.0301D0, 3.0302D0, 3.0303D0,
+      !>     .                      3.0401D0, 3.0402D0, 3.0403D0,
+      !>     .                      3.0501D0, 3.0502D0, 3.0503D0,
+      !>     .                      3.0601D0, 3.0602D0, 3.0603D0,
+      !>     .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
+      !>     .                      4.0201D0, 4.0202D0, 4.0203D0,
+      !>     .                      4.0301D0, 4.0302D0, 4.0303D0,
+      !>     .                      4.0401D0, 4.0402D0, 4.0403D0,
+      !>     .                      4.0501D0, 4.0502D0, 4.0503D0,
+      !>     .                      4.0601D0, 4.0602D0, 4.0603D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment.
-      !>        C
-      !>              FIRST = EPOCHS(1)
-      !>              LAST  = EPOCHS(NRECS + 1)
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment.
+      !>C
+      !>      FIRST = EPOCHS(1)
+      !>      LAST  = EPOCHS(NRECS + 1)
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 14 SPK internal file name.'
-      !>              SEGID  = 'SPK type 14 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 14 SPK internal file name.'
+      !>      SEGID  = 'SPK type 14 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Begin the segment.
-      !>        C
-      !>              CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
-      !>             .              FIRST,  LAST,  CHBDEG            )
+      !>C
+      !>C     Begin the segment.
+      !>C
+      !>      CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
+      !>     .              FIRST,  LAST,  CHBDEG            )
       !>
-      !>        C
-      !>        C     Write the records to the segment in the
-      !>        C     SPK file one at at time.
-      !>        C
-      !>              DO I = 1, NRECS
+      !>C
+      !>C     Write the records to the segment in the
+      !>C     SPK file one at at time.
+      !>C
+      !>      DO I = 1, NRECS
       !>
-      !>                 CALL SPK14A ( HANDLE, 1, RECRDS(1,I), EPOCHS(I) )
+      !>         CALL SPK14A ( HANDLE, 1, RECRDS(1,I), EPOCHS(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     End the segment, making the segment a permanent addition
-      !>        C     to the SPK file.
-      !>        C
-      !>              CALL SPK14E ( HANDLE )
+      !>C
+      !>C     End the segment, making the segment a permanent addition
+      !>C     to the SPK file.
+      !>C
+      !>      CALL SPK14E ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 14 exists in
@@ -12426,133 +12440,135 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPK14B_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPK14B_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK14
-      !>              PARAMETER           ( SPK14  = 'spk14b_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK14
+      !>      PARAMETER           ( SPK14  = 'spk14b_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               CHBDEG
-      !>              PARAMETER           ( CHBDEG = 2  )
+      !>      INTEGER               CHBDEG
+      !>      PARAMETER           ( CHBDEG = 2  )
       !>
-      !>              INTEGER               NRECS
-      !>              PARAMETER           ( NRECS  = 4  )
+      !>      INTEGER               NRECS
+      !>      PARAMETER           ( NRECS  = 4  )
       !>
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+      !>      DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the epochs and coefficients.
-      !>        C
-      !>              DATA                  EPOCHS /
-      !>             .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
+      !>C
+      !>C     Define the epochs and coefficients.
+      !>C
+      !>      DATA                  EPOCHS /
+      !>     .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
       !>
-      !>              DATA                  RECRDS /
-      !>             .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
-      !>             .                      1.0201D0, 1.0202D0, 1.0203D0,
-      !>             .                      1.0301D0, 1.0302D0, 1.0303D0,
-      !>             .                      1.0401D0, 1.0402D0, 1.0403D0,
-      !>             .                      1.0501D0, 1.0502D0, 1.0503D0,
-      !>             .                      1.0601D0, 1.0602D0, 1.0603D0,
-      !>             .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
-      !>             .                      2.0201D0, 2.0202D0, 2.0203D0,
-      !>             .                      2.0301D0, 2.0302D0, 2.0303D0,
-      !>             .                      2.0401D0, 2.0402D0, 2.0403D0,
-      !>             .                      2.0501D0, 2.0502D0, 2.0503D0,
-      !>             .                      2.0601D0, 2.0602D0, 2.0603D0,
-      !>             .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
-      !>             .                      3.0201D0, 3.0202D0, 3.0203D0,
-      !>             .                      3.0301D0, 3.0302D0, 3.0303D0,
-      !>             .                      3.0401D0, 3.0402D0, 3.0403D0,
-      !>             .                      3.0501D0, 3.0502D0, 3.0503D0,
-      !>             .                      3.0601D0, 3.0602D0, 3.0603D0,
-      !>             .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
-      !>             .                      4.0201D0, 4.0202D0, 4.0203D0,
-      !>             .                      4.0301D0, 4.0302D0, 4.0303D0,
-      !>             .                      4.0401D0, 4.0402D0, 4.0403D0,
-      !>             .                      4.0501D0, 4.0502D0, 4.0503D0,
-      !>             .                      4.0601D0, 4.0602D0, 4.0603D0 /
+      !>      DATA                  RECRDS /
+      !>     .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
+      !>     .                      1.0201D0, 1.0202D0, 1.0203D0,
+      !>     .                      1.0301D0, 1.0302D0, 1.0303D0,
+      !>     .                      1.0401D0, 1.0402D0, 1.0403D0,
+      !>     .                      1.0501D0, 1.0502D0, 1.0503D0,
+      !>     .                      1.0601D0, 1.0602D0, 1.0603D0,
+      !>     .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
+      !>     .                      2.0201D0, 2.0202D0, 2.0203D0,
+      !>     .                      2.0301D0, 2.0302D0, 2.0303D0,
+      !>     .                      2.0401D0, 2.0402D0, 2.0403D0,
+      !>     .                      2.0501D0, 2.0502D0, 2.0503D0,
+      !>     .                      2.0601D0, 2.0602D0, 2.0603D0,
+      !>     .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
+      !>     .                      3.0201D0, 3.0202D0, 3.0203D0,
+      !>     .                      3.0301D0, 3.0302D0, 3.0303D0,
+      !>     .                      3.0401D0, 3.0402D0, 3.0403D0,
+      !>     .                      3.0501D0, 3.0502D0, 3.0503D0,
+      !>     .                      3.0601D0, 3.0602D0, 3.0603D0,
+      !>     .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
+      !>     .                      4.0201D0, 4.0202D0, 4.0203D0,
+      !>     .                      4.0301D0, 4.0302D0, 4.0303D0,
+      !>     .                      4.0401D0, 4.0402D0, 4.0403D0,
+      !>     .                      4.0501D0, 4.0502D0, 4.0503D0,
+      !>     .                      4.0601D0, 4.0602D0, 4.0603D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment.
-      !>        C
-      !>              FIRST = EPOCHS(1)
-      !>              LAST  = EPOCHS(NRECS + 1)
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment.
+      !>C
+      !>      FIRST = EPOCHS(1)
+      !>      LAST  = EPOCHS(NRECS + 1)
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 14 SPK internal file name.'
-      !>              SEGID  = 'SPK type 14 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 14 SPK internal file name.'
+      !>      SEGID  = 'SPK type 14 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Begin the segment.
-      !>        C
-      !>              CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
-      !>             .              FIRST,  LAST,  CHBDEG            )
+      !>C
+      !>C     Begin the segment.
+      !>C
+      !>      CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
+      !>     .              FIRST,  LAST,  CHBDEG            )
       !>
-      !>        C
-      !>        C     Add the data to the segment all at once.
-      !>        C
-      !>              CALL SPK14A ( HANDLE, NRECS, RECRDS, EPOCHS )
+      !>C
+      !>C     Add the data to the segment all at once.
+      !>C
+      !>      CALL SPK14A ( HANDLE, NRECS, RECRDS, EPOCHS )
       !>
-      !>        C
-      !>        C     End the segment, making the segment a permanent addition
-      !>        C     to the SPK file.
-      !>        C
-      !>              CALL SPK14E ( HANDLE )
+      !>C
+      !>C     End the segment, making the segment a permanent addition
+      !>C     to the SPK file.
+      !>C
+      !>      CALL SPK14E ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 14 exists in
@@ -12792,133 +12808,135 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPK14E_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPK14E_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK14
-      !>              PARAMETER           ( SPK14  = 'spk14e_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK14
+      !>      PARAMETER           ( SPK14  = 'spk14e_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               CHBDEG
-      !>              PARAMETER           ( CHBDEG = 2  )
+      !>      INTEGER               CHBDEG
+      !>      PARAMETER           ( CHBDEG = 2  )
       !>
-      !>              INTEGER               NRECS
-      !>              PARAMETER           ( NRECS  = 4  )
+      !>      INTEGER               NRECS
+      !>      PARAMETER           ( NRECS  = 4  )
       !>
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = 2 + 6*(CHBDEG+1) )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+      !>      DOUBLE PRECISION      EPOCHS ( NRECS + 1 )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the epochs and coefficients.
-      !>        C
-      !>              DATA                  EPOCHS /
-      !>             .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
+      !>C
+      !>C     Define the epochs and coefficients.
+      !>C
+      !>      DATA                  EPOCHS /
+      !>     .                100.D0, 200.D0, 300.D0, 400.D0, 500.D0 /
       !>
-      !>              DATA                  RECRDS /
-      !>             .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
-      !>             .                      1.0201D0, 1.0202D0, 1.0203D0,
-      !>             .                      1.0301D0, 1.0302D0, 1.0303D0,
-      !>             .                      1.0401D0, 1.0402D0, 1.0403D0,
-      !>             .                      1.0501D0, 1.0502D0, 1.0503D0,
-      !>             .                      1.0601D0, 1.0602D0, 1.0603D0,
-      !>             .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
-      !>             .                      2.0201D0, 2.0202D0, 2.0203D0,
-      !>             .                      2.0301D0, 2.0302D0, 2.0303D0,
-      !>             .                      2.0401D0, 2.0402D0, 2.0403D0,
-      !>             .                      2.0501D0, 2.0502D0, 2.0503D0,
-      !>             .                      2.0601D0, 2.0602D0, 2.0603D0,
-      !>             .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
-      !>             .                      3.0201D0, 3.0202D0, 3.0203D0,
-      !>             .                      3.0301D0, 3.0302D0, 3.0303D0,
-      !>             .                      3.0401D0, 3.0402D0, 3.0403D0,
-      !>             .                      3.0501D0, 3.0502D0, 3.0503D0,
-      !>             .                      3.0601D0, 3.0602D0, 3.0603D0,
-      !>             .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
-      !>             .                      4.0201D0, 4.0202D0, 4.0203D0,
-      !>             .                      4.0301D0, 4.0302D0, 4.0303D0,
-      !>             .                      4.0401D0, 4.0402D0, 4.0403D0,
-      !>             .                      4.0501D0, 4.0502D0, 4.0503D0,
-      !>             .                      4.0601D0, 4.0602D0, 4.0603D0 /
+      !>      DATA                  RECRDS /
+      !>     .     150.0D0, 50.0D0, 1.0101D0, 1.0102D0, 1.0103D0,
+      !>     .                      1.0201D0, 1.0202D0, 1.0203D0,
+      !>     .                      1.0301D0, 1.0302D0, 1.0303D0,
+      !>     .                      1.0401D0, 1.0402D0, 1.0403D0,
+      !>     .                      1.0501D0, 1.0502D0, 1.0503D0,
+      !>     .                      1.0601D0, 1.0602D0, 1.0603D0,
+      !>     .     250.0D0, 50.0D0, 2.0101D0, 2.0102D0, 2.0103D0,
+      !>     .                      2.0201D0, 2.0202D0, 2.0203D0,
+      !>     .                      2.0301D0, 2.0302D0, 2.0303D0,
+      !>     .                      2.0401D0, 2.0402D0, 2.0403D0,
+      !>     .                      2.0501D0, 2.0502D0, 2.0503D0,
+      !>     .                      2.0601D0, 2.0602D0, 2.0603D0,
+      !>     .     350.0D0, 50.0D0, 3.0101D0, 3.0102D0, 3.0103D0,
+      !>     .                      3.0201D0, 3.0202D0, 3.0203D0,
+      !>     .                      3.0301D0, 3.0302D0, 3.0303D0,
+      !>     .                      3.0401D0, 3.0402D0, 3.0403D0,
+      !>     .                      3.0501D0, 3.0502D0, 3.0503D0,
+      !>     .                      3.0601D0, 3.0602D0, 3.0603D0,
+      !>     .     450.0D0, 50.0D0, 4.0101D0, 4.0102D0, 4.0103D0,
+      !>     .                      4.0201D0, 4.0202D0, 4.0203D0,
+      !>     .                      4.0301D0, 4.0302D0, 4.0303D0,
+      !>     .                      4.0401D0, 4.0402D0, 4.0403D0,
+      !>     .                      4.0501D0, 4.0502D0, 4.0503D0,
+      !>     .                      4.0601D0, 4.0602D0, 4.0603D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment.
-      !>        C
-      !>              FIRST = EPOCHS(1)
-      !>              LAST  = EPOCHS(NRECS + 1)
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment.
+      !>C
+      !>      FIRST = EPOCHS(1)
+      !>      LAST  = EPOCHS(NRECS + 1)
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 14 SPK internal file name.'
-      !>              SEGID  = 'SPK type 14 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 14 SPK internal file name.'
+      !>      SEGID  = 'SPK type 14 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK14, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Begin the segment.
-      !>        C
-      !>              CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
-      !>             .              FIRST,  LAST,  CHBDEG            )
+      !>C
+      !>C     Begin the segment.
+      !>C
+      !>      CALL SPK14B ( HANDLE, SEGID, BODY, CENTER, REF,
+      !>     .              FIRST,  LAST,  CHBDEG            )
       !>
-      !>        C
-      !>        C     Add the data to the segment all at once.
-      !>        C
-      !>              CALL SPK14A ( HANDLE, NRECS, RECRDS, EPOCHS )
+      !>C
+      !>C     Add the data to the segment all at once.
+      !>C
+      !>      CALL SPK14A ( HANDLE, NRECS, RECRDS, EPOCHS )
       !>
-      !>        C
-      !>        C     End the segment, making the segment a permanent addition
-      !>        C     to the SPK file.
-      !>        C
-      !>              CALL SPK14E ( HANDLE )
+      !>C
+      !>C     End the segment, making the segment a permanent addition
+      !>C     to the SPK file.
+      !>C
+      !>      CALL SPK14E ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 14 exists in
@@ -13978,88 +13996,90 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKLTC_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>        C     The meta-kernel name shown here refers to a file whose
-      !>        C     contents are those shown above. This file and the kernels
-      !>        C     it references must exist in your current working
-      !>        C     directory.
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkltc_ex1.tm' )
-      !>        C
-      !>        C     Use a time step of 1 hour; look up 5 states.
-      !>        C
-      !>              DOUBLE PRECISION      STEP
-      !>              PARAMETER           ( STEP   = 3600.0D0 )
+      !>```fortran
+      !>      PROGRAM SPKLTC_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Local constants
+      !>C
+      !>C     The meta-kernel name shown here refers to a file whose
+      !>C     contents are those shown above. This file and the kernels
+      !>C     it references must exist in your current working
+      !>C     directory.
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkltc_ex1.tm' )
+      !>C
+      !>C     Use a time step of 1 hour; look up 5 states.
+      !>C
+      !>      DOUBLE PRECISION      STEP
+      !>      PARAMETER           ( STEP   = 3600.0D0 )
       !>
-      !>              INTEGER               MAXITR
-      !>              PARAMETER           ( MAXITR = 5 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DLT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE ( 6 )
-      !>              DOUBLE PRECISION      STOBS ( 6 )
-      !>              INTEGER               I
+      !>      INTEGER               MAXITR
+      !>      PARAMETER           ( MAXITR = 5 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DLT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE ( 6 )
+      !>      DOUBLE PRECISION      STOBS ( 6 )
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load the SPK and LSK kernels via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Convert the start time to seconds past J2000 TDB.
-      !>        C
-      !>              CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-      !>        C
-      !>        C     Step through a series of epochs, looking up a
-      !>        C     state vector at each one.
-      !>        C
-      !>              DO I = 1, MAXITR
+      !>C
+      !>C     Load the SPK and LSK kernels via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Convert the start time to seconds past J2000 TDB.
+      !>C
+      !>      CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+      !>C
+      !>C     Step through a series of epochs, looking up a
+      !>C     state vector at each one.
+      !>C
+      !>      DO I = 1, MAXITR
       !>
-      !>                 ET = ET0 + (I-1)*STEP
+      !>         ET = ET0 + (I-1)*STEP
       !>
-      !>        C
-      !>        C        Look up a state vector at epoch ET using the
-      !>        C        following inputs:
-      !>        C
-      !>        C           Target:                 Moon (NAIF ID code 301)
-      !>        C           Reference frame:        J2000
-      !>        C           Aberration correction:  Light time ('LT')
-      !>        C           Observer:               Earth (NAIF ID code 399)
-      !>        C
-      !>        C        Before we can execute this computation, we'll need the
-      !>        C        geometric state of the observer relative to the solar
-      !>        C        system barycenter at ET, expressed relative to the
-      !>        C        J2000 reference frame:
-      !>        C
-      !>                 CALL SPKSSB ( 399, ET,    'J2000', STOBS )
-      !>        C
-      !>        C        Now compute the desired state vector:
-      !>        C
-      !>                 CALL SPKLTC ( 301,   ET,    'J2000', 'LT',
-      !>             .                 STOBS, STATE, LT,      DLT     )
+      !>C
+      !>C        Look up a state vector at epoch ET using the
+      !>C        following inputs:
+      !>C
+      !>C           Target:                 Moon (NAIF ID code 301)
+      !>C           Reference frame:        J2000
+      !>C           Aberration correction:  Light time ('LT')
+      !>C           Observer:               Earth (NAIF ID code 399)
+      !>C
+      !>C        Before we can execute this computation, we'll need the
+      !>C        geometric state of the observer relative to the solar
+      !>C        system barycenter at ET, expressed relative to the
+      !>C        J2000 reference frame:
+      !>C
+      !>         CALL SPKSSB ( 399, ET,    'J2000', STOBS )
+      !>C
+      !>C        Now compute the desired state vector:
+      !>C
+      !>         CALL SPKLTC ( 301,   ET,    'J2000', 'LT',
+      !>     .                 STOBS, STATE, LT,      DLT     )
       !>
-      !>                 WRITE (*,*) 'ET = ', ET
-      !>                 WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-      !>                 WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-      !>                 WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-      !>                 WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-      !>                 WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-      !>                 WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-      !>                 WRITE (*,*) 'One-way light time (s):  ', LT
-      !>                 WRITE (*,*) 'Light time rate:         ', DLT
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) 'ET = ', ET
+      !>         WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+      !>         WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+      !>         WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+      !>         WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+      !>         WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+      !>         WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+      !>         WRITE (*,*) 'One-way light time (s):  ', LT
+      !>         WRITE (*,*) 'Light time rate:         ', DLT
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -16262,105 +16282,107 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKAPS_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>        C     The meta-kernel name shown here refers to a file whose
-      !>        C     contents are those shown above. This file and the kernels
-      !>        C     it references must exist in your current working
-      !>        C     directory.
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkaps_ex1.tm' )
-      !>        C
-      !>        C     Use a time step of 1 hour; look up 5 states.
-      !>        C
-      !>              DOUBLE PRECISION      STEP
-      !>              PARAMETER           ( STEP   = 3600.0D0 )
+      !>```fortran
+      !>      PROGRAM SPKAPS_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Local constants
+      !>C
+      !>C     The meta-kernel name shown here refers to a file whose
+      !>C     contents are those shown above. This file and the kernels
+      !>C     it references must exist in your current working
+      !>C     directory.
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkaps_ex1.tm' )
+      !>C
+      !>C     Use a time step of 1 hour; look up 5 states.
+      !>C
+      !>      DOUBLE PRECISION      STEP
+      !>      PARAMETER           ( STEP   = 3600.0D0 )
       !>
-      !>              INTEGER               MAXITR
-      !>              PARAMETER           ( MAXITR = 5 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ACC    ( 3 )
-      !>              DOUBLE PRECISION      DLT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      STATE0 ( 6 )
-      !>              DOUBLE PRECISION      STATE2 ( 6 )
-      !>              DOUBLE PRECISION      STOBS  ( 6 )
-      !>              DOUBLE PRECISION      TDELTA
-      !>              INTEGER               I
+      !>      INTEGER               MAXITR
+      !>      PARAMETER           ( MAXITR = 5 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ACC    ( 3 )
+      !>      DOUBLE PRECISION      DLT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE2 ( 6 )
+      !>      DOUBLE PRECISION      STOBS  ( 6 )
+      !>      DOUBLE PRECISION      TDELTA
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load the SPK and LSK kernels via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Convert the start time to seconds past J2000 TDB.
-      !>        C
-      !>              CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-      !>        C
-      !>        C     Step through a series of epochs, looking up a
-      !>        C     state vector at each one.
-      !>        C
-      !>              DO I = 1, MAXITR
+      !>C
+      !>C     Load the SPK and LSK kernels via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Convert the start time to seconds past J2000 TDB.
+      !>C
+      !>      CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+      !>C
+      !>C     Step through a series of epochs, looking up a
+      !>C     state vector at each one.
+      !>C
+      !>      DO I = 1, MAXITR
       !>
-      !>                 ET = ET0 + (I-1)*STEP
+      !>         ET = ET0 + (I-1)*STEP
       !>
-      !>        C
-      !>        C        Look up a state vector at epoch ET using the
-      !>        C        following inputs:
-      !>        C
-      !>        C           Target:                 Moon (NAIF ID code 301)
-      !>        C           Reference frame:        J2000
-      !>        C           Aberration correction:  Light time and stellar
-      !>        C                                   aberration ('LT+S')
-      !>        C           Observer:               Earth (NAIF ID code 399)
-      !>        C
-      !>        C        Before we can execute this computation, we'll need the
-      !>        C        geometric state and acceleration of the observer
-      !>        C        relative to the solar system barycenter at ET,
-      !>        C        expressed relative to the J2000 reference frame. First
-      !>        C        find the state:
-      !>        C
-      !>                 CALL SPKSSB ( 399, ET, 'J2000', STOBS )
-      !>        C
-      !>        C        Next compute the acceleration. We numerically
-      !>        C        differentiate the velocity using a quadratic
-      !>        C        approximation:
-      !>        C
-      !>                 TDELTA = 1.D0
+      !>C
+      !>C        Look up a state vector at epoch ET using the
+      !>C        following inputs:
+      !>C
+      !>C           Target:                 Moon (NAIF ID code 301)
+      !>C           Reference frame:        J2000
+      !>C           Aberration correction:  Light time and stellar
+      !>C                                   aberration ('LT+S')
+      !>C           Observer:               Earth (NAIF ID code 399)
+      !>C
+      !>C        Before we can execute this computation, we'll need the
+      !>C        geometric state and acceleration of the observer
+      !>C        relative to the solar system barycenter at ET,
+      !>C        expressed relative to the J2000 reference frame. First
+      !>C        find the state:
+      !>C
+      !>         CALL SPKSSB ( 399, ET, 'J2000', STOBS )
+      !>C
+      !>C        Next compute the acceleration. We numerically
+      !>C        differentiate the velocity using a quadratic
+      !>C        approximation:
+      !>C
+      !>         TDELTA = 1.D0
       !>
-      !>                 CALL SPKSSB ( 399, ET-TDELTA, 'J2000', STATE0 )
-      !>                 CALL SPKSSB ( 399, ET+TDELTA, 'J2000', STATE2 )
+      !>         CALL SPKSSB ( 399, ET-TDELTA, 'J2000', STATE0 )
+      !>         CALL SPKSSB ( 399, ET+TDELTA, 'J2000', STATE2 )
       !>
-      !>                 CALL QDERIV ( 3, STATE0(4), STATE2(4), TDELTA, ACC )
-      !>        C
-      !>        C        Now compute the desired state vector:
-      !>        C
-      !>                 CALL SPKAPS ( 301,   ET,  'J2000', 'LT+S',
-      !>             .                 STOBS, ACC, STATE,    LT,   DLT )
+      !>         CALL QDERIV ( 3, STATE0(4), STATE2(4), TDELTA, ACC )
+      !>C
+      !>C        Now compute the desired state vector:
+      !>C
+      !>         CALL SPKAPS ( 301,   ET,  'J2000', 'LT+S',
+      !>     .                 STOBS, ACC, STATE,    LT,   DLT )
       !>
-      !>                 WRITE (*,*) 'ET = ', ET
-      !>                 WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-      !>                 WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-      !>                 WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-      !>                 WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-      !>                 WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-      !>                 WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-      !>                 WRITE (*,*) 'One-way light time (s):  ', LT
-      !>                 WRITE (*,*) 'Light time rate:         ', DLT
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) 'ET = ', ET
+      !>         WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+      !>         WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+      !>         WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+      !>         WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+      !>         WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+      !>         WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+      !>         WRITE (*,*) 'One-way light time (s):  ', LT
+      !>         WRITE (*,*) 'Light time rate:         ', DLT
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18572,80 +18594,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKACS_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>        C     The meta-kernel name shown here refers to a file whose
-      !>        C     contents are those shown above. This file and the
-      !>        C     kernels it references must exist in your current working
-      !>        C     directory.
-      !>        C
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkacs_ex1.tm' )
-      !>        C
-      !>        C     Use a time step of 1 hour; look up 5 states.
-      !>        C
-      !>              DOUBLE PRECISION      STEP
-      !>              PARAMETER           ( STEP   = 3600.0D0 )
+      !>```fortran
+      !>      PROGRAM SPKACS_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Local constants
+      !>C
+      !>C     The meta-kernel name shown here refers to a file whose
+      !>C     contents are those shown above. This file and the
+      !>C     kernels it references must exist in your current working
+      !>C     directory.
+      !>C
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkacs_ex1.tm' )
+      !>C
+      !>C     Use a time step of 1 hour; look up 5 states.
+      !>C
+      !>      DOUBLE PRECISION      STEP
+      !>      PARAMETER           ( STEP   = 3600.0D0 )
       !>
-      !>              INTEGER               MAXITR
-      !>              PARAMETER           ( MAXITR = 5 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DLT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE ( 6 )
-      !>              INTEGER               I
+      !>      INTEGER               MAXITR
+      !>      PARAMETER           ( MAXITR = 5 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DLT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE ( 6 )
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load the SPK and LSK kernels via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Convert the start time to seconds past J2000 TDB.
-      !>        C
-      !>              CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
-      !>        C
-      !>        C     Step through a series of epochs, looking up a
-      !>        C     state vector at each one.
-      !>        C
-      !>              DO I = 1, MAXITR
+      !>C
+      !>C     Load the SPK and LSK kernels via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Convert the start time to seconds past J2000 TDB.
+      !>C
+      !>      CALL STR2ET ( '2000 JAN 1 12:00:00 TDB', ET0 )
+      !>C
+      !>C     Step through a series of epochs, looking up a
+      !>C     state vector at each one.
+      !>C
+      !>      DO I = 1, MAXITR
       !>
-      !>                 ET = ET0 + (I-1)*STEP
-      !>        C
-      !>        C        Look up a state vector at epoch ET using the
-      !>        C        following inputs:
-      !>        C
-      !>        C           Target:                 Moon (NAIF ID code 301)
-      !>        C           Reference frame:        J2000
-      !>        C           Aberration correction:  Light time and stellar
-      !>        C                                   aberration ('LT+S')
-      !>        C           Observer:               Earth (NAIF ID code 399)
-      !>        C
+      !>         ET = ET0 + (I-1)*STEP
+      !>C
+      !>C        Look up a state vector at epoch ET using the
+      !>C        following inputs:
+      !>C
+      !>C           Target:                 Moon (NAIF ID code 301)
+      !>C           Reference frame:        J2000
+      !>C           Aberration correction:  Light time and stellar
+      !>C                                   aberration ('LT+S')
+      !>C           Observer:               Earth (NAIF ID code 399)
+      !>C
       !>
-      !>                 CALL SPKACS ( 301, ET,    'J2000', 'LT+S',
-      !>             .                 399, STATE, LT,      DLT     )
+      !>         CALL SPKACS ( 301, ET,    'J2000', 'LT+S',
+      !>     .                 399, STATE, LT,      DLT     )
       !>
-      !>                 WRITE (*,*) 'ET = ', ET
-      !>                 WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
-      !>                 WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
-      !>                 WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
-      !>                 WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
-      !>                 WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
-      !>                 WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
-      !>                 WRITE (*,*) 'One-way light time (s):  ', LT
-      !>                 WRITE (*,*) 'Light time rate:         ', DLT
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) 'ET = ', ET
+      !>         WRITE (*,*) 'J2000 x-position (km):   ', STATE(1)
+      !>         WRITE (*,*) 'J2000 y-position (km):   ', STATE(2)
+      !>         WRITE (*,*) 'J2000 z-position (km):   ', STATE(3)
+      !>         WRITE (*,*) 'J2000 x-velocity (km/s): ', STATE(4)
+      !>         WRITE (*,*) 'J2000 y-velocity (km/s): ', STATE(5)
+      !>         WRITE (*,*) 'J2000 z-velocity (km/s): ', STATE(6)
+      !>         WRITE (*,*) 'One-way light time (s):  ', LT
+      !>         WRITE (*,*) 'Light time rate:         ', DLT
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -19107,75 +19131,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              CHARACTER*(*)         FRAME
-      !>              PARAMETER           ( FRAME  = 'J2000' )
+      !>```fortran
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Local constants
+      !>C
+      !>      CHARACTER*(*)         FRAME
+      !>      PARAMETER           ( FRAME  = 'J2000' )
       !>
-      !>              CHARACTER*(*)         ABCORR
-      !>              PARAMETER           ( ABCORR = 'NONE' )
+      !>      CHARACTER*(*)         ABCORR
+      !>      PARAMETER           ( ABCORR = 'NONE' )
       !>
-      !>              CHARACTER*(*)         SPK
-      !>              PARAMETER           ( SPK    = 'de421.bsp' )
+      !>      CHARACTER*(*)         SPK
+      !>      PARAMETER           ( SPK    = 'de421.bsp' )
       !>
-      !>        C
-      !>        C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
-      !>        C
-      !>              DOUBLE PRECISION      ET0
-      !>              PARAMETER           ( ET0    = 0.0D0 )
+      !>C
+      !>C     ET0 represents the date 2000 Jan 1 12:00:00 TDB.
+      !>C
+      !>      DOUBLE PRECISION      ET0
+      !>      PARAMETER           ( ET0    = 0.0D0 )
       !>
-      !>        C
-      !>        C     Use a time step of 1 hour; look up 4 positions.
-      !>        C
-      !>              DOUBLE PRECISION      STEP
-      !>              PARAMETER           ( STEP   = 3600.0D0 )
+      !>C
+      !>C     Use a time step of 1 hour; look up 4 positions.
+      !>C
+      !>      DOUBLE PRECISION      STEP
+      !>      PARAMETER           ( STEP   = 3600.0D0 )
       !>
-      !>              INTEGER               MAXITR
-      !>              PARAMETER           ( MAXITR = 4 )
+      !>      INTEGER               MAXITR
+      !>      PARAMETER           ( MAXITR = 4 )
       !>
-      !>              CHARACTER*(*)         OBSRVR
-      !>              PARAMETER           ( OBSRVR = 'Earth' )
+      !>      CHARACTER*(*)         OBSRVR
+      !>      PARAMETER           ( OBSRVR = 'Earth' )
       !>
-      !>              CHARACTER*(*)         TARGET
-      !>              PARAMETER           ( TARGET = 'Moon' )
+      !>      CHARACTER*(*)         TARGET
+      !>      PARAMETER           ( TARGET = 'Moon' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POS ( 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS ( 3 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load the SPK file.
-      !>        C
-      !>              CALL FURNSH ( SPK )
+      !>C
+      !>C     Load the SPK file.
+      !>C
+      !>      CALL FURNSH ( SPK )
       !>
-      !>        C
-      !>        C     Step through a series of epochs, looking up a
-      !>        C     position vector at each one.
-      !>        C
-      !>              DO I = 1, MAXITR
+      !>C
+      !>C     Step through a series of epochs, looking up a
+      !>C     position vector at each one.
+      !>C
+      !>      DO I = 1, MAXITR
       !>
-      !>                 ET = ET0 + (I-1)*STEP
+      !>         ET = ET0 + (I-1)*STEP
       !>
-      !>                 CALL SPKPOS ( TARGET, ET, FRAME, ABCORR, OBSRVR,
-      !>             .                 POS,    LT                        )
+      !>         CALL SPKPOS ( TARGET, ET, FRAME, ABCORR, OBSRVR,
+      !>     .                 POS,    LT                        )
       !>
-      !>                 WRITE (*,*) 'ET = ', ET
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'J2000 x-position (km):   ', POS(1)
-      !>                 WRITE (*,*) 'J2000 y-position (km):   ', POS(2)
-      !>                 WRITE (*,*) 'J2000 z-position (km):   ', POS(3)
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) 'ET = ', ET
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'J2000 x-position (km):   ', POS(1)
+      !>         WRITE (*,*) 'J2000 y-position (km):   ', POS(2)
+      !>         WRITE (*,*) 'J2000 z-position (km):   ', POS(3)
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -23620,288 +23646,290 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     This program uses SPKCVO to compute solar azimuth
-      !>        C     and elevation at a given surface point on the earth:
-      !>        C     the DSN station DSS-14.
-      !>        C
+      !>```fortran
+      !>C
+      !>C     This program uses SPKCVO to compute solar azimuth
+      !>C     and elevation at a given surface point on the earth:
+      !>C     the DSN station DSS-14.
+      !>C
       !>
-      !>              PROGRAM SPKCVO_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VDIST
+      !>      PROGRAM SPKCVO_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VDIST
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT0
-      !>              PARAMETER           ( FMT0   = '(A,3F20.8)'    )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT0
+      !>      PARAMETER           ( FMT0   = '(A,3F20.8)'    )
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkcvo_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkcvo_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .                    'YYYY MON DD HR:MN:SC.###### UTC' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .                    'YYYY MON DD HR:MN:SC.###### UTC' )
       !>
-      !>              CHARACTER*(*)         TIMFM2
-      !>              PARAMETER           ( TIMFM2 =
-      !>             .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
+      !>      CHARACTER*(*)         TIMFM2
+      !>      PARAMETER           ( TIMFM2 =
+      !>     .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               EVLLEN
-      !>              PARAMETER           ( EVLLEN = 25 )
+      !>      INTEGER               EVLLEN
+      !>      PARAMETER           ( EVLLEN = 25 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(TIMLEN)    EMITIM
-      !>              CHARACTER*(TIMLEN)    EPCSTR
-      !>              CHARACTER*(EVLLEN)    REFLOC
-      !>              CHARACTER*(BDNMLN)    OBSCTR
-      !>              CHARACTER*(FRNMLN)    OBSREF
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    OUTREF
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(TIMLEN)    EMITIM
+      !>      CHARACTER*(TIMLEN)    EPCSTR
+      !>      CHARACTER*(EVLLEN)    REFLOC
+      !>      CHARACTER*(BDNMLN)    OBSCTR
+      !>      CHARACTER*(FRNMLN)    OBSREF
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    OUTREF
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      AZ
-      !>              DOUBLE PRECISION      EL
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT0
-      !>              DOUBLE PRECISION      LT1
-      !>              DOUBLE PRECISION      NORMAL ( 3 )
-      !>              DOUBLE PRECISION      OBSALT
-      !>              DOUBLE PRECISION      OBSEPC
-      !>              DOUBLE PRECISION      OBSLAT
-      !>              DOUBLE PRECISION      OBSLON
-      !>              DOUBLE PRECISION      OBSSTA ( 6 )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      STATE0 ( 6 )
-      !>              DOUBLE PRECISION      STATE1 ( 6 )
-      !>              DOUBLE PRECISION      TOPVEC ( 3 )
-      !>              DOUBLE PRECISION      XFORM  ( 3, 3 )
-      !>              DOUBLE PRECISION      Z      ( 3 )
+      !>      DOUBLE PRECISION      AZ
+      !>      DOUBLE PRECISION      EL
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT0
+      !>      DOUBLE PRECISION      LT1
+      !>      DOUBLE PRECISION      NORMAL ( 3 )
+      !>      DOUBLE PRECISION      OBSALT
+      !>      DOUBLE PRECISION      OBSEPC
+      !>      DOUBLE PRECISION      OBSLAT
+      !>      DOUBLE PRECISION      OBSLON
+      !>      DOUBLE PRECISION      OBSSTA ( 6 )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE1 ( 6 )
+      !>      DOUBLE PRECISION      TOPVEC ( 3 )
+      !>      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      !>      DOUBLE PRECISION      Z      ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  Z / 0.D0, 0.D0, 1.D0 /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  Z / 0.D0, 0.D0, 1.D0 /
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the target, observer center, observer frame, and
-      !>        C     observer state relative to its center.
-      !>        C
-      !>              TARGET = 'SUN'
-      !>              OBSCTR = 'EARTH'
-      !>              OBSREF = 'ITRF93'
+      !>C
+      !>C     Set the target, observer center, observer frame, and
+      !>C     observer state relative to its center.
+      !>C
+      !>      TARGET = 'SUN'
+      !>      OBSCTR = 'EARTH'
+      !>      OBSREF = 'ITRF93'
       !>
-      !>        C
-      !>        C     Set the state of DSS-14 relative to the earth's
-      !>        C     center at the J2000 epoch, expressed in the
-      !>        C     ITRF93 reference frame. Values come from the
-      !>        C     earth station SPK specified in the meta-kernel.
-      !>        C
-      !>        C     The velocity is non-zero due to tectonic
-      !>        C     plate motion.
-      !>        C
-      !>              OBSEPC    =  0.D0
+      !>C
+      !>C     Set the state of DSS-14 relative to the earth's
+      !>C     center at the J2000 epoch, expressed in the
+      !>C     ITRF93 reference frame. Values come from the
+      !>C     earth station SPK specified in the meta-kernel.
+      !>C
+      !>C     The velocity is non-zero due to tectonic
+      !>C     plate motion.
+      !>C
+      !>      OBSEPC    =  0.D0
       !>
-      !>              OBSSTA(1) =  -2353.6213656676991D0
-      !>              OBSSTA(2) =  -4641.3414911499403D0
-      !>              OBSSTA(3) =   3677.0523293197439D0
-      !>              OBSSTA(4) =     -0.00000000000057086D0
-      !>              OBSSTA(5) =      0.00000000000020549D0
-      !>              OBSSTA(6) =     -0.00000000000012171D0
+      !>      OBSSTA(1) =  -2353.6213656676991D0
+      !>      OBSSTA(2) =  -4641.3414911499403D0
+      !>      OBSSTA(3) =   3677.0523293197439D0
+      !>      OBSSTA(4) =     -0.00000000000057086D0
+      !>      OBSSTA(5) =      0.00000000000020549D0
+      !>      OBSSTA(6) =     -0.00000000000012171D0
       !>
-      !>        C
-      !>        C     Find the apparent state of the sun relative
-      !>        C     to the station in the DSS-14_TOPO reference frame.
-      !>        C     Evaluate the output frame's orientation, that is the
-      !>        C     orientation of the DSS-14_TOPO frame relative to the
-      !>        C     J2000 frame, at the observation epoch. This
-      !>        C     correction is obtained by setting REFLOC to
-      !>        C     'OBSERVER'.
-      !>        C
-      !>              OUTREF = 'DSS-14_TOPO'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Find the apparent state of the sun relative
+      !>C     to the station in the DSS-14_TOPO reference frame.
+      !>C     Evaluate the output frame's orientation, that is the
+      !>C     orientation of the DSS-14_TOPO frame relative to the
+      !>C     J2000 frame, at the observation epoch. This
+      !>C     correction is obtained by setting REFLOC to
+      !>C     'OBSERVER'.
+      !>C
+      !>      OUTREF = 'DSS-14_TOPO'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
-      !>             .              OBSREF, STATE0, LT0            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
+      !>     .              OBSREF, STATE0, LT0            )
       !>
-      !>        C
-      !>        C     Compute planetocentric coordinates of the
-      !>        C     observer-target position in the local
-      !>        C     topocentric reference frame DSS-14_TOPO.
-      !>        C
-      !>              CALL RECLAT ( STATE0, R, LON, LAT )
+      !>C
+      !>C     Compute planetocentric coordinates of the
+      !>C     observer-target position in the local
+      !>C     topocentric reference frame DSS-14_TOPO.
+      !>C
+      !>      CALL RECLAT ( STATE0, R, LON, LAT )
       !>
-      !>        C
-      !>        C     Compute solar azimuth. The latitude we've
-      !>        C     already computed is the elevation. Express
-      !>        C     both angles in degrees.
-      !>        C
-      !>              EL =   LAT * DPR()
-      !>              AZ = - LON * DPR()
+      !>C
+      !>C     Compute solar azimuth. The latitude we've
+      !>C     already computed is the elevation. Express
+      !>C     both angles in degrees.
+      !>C
+      !>      EL =   LAT * DPR()
+      !>      AZ = - LON * DPR()
       !>
-      !>              IF ( AZ .LT. 0.D0 ) THEN
-      !>                 AZ = AZ + 360.D0
-      !>              END IF
+      !>      IF ( AZ .LT. 0.D0 ) THEN
+      !>         AZ = AZ + 360.D0
+      !>      END IF
       !>
-      !>        C
-      !>        C     Display the computed state, light time, and
-      !>        C     angles.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
-      !>              CALL TIMOUT ( OBSEPC, TIMFM2, EPCSTR )
+      !>C
+      !>C     Display the computed state, light time, and
+      !>C     angles.
+      !>C
+      !>      CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
+      !>      CALL TIMOUT ( OBSEPC, TIMFM2, EPCSTR )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer-center state time: ', EPCSTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):        ', LT0
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
-      !>              WRITE (*,FMT1) 'Solar elevation (deg): ', EL
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer-center state time: ', EPCSTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):        ', LT0
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
+      !>      WRITE (*,FMT1) 'Solar elevation (deg): ', EL
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     For an arbitrary surface point, we might not
-      !>        C     have a frame kernel available. In this case
-      !>        C     we can look up the state in the observer frame
-      !>        C     using SPKCVO and then convert the state to
-      !>        C     the local topocentric frame. We'll first
-      !>        C     create the transformation matrix for converting
-      !>        C     vectors in the observer frame to the topocentric
-      !>        C     frame.
-      !>        C
-      !>        C     First step: find the geodetic (planetodetic)
-      !>        C     coordinates of the observer. We need the
-      !>        C     equatorial radius and flattening coefficient
-      !>        C     of the reference ellipsoid.
-      !>        C
-      !>              CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
+      !>C
+      !>C     For an arbitrary surface point, we might not
+      !>C     have a frame kernel available. In this case
+      !>C     we can look up the state in the observer frame
+      !>C     using SPKCVO and then convert the state to
+      !>C     the local topocentric frame. We'll first
+      !>C     create the transformation matrix for converting
+      !>C     vectors in the observer frame to the topocentric
+      !>C     frame.
+      !>C
+      !>C     First step: find the geodetic (planetodetic)
+      !>C     coordinates of the observer. We need the
+      !>C     equatorial radius and flattening coefficient
+      !>C     of the reference ellipsoid.
+      !>C
+      !>      CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
       !>
-      !>              RE = RADII(1)
-      !>              RP = RADII(3)
+      !>      RE = RADII(1)
+      !>      RP = RADII(3)
       !>
-      !>              F  = ( RE - RP ) / RE
+      !>      F  = ( RE - RP ) / RE
       !>
-      !>              CALL RECGEO ( OBSSTA, RE, F, OBSLON, OBSLAT, OBSALT )
+      !>      CALL RECGEO ( OBSSTA, RE, F, OBSLON, OBSLAT, OBSALT )
       !>
-      !>        C
-      !>        C     Find the outward surface normal on the reference
-      !>        C     ellipsoid at the observer's longitude and latitude.
-      !>        C
-      !>              CALL LATREC ( 1.D0, OBSLON, OBSLAT, NORMAL )
+      !>C
+      !>C     Find the outward surface normal on the reference
+      !>C     ellipsoid at the observer's longitude and latitude.
+      !>C
+      !>      CALL LATREC ( 1.D0, OBSLON, OBSLAT, NORMAL )
       !>
-      !>        C
-      !>        C     The topocentric frame has its +Z axis aligned
-      !>        C     with NORMAL and its +X axis pointed north.
-      !>        C     The north direction is aligned with the component
-      !>        C     of the ITRF93 +Z axis orthogonal to the topocentric
-      !>        C     +Z axis.
-      !>        C
-      !>              CALL TWOVEC ( NORMAL, 3, Z, 1, XFORM )
+      !>C
+      !>C     The topocentric frame has its +Z axis aligned
+      !>C     with NORMAL and its +X axis pointed north.
+      !>C     The north direction is aligned with the component
+      !>C     of the ITRF93 +Z axis orthogonal to the topocentric
+      !>C     +Z axis.
+      !>C
+      !>      CALL TWOVEC ( NORMAL, 3, Z, 1, XFORM )
       !>
-      !>              OUTREF = 'ITRF93'
-      !>              ABCORR = 'CN+S'
+      !>      OUTREF = 'ITRF93'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
-      !>             .              OBSREF, STATE1, LT1            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
+      !>     .              OBSREF, STATE1, LT1            )
       !>
-      !>        C
-      !>        C     Convert the position to the topocentric frame.
-      !>        C
-      !>              CALL MXV ( XFORM, STATE1, TOPVEC )
+      !>C
+      !>C     Convert the position to the topocentric frame.
+      !>C
+      !>      CALL MXV ( XFORM, STATE1, TOPVEC )
       !>
-      !>        C
-      !>        C     Compute azimuth and elevation.
-      !>        C
-      !>              CALL RECLAT ( TOPVEC, R, LON, LAT )
+      !>C
+      !>C     Compute azimuth and elevation.
+      !>C
+      !>      CALL RECLAT ( TOPVEC, R, LON, LAT )
       !>
-      !>              EL =   LAT * DPR()
-      !>              AZ = - LON * DPR()
+      !>      EL =   LAT * DPR()
+      !>      AZ = - LON * DPR()
       !>
-      !>              IF ( AZ .LT. 0.D0 ) THEN
-      !>                 AZ = AZ + 360.D0
-      !>              END IF
+      !>      IF ( AZ .LT. 0.D0 ) THEN
+      !>         AZ = AZ + 360.D0
+      !>      END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'AZ/EL computed without frame kernel: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Distance between last two '
-      !>             .//             'positions (km): ',
-      !>             .               VDIST ( STATE0, TOPVEC )
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
-      !>              WRITE (*,FMT1) 'Solar elevation (deg): ', EL
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'AZ/EL computed without frame kernel: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Distance between last two '
+      !>     .//             'positions (km): ',
+      !>     .               VDIST ( STATE0, TOPVEC )
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
+      !>      WRITE (*,FMT1) 'Solar elevation (deg): ', EL
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -23969,306 +23997,308 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     This program demonstrates the use of SPKCVO.
-      !>        C     Computations are performed using all three possible
-      !>        C     values of the output frame evaluation locus REFLOC:
-      !>        C
-      !>        C        'OBSERVER'
-      !>        C        'CENTER'
-      !>        C        'TARGET'
-      !>        C
-      !>        C     Several unrelated computations are performed in
-      !>        C     this program. In particular, computation of the
-      !>        C     central meridian longitude on Mars is included
-      !>        C     simply to demonstrate use of the 'TARGET' option.
-      !>        C
+      !>```fortran
+      !>C
+      !>C     This program demonstrates the use of SPKCVO.
+      !>C     Computations are performed using all three possible
+      !>C     values of the output frame evaluation locus REFLOC:
+      !>C
+      !>C        'OBSERVER'
+      !>C        'CENTER'
+      !>C        'TARGET'
+      !>C
+      !>C     Several unrelated computations are performed in
+      !>C     this program. In particular, computation of the
+      !>C     central meridian longitude on Mars is included
+      !>C     simply to demonstrate use of the 'TARGET' option.
+      !>C
       !>
-      !>              PROGRAM SPKCVO_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VDIST
+      !>      PROGRAM SPKCVO_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VDIST
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT0
-      !>              PARAMETER           ( FMT0   = '(A,3F20.8)'    )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT0
+      !>      PARAMETER           ( FMT0   = '(A,3F20.8)'    )
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkcvo_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkcvo_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .                    'YYYY MON DD HR:MN:SC.###### UTC' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .                    'YYYY MON DD HR:MN:SC.###### UTC' )
       !>
-      !>              CHARACTER*(*)         TIMFM2
-      !>              PARAMETER           ( TIMFM2 =
-      !>             .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
+      !>      CHARACTER*(*)         TIMFM2
+      !>      PARAMETER           ( TIMFM2 =
+      !>     .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               LOCLEN
-      !>              PARAMETER           ( LOCLEN = 25 )
+      !>      INTEGER               LOCLEN
+      !>      PARAMETER           ( LOCLEN = 25 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(TIMLEN)    EMITIM
-      !>              CHARACTER*(TIMLEN)    EPCSTR
-      !>              CHARACTER*(LOCLEN)    REFLOC
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    OUTREF
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(BDNMLN)    OBSCTR
-      !>              CHARACTER*(FRNMLN)    OBSREF
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(TIMLEN)    EMITIM
+      !>      CHARACTER*(TIMLEN)    EPCSTR
+      !>      CHARACTER*(LOCLEN)    REFLOC
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    OUTREF
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(BDNMLN)    OBSCTR
+      !>      CHARACTER*(FRNMLN)    OBSREF
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT0
-      !>              DOUBLE PRECISION      LT1
-      !>              DOUBLE PRECISION      LT2
-      !>              DOUBLE PRECISION      LT3
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      STATE0 ( 6 )
-      !>              DOUBLE PRECISION      STATE1 ( 6 )
-      !>              DOUBLE PRECISION      STATE2 ( 6 )
-      !>              DOUBLE PRECISION      STATE3 ( 6 )
-      !>              DOUBLE PRECISION      OBSEPC
-      !>              DOUBLE PRECISION      OBSSTA ( 6 )
-      !>              DOUBLE PRECISION      OBSVEC ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT0
+      !>      DOUBLE PRECISION      LT1
+      !>      DOUBLE PRECISION      LT2
+      !>      DOUBLE PRECISION      LT3
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE1 ( 6 )
+      !>      DOUBLE PRECISION      STATE2 ( 6 )
+      !>      DOUBLE PRECISION      STATE3 ( 6 )
+      !>      DOUBLE PRECISION      OBSEPC
+      !>      DOUBLE PRECISION      OBSSTA ( 6 )
+      !>      DOUBLE PRECISION      OBSVEC ( 3 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the target, observer center, observer frame, and
-      !>        C     observer state relative to its center.
-      !>        C
-      !>              TARGET = 'MGS'
-      !>              OBSCTR = 'EARTH'
-      !>              OBSREF = 'ITRF93'
+      !>C
+      !>C     Set the target, observer center, observer frame, and
+      !>C     observer state relative to its center.
+      !>C
+      !>      TARGET = 'MGS'
+      !>      OBSCTR = 'EARTH'
+      !>      OBSREF = 'ITRF93'
       !>
-      !>        C
-      !>        C     Set the state of DSS-14 relative to the earth's
-      !>        C     center at the J2000 epoch, expressed in the
-      !>        C     ITRF93 reference frame. Values come from the
-      !>        C     earth station SPK specified in the meta-kernel.
-      !>        C
-      !>        C     The velocity is non-zero due to tectonic
-      !>        C     plate motion.
-      !>        C
-      !>              OBSEPC    =  0.D0
+      !>C
+      !>C     Set the state of DSS-14 relative to the earth's
+      !>C     center at the J2000 epoch, expressed in the
+      !>C     ITRF93 reference frame. Values come from the
+      !>C     earth station SPK specified in the meta-kernel.
+      !>C
+      !>C     The velocity is non-zero due to tectonic
+      !>C     plate motion.
+      !>C
+      !>      OBSEPC    =  0.D0
       !>
-      !>              OBSSTA(1) =  -2353.6213656676991D0
-      !>              OBSSTA(2) =  -4641.3414911499403D0
-      !>              OBSSTA(3) =   3677.0523293197439D0
-      !>              OBSSTA(4) =     -0.00000000000057086D0
-      !>              OBSSTA(5) =      0.00000000000020549D0
-      !>              OBSSTA(6) =     -0.00000000000012171D0
+      !>      OBSSTA(1) =  -2353.6213656676991D0
+      !>      OBSSTA(2) =  -4641.3414911499403D0
+      !>      OBSSTA(3) =   3677.0523293197439D0
+      !>      OBSSTA(4) =     -0.00000000000057086D0
+      !>      OBSSTA(5) =      0.00000000000020549D0
+      !>      OBSSTA(6) =     -0.00000000000012171D0
       !>
-      !>        C
-      !>        C     Find the apparent state of the spacecraft relative
-      !>        C     to the station in the ITRF93 reference frame.
-      !>        C     Evaluate the earth's orientation, that is the
-      !>        C     orientation of the ITRF93 frame relative to the
-      !>        C     J2000 frame, at the observation epoch. This
-      !>        C     correction is obtained by setting REFLOC to
-      !>        C     'OBSERVER'.
-      !>        C
-      !>              OUTREF = 'ITRF93'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Find the apparent state of the spacecraft relative
+      !>C     to the station in the ITRF93 reference frame.
+      !>C     Evaluate the earth's orientation, that is the
+      !>C     orientation of the ITRF93 frame relative to the
+      !>C     J2000 frame, at the observation epoch. This
+      !>C     correction is obtained by setting REFLOC to
+      !>C     'OBSERVER'.
+      !>C
+      !>      OUTREF = 'ITRF93'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
-      !>             .              OBSREF, STATE0, LT0            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
+      !>     .              OBSREF, STATE0, LT0            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
-      !>              CALL TIMOUT ( OBSEPC, TIMFM2, EPCSTR )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
+      !>      CALL TIMOUT ( OBSEPC, TIMFM2, EPCSTR )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer-center state time: ', EPCSTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT0
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer-center state time: ', EPCSTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT0
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     Repeat the computation, this time evaluating the
-      !>        C     earth's orientation at the epoch obtained by
-      !>        C     subtracting from the observation time the one way
-      !>        C     light time from the earth's center.
-      !>        C
-      !>        C     This is equivalent to looking up the observer-target
-      !>        C     state using SPKEZR.
-      !>        C
-      !>              REFLOC = 'CENTER'
+      !>C
+      !>C     Repeat the computation, this time evaluating the
+      !>C     earth's orientation at the epoch obtained by
+      !>C     subtracting from the observation time the one way
+      !>C     light time from the earth's center.
+      !>C
+      !>C     This is equivalent to looking up the observer-target
+      !>C     state using SPKEZR.
+      !>C
+      !>      REFLOC = 'CENTER'
       !>
-      !>              CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
-      !>             .              OBSREF, STATE1, LT1            )
+      !>      CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
+      !>     .              OBSREF, STATE1, LT1            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer-center state time: ', EPCSTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT1
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer-center state time: ', EPCSTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT1
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between above positions '
-      !>             .//             '(km):    ',   VDIST( STATE0, STATE1 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             ' (km/s):    ',
-      !>             .               VDIST( STATE0(4), STATE1(4) )
+      !>      WRITE (*,FMT1) 'Distance between above positions '
+      !>     .//             '(km):    ',   VDIST( STATE0, STATE1 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             ' (km/s):    ',
+      !>     .               VDIST( STATE0(4), STATE1(4) )
       !>
-      !>        C
-      !>        C     Check: compare the state computed directly above
-      !>        C     to one produced by SPKEZR.
-      !>        C
-      !>              OBSRVR = 'DSS-14'
+      !>C
+      !>C     Check: compare the state computed directly above
+      !>C     to one produced by SPKEZR.
+      !>C
+      !>      OBSRVR = 'DSS-14'
       !>
-      !>              CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
-      !>             .              OBSRVR, STATE2, LT2            )
+      !>      CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
+      !>     .              OBSRVR, STATE2, LT2            )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'State computed using SPKEZR: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                 ', TARGET
-      !>              WRITE (*,*) 'Observation time:       ', OBSTIM
-      !>              WRITE (*,*) 'Output reference frame: ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:  ', ABCORR
-      !>              WRITE (*,*) 'Observer:               ', OBSRVR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s): ', LT2
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'State computed using SPKEZR: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                 ', TARGET
+      !>      WRITE (*,*) 'Observation time:       ', OBSTIM
+      !>      WRITE (*,*) 'Output reference frame: ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:  ', ABCORR
+      !>      WRITE (*,*) 'Observer:               ', OBSRVR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s): ', LT2
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between last two '
-      !>             .//             'positions (km): ',
-      !>             .               VDIST ( STATE1, STATE2 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             '    (km/s): ',
-      !>             .               VDIST( STATE1(4), STATE2(4) )
+      !>      WRITE (*,FMT1) 'Distance between last two '
+      !>     .//             'positions (km): ',
+      !>     .               VDIST ( STATE1, STATE2 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             '    (km/s): ',
+      !>     .               VDIST( STATE1(4), STATE2(4) )
       !>
-      !>        C
-      !>        C     Finally, compute an observer-target state in
-      !>        C     a frame centered at the target. This state
-      !>        C     can be used to compute the central meridian longitude.
-      !>        C     The reference frame is the Mars-fixed frame IAU_MARS.
-      !>        C
-      !>              TARGET = 'MARS'
-      !>              OUTREF = 'IAU_MARS'
+      !>C
+      !>C     Finally, compute an observer-target state in
+      !>C     a frame centered at the target. This state
+      !>C     can be used to compute the central meridian longitude.
+      !>C     The reference frame is the Mars-fixed frame IAU_MARS.
+      !>C
+      !>      TARGET = 'MARS'
+      !>      OUTREF = 'IAU_MARS'
       !>
-      !>              REFLOC = 'TARGET'
+      !>      REFLOC = 'TARGET'
       !>
-      !>              CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
-      !>             .              OBSREF, STATE3, LT3            )
+      !>      CALL SPKCVO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSSTA, OBSEPC, OBSCTR,
+      !>     .              OBSREF, STATE3, LT3            )
       !>
-      !>        C
-      !>        C     Central meridian longitude is the longitude of the
-      !>        C     observer relative to the target center, so we must
-      !>        C     negate the position portion of the state we just
-      !>        C     computed.
-      !>        C
-      !>              CALL VMINUS ( STATE3, OBSVEC )
+      !>C
+      !>C     Central meridian longitude is the longitude of the
+      !>C     observer relative to the target center, so we must
+      !>C     negate the position portion of the state we just
+      !>C     computed.
+      !>C
+      !>      CALL VMINUS ( STATE3, OBSVEC )
       !>
-      !>              CALL RECLAT ( OBSVEC, R, LON, LAT )
+      !>      CALL RECLAT ( OBSVEC, R, LON, LAT )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer-center state time: ', EPCSTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT3
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Central meridian '
-      !>              WRITE (*,FMT1) 'longitude (deg):  ', LON*DPR()
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer-center state time: ', EPCSTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT3
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Central meridian '
+      !>      WRITE (*,FMT1) 'longitude (deg):  ', LON*DPR()
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -24964,77 +24994,79 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKEZR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKEZR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(32)        FRAME
-      !>              CHARACTER*(32)        ABCORR
-      !>              CHARACTER*(36)        OBS
-      !>              CHARACTER*(36)        TARGET
-      !>              CHARACTER*(36)        EPOCH
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(32)        FRAME
+      !>      CHARACTER*(32)        ABCORR
+      !>      CHARACTER*(36)        OBS
+      !>      CHARACTER*(36)        TARGET
+      !>      CHARACTER*(36)        EPOCH
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE ( 6 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE ( 6 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load a set of kernels: an SPK file, a PCK
-      !>        C     file and a leapseconds file. Use a meta-kernel.
-      !>        C
-      !>              CALL FURNSH( 'spkezr_ex1.tm' )
+      !>C
+      !>C     Load a set of kernels: an SPK file, a PCK
+      !>C     file and a leapseconds file. Use a meta-kernel.
+      !>C
+      !>      CALL FURNSH( 'spkezr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Define parameters for a state lookup:
-      !>        C
-      !>        C     Return the state vector of Mars Barycenter (4) as seen
-      !>        C     from Earth (399) in the J2000 frame  using aberration
-      !>        C     correction LT+S (light time plus stellar aberration)
-      !>        C     at the epoch JAN 1 2015 12:00:00.
-      !>        C
-      !>              TARGET   = 'MARS BARYCENTER'
-      !>              EPOCH    = 'JAN 1 2015 12:00:00'
-      !>              FRAME    = 'J2000'
-      !>              ABCORR   = 'LT+S'
-      !>              OBS      = 'EARTH'
+      !>C
+      !>C     Define parameters for a state lookup:
+      !>C
+      !>C     Return the state vector of Mars Barycenter (4) as seen
+      !>C     from Earth (399) in the J2000 frame  using aberration
+      !>C     correction LT+S (light time plus stellar aberration)
+      !>C     at the epoch JAN 1 2015 12:00:00.
+      !>C
+      !>      TARGET   = 'MARS BARYCENTER'
+      !>      EPOCH    = 'JAN 1 2015 12:00:00'
+      !>      FRAME    = 'J2000'
+      !>      ABCORR   = 'LT+S'
+      !>      OBS      = 'EARTH'
       !>
-      !>        C
-      !>        C     Convert the epoch to ephemeris time.
-      !>        C
-      !>              CALL STR2ET( EPOCH, ET )
+      !>C
+      !>C     Convert the epoch to ephemeris time.
+      !>C
+      !>      CALL STR2ET( EPOCH, ET )
       !>
-      !>        C
-      !>        C     Look-up the state for the defined parameters.
-      !>        C
-      !>              CALL SPKEZR( TARGET, ET, FRAME, ABCORR, OBS, STATE, LT)
+      !>C
+      !>C     Look-up the state for the defined parameters.
+      !>C
+      !>      CALL SPKEZR( TARGET, ET, FRAME, ABCORR, OBS, STATE, LT)
       !>
-      !>        C
-      !>        C     Output...
-      !>        C
-      !>              WRITE(*,*) 'The position of    : ', TARGET
-      !>              WRITE(*,*) 'As observed from   : ', OBS
-      !>              WRITE(*,*) 'In reference frame : ', FRAME
-      !>              WRITE(*,*) 'At epoch           : ', EPOCH
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output...
+      !>C
+      !>      WRITE(*,*) 'The position of    : ', TARGET
+      !>      WRITE(*,*) 'As observed from   : ', OBS
+      !>      WRITE(*,*) 'In reference frame : ', FRAME
+      !>      WRITE(*,*) 'At epoch           : ', EPOCH
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     The first three entries of state contain the
-      !>        C     X, Y, Z position components. The final three contain
-      !>        C     the Vx, Vy, Vz velocity components.
-      !>        C
-      !>              WRITE(*,*) 'R (kilometers)     : '
-      !>              WRITE(*,'(3F20.6)') (STATE(I), I=1,3 )
+      !>C
+      !>C     The first three entries of state contain the
+      !>C     X, Y, Z position components. The final three contain
+      !>C     the Vx, Vy, Vz velocity components.
+      !>C
+      !>      WRITE(*,*) 'R (kilometers)     : '
+      !>      WRITE(*,'(3F20.6)') (STATE(I), I=1,3 )
       !>
-      !>              WRITE(*,*) 'V (kilometers/sec) : '
-      !>              WRITE(*,'(3F20.6)') (STATE(I), I=4,6 )
+      !>      WRITE(*,*) 'V (kilometers/sec) : '
+      !>      WRITE(*,'(3F20.6)') (STATE(I), I=4,6 )
       !>
-      !>              WRITE(*,*) 'Light time (secs)  : ', LT
+      !>      WRITE(*,*) 'Light time (secs)  : ', LT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -26656,282 +26688,284 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Program: SPKCPO_EX1
-      !>        C
-      !>        C     This program uses SPKCPO to compute solar azimuth
-      !>        C     and elevation at a given surface point on the earth.
-      !>        C
+      !>```fortran
+      !>C
+      !>C     Program: SPKCPO_EX1
+      !>C
+      !>C     This program uses SPKCPO to compute solar azimuth
+      !>C     and elevation at a given surface point on the earth.
+      !>C
       !>
-      !>              PROGRAM SPKCPO_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VDIST
+      !>      PROGRAM SPKCPO_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VDIST
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT0
-      !>              PARAMETER           ( FMT0   = '(A,3F20.8)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT0
+      !>      PARAMETER           ( FMT0   = '(A,3F20.8)' )
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkcpo_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkcpo_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .                    'YYYY MON DD HR:MN:SC.###### UTC' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .                    'YYYY MON DD HR:MN:SC.###### UTC' )
       !>
-      !>              CHARACTER*(*)         TIMFM2
-      !>              PARAMETER           ( TIMFM2 =
-      !>             .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
+      !>      CHARACTER*(*)         TIMFM2
+      !>      PARAMETER           ( TIMFM2 =
+      !>     .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               EVLLEN
-      !>              PARAMETER           ( EVLLEN = 25 )
+      !>      INTEGER               EVLLEN
+      !>      PARAMETER           ( EVLLEN = 25 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(TIMLEN)    EMITIM
-      !>              CHARACTER*(EVLLEN)    REFLOC
-      !>              CHARACTER*(BDNMLN)    OBSCTR
-      !>              CHARACTER*(FRNMLN)    OBSREF
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    OUTREF
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(TIMLEN)    EMITIM
+      !>      CHARACTER*(EVLLEN)    REFLOC
+      !>      CHARACTER*(BDNMLN)    OBSCTR
+      !>      CHARACTER*(FRNMLN)    OBSREF
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    OUTREF
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      AZ
-      !>              DOUBLE PRECISION      EL
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT0
-      !>              DOUBLE PRECISION      LT1
-      !>              DOUBLE PRECISION      NORMAL ( 3 )
-      !>              DOUBLE PRECISION      OBSALT
-      !>              DOUBLE PRECISION      OBSLAT
-      !>              DOUBLE PRECISION      OBSLON
-      !>              DOUBLE PRECISION      OBSPOS ( 3 )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      STATE0 ( 6 )
-      !>              DOUBLE PRECISION      STATE1 ( 6 )
-      !>              DOUBLE PRECISION      TOPVEC ( 3 )
-      !>              DOUBLE PRECISION      XFORM  ( 3, 3 )
-      !>              DOUBLE PRECISION      Z      ( 3 )
+      !>      DOUBLE PRECISION      AZ
+      !>      DOUBLE PRECISION      EL
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT0
+      !>      DOUBLE PRECISION      LT1
+      !>      DOUBLE PRECISION      NORMAL ( 3 )
+      !>      DOUBLE PRECISION      OBSALT
+      !>      DOUBLE PRECISION      OBSLAT
+      !>      DOUBLE PRECISION      OBSLON
+      !>      DOUBLE PRECISION      OBSPOS ( 3 )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE1 ( 6 )
+      !>      DOUBLE PRECISION      TOPVEC ( 3 )
+      !>      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      !>      DOUBLE PRECISION      Z      ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  Z / 0.D0, 0.D0, 1.D0 /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  Z / 0.D0, 0.D0, 1.D0 /
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the target, observer center, observer frame, and
-      !>        C     observer position relative to its center.
-      !>        C
-      !>              TARGET = 'SUN'
-      !>              OBSCTR = 'EARTH'
-      !>              OBSREF = 'ITRF93'
+      !>C
+      !>C     Set the target, observer center, observer frame, and
+      !>C     observer position relative to its center.
+      !>C
+      !>      TARGET = 'SUN'
+      !>      OBSCTR = 'EARTH'
+      !>      OBSREF = 'ITRF93'
       !>
-      !>        C
-      !>        C     Set the position of DSS-14 relative to the earth's
-      !>        C     center at the J2000 epoch, expressed in the
-      !>        C     ITRF93 reference frame. Values come from the
-      !>        C     earth station SPK specified in the meta-kernel.
-      !>        C
-      !>        C     The actual station velocity is non-zero due
-      !>        C     to tectonic plate motion; we ignore the motion
-      !>        C     in this example. See the routine SPKCVO for an
-      !>        C     example in which the plate motion is accounted for.
-      !>        C
-      !>              OBSPOS(1) =  -2353.6213656676991D0
-      !>              OBSPOS(2) =  -4641.3414911499403D0
-      !>              OBSPOS(3) =   3677.0523293197439D0
+      !>C
+      !>C     Set the position of DSS-14 relative to the earth's
+      !>C     center at the J2000 epoch, expressed in the
+      !>C     ITRF93 reference frame. Values come from the
+      !>C     earth station SPK specified in the meta-kernel.
+      !>C
+      !>C     The actual station velocity is non-zero due
+      !>C     to tectonic plate motion; we ignore the motion
+      !>C     in this example. See the routine SPKCVO for an
+      !>C     example in which the plate motion is accounted for.
+      !>C
+      !>      OBSPOS(1) =  -2353.6213656676991D0
+      !>      OBSPOS(2) =  -4641.3414911499403D0
+      !>      OBSPOS(3) =   3677.0523293197439D0
       !>
-      !>        C
-      !>        C     Find the apparent state of the sun relative
-      !>        C     to the station in the DSS-14_TOPO reference frame.
-      !>        C     Evaluate the output frame's orientation, that is the
-      !>        C     orientation of the DSS-14_TOPO frame relative to the
-      !>        C     J2000 frame, at the observation epoch. This
-      !>        C     correction is obtained by setting REFLOC to
-      !>        C     'OBSERVER'.
-      !>        C
-      !>              OUTREF = 'DSS-14_TOPO'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Find the apparent state of the sun relative
+      !>C     to the station in the DSS-14_TOPO reference frame.
+      !>C     Evaluate the output frame's orientation, that is the
+      !>C     orientation of the DSS-14_TOPO frame relative to the
+      !>C     J2000 frame, at the observation epoch. This
+      !>C     correction is obtained by setting REFLOC to
+      !>C     'OBSERVER'.
+      !>C
+      !>      OUTREF = 'DSS-14_TOPO'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSPOS, OBSCTR,
-      !>             .              OBSREF, STATE0, LT0            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSPOS, OBSCTR,
+      !>     .              OBSREF, STATE0, LT0            )
       !>
-      !>        C
-      !>        C     Compute planetocentric coordinates of the
-      !>        C     observer-target position in the local
-      !>        C     topocentric reference frame DSS-14_TOPO.
-      !>        C
-      !>              CALL RECLAT ( STATE0, R, LON, LAT )
+      !>C
+      !>C     Compute planetocentric coordinates of the
+      !>C     observer-target position in the local
+      !>C     topocentric reference frame DSS-14_TOPO.
+      !>C
+      !>      CALL RECLAT ( STATE0, R, LON, LAT )
       !>
-      !>        C
-      !>        C     Compute solar azimuth. The latitude we've
-      !>        C     already computed is the elevation. Express
-      !>        C     both angles in degrees.
-      !>        C
-      !>              EL =   LAT * DPR()
-      !>              AZ = - LON * DPR()
+      !>C
+      !>C     Compute solar azimuth. The latitude we've
+      !>C     already computed is the elevation. Express
+      !>C     both angles in degrees.
+      !>C
+      !>      EL =   LAT * DPR()
+      !>      AZ = - LON * DPR()
       !>
-      !>              IF ( AZ .LT. 0.D0 ) THEN
-      !>                 AZ = AZ + 360.D0
-      !>              END IF
+      !>      IF ( AZ .LT. 0.D0 ) THEN
+      !>         AZ = AZ + 360.D0
+      !>      END IF
       !>
-      !>        C
-      !>        C     Display the computed state, light time, and
-      !>        C     angles.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
+      !>C
+      !>C     Display the computed state, light time, and
+      !>C     angles.
+      !>C
+      !>      CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):        ', LT0
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
-      !>              WRITE (*,FMT1) 'Solar elevation (deg): ', EL
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):        ', LT0
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
+      !>      WRITE (*,FMT1) 'Solar elevation (deg): ', EL
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     For an arbitrary surface point, we might not
-      !>        C     have a frame kernel available. In this case
-      !>        C     we can look up the state in the observer frame
-      !>        C     using SPKCPO and then convert the state to
-      !>        C     the local topocentric frame. We'll first
-      !>        C     create the transformation matrix for converting
-      !>        C     vectors in the observer frame to the topocentric
-      !>        C     frame.
-      !>        C
-      !>        C     First step: find the geodetic (planetodetic)
-      !>        C     coordinates of the observer. We need the
-      !>        C     equatorial radius and flattening coefficient
-      !>        C     of the reference ellipsoid.
-      !>        C
-      !>              CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
+      !>C
+      !>C     For an arbitrary surface point, we might not
+      !>C     have a frame kernel available. In this case
+      !>C     we can look up the state in the observer frame
+      !>C     using SPKCPO and then convert the state to
+      !>C     the local topocentric frame. We'll first
+      !>C     create the transformation matrix for converting
+      !>C     vectors in the observer frame to the topocentric
+      !>C     frame.
+      !>C
+      !>C     First step: find the geodetic (planetodetic)
+      !>C     coordinates of the observer. We need the
+      !>C     equatorial radius and flattening coefficient
+      !>C     of the reference ellipsoid.
+      !>C
+      !>      CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
       !>
-      !>              RE = RADII(1)
-      !>              RP = RADII(3)
+      !>      RE = RADII(1)
+      !>      RP = RADII(3)
       !>
-      !>              F  = ( RE - RP ) / RE
+      !>      F  = ( RE - RP ) / RE
       !>
-      !>              CALL RECGEO ( OBSPOS, RE, F, OBSLON, OBSLAT, OBSALT )
+      !>      CALL RECGEO ( OBSPOS, RE, F, OBSLON, OBSLAT, OBSALT )
       !>
-      !>        C
-      !>        C     Find the outward surface normal on the reference
-      !>        C     ellipsoid at the observer's longitude and latitude.
-      !>        C
-      !>              CALL LATREC ( 1.D0, OBSLON, OBSLAT, NORMAL )
+      !>C
+      !>C     Find the outward surface normal on the reference
+      !>C     ellipsoid at the observer's longitude and latitude.
+      !>C
+      !>      CALL LATREC ( 1.D0, OBSLON, OBSLAT, NORMAL )
       !>
-      !>        C
-      !>        C     The topocentric frame has its +Z axis aligned
-      !>        C     with NORMAL and its +X axis pointed north.
-      !>        C     The north direction is aligned with the component
-      !>        C     of the ITRF93 +Z axis orthogonal to the topocentric
-      !>        C     +Z axis.
-      !>        C
-      !>              CALL TWOVEC ( NORMAL, 3, Z, 1, XFORM )
+      !>C
+      !>C     The topocentric frame has its +Z axis aligned
+      !>C     with NORMAL and its +X axis pointed north.
+      !>C     The north direction is aligned with the component
+      !>C     of the ITRF93 +Z axis orthogonal to the topocentric
+      !>C     +Z axis.
+      !>C
+      !>      CALL TWOVEC ( NORMAL, 3, Z, 1, XFORM )
       !>
-      !>              OUTREF = 'ITRF93'
-      !>              ABCORR = 'CN+S'
+      !>      OUTREF = 'ITRF93'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSPOS, OBSCTR,
-      !>             .              OBSREF, STATE1, LT1            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSPOS, OBSCTR,
+      !>     .              OBSREF, STATE1, LT1            )
       !>
-      !>        C
-      !>        C     Convert the position to the topocentric frame.
-      !>        C
-      !>              CALL MXV ( XFORM, STATE1, TOPVEC )
+      !>C
+      !>C     Convert the position to the topocentric frame.
+      !>C
+      !>      CALL MXV ( XFORM, STATE1, TOPVEC )
       !>
-      !>        C
-      !>        C     Compute azimuth and elevation.
-      !>        C
-      !>              CALL RECLAT ( TOPVEC, R, LON, LAT )
+      !>C
+      !>C     Compute azimuth and elevation.
+      !>C
+      !>      CALL RECLAT ( TOPVEC, R, LON, LAT )
       !>
-      !>              EL =   LAT * DPR()
-      !>              AZ = - LON * DPR()
+      !>      EL =   LAT * DPR()
+      !>      AZ = - LON * DPR()
       !>
-      !>              IF ( AZ .LT. 0.D0 ) THEN
-      !>                 AZ = AZ + 360.D0
-      !>              END IF
+      !>      IF ( AZ .LT. 0.D0 ) THEN
+      !>         AZ = AZ + 360.D0
+      !>      END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'AZ/EL computed without frame kernel: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Distance between last two '
-      !>             .//             'positions (km): ',
-      !>             .               VDIST ( STATE0, TOPVEC )
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
-      !>              WRITE (*,FMT1) 'Solar elevation (deg): ', EL
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'AZ/EL computed without frame kernel: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Distance between last two '
+      !>     .//             'positions (km): ',
+      !>     .               VDIST ( STATE0, TOPVEC )
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Solar azimuth (deg):   ', AZ
+      !>      WRITE (*,FMT1) 'Solar elevation (deg): ', EL
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -26998,294 +27032,296 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C     Program: SPKCPO_EX2
-      !>        C
-      !>        C     This program demonstrates the use of SPKCPO.
-      !>        C     Computations are performed using all three possible
-      !>        C     values of the output frame evaluation locus REFLOC:
-      !>        C
-      !>        C        'OBSERVER'
-      !>        C        'CENTER'
-      !>        C        'TARGET'
-      !>        C
-      !>        C     Several unrelated computations are performed in
-      !>        C     this program. In particular, computation of the
-      !>        C     central meridian longitude on Mars is included
-      !>        C     simply to demonstrate use of the 'TARGET' option.
-      !>        C
+      !>```fortran
+      !>C     Program: SPKCPO_EX2
+      !>C
+      !>C     This program demonstrates the use of SPKCPO.
+      !>C     Computations are performed using all three possible
+      !>C     values of the output frame evaluation locus REFLOC:
+      !>C
+      !>C        'OBSERVER'
+      !>C        'CENTER'
+      !>C        'TARGET'
+      !>C
+      !>C     Several unrelated computations are performed in
+      !>C     this program. In particular, computation of the
+      !>C     central meridian longitude on Mars is included
+      !>C     simply to demonstrate use of the 'TARGET' option.
+      !>C
       !>
-      !>              PROGRAM SPKCPO_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VDIST
+      !>      PROGRAM SPKCPO_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VDIST
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT0
-      !>              PARAMETER           ( FMT0   = '(A,3F20.8)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT0
+      !>      PARAMETER           ( FMT0   = '(A,3F20.8)' )
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkcpo_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkcpo_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .                    'YYYY MON DD HR:MN:SC.###### UTC' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .                    'YYYY MON DD HR:MN:SC.###### UTC' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               EVLLEN
-      !>              PARAMETER           ( EVLLEN = 25 )
+      !>      INTEGER               EVLLEN
+      !>      PARAMETER           ( EVLLEN = 25 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(TIMLEN)    EMITIM
-      !>              CHARACTER*(EVLLEN)    REFLOC
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    OUTREF
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(BDNMLN)    OBSCTR
-      !>              CHARACTER*(FRNMLN)    OBSREF
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(TIMLEN)    EMITIM
+      !>      CHARACTER*(EVLLEN)    REFLOC
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    OUTREF
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(BDNMLN)    OBSCTR
+      !>      CHARACTER*(FRNMLN)    OBSREF
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT0
-      !>              DOUBLE PRECISION      LT1
-      !>              DOUBLE PRECISION      LT2
-      !>              DOUBLE PRECISION      LT3
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      STATE0 ( 6 )
-      !>              DOUBLE PRECISION      STATE1 ( 6 )
-      !>              DOUBLE PRECISION      STATE2 ( 6 )
-      !>              DOUBLE PRECISION      STATE3 ( 6 )
-      !>              DOUBLE PRECISION      OBSPOS ( 3 )
-      !>              DOUBLE PRECISION      OBSVEC ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT0
+      !>      DOUBLE PRECISION      LT1
+      !>      DOUBLE PRECISION      LT2
+      !>      DOUBLE PRECISION      LT3
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE1 ( 6 )
+      !>      DOUBLE PRECISION      STATE2 ( 6 )
+      !>      DOUBLE PRECISION      STATE3 ( 6 )
+      !>      DOUBLE PRECISION      OBSPOS ( 3 )
+      !>      DOUBLE PRECISION      OBSVEC ( 3 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the target, observer center, observer frame, and
-      !>        C     observer position relative to its center.
-      !>        C
-      !>              TARGET = 'MGS'
-      !>              OBSCTR = 'EARTH'
-      !>              OBSREF = 'ITRF93'
+      !>C
+      !>C     Set the target, observer center, observer frame, and
+      !>C     observer position relative to its center.
+      !>C
+      !>      TARGET = 'MGS'
+      !>      OBSCTR = 'EARTH'
+      !>      OBSREF = 'ITRF93'
       !>
-      !>        C
-      !>        C     Set the position of DSS-14 relative to the earth's
-      !>        C     center at the J2000 epoch, expressed in the
-      !>        C     ITRF93 reference frame. Values come from the
-      !>        C     earth station SPK specified in the meta-kernel.
-      !>        C
-      !>        C     The actual station velocity is non-zero due
-      !>        C     to tectonic plate motion; we ignore the motion
-      !>        C     in this example. See the routine SPKCVT for an
-      !>        C     example in which the plate motion is accounted for.
-      !>        C
-      !>              OBSPOS(1) =  -2353.6213656676991D0
-      !>              OBSPOS(2) =  -4641.3414911499403D0
-      !>              OBSPOS(3) =   3677.0523293197439D0
+      !>C
+      !>C     Set the position of DSS-14 relative to the earth's
+      !>C     center at the J2000 epoch, expressed in the
+      !>C     ITRF93 reference frame. Values come from the
+      !>C     earth station SPK specified in the meta-kernel.
+      !>C
+      !>C     The actual station velocity is non-zero due
+      !>C     to tectonic plate motion; we ignore the motion
+      !>C     in this example. See the routine SPKCVT for an
+      !>C     example in which the plate motion is accounted for.
+      !>C
+      !>      OBSPOS(1) =  -2353.6213656676991D0
+      !>      OBSPOS(2) =  -4641.3414911499403D0
+      !>      OBSPOS(3) =   3677.0523293197439D0
       !>
-      !>        C
-      !>        C     Find the apparent state of the spacecraft relative
-      !>        C     to the station in the ITRF93 reference frame.
-      !>        C     Evaluate the earth's orientation, that is the
-      !>        C     orientation of the ITRF93 frame relative to the
-      !>        C     J2000 frame, at the observation epoch. This
-      !>        C     correction is obtained by setting REFLOC to
-      !>        C     'OBSERVER'.
-      !>        C
-      !>              OUTREF = 'ITRF93'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Find the apparent state of the spacecraft relative
+      !>C     to the station in the ITRF93 reference frame.
+      !>C     Evaluate the earth's orientation, that is the
+      !>C     orientation of the ITRF93 frame relative to the
+      !>C     J2000 frame, at the observation epoch. This
+      !>C     correction is obtained by setting REFLOC to
+      !>C     'OBSERVER'.
+      !>C
+      !>      OUTREF = 'ITRF93'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSPOS, OBSCTR,
-      !>             .              OBSREF, STATE0, LT0            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSPOS, OBSCTR,
+      !>     .              OBSREF, STATE0, LT0            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT0
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT0
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     Repeat the computation, this time evaluating the
-      !>        C     earth's orientation at the epoch obtained by
-      !>        C     subtracting from the observation time the one way
-      !>        C     light time from the earth's center.
-      !>        C
-      !>        C     This is equivalent to looking up the observer-target
-      !>        C     state using SPKEZR.
-      !>        C
-      !>              REFLOC = 'CENTER'
+      !>C
+      !>C     Repeat the computation, this time evaluating the
+      !>C     earth's orientation at the epoch obtained by
+      !>C     subtracting from the observation time the one way
+      !>C     light time from the earth's center.
+      !>C
+      !>C     This is equivalent to looking up the observer-target
+      !>C     state using SPKEZR.
+      !>C
+      !>      REFLOC = 'CENTER'
       !>
-      !>              CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSPOS, OBSCTR,
-      !>             .              OBSREF, STATE1, LT1            )
+      !>      CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSPOS, OBSCTR,
+      !>     .              OBSREF, STATE1, LT1            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT1
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT1
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between above positions '
-      !>             .//             '(km):    ',   VDIST( STATE0, STATE1 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             ' (km/s):    ',
-      !>             .               VDIST( STATE0(4), STATE1(4) )
+      !>      WRITE (*,FMT1) 'Distance between above positions '
+      !>     .//             '(km):    ',   VDIST( STATE0, STATE1 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             ' (km/s):    ',
+      !>     .               VDIST( STATE0(4), STATE1(4) )
       !>
-      !>        C
-      !>        C     Check: compare the state computed directly above
-      !>        C     to one produced by SPKEZR.
-      !>        C
-      !>              OBSRVR = 'DSS-14'
+      !>C
+      !>C     Check: compare the state computed directly above
+      !>C     to one produced by SPKEZR.
+      !>C
+      !>      OBSRVR = 'DSS-14'
       !>
-      !>              CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
-      !>             .              OBSRVR, STATE2, LT2            )
+      !>      CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
+      !>     .              OBSRVR, STATE2, LT2            )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'State computed using SPKEZR: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                 ', TARGET
-      !>              WRITE (*,*) 'Observation time:       ', OBSTIM
-      !>              WRITE (*,*) 'Output reference frame: ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:  ', ABCORR
-      !>              WRITE (*,*) 'Observer:               ', OBSRVR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s): ', LT2
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'State computed using SPKEZR: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                 ', TARGET
+      !>      WRITE (*,*) 'Observation time:       ', OBSTIM
+      !>      WRITE (*,*) 'Output reference frame: ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:  ', ABCORR
+      !>      WRITE (*,*) 'Observer:               ', OBSRVR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s): ', LT2
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between last two '
-      !>             .//             'positions (km): ',
-      !>             .               VDIST ( STATE1, STATE2 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             '    (km/s): ',
-      !>             .               VDIST( STATE1(4), STATE2(4) )
+      !>      WRITE (*,FMT1) 'Distance between last two '
+      !>     .//             'positions (km): ',
+      !>     .               VDIST ( STATE1, STATE2 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             '    (km/s): ',
+      !>     .               VDIST( STATE1(4), STATE2(4) )
       !>
-      !>        C
-      !>        C     Finally, compute an observer-target state in
-      !>        C     a frame centered at the target. This state
-      !>        C     can be used to compute the sub-observer longitude.
-      !>        C     The reference frame is the Mars-fixed frame IAU_MARS.
-      !>        C
-      !>              TARGET = 'MARS'
-      !>              OUTREF = 'IAU_MARS'
+      !>C
+      !>C     Finally, compute an observer-target state in
+      !>C     a frame centered at the target. This state
+      !>C     can be used to compute the sub-observer longitude.
+      !>C     The reference frame is the Mars-fixed frame IAU_MARS.
+      !>C
+      !>      TARGET = 'MARS'
+      !>      OUTREF = 'IAU_MARS'
       !>
-      !>              REFLOC = 'TARGET'
+      !>      REFLOC = 'TARGET'
       !>
-      !>              CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
-      !>             .              ABCORR, OBSPOS, OBSCTR,
-      !>             .              OBSREF, STATE3, LT3            )
+      !>      CALL SPKCPO ( TARGET, ET,     OUTREF, REFLOC,
+      !>     .              ABCORR, OBSPOS, OBSCTR,
+      !>     .              OBSREF, STATE3, LT3            )
       !>
-      !>        C
-      !>        C     Central meridian longitude is the longitude of the
-      !>        C     observer relative to the target center, so we must
-      !>        C     negate the position portion of the state we just
-      !>        C     computed.
-      !>        C
-      !>              CALL VMINUS ( STATE3, OBSVEC )
+      !>C
+      !>C     Central meridian longitude is the longitude of the
+      !>C     observer relative to the target center, so we must
+      !>C     negate the position portion of the state we just
+      !>C     computed.
+      !>C
+      !>      CALL VMINUS ( STATE3, OBSVEC )
       !>
-      !>              CALL RECLAT ( OBSVEC, R, LON, LAT )
+      !>      CALL RECLAT ( OBSVEC, R, LON, LAT )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Target:                     ', TARGET
-      !>              WRITE (*,*) 'Observation time:           ', OBSTIM
-      !>              WRITE (*,*) 'Observer center:            ', OBSCTR
-      !>              WRITE (*,*) 'Observer frame:             ', OBSREF
-      !>              WRITE (*,*) 'Emission time:              ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:     ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:      ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT3
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Central meridian '
-      !>              WRITE (*,FMT1) 'longitude (deg):  ', LON*DPR()
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:     ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Target:                     ', TARGET
+      !>      WRITE (*,*) 'Observation time:           ', OBSTIM
+      !>      WRITE (*,*) 'Observer center:            ', OBSCTR
+      !>      WRITE (*,*) 'Observer frame:             ', OBSREF
+      !>      WRITE (*,*) 'Emission time:              ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:     ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:      ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT3
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Central meridian '
+      !>      WRITE (*,FMT1) 'longitude (deg):  ', LON*DPR()
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -27946,371 +27982,373 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     This program demonstrates the use of SPKCVT.
-      !>        C     Computations are performed using all three possible
-      !>        C     values of the output frame evaluation locus REFLOC:
-      !>        C
-      !>        C        'TARGET'
-      !>        C        'OBSERVER'
-      !>        C        'CENTER'
-      !>        C
-      !>        C     Several unrelated computations are performed in
-      !>        C     this program. In particular, computations
-      !>        C     involving a surface point on Mars are included
-      !>        C     simply to demonstrate use of the 'OBSERVER'
-      !>        C     option.
-      !>        C
-      !>              PROGRAM SPKCVT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>C
+      !>C     This program demonstrates the use of SPKCVT.
+      !>C     Computations are performed using all three possible
+      !>C     values of the output frame evaluation locus REFLOC:
+      !>C
+      !>C        'TARGET'
+      !>C        'OBSERVER'
+      !>C        'CENTER'
+      !>C
+      !>C     Several unrelated computations are performed in
+      !>C     this program. In particular, computations
+      !>C     involving a surface point on Mars are included
+      !>C     simply to demonstrate use of the 'OBSERVER'
+      !>C     option.
+      !>C
+      !>      PROGRAM SPKCVT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      VDIST
-      !>              DOUBLE PRECISION      VNORM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      VDIST
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         CAMERA
-      !>              PARAMETER           ( CAMERA = 'MGS_MOC_NA' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         CAMERA
+      !>      PARAMETER           ( CAMERA = 'MGS_MOC_NA' )
       !>
-      !>              CHARACTER*(*)         FMT0
-      !>              PARAMETER           ( FMT0   = '(A,3F20.8)'    )
+      !>      CHARACTER*(*)         FMT0
+      !>      PARAMETER           ( FMT0   = '(A,3F20.8)'    )
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkcvt_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkcvt_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .                    'YYYY MON DD HR:MN:SC.###### UTC' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .                    'YYYY MON DD HR:MN:SC.###### UTC' )
       !>
-      !>              CHARACTER*(*)         TIMFM2
-      !>              PARAMETER           ( TIMFM2 =
-      !>             .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
+      !>      CHARACTER*(*)         TIMFM2
+      !>      PARAMETER           ( TIMFM2 =
+      !>     .              'YYYY MON DD HR:MN:SC.###### TDB ::TDB' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               LOCLEN
-      !>              PARAMETER           ( LOCLEN = 25 )
+      !>      INTEGER               LOCLEN
+      !>      PARAMETER           ( LOCLEN = 25 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               MAXBND
-      !>              PARAMETER           ( MAXBND = 10 )
+      !>      INTEGER               MAXBND
+      !>      PARAMETER           ( MAXBND = 10 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 80 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 80 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(FRNMLN)    CAMREF
-      !>              CHARACTER*(TIMLEN)    EMITIM
-      !>              CHARACTER*(LOCLEN)    REFLOC
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    OUTREF
-      !>              CHARACTER*(SHPLEN)    SHAPE
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(BDNMLN)    TRGCTR
-      !>              CHARACTER*(FRNMLN)    TRGREF
-      !>              CHARACTER*(TIMLEN)    TRGTIM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(FRNMLN)    CAMREF
+      !>      CHARACTER*(TIMLEN)    EMITIM
+      !>      CHARACTER*(LOCLEN)    REFLOC
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    OUTREF
+      !>      CHARACTER*(SHPLEN)    SHAPE
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(BDNMLN)    TRGCTR
+      !>      CHARACTER*(FRNMLN)    TRGREF
+      !>      CHARACTER*(TIMLEN)    TRGTIM
       !>
-      !>              DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
-      !>              DOUBLE PRECISION      BSIGHT ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT0
-      !>              DOUBLE PRECISION      LT1
-      !>              DOUBLE PRECISION      LT2
-      !>              DOUBLE PRECISION      LT3
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      STATE0 ( 6 )
-      !>              DOUBLE PRECISION      STATE1 ( 6 )
-      !>              DOUBLE PRECISION      STATE2 ( 6 )
-      !>              DOUBLE PRECISION      STATE3 ( 6 )
-      !>              DOUBLE PRECISION      TRGEP2
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      TRGST2 ( 6 )
-      !>              DOUBLE PRECISION      TRGSTA ( 6 )
+      !>      DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
+      !>      DOUBLE PRECISION      BSIGHT ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT0
+      !>      DOUBLE PRECISION      LT1
+      !>      DOUBLE PRECISION      LT2
+      !>      DOUBLE PRECISION      LT3
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE1 ( 6 )
+      !>      DOUBLE PRECISION      STATE2 ( 6 )
+      !>      DOUBLE PRECISION      STATE3 ( 6 )
+      !>      DOUBLE PRECISION      TRGEP2
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      TRGST2 ( 6 )
+      !>      DOUBLE PRECISION      TRGSTA ( 6 )
       !>
-      !>              INTEGER               CAMID
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               CAMID
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the observer, target center, and target frame.
-      !>        C
-      !>              OBSRVR = 'MGS'
-      !>              TRGCTR = 'EARTH'
-      !>              TRGREF = 'ITRF93'
+      !>C
+      !>C     Set the observer, target center, and target frame.
+      !>C
+      !>      OBSRVR = 'MGS'
+      !>      TRGCTR = 'EARTH'
+      !>      TRGREF = 'ITRF93'
       !>
-      !>        C
-      !>        C     Set the state of DSS-14 relative to the earth's
-      !>        C     center at the J2000 epoch, expressed in the
-      !>        C     ITRF93 reference frame. Values come from the
-      !>        C     earth station SPK specified in the meta-kernel.
-      !>        C
-      !>        C     The velocity is non-zero due to tectonic
-      !>        C     plate motion.
-      !>        C
-      !>              TRGEPC    =  0.D0
+      !>C
+      !>C     Set the state of DSS-14 relative to the earth's
+      !>C     center at the J2000 epoch, expressed in the
+      !>C     ITRF93 reference frame. Values come from the
+      !>C     earth station SPK specified in the meta-kernel.
+      !>C
+      !>C     The velocity is non-zero due to tectonic
+      !>C     plate motion.
+      !>C
+      !>      TRGEPC    =  0.D0
       !>
-      !>              TRGSTA(1) =  -2353.6213656676991D0
-      !>              TRGSTA(2) =  -4641.3414911499403D0
-      !>              TRGSTA(3) =   3677.0523293197439D0
-      !>              TRGSTA(4) =     -0.00000000000057086D0
-      !>              TRGSTA(5) =      0.00000000000020549D0
-      !>              TRGSTA(6) =     -0.00000000000012171D0
+      !>      TRGSTA(1) =  -2353.6213656676991D0
+      !>      TRGSTA(2) =  -4641.3414911499403D0
+      !>      TRGSTA(3) =   3677.0523293197439D0
+      !>      TRGSTA(4) =     -0.00000000000057086D0
+      !>      TRGSTA(5) =      0.00000000000020549D0
+      !>      TRGSTA(6) =     -0.00000000000012171D0
       !>
-      !>        C
-      !>        C     Find the apparent state of the station relative
-      !>        C     to the spacecraft in the ITRF93 reference frame.
-      !>        C     Evaluate the earth's orientation, that is the
-      !>        C     orientation of the ITRF93 frame relative to the
-      !>        C     J2000 frame, at the epoch obtained by correcting
-      !>        C     the observation time for one-way light time. This
-      !>        C     correction is obtained by setting REFLOC to 'TARGET'.
-      !>        C
-      !>              OUTREF = 'ITRF93'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Find the apparent state of the station relative
+      !>C     to the spacecraft in the ITRF93 reference frame.
+      !>C     Evaluate the earth's orientation, that is the
+      !>C     orientation of the ITRF93 frame relative to the
+      !>C     J2000 frame, at the epoch obtained by correcting
+      !>C     the observation time for one-way light time. This
+      !>C     correction is obtained by setting REFLOC to 'TARGET'.
+      !>C
+      !>      OUTREF = 'ITRF93'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'TARGET'
+      !>      REFLOC = 'TARGET'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCVT ( TRGSTA, TRGEPC, TRGCTR, TRGREF,
-      !>             .              ET,     OUTREF, REFLOC, ABCORR,
-      !>             .              OBSRVR, STATE0, LT0            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCVT ( TRGSTA, TRGEPC, TRGCTR, TRGREF,
+      !>     .              ET,     OUTREF, REFLOC, ABCORR,
+      !>     .              OBSRVR, STATE0, LT0            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
-      !>              CALL TIMOUT ( TRGEPC, TIMFM2, TRGTIM )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
+      !>      CALL TIMOUT ( TRGEPC, TIMFM2, TRGTIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:                 ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:         ', OBSTIM
-      !>              WRITE (*,*) 'Target center:            ', TRGCTR
-      !>              WRITE (*,*) 'Target-center state time: ', TRGTIM
-      !>              WRITE (*,*) 'Target frame:             ', TRGREF
-      !>              WRITE (*,*) 'Emission time:            ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:   ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:    ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT0
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:                 ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:         ', OBSTIM
+      !>      WRITE (*,*) 'Target center:            ', TRGCTR
+      !>      WRITE (*,*) 'Target-center state time: ', TRGTIM
+      !>      WRITE (*,*) 'Target frame:             ', TRGREF
+      !>      WRITE (*,*) 'Emission time:            ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:   ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:    ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT0
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     Repeat the computation, this time evaluating the
-      !>        C     earth's orientation at the epoch obtained by
-      !>        C     subtracting from the observation time the one way
-      !>        C     light time from the earth's center.
-      !>        C
-      !>        C     This is equivalent to looking up the observer-target
-      !>        C     state using SPKEZR.
-      !>        C
-      !>              REFLOC = 'CENTER'
+      !>C
+      !>C     Repeat the computation, this time evaluating the
+      !>C     earth's orientation at the epoch obtained by
+      !>C     subtracting from the observation time the one way
+      !>C     light time from the earth's center.
+      !>C
+      !>C     This is equivalent to looking up the observer-target
+      !>C     state using SPKEZR.
+      !>C
+      !>      REFLOC = 'CENTER'
       !>
-      !>              CALL SPKCVT ( TRGSTA, TRGEPC, TRGCTR, TRGREF,
-      !>             .              ET,     OUTREF, REFLOC, ABCORR,
-      !>             .              OBSRVR, STATE1, LT1            )
+      !>      CALL SPKCVT ( TRGSTA, TRGEPC, TRGCTR, TRGREF,
+      !>     .              ET,     OUTREF, REFLOC, ABCORR,
+      !>     .              OBSRVR, STATE1, LT1            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:                 ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:         ', OBSTIM
-      !>              WRITE (*,*) 'Target center:            ', TRGCTR
-      !>              WRITE (*,*) 'Target-center state time: ', TRGTIM
-      !>              WRITE (*,*) 'Target frame:             ', TRGREF
-      !>              WRITE (*,*) 'Emission time:            ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:   ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:    ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT1
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:                 ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:         ', OBSTIM
+      !>      WRITE (*,*) 'Target center:            ', TRGCTR
+      !>      WRITE (*,*) 'Target-center state time: ', TRGTIM
+      !>      WRITE (*,*) 'Target frame:             ', TRGREF
+      !>      WRITE (*,*) 'Emission time:            ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:   ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:    ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT1
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between above positions '
-      !>             .//             '(km):    ',   VDIST( STATE0, STATE1 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             ' (km/s):    ',
-      !>             .               VDIST( STATE0(4), STATE1(4) )
+      !>      WRITE (*,FMT1) 'Distance between above positions '
+      !>     .//             '(km):    ',   VDIST( STATE0, STATE1 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             ' (km/s):    ',
+      !>     .               VDIST( STATE0(4), STATE1(4) )
       !>
-      !>        C
-      !>        C     Check: compare the state computed directly above
-      !>        C     to one produced by SPKEZR.
-      !>        C
-      !>              TARGET = 'DSS-14'
+      !>C
+      !>C     Check: compare the state computed directly above
+      !>C     to one produced by SPKEZR.
+      !>C
+      !>      TARGET = 'DSS-14'
       !>
-      !>              CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
-      !>             .              OBSRVR, STATE2, LT2            )
+      !>      CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
+      !>     .              OBSRVR, STATE2, LT2            )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'State computed using SPKEZR: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:               ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:       ', OBSTIM
-      !>              WRITE (*,*) 'Target:                 ', TARGET
-      !>              WRITE (*,*) 'Output reference frame: ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:  ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s): ', LT2
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'State computed using SPKEZR: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:               ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:       ', OBSTIM
+      !>      WRITE (*,*) 'Target:                 ', TARGET
+      !>      WRITE (*,*) 'Output reference frame: ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:  ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s): ', LT2
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between last two '
-      !>             .//             'positions (km): ',
-      !>             .               VDIST ( STATE1, STATE2 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             '    (km/s): ',
-      !>             .               VDIST( STATE1(4), STATE2(4) )
+      !>      WRITE (*,FMT1) 'Distance between last two '
+      !>     .//             'positions (km): ',
+      !>     .               VDIST ( STATE1, STATE2 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             '    (km/s): ',
+      !>     .               VDIST( STATE1(4), STATE2(4) )
       !>
-      !>        C
-      !>        C     Finally, compute an observer-target state in
-      !>        C     a frame centered at the observer.
-      !>        C     The reference frame will be that of the
-      !>        C     MGS MOC NA camera.
-      !>        C
-      !>        C     In this case we'll use as the target the surface
-      !>        C     intercept on Mars of the camera boresight. This
-      !>        C     allows us to easily verify the correctness of
-      !>        C     the results returned by SPKCVT.
-      !>        C
-      !>        C     Get camera frame and FOV parameters. We'll need
-      !>        C     the camera ID code first.
-      !>        C
-      !>              CALL BODN2C ( CAMERA, CAMID, FOUND )
+      !>C
+      !>C     Finally, compute an observer-target state in
+      !>C     a frame centered at the observer.
+      !>C     The reference frame will be that of the
+      !>C     MGS MOC NA camera.
+      !>C
+      !>C     In this case we'll use as the target the surface
+      !>C     intercept on Mars of the camera boresight. This
+      !>C     allows us to easily verify the correctness of
+      !>C     the results returned by SPKCVT.
+      !>C
+      !>C     Get camera frame and FOV parameters. We'll need
+      !>C     the camera ID code first.
+      !>C
+      !>      CALL BODN2C ( CAMERA, CAMID, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 WRITE (*,*) 'Camera name could not be mapped '
-      !>             .   //          'to an ID code.'
-      !>                 STOP
+      !>         WRITE (*,*) 'Camera name could not be mapped '
+      !>     .   //          'to an ID code.'
+      !>         STOP
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     GETFOV will return the name of the camera-fixed frame
-      !>        C     in the string CAMREF, the camera boresight vector in
-      !>        C     the array BSIGHT, and the FOV corner vectors in the
-      !>        C     array BOUNDS. All we're going to use are the camera
-      !>        C     frame name and camera boresight.
-      !>        C
-      !>              CALL GETFOV ( CAMID,  MAXBND, SHAPE,  CAMREF,
-      !>             .              BSIGHT, N,      BOUNDS         )
+      !>C
+      !>C     GETFOV will return the name of the camera-fixed frame
+      !>C     in the string CAMREF, the camera boresight vector in
+      !>C     the array BSIGHT, and the FOV corner vectors in the
+      !>C     array BOUNDS. All we're going to use are the camera
+      !>C     frame name and camera boresight.
+      !>C
+      !>      CALL GETFOV ( CAMID,  MAXBND, SHAPE,  CAMREF,
+      !>     .              BSIGHT, N,      BOUNDS         )
       !>
-      !>        C
-      !>        C     Find the camera boresight surface intercept.
-      !>        C
-      !>              TRGCTR = 'MARS'
-      !>              TRGREF = 'IAU_MARS'
+      !>C
+      !>C     Find the camera boresight surface intercept.
+      !>C
+      !>      TRGCTR = 'MARS'
+      !>      TRGREF = 'IAU_MARS'
       !>
-      !>              CALL SINCPT ( 'ELLIPSOID', TRGCTR, ET,     TRGREF,
-      !>             .              ABCORR,      OBSRVR, CAMREF, BSIGHT,
-      !>             .              SPOINT,      TRGEP2, SRFVEC, FOUND  )
+      !>      CALL SINCPT ( 'ELLIPSOID', TRGCTR, ET,     TRGREF,
+      !>     .              ABCORR,      OBSRVR, CAMREF, BSIGHT,
+      !>     .              SPOINT,      TRGEP2, SRFVEC, FOUND  )
       !>
-      !>        C
-      !>        C     Set the position component of the state vector
-      !>        C     TRGST2 to SPOINT.
-      !>        C
-      !>              CALL VEQU ( SPOINT, TRGST2 )
+      !>C
+      !>C     Set the position component of the state vector
+      !>C     TRGST2 to SPOINT.
+      !>C
+      !>      CALL VEQU ( SPOINT, TRGST2 )
       !>
-      !>        C
-      !>        C     Set the velocity of the target state to zero.
-      !>        C     Since the velocity is zero, we can pick any value
-      !>        C     as the target epoch; we choose 0 seconds past
-      !>        C     J2000 TDB.
-      !>        C
-      !>              CALL CLEARD ( 3, TRGST2(4) )
+      !>C
+      !>C     Set the velocity of the target state to zero.
+      !>C     Since the velocity is zero, we can pick any value
+      !>C     as the target epoch; we choose 0 seconds past
+      !>C     J2000 TDB.
+      !>C
+      !>      CALL CLEARD ( 3, TRGST2(4) )
       !>
-      !>              TRGEPC = 0.D0
-      !>              OUTREF = CAMREF
+      !>      TRGEPC = 0.D0
+      !>      OUTREF = CAMREF
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>              CALL SPKCVT ( TRGST2, TRGEPC, TRGCTR, TRGREF,
-      !>             .              ET,     OUTREF, REFLOC, ABCORR,
-      !>             .              OBSRVR, STATE3, LT3             )
+      !>      CALL SPKCVT ( TRGST2, TRGEPC, TRGCTR, TRGREF,
+      !>     .              ET,     OUTREF, REFLOC, ABCORR,
+      !>     .              OBSRVR, STATE3, LT3             )
       !>
-      !>        C
-      !>        C     Convert the emission time and the target state
-      !>        C     evaluation epoch to strings for output.
-      !>        C
-      !>              CALL TIMOUT ( ET - LT3, TIMFMT, EMITIM )
-      !>              CALL TIMOUT ( TRGEPC,   TIMFM2, TRGTIM )
+      !>C
+      !>C     Convert the emission time and the target state
+      !>C     evaluation epoch to strings for output.
+      !>C
+      !>      CALL TIMOUT ( ET - LT3, TIMFMT, EMITIM )
+      !>      CALL TIMOUT ( TRGEPC,   TIMFM2, TRGTIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:                 ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:         ', OBSTIM
-      !>              WRITE (*,*) 'Target center:            ', TRGCTR
-      !>              WRITE (*,*) 'Target-center state time: ', TRGTIM
-      !>              WRITE (*,*) 'Target frame:             ', TRGREF
-      !>              WRITE (*,*) 'Emission time:            ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:   ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:    ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s): ', LT3
-      !>              WRITE (*,FMT1) 'Target range from SINCPT (km): '
-      !>             .//             '           ',    VNORM( SRFVEC )
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:                 ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:         ', OBSTIM
+      !>      WRITE (*,*) 'Target center:            ', TRGCTR
+      !>      WRITE (*,*) 'Target-center state time: ', TRGTIM
+      !>      WRITE (*,*) 'Target frame:             ', TRGREF
+      !>      WRITE (*,*) 'Emission time:            ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:   ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:    ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s): ', LT3
+      !>      WRITE (*,FMT1) 'Target range from SINCPT (km): '
+      !>     .//             '           ',    VNORM( SRFVEC )
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -29212,344 +29250,346 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Program: SPKCPT_EX1
-      !>        C
-      !>        C     This program demonstrates the use of SPKCPT.
-      !>        C     Computations are performed using all three possible
-      !>        C     values of the output frame evaluation locus REFLOC:
-      !>        C
-      !>        C        'TARGET'
-      !>        C        'OBSERVER'
-      !>        C        'CENTER'
-      !>        C
-      !>        C     Several unrelated computations are performed in
-      !>        C     this program. In particular, computations
-      !>        C     involving a surface point on Mars are included
-      !>        C     simply to demonstrate use of the 'OBSERVER'
-      !>        C     option.
-      !>        C
+      !>```fortran
+      !>C
+      !>C     Program: SPKCPT_EX1
+      !>C
+      !>C     This program demonstrates the use of SPKCPT.
+      !>C     Computations are performed using all three possible
+      !>C     values of the output frame evaluation locus REFLOC:
+      !>C
+      !>C        'TARGET'
+      !>C        'OBSERVER'
+      !>C        'CENTER'
+      !>C
+      !>C     Several unrelated computations are performed in
+      !>C     this program. In particular, computations
+      !>C     involving a surface point on Mars are included
+      !>C     simply to demonstrate use of the 'OBSERVER'
+      !>C     option.
+      !>C
       !>
-      !>              PROGRAM SPKCPT_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      VDIST
-      !>              DOUBLE PRECISION      VNORM
+      !>      PROGRAM SPKCPT_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      VDIST
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         CAMERA
-      !>              PARAMETER           ( CAMERA = 'MGS_MOC_NA' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         CAMERA
+      !>      PARAMETER           ( CAMERA = 'MGS_MOC_NA' )
       !>
-      !>              CHARACTER*(*)         FMT0
-      !>              PARAMETER           ( FMT0   = '(A,3F20.8)' )
+      !>      CHARACTER*(*)         FMT0
+      !>      PARAMETER           ( FMT0   = '(A,3F20.8)' )
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A, F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'spkcpt_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'spkcpt_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .                    'YYYY MON DD HR:MN:SC.###### UTC' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .                    'YYYY MON DD HR:MN:SC.###### UTC' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               LOCLEN
-      !>              PARAMETER           ( LOCLEN = 25 )
+      !>      INTEGER               LOCLEN
+      !>      PARAMETER           ( LOCLEN = 25 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               MAXBND
-      !>              PARAMETER           ( MAXBND = 10 )
+      !>      INTEGER               MAXBND
+      !>      PARAMETER           ( MAXBND = 10 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 80 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 80 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(FRNMLN)    CAMREF
-      !>              CHARACTER*(TIMLEN)    EMITIM
-      !>              CHARACTER*(LOCLEN)    REFLOC
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    OUTREF
-      !>              CHARACTER*(SHPLEN)    SHAPE
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(BDNMLN)    TRGCTR
-      !>              CHARACTER*(FRNMLN)    TRGREF
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(FRNMLN)    CAMREF
+      !>      CHARACTER*(TIMLEN)    EMITIM
+      !>      CHARACTER*(LOCLEN)    REFLOC
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    OUTREF
+      !>      CHARACTER*(SHPLEN)    SHAPE
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(BDNMLN)    TRGCTR
+      !>      CHARACTER*(FRNMLN)    TRGREF
       !>
-      !>              DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
-      !>              DOUBLE PRECISION      BSIGHT ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT0
-      !>              DOUBLE PRECISION      LT1
-      !>              DOUBLE PRECISION      LT2
-      !>              DOUBLE PRECISION      LT3
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      STATE0 ( 6 )
-      !>              DOUBLE PRECISION      STATE1 ( 6 )
-      !>              DOUBLE PRECISION      STATE2 ( 6 )
-      !>              DOUBLE PRECISION      STATE3 ( 6 )
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      TRGPOS ( 3 )
+      !>      DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
+      !>      DOUBLE PRECISION      BSIGHT ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT0
+      !>      DOUBLE PRECISION      LT1
+      !>      DOUBLE PRECISION      LT2
+      !>      DOUBLE PRECISION      LT3
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      STATE0 ( 6 )
+      !>      DOUBLE PRECISION      STATE1 ( 6 )
+      !>      DOUBLE PRECISION      STATE2 ( 6 )
+      !>      DOUBLE PRECISION      STATE3 ( 6 )
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      TRGPOS ( 3 )
       !>
-      !>              INTEGER               CAMID
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               CAMID
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the observer, target center, target frame, and
-      !>        C     target state relative to its center.
-      !>        C
-      !>              OBSRVR = 'MGS'
-      !>              TRGCTR = 'EARTH'
-      !>              TRGREF = 'ITRF93'
+      !>C
+      !>C     Set the observer, target center, target frame, and
+      !>C     target state relative to its center.
+      !>C
+      !>      OBSRVR = 'MGS'
+      !>      TRGCTR = 'EARTH'
+      !>      TRGREF = 'ITRF93'
       !>
-      !>        C
-      !>        C     Set the position of DSS-14 relative to the earth's
-      !>        C     center at the J2000 epoch, expressed in the
-      !>        C     ITRF93 reference frame. Values come from the
-      !>        C     earth station SPK specified in the meta-kernel.
-      !>        C
-      !>        C     The actual station velocity is non-zero due
-      !>        C     to tectonic plate motion; we ignore the motion
-      !>        C     in this example. See the routine SPKCVT for an
-      !>        C     example in which the plate motion is accounted for.
-      !>        C
-      !>              TRGPOS(1) =  -2353.6213656676991D0
-      !>              TRGPOS(2) =  -4641.3414911499403D0
-      !>              TRGPOS(3) =   3677.0523293197439D0
+      !>C
+      !>C     Set the position of DSS-14 relative to the earth's
+      !>C     center at the J2000 epoch, expressed in the
+      !>C     ITRF93 reference frame. Values come from the
+      !>C     earth station SPK specified in the meta-kernel.
+      !>C
+      !>C     The actual station velocity is non-zero due
+      !>C     to tectonic plate motion; we ignore the motion
+      !>C     in this example. See the routine SPKCVT for an
+      !>C     example in which the plate motion is accounted for.
+      !>C
+      !>      TRGPOS(1) =  -2353.6213656676991D0
+      !>      TRGPOS(2) =  -4641.3414911499403D0
+      !>      TRGPOS(3) =   3677.0523293197439D0
       !>
-      !>        C
-      !>        C     Find the apparent state of the station relative
-      !>        C     to the spacecraft in the ITRF93 reference frame.
-      !>        C     Evaluate the earth's orientation, that is the
-      !>        C     orientation of the ITRF93 frame relative to the
-      !>        C     J2000 frame, at the epoch obtained by correcting
-      !>        C     the observation time for one-way light time. This
-      !>        C     correction is obtained by setting REFLOC to 'TARGET'.
-      !>        C
-      !>              OUTREF = 'ITRF93'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Find the apparent state of the station relative
+      !>C     to the spacecraft in the ITRF93 reference frame.
+      !>C     Evaluate the earth's orientation, that is the
+      !>C     orientation of the ITRF93 frame relative to the
+      !>C     J2000 frame, at the epoch obtained by correcting
+      !>C     the observation time for one-way light time. This
+      !>C     correction is obtained by setting REFLOC to 'TARGET'.
+      !>C
+      !>      OUTREF = 'ITRF93'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              REFLOC = 'TARGET'
+      !>      REFLOC = 'TARGET'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKCPT ( TRGPOS, TRGCTR, TRGREF,
-      !>             .              ET,     OUTREF, REFLOC, ABCORR,
-      !>             .              OBSRVR, STATE0, LT0            )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKCPT ( TRGPOS, TRGCTR, TRGREF,
+      !>     .              ET,     OUTREF, REFLOC, ABCORR,
+      !>     .              OBSRVR, STATE0, LT0            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT0, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:                 ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:         ', OBSTIM
-      !>              WRITE (*,*) 'Target center:            ', TRGCTR
-      !>              WRITE (*,*) 'Target frame:             ', TRGREF
-      !>              WRITE (*,*) 'Emission time:            ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:   ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:    ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT0
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:                 ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:         ', OBSTIM
+      !>      WRITE (*,*) 'Target center:            ', TRGCTR
+      !>      WRITE (*,*) 'Target frame:             ', TRGREF
+      !>      WRITE (*,*) 'Emission time:            ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:   ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:    ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE0(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT0
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     Repeat the computation, this time evaluating the
-      !>        C     earth's orientation at the epoch obtained by
-      !>        C     subtracting from the observation time the one way
-      !>        C     light time from the earth's center.
-      !>        C
-      !>        C     This is equivalent to looking up the observer-target
-      !>        C     state using SPKEZR.
-      !>        C
-      !>              REFLOC = 'CENTER'
+      !>C
+      !>C     Repeat the computation, this time evaluating the
+      !>C     earth's orientation at the epoch obtained by
+      !>C     subtracting from the observation time the one way
+      !>C     light time from the earth's center.
+      !>C
+      !>C     This is equivalent to looking up the observer-target
+      !>C     state using SPKEZR.
+      !>C
+      !>      REFLOC = 'CENTER'
       !>
-      !>              CALL SPKCPT ( TRGPOS, TRGCTR, TRGREF,
-      !>             .              ET,     OUTREF, REFLOC, ABCORR,
-      !>             .              OBSRVR, STATE1, LT1            )
+      !>      CALL SPKCPT ( TRGPOS, TRGCTR, TRGREF,
+      !>     .              ET,     OUTREF, REFLOC, ABCORR,
+      !>     .              OBSRVR, STATE1, LT1            )
       !>
-      !>        C
-      !>        C     Display the computed state and light time.
-      !>        C
-      !>              CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
+      !>C
+      !>C     Display the computed state and light time.
+      !>C
+      !>      CALL TIMOUT ( ET-LT1, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:                 ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:         ', OBSTIM
-      !>              WRITE (*,*) 'Target center:            ', TRGCTR
-      !>              WRITE (*,*) 'Target frame:             ', TRGREF
-      !>              WRITE (*,*) 'Emission time:            ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:   ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:    ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s):   ', LT1
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:                 ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:         ', OBSTIM
+      !>      WRITE (*,*) 'Target center:            ', TRGCTR
+      !>      WRITE (*,*) 'Target frame:             ', TRGREF
+      !>      WRITE (*,*) 'Emission time:            ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:   ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:    ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE1(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s):   ', LT1
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between above positions '
-      !>             .//             '(km):    ',   VDIST( STATE0, STATE1 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             ' (km/s):    ',
-      !>             .               VDIST( STATE0(4), STATE1(4) )
+      !>      WRITE (*,FMT1) 'Distance between above positions '
+      !>     .//             '(km):    ',   VDIST( STATE0, STATE1 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             ' (km/s):    ',
+      !>     .               VDIST( STATE0(4), STATE1(4) )
       !>
-      !>        C
-      !>        C     Check: compare the state computed directly above
-      !>        C     to one produced by SPKEZR.
-      !>        C
-      !>              TARGET = 'DSS-14'
+      !>C
+      !>C     Check: compare the state computed directly above
+      !>C     to one produced by SPKEZR.
+      !>C
+      !>      TARGET = 'DSS-14'
       !>
-      !>              CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
-      !>             .              OBSRVR, STATE2, LT2            )
+      !>      CALL SPKEZR ( TARGET, ET,     OUTREF, ABCORR,
+      !>     .              OBSRVR, STATE2, LT2            )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'State computed using SPKEZR: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:               ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:       ', OBSTIM
-      !>              WRITE (*,*) 'Target:                 ', TARGET
-      !>              WRITE (*,*) 'Output reference frame: ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:  ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s): ', LT2
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'State computed using SPKEZR: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:               ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:       ', OBSTIM
+      !>      WRITE (*,*) 'Target:                 ', TARGET
+      !>      WRITE (*,*) 'Output reference frame: ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:  ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE2(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s): ', LT2
+      !>      WRITE (*,*) ' '
       !>
-      !>              WRITE (*,FMT1) 'Distance between last two '
-      !>             .//             'positions (km): ',
-      !>             .               VDIST ( STATE1, STATE2 )
-      !>              WRITE (*,FMT1) 'Velocity difference magnitude '
-      !>             .//             '    (km/s): ',
-      !>             .               VDIST( STATE1(4), STATE2(4) )
+      !>      WRITE (*,FMT1) 'Distance between last two '
+      !>     .//             'positions (km): ',
+      !>     .               VDIST ( STATE1, STATE2 )
+      !>      WRITE (*,FMT1) 'Velocity difference magnitude '
+      !>     .//             '    (km/s): ',
+      !>     .               VDIST( STATE1(4), STATE2(4) )
       !>
-      !>        C
-      !>        C     Finally, compute an observer-target state in
-      !>        C     a frame centered at the observer.
-      !>        C     The reference frame will be that of the
-      !>        C     MGS MOC NA camera.
-      !>        C
-      !>        C     In this case we'll use as the target the surface
-      !>        C     intercept on Mars of the camera boresight. This
-      !>        C     allows us to easily verify the correctness of
-      !>        C     the results returned by SPKCPT.
-      !>        C
-      !>        C     Get camera frame and FOV parameters. We'll need
-      !>        C     the camera ID code first.
-      !>        C
-      !>              CALL BODN2C ( CAMERA, CAMID, FOUND )
+      !>C
+      !>C     Finally, compute an observer-target state in
+      !>C     a frame centered at the observer.
+      !>C     The reference frame will be that of the
+      !>C     MGS MOC NA camera.
+      !>C
+      !>C     In this case we'll use as the target the surface
+      !>C     intercept on Mars of the camera boresight. This
+      !>C     allows us to easily verify the correctness of
+      !>C     the results returned by SPKCPT.
+      !>C
+      !>C     Get camera frame and FOV parameters. We'll need
+      !>C     the camera ID code first.
+      !>C
+      !>      CALL BODN2C ( CAMERA, CAMID, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 WRITE (*,*) 'Camera name could not be mapped '
-      !>             .   //          'to an ID code.'
-      !>                 STOP
+      !>         WRITE (*,*) 'Camera name could not be mapped '
+      !>     .   //          'to an ID code.'
+      !>         STOP
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     GETFOV will return the name of the camera-fixed frame
-      !>        C     in the string CAMREF, the camera boresight vector in
-      !>        C     the array BSIGHT, and the FOV corner vectors in the
-      !>        C     array BOUNDS. All we're going to use are the camera
-      !>        C     frame name and camera boresight.
-      !>        C
-      !>              CALL GETFOV ( CAMID,  MAXBND, SHAPE,  CAMREF,
-      !>             .              BSIGHT, N,      BOUNDS         )
+      !>C
+      !>C     GETFOV will return the name of the camera-fixed frame
+      !>C     in the string CAMREF, the camera boresight vector in
+      !>C     the array BSIGHT, and the FOV corner vectors in the
+      !>C     array BOUNDS. All we're going to use are the camera
+      !>C     frame name and camera boresight.
+      !>C
+      !>      CALL GETFOV ( CAMID,  MAXBND, SHAPE,  CAMREF,
+      !>     .              BSIGHT, N,      BOUNDS         )
       !>
-      !>        C
-      !>        C     Find the camera boresight surface intercept.
-      !>        C
-      !>              TRGCTR = 'MARS'
-      !>              TRGREF = 'IAU_MARS'
+      !>C
+      !>C     Find the camera boresight surface intercept.
+      !>C
+      !>      TRGCTR = 'MARS'
+      !>      TRGREF = 'IAU_MARS'
       !>
-      !>              CALL SINCPT ( 'ELLIPSOID', TRGCTR, ET,     TRGREF,
-      !>             .              ABCORR,      OBSRVR, CAMREF, BSIGHT,
-      !>             .              SPOINT,      TRGEPC, SRFVEC, FOUND  )
+      !>      CALL SINCPT ( 'ELLIPSOID', TRGCTR, ET,     TRGREF,
+      !>     .              ABCORR,      OBSRVR, CAMREF, BSIGHT,
+      !>     .              SPOINT,      TRGEPC, SRFVEC, FOUND  )
       !>
-      !>              OUTREF = CAMREF
+      !>      OUTREF = CAMREF
       !>
-      !>              REFLOC = 'OBSERVER'
+      !>      REFLOC = 'OBSERVER'
       !>
-      !>              CALL SPKCPT ( SPOINT, TRGCTR, TRGREF,
-      !>             .              ET,     OUTREF, REFLOC, ABCORR,
-      !>             .              OBSRVR, STATE3, LT3             )
+      !>      CALL SPKCPT ( SPOINT, TRGCTR, TRGREF,
+      !>     .              ET,     OUTREF, REFLOC, ABCORR,
+      !>     .              OBSRVR, STATE3, LT3             )
       !>
-      !>        C
-      !>        C     Convert the emission time and the target state
-      !>        C     evaluation epoch to strings for output.
-      !>        C
-      !>              CALL TIMOUT ( ET - LT3, TIMFMT, EMITIM )
+      !>C
+      !>C     Convert the emission time and the target state
+      !>C     evaluation epoch to strings for output.
+      !>C
+      !>      CALL TIMOUT ( ET - LT3, TIMFMT, EMITIM )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:                 ', OBSRVR
-      !>              WRITE (*,*) 'Observation time:         ', OBSTIM
-      !>              WRITE (*,*) 'Target center:            ', TRGCTR
-      !>              WRITE (*,*) 'Target frame:             ', TRGREF
-      !>              WRITE (*,*) 'Emission time:            ', EMITIM
-      !>              WRITE (*,*) 'Output reference frame:   ', OUTREF
-      !>              WRITE (*,*) 'Aberration correction:    ', ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer-target position (km):   '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
-      !>              WRITE (*,*) 'Observer-target velocity (km/s): '
-      !>              WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
-      !>              WRITE (*,FMT1) 'Light time (s): ', LT3
-      !>              WRITE (*,FMT1) 'Target range from SINCPT (km): '
-      !>             .//             '           ',    VNORM( SRFVEC )
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Frame evaluation locus:   ', REFLOC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:                 ', OBSRVR
+      !>      WRITE (*,*) 'Observation time:         ', OBSTIM
+      !>      WRITE (*,*) 'Target center:            ', TRGCTR
+      !>      WRITE (*,*) 'Target frame:             ', TRGREF
+      !>      WRITE (*,*) 'Emission time:            ', EMITIM
+      !>      WRITE (*,*) 'Output reference frame:   ', OUTREF
+      !>      WRITE (*,*) 'Aberration correction:    ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer-target position (km):   '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 1, 3 )
+      !>      WRITE (*,*) 'Observer-target velocity (km/s): '
+      !>      WRITE (*,FMT0) '   ', ( STATE3(I), I = 4, 6 )
+      !>      WRITE (*,FMT1) 'Light time (s): ', LT3
+      !>      WRITE (*,FMT1) 'Target range from SINCPT (km): '
+      !>     .//             '           ',    VNORM( SRFVEC )
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

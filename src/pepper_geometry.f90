@@ -2448,176 +2448,178 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM AZLCPO_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM AZLCPO_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(A,F20.8)'     )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(A,F20.8)'     )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'azlcpo_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'azlcpo_ex1.tm' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 40 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 40 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    OBS
-      !>              CHARACTER*(BDNMLN)    OBSCTR
-      !>              CHARACTER*(FRNMLN)    OBSREF
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(STRLEN)    METHOD
-      !>              CHARACTER*(FRNMLN)    REF
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    OBS
+      !>      CHARACTER*(BDNMLN)    OBSCTR
+      !>      CHARACTER*(FRNMLN)    OBSREF
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(STRLEN)    METHOD
+      !>      CHARACTER*(FRNMLN)    REF
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      AZ
-      !>              DOUBLE PRECISION      AZLSTA ( 6    )
-      !>              DOUBLE PRECISION      AZLVEL ( 3    )
-      !>              DOUBLE PRECISION      EL
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6    )
-      !>              DOUBLE PRECISION      OBSPOS ( 3    )
-      !>              DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      AZ
+      !>      DOUBLE PRECISION      AZLSTA ( 6    )
+      !>      DOUBLE PRECISION      AZLVEL ( 3    )
+      !>      DOUBLE PRECISION      EL
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6    )
+      !>      DOUBLE PRECISION      OBSPOS ( 3    )
+      !>      DOUBLE PRECISION      R
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               AZCCW
-      !>              LOGICAL               ELPLSZ
+      !>      LOGICAL               AZCCW
+      !>      LOGICAL               ELPLSZ
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 Jan 01 00:00:00 TDB'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 Jan 01 00:00:00 TDB'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the method, target, center of motion of the observer,
-      !>        C     frame of observer position, and aberration corrections.
-      !>        C
-      !>              METHOD = 'ELLIPSOID'
-      !>              TARGET = 'VENUS'
-      !>              OBSCTR = 'EARTH'
-      !>              OBSREF = 'ITRF93'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Set the method, target, center of motion of the observer,
+      !>C     frame of observer position, and aberration corrections.
+      !>C
+      !>      METHOD = 'ELLIPSOID'
+      !>      TARGET = 'VENUS'
+      !>      OBSCTR = 'EARTH'
+      !>      OBSREF = 'ITRF93'
+      !>      ABCORR = 'CN+S'
       !>
-      !>        C
-      !>        C     Set the position of DSS-14 relative to the earth's
-      !>        C     center at the observation epoch, expressed in the
-      !>        C     ITRF93 reference frame. Values come from the
-      !>        C     earth station SPK specified in the meta-kernel.
-      !>        C
-      !>        C     The actual station velocity is non-zero due
-      !>        C     to tectonic plate motion; we ignore the motion
-      !>        C     in this example.
-      !>        C
-      !>              OBSPOS(1) =  -2353.621419700D0
-      !>              OBSPOS(2) =  -4641.341471700D0
-      !>              OBSPOS(3) =   3677.052317800D0
+      !>C
+      !>C     Set the position of DSS-14 relative to the earth's
+      !>C     center at the observation epoch, expressed in the
+      !>C     ITRF93 reference frame. Values come from the
+      !>C     earth station SPK specified in the meta-kernel.
+      !>C
+      !>C     The actual station velocity is non-zero due
+      !>C     to tectonic plate motion; we ignore the motion
+      !>C     in this example.
+      !>C
+      !>      OBSPOS(1) =  -2353.621419700D0
+      !>      OBSPOS(2) =  -4641.341471700D0
+      !>      OBSPOS(3) =   3677.052317800D0
       !>
-      !>        C
-      !>        C     We want the azimuth/elevation coordinates to be measured
-      !>        C     with the azimuth increasing clockwise and the
-      !>        C     elevation positive towards +Z axis of the local
-      !>        C     topocentric reference frame
-      !>        C
-      !>              AZCCW  = .FALSE.
-      !>              ELPLSZ = .TRUE.
+      !>C
+      !>C     We want the azimuth/elevation coordinates to be measured
+      !>C     with the azimuth increasing clockwise and the
+      !>C     elevation positive towards +Z axis of the local
+      !>C     topocentric reference frame
+      !>C
+      !>      AZCCW  = .FALSE.
+      !>      ELPLSZ = .TRUE.
       !>
-      !>              CALL AZLCPO ( METHOD, TARGET, ET,     ABCORR,
-      !>             .              AZCCW,  ELPLSZ, OBSPOS, OBSCTR,
-      !>             .              OBSREF, AZLSTA, LT              )
+      !>      CALL AZLCPO ( METHOD, TARGET, ET,     ABCORR,
+      !>     .              AZCCW,  ELPLSZ, OBSPOS, OBSCTR,
+      !>     .              OBSREF, AZLSTA, LT              )
       !>
-      !>        C
-      !>        C     In order to check the results obtained using AZLCPO
-      !>        C     we are going to compute the same azimuth/elevation state
-      !>        C     using the position of DSS-14 and its local topocentric
-      !>        C     reference frame 'DSS-14_TOPO' from the kernel pool.
-      !>        C
-      !>              OBS    = 'DSS-14'
-      !>              REF    = 'DSS-14_TOPO'
+      !>C
+      !>C     In order to check the results obtained using AZLCPO
+      !>C     we are going to compute the same azimuth/elevation state
+      !>C     using the position of DSS-14 and its local topocentric
+      !>C     reference frame 'DSS-14_TOPO' from the kernel pool.
+      !>C
+      !>      OBS    = 'DSS-14'
+      !>      REF    = 'DSS-14_TOPO'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKEZR ( TARGET, ET, REF, ABCORR, OBS,
-      !>             .              STATE,  LT                   )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKEZR ( TARGET, ET, REF, ABCORR, OBS,
+      !>     .              STATE,  LT                   )
       !>
-      !>        C
-      !>        C     Convert the position to azimuth/elevation coordinates.
-      !>        C
-      !>              CALL RECAZL ( STATE, AZCCW, ELPLSZ, R, AZ, EL )
+      !>C
+      !>C     Convert the position to azimuth/elevation coordinates.
+      !>C
+      !>      CALL RECAZL ( STATE, AZCCW, ELPLSZ, R, AZ, EL )
       !>
-      !>        C
-      !>        C     Convert velocity to azimuth/elevation coordinates.
-      !>        C
-      !>              CALL DAZLDR ( STATE(1), STATE(2), STATE(3),
-      !>             .              AZCCW,    ELPLSZ,   JACOBI   )
+      !>C
+      !>C     Convert velocity to azimuth/elevation coordinates.
+      !>C
+      !>      CALL DAZLDR ( STATE(1), STATE(2), STATE(3),
+      !>     .              AZCCW,    ELPLSZ,   JACOBI   )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), AZLVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), AZLVEL )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'AZ/EL coordinates (from AZLCPO):'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   Range     (km)         = ', AZLSTA(1)
-      !>              WRITE(*,FMT1) '   Azimuth   (deg)        = ', AZLSTA(2)
-      !>             .                                            * DPR()
-      !>              WRITE(*,FMT1) '   Elevation (deg)        = ', AZLSTA(3)
-      !>             .                                            * DPR()
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'AZ/EL coordinates (using kernels):'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   Range     (km)         = ', R
-      !>              WRITE(*,FMT1) '   Azimuth   (deg)        = ', AZ * DPR()
-      !>              WRITE(*,FMT1) '   Elevation (deg)        = ', EL * DPR()
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'AZ/EL velocity (from AZLCPO):'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   d Range/dt    (km/s)   = ', AZLSTA(4)
-      !>              WRITE(*,FMT1) '   d Azimuth/dt  (deg/s)  = ', AZLSTA(5)
-      !>             .                                            * DPR()
-      !>              WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLSTA(6)
-      !>             .                                            * DPR()
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'AZ/EL velocity (using kernels):'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   d Range/dt     (km/s)  = ', AZLVEL(1)
-      !>              WRITE(*,FMT1) '   d Azimuth/dt   (deg/s) = ', AZLVEL(2)
-      !>             .                                            * DPR()
-      !>              WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLVEL(3)
-      !>             .                                            * DPR()
-      !>              WRITE(*,*)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'AZ/EL coordinates (from AZLCPO):'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   Range     (km)         = ', AZLSTA(1)
+      !>      WRITE(*,FMT1) '   Azimuth   (deg)        = ', AZLSTA(2)
+      !>     .                                            * DPR()
+      !>      WRITE(*,FMT1) '   Elevation (deg)        = ', AZLSTA(3)
+      !>     .                                            * DPR()
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'AZ/EL coordinates (using kernels):'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   Range     (km)         = ', R
+      !>      WRITE(*,FMT1) '   Azimuth   (deg)        = ', AZ * DPR()
+      !>      WRITE(*,FMT1) '   Elevation (deg)        = ', EL * DPR()
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'AZ/EL velocity (from AZLCPO):'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   d Range/dt    (km/s)   = ', AZLSTA(4)
+      !>      WRITE(*,FMT1) '   d Azimuth/dt  (deg/s)  = ', AZLSTA(5)
+      !>     .                                            * DPR()
+      !>      WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLSTA(6)
+      !>     .                                            * DPR()
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'AZ/EL velocity (using kernels):'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   d Range/dt     (km/s)  = ', AZLVEL(1)
+      !>      WRITE(*,FMT1) '   d Azimuth/dt   (deg/s) = ', AZLVEL(2)
+      !>     .                                            * DPR()
+      !>      WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLVEL(3)
+      !>     .                                            * DPR()
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2980,98 +2982,100 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BLTFRM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BLTFRM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'ninert.inc'
-      !>              INCLUDE 'nninrt.inc'
-      !>              INCLUDE 'frmtyp.inc'
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               NFRAME
-      !>              PARAMETER           ( NFRAME = NINERT + NNINRT )
+      !>      INCLUDE 'ninert.inc'
+      !>      INCLUDE 'nninrt.inc'
+      !>      INCLUDE 'frmtyp.inc'
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               NFRAME
+      !>      PARAMETER           ( NFRAME = NINERT + NNINRT )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FRNMLN)    FRNAME
-      !>              CHARACTER*(LNSIZE)    OUTLIN
-      !>              CHARACTER*(LNSIZE)    VERSN
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FRNMLN)    FRNAME
+      !>      CHARACTER*(LNSIZE)    OUTLIN
+      !>      CHARACTER*(LNSIZE)    VERSN
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDSET ( LBCELL : NFRAME )
-      !>              INTEGER               NFRMS
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               IDSET ( LBCELL : NFRAME )
+      !>      INTEGER               NFRMS
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Get the Toolkit version number and display it.
-      !>        C
-      !>              CALL TKVRSN ( 'TOOLKIT', VERSN )
-      !>              CALL TOSTDO ( 'Toolkit version: ' // VERSN )
+      !>C
+      !>C     Get the Toolkit version number and display it.
+      !>C
+      !>      CALL TKVRSN ( 'TOOLKIT', VERSN )
+      !>      CALL TOSTDO ( 'Toolkit version: ' // VERSN )
       !>
-      !>        C
-      !>        C     Initialize the frame set.
-      !>        C
-      !>              CALL SSIZEI ( NFRAME, IDSET )
+      !>C
+      !>C     Initialize the frame set.
+      !>C
+      !>      CALL SSIZEI ( NFRAME, IDSET )
       !>
-      !>        C
-      !>        C     Fetch and display the frames of each class.
-      !>        C
-      !>              DO I = 1, 7
+      !>C
+      !>C     Fetch and display the frames of each class.
+      !>C
+      !>      DO I = 1, 7
       !>
-      !>                 IF ( I .LT. 7 ) THEN
-      !>        C
-      !>        C           Fetch the frames of class I.
-      !>        C
-      !>                    CALL BLTFRM ( I, IDSET )
+      !>         IF ( I .LT. 7 ) THEN
+      !>C
+      !>C           Fetch the frames of class I.
+      !>C
+      !>            CALL BLTFRM ( I, IDSET )
       !>
-      !>                    OUTLIN = 'Number of frames of class #: #'
-      !>                    CALL REPMI ( OUTLIN, '#', I,            OUTLIN )
-      !>                    CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
+      !>            OUTLIN = 'Number of frames of class #: #'
+      !>            CALL REPMI ( OUTLIN, '#', I,            OUTLIN )
+      !>            CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
       !>
-      !>                 ELSE
-      !>        C
-      !>        C           Fetch IDs of all built-in frames.
-      !>        C
-      !>                    CALL BLTFRM ( ALL, IDSET )
+      !>         ELSE
+      !>C
+      !>C           Fetch IDs of all built-in frames.
+      !>C
+      !>            CALL BLTFRM ( ALL, IDSET )
       !>
-      !>                    OUTLIN = 'Number of built-in frames: #'
-      !>                    CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
+      !>            OUTLIN = 'Number of built-in frames: #'
+      !>            CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 CALL TOSTDO ( ' '    )
-      !>                 CALL TOSTDO ( OUTLIN )
-      !>                 CALL TOSTDO ( '   Frame IDs and names' )
+      !>         CALL TOSTDO ( ' '    )
+      !>         CALL TOSTDO ( OUTLIN )
+      !>         CALL TOSTDO ( '   Frame IDs and names' )
       !>
-      !>        C
-      !>        C        Display the NAIF ID and name of a maximum of 5 frames
-      !>        C        per family.
-      !>        C
-      !>                 NFRMS = MIN( 5, CARDI(IDSET) )
+      !>C
+      !>C        Display the NAIF ID and name of a maximum of 5 frames
+      !>C        per family.
+      !>C
+      !>         NFRMS = MIN( 5, CARDI(IDSET) )
       !>
-      !>                 DO J = 1, NFRMS
-      !>                    CALL FRMNAM ( IDSET(J), FRNAME )
-      !>                    WRITE (*,*) IDSET(J), '  ', FRNAME
-      !>                 END DO
+      !>         DO J = 1, NFRMS
+      !>            CALL FRMNAM ( IDSET(J), FRNAME )
+      !>            WRITE (*,*) IDSET(J), '  ', FRNAME
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4345,144 +4349,146 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DGEODR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DGEODR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,E18.8)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,E18.8)' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      DRECTN ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      GEOVEL ( 3 )
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      STATE  ( 6 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      DRECTN ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      GEOVEL ( 3 )
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      STATE  ( 6 )
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Load SPK, PCK, and LSK kernels, use a meta kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'dgeodr_ex1.tm' )
+      !>C
+      !>C     Load SPK, PCK, and LSK kernels, use a meta kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'dgeodr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Look up the radii for Mars.  Although we
-      !>        C     omit it here, we could first call BADKPV
-      !>        C     to make sure the variable BODY499_RADII
-      !>        C     has three elements and numeric data type.
-      !>        C     If the variable is not present in the kernel
-      !>        C     pool, BODVRD will signal an error.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the radii for Mars.  Although we
+      !>C     omit it here, we could first call BADKPV
+      !>C     to make sure the variable BODY499_RADII
+      !>C     has three elements and numeric data type.
+      !>C     If the variable is not present in the kernel
+      !>C     pool, BODVRD will signal an error.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Look up the apparent state of earth as seen from Mars at
-      !>        C     January 1, 2005 TDB, relative to the IAU_MARS reference
-      !>        C     frame.
-      !>        C
-      !>              CALL STR2ET ( 'January 1, 2005 TDB', ET )
+      !>C
+      !>C     Look up the apparent state of earth as seen from Mars at
+      !>C     January 1, 2005 TDB, relative to the IAU_MARS reference
+      !>C     frame.
+      !>C
+      !>      CALL STR2ET ( 'January 1, 2005 TDB', ET )
       !>
-      !>              CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
-      !>             .              'Mars',  STATE, LT                )
+      !>      CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
+      !>     .              'Mars',  STATE, LT                )
       !>
-      !>        C
-      !>        C     Convert position to geodetic coordinates.
-      !>        C
-      !>              CALL RECGEO ( STATE, RE, F, LON, LAT, ALT )
+      !>C
+      !>C     Convert position to geodetic coordinates.
+      !>C
+      !>      CALL RECGEO ( STATE, RE, F, LON, LAT, ALT )
       !>
-      !>        C
-      !>        C     Convert velocity to geodetic coordinates.
-      !>        C
+      !>C
+      !>C     Convert velocity to geodetic coordinates.
+      !>C
       !>
-      !>              CALL DGEODR (  STATE(1), STATE(2), STATE(3),
-      !>             .               RE,       F,        JACOBI   )
+      !>      CALL DGEODR (  STATE(1), STATE(2), STATE(3),
+      !>     .               RE,       F,        JACOBI   )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), GEOVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), GEOVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the geodetic state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL GEOREC ( LON, LAT, ALT, RE, F, RECTAN )
+      !>C
+      !>C     As a check, convert the geodetic state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL GEOREC ( LON, LAT, ALT, RE, F, RECTAN )
       !>
-      !>              CALL DRDGEO ( LON, LAT, ALT, RE, F, JACOBI )
+      !>      CALL DRDGEO ( LON, LAT, ALT, RE, F, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, GEOVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, GEOVEL, DRECTN )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Ellipsoid shape parameters: '
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  Equatorial radius (km) = ', RE
-      !>              WRITE(*,FMT1) '  Polar radius      (km) = ', RP
-      !>              WRITE(*,FMT1) '  Flattening coefficient = ', F
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Geodetic coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  Longitude (deg)        = ', LON / RPD()
-      !>              WRITE(*,FMT1) '  Latitude  (deg)        = ', LAT / RPD()
-      !>              WRITE(*,FMT1) '  Altitude  (km)         = ', ALT
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Geodetic velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
-      !>             .                                         GEOVEL(1)/RPD()
-      !>              WRITE(*,FMT1) '  d Latitude/dt  (deg/s) = ',
-      !>             .                                         GEOVEL(2)/RPD()
-      !>              WRITE(*,FMT1) '  d Altitude/dt  (km/s)  = ', GEOVEL(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates from inverse ' //
-      !>             .           'mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity from inverse mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*) ' '
-      !>              END
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Ellipsoid shape parameters: '
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  Equatorial radius (km) = ', RE
+      !>      WRITE(*,FMT1) '  Polar radius      (km) = ', RP
+      !>      WRITE(*,FMT1) '  Flattening coefficient = ', F
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Geodetic coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  Longitude (deg)        = ', LON / RPD()
+      !>      WRITE(*,FMT1) '  Latitude  (deg)        = ', LAT / RPD()
+      !>      WRITE(*,FMT1) '  Altitude  (km)         = ', ALT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Geodetic velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
+      !>     .                                         GEOVEL(1)/RPD()
+      !>      WRITE(*,FMT1) '  d Latitude/dt  (deg/s) = ',
+      !>     .                                         GEOVEL(2)/RPD()
+      !>      WRITE(*,FMT1) '  d Altitude/dt  (km/s)  = ', GEOVEL(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates from inverse ' //
+      !>     .           'mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity from inverse mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4800,64 +4806,66 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DHFA_EX
-      !>              IMPLICIT              NONE
+      !>```fortran
+      !>      PROGRAM DHFA_EX
+      !>      IMPLICIT              NONE
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      DHADT
-      !>              DOUBLE PRECISION      RAD   (3)
-      !>              DOUBLE PRECISION      STATE (6)
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      DHADT
+      !>      DOUBLE PRECISION      RAD   (3)
+      !>      DOUBLE PRECISION      STATE (6)
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>              CHARACTER*(STRLEN)    BEGSTR
+      !>      CHARACTER*(STRLEN)    BEGSTR
       !>
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      DHFA
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ('dhfa_ex1.tm')
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      DHFA
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ('dhfa_ex1.tm')
       !>
-      !>        C
-      !>        C     An approximate time corresponding to a maximal angular
-      !>        C     separation between the Earth and Moon as seen from the
-      !>        C     Sun.
-      !>        C
-      !>              BEGSTR = '2007-DEC-17 04:04:46.935443 (TDB)'
-      !>              CALL STR2ET( BEGSTR, ET )
+      !>C
+      !>C     An approximate time corresponding to a maximal angular
+      !>C     separation between the Earth and Moon as seen from the
+      !>C     Sun.
+      !>C
+      !>      BEGSTR = '2007-DEC-17 04:04:46.935443 (TDB)'
+      !>      CALL STR2ET( BEGSTR, ET )
       !>
-      !>              CALL BODVRD ('SUN', 'RADII', 3, DIM, RAD )
+      !>      CALL BODVRD ('SUN', 'RADII', 3, DIM, RAD )
       !>
-      !>              CALL SPKEZR ('MOON', ET, 'J2000', 'NONE', 'SUN',
-      !>             .              STATE, LT                         )
+      !>      CALL SPKEZR ('MOON', ET, 'J2000', 'NONE', 'SUN',
+      !>     .              STATE, LT                         )
       !>
-      !>        C
-      !>        C     The derivative of the half angle at ET should have a
-      !>        C     near-to maximal value as the Moon velocity vector points
-      !>        C     either towards the Sun or away.
-      !>        C
-      !>              DHADT = DHFA( STATE, RAD(1) )
-      !>              WRITE(*,*) 'Half angle derivative:'
-      !>              WRITE(*,*) '   at begin time  : ', DHADT
+      !>C
+      !>C     The derivative of the half angle at ET should have a
+      !>C     near-to maximal value as the Moon velocity vector points
+      !>C     either towards the Sun or away.
+      !>C
+      !>      DHADT = DHFA( STATE, RAD(1) )
+      !>      WRITE(*,*) 'Half angle derivative:'
+      !>      WRITE(*,*) '   at begin time  : ', DHADT
       !>
-      !>        C
-      !>        C     Two weeks later the derivate should have a similar
-      !>        C     magnitude but the opposite sign.
-      !>        C
-      !>              ET = SPD() * 14.D0 + ET
+      !>C
+      !>C     Two weeks later the derivate should have a similar
+      !>C     magnitude but the opposite sign.
+      !>C
+      !>      ET = SPD() * 14.D0 + ET
       !>
-      !>              CALL SPKEZR ('MOON', ET, 'J2000', 'NONE', 'SUN',
-      !>             .              STATE, LT                         )
+      !>      CALL SPKEZR ('MOON', ET, 'J2000', 'NONE', 'SUN',
+      !>     .              STATE, LT                         )
       !>
-      !>              DHADT = DHFA( STATE, RAD(1) )
-      !>              WRITE(*,*) '   two weeks later: ', DHADT
+      !>      DHADT = DHFA( STATE, RAD(1) )
+      !>      WRITE(*,*) '   two weeks later: ', DHADT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6174,112 +6182,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EV2LIN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EV2LIN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         TIMSTR
-      !>              PARAMETER           ( TIMSTR = '2020-05-26 02:25:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         TIMSTR
+      !>      PARAMETER           ( TIMSTR = '2020-05-26 02:25:00' )
       !>
-      !>              INTEGER               PNAMLN
-      !>              PARAMETER           ( PNAMLN = 2  )
+      !>      INTEGER               PNAMLN
+      !>      PARAMETER           ( PNAMLN = 2  )
       !>
-      !>              INTEGER               TLELLN
-      !>              PARAMETER           ( TLELLN = 69 )
+      !>      INTEGER               TLELLN
+      !>      PARAMETER           ( TLELLN = 69 )
       !>
-      !>        C
-      !>        C     The LUME-1 cubesat is an Earth orbiting object; set
-      !>        C     the center ID to the Earth ID.
-      !>        C
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER  = 399     )
+      !>C
+      !>C     The LUME-1 cubesat is an Earth orbiting object; set
+      !>C     the center ID to the Earth ID.
+      !>C
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER  = 399     )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMLN)    NOADPN ( 8  )
-      !>              CHARACTER*(TLELLN)    TLE    ( 2  )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMLN)    NOADPN ( 8  )
+      !>      CHARACTER*(TLELLN)    TLE    ( 2  )
       !>
-      !>              DOUBLE PRECISION      ELEMS  ( 10 )
-      !>              DOUBLE PRECISION      EPOCH
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      GEOPHS ( 8  )
-      !>              DOUBLE PRECISION      STATE  ( 6  )
+      !>      DOUBLE PRECISION      ELEMS  ( 10 )
+      !>      DOUBLE PRECISION      EPOCH
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      GEOPHS ( 8  )
+      !>      DOUBLE PRECISION      STATE  ( 6  )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     These are the variables that will hold the constants
-      !>        C     required by EV2LIN. These constants are available from
-      !>        C     the loaded PCK file, which provides the actual values
-      !>        C     and units as used by NORAD propagation model.
-      !>        C
-      !>        C        Constant   Meaning
-      !>        C        --------   ------------------------------------------
-      !>        C        J2         J2 gravitational harmonic for Earth.
-      !>        C        J3         J3 gravitational harmonic for Earth.
-      !>        C        J4         J4 gravitational harmonic for Earth.
-      !>        C        KE         Square root of the GM for Earth.
-      !>        C        QO         High altitude bound for atmospheric model.
-      !>        C        SO         Low altitude bound for atmospheric model.
-      !>        C        ER         Equatorial radius of the Earth.
-      !>        C        AE         Distance units/earth radius.
-      !>        C
-      !>              DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
-      !>             .                         'QO', 'SO', 'ER', 'AE'  /
+      !>C
+      !>C     These are the variables that will hold the constants
+      !>C     required by EV2LIN. These constants are available from
+      !>C     the loaded PCK file, which provides the actual values
+      !>C     and units as used by NORAD propagation model.
+      !>C
+      !>C        Constant   Meaning
+      !>C        --------   ------------------------------------------
+      !>C        J2         J2 gravitational harmonic for Earth.
+      !>C        J3         J3 gravitational harmonic for Earth.
+      !>C        J4         J4 gravitational harmonic for Earth.
+      !>C        KE         Square root of the GM for Earth.
+      !>C        QO         High altitude bound for atmospheric model.
+      !>C        SO         Low altitude bound for atmospheric model.
+      !>C        ER         Equatorial radius of the Earth.
+      !>C        AE         Distance units/earth radius.
+      !>C
+      !>      DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
+      !>     .                         'QO', 'SO', 'ER', 'AE'  /
       !>
-      !>        C
-      !>        C     Define the Two-Line Element set for LUME-1.
-      !>        C
-      !>              TLE(1)  = '1 43908U 18111AJ  20146.60805006  .00000806'
-      !>             .      //                   '  00000-0  34965-4 0  9999'
-      !>              TLE(2)  = '2 43908  97.2676  47.2136 0020001 220.6050 '
-      !>             .      //                   '139.3698 15.24999521 78544'
+      !>C
+      !>C     Define the Two-Line Element set for LUME-1.
+      !>C
+      !>      TLE(1)  = '1 43908U 18111AJ  20146.60805006  .00000806'
+      !>     .      //                   '  00000-0  34965-4 0  9999'
+      !>      TLE(2)  = '2 43908  97.2676  47.2136 0020001 220.6050 '
+      !>     .      //                   '139.3698 15.24999521 78544'
       !>
-      !>        C
-      !>        C     Load the PCK file that provides the geophysical
-      !>        C     constants required for the evaluation of the two-line
-      !>        C     elements sets. Load also an LSK, as it is required by
-      !>        C     GETELM to perform time conversions. Use a meta-kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'ev2lin_ex1.tm' )
+      !>C
+      !>C     Load the PCK file that provides the geophysical
+      !>C     constants required for the evaluation of the two-line
+      !>C     elements sets. Load also an LSK, as it is required by
+      !>C     GETELM to perform time conversions. Use a meta-kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'ev2lin_ex1.tm' )
       !>
-      !>        C
-      !>        C     Retrieve the data from the kernel, and place it on
-      !>        C     the GEOPHS array.
-      !>        C
-      !>              DO I = 1, 8
+      !>C
+      !>C     Retrieve the data from the kernel, and place it on
+      !>C     the GEOPHS array.
+      !>C
+      !>      DO I = 1, 8
       !>
-      !>                 CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
+      !>         CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Convert the Two Line Elements lines to the element sets.
-      !>        C     Set the lower bound for the years to be the beginning
-      !>        C     of the space age.
-      !>        C
-      !>              CALL GETELM ( 1957, TLE, EPOCH, ELEMS )
+      !>C
+      !>C     Convert the Two Line Elements lines to the element sets.
+      !>C     Set the lower bound for the years to be the beginning
+      !>C     of the space age.
+      !>C
+      !>      CALL GETELM ( 1957, TLE, EPOCH, ELEMS )
       !>
-      !>        C
-      !>        C     Now propagate the state using EV2LIN to the epoch of
-      !>        C     interest.
-      !>        C
-      !>              CALL STR2ET ( TIMSTR, ET )
-      !>              CALL EV2LIN ( ET, GEOPHS, ELEMS, STATE )
+      !>C
+      !>C     Now propagate the state using EV2LIN to the epoch of
+      !>C     interest.
+      !>C
+      !>      CALL STR2ET ( TIMSTR, ET )
+      !>      CALL EV2LIN ( ET, GEOPHS, ELEMS, STATE )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              WRITE(*,'(2A)')       'Epoch   : ', TIMSTR
-      !>              WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
-      !>              WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      WRITE(*,'(2A)')       'Epoch   : ', TIMSTR
+      !>      WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
+      !>      WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7742,109 +7752,111 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EVSGP4_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EVSGP4_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         TIMSTR
-      !>              PARAMETER           ( TIMSTR = '2020-05-26 02:25:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         TIMSTR
+      !>      PARAMETER           ( TIMSTR = '2020-05-26 02:25:00' )
       !>
-      !>              INTEGER               PNAMLN
-      !>              PARAMETER           ( PNAMLN = 2  )
+      !>      INTEGER               PNAMLN
+      !>      PARAMETER           ( PNAMLN = 2  )
       !>
-      !>              INTEGER               TLELLN
-      !>              PARAMETER           ( TLELLN = 69 )
+      !>      INTEGER               TLELLN
+      !>      PARAMETER           ( TLELLN = 69 )
       !>
-      !>        C
-      !>        C     The LUME-1 cubesat is an Earth orbiting object; set
-      !>        C     the center ID to the Earth ID.
-      !>        C
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER  = 399     )
+      !>C
+      !>C     The LUME-1 cubesat is an Earth orbiting object; set
+      !>C     the center ID to the Earth ID.
+      !>C
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER  = 399     )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMLN)    NOADPN ( 8  )
-      !>              CHARACTER*(TLELLN)    TLE    ( 2  )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMLN)    NOADPN ( 8  )
+      !>      CHARACTER*(TLELLN)    TLE    ( 2  )
       !>
-      !>              DOUBLE PRECISION      ELEMS  ( 10 )
-      !>              DOUBLE PRECISION      EPOCH
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      GEOPHS ( 8  )
-      !>              DOUBLE PRECISION      STATE  ( 6  )
+      !>      DOUBLE PRECISION      ELEMS  ( 10 )
+      !>      DOUBLE PRECISION      EPOCH
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      GEOPHS ( 8  )
+      !>      DOUBLE PRECISION      STATE  ( 6  )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     These are the variables that will hold the constants
-      !>        C     required by EVSGP4. These constants are available from
-      !>        C     the loaded PCK file, which provides the actual values
-      !>        C     and units as used by NORAD propagation model.
-      !>        C
-      !>        C     Constant   Meaning
-      !>        C     --------   ------------------------------------------
-      !>        C     J2         J2 gravitational harmonic for Earth.
-      !>        C     J3         J3 gravitational harmonic for Earth.
-      !>        C     J4         J4 gravitational harmonic for Earth.
-      !>        C     KE         Square root of the GM for Earth.
-      !>        C     QO         High altitude bound for atmospheric model.
-      !>        C     SO         Low altitude bound for atmospheric model.
-      !>        C     ER         Equatorial radius of the Earth.
-      !>        C     AE         Distance units/earth radius.
-      !>        C
-      !>              DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
-      !>             .                         'QO', 'SO', 'ER', 'AE'  /
+      !>C
+      !>C     These are the variables that will hold the constants
+      !>C     required by EVSGP4. These constants are available from
+      !>C     the loaded PCK file, which provides the actual values
+      !>C     and units as used by NORAD propagation model.
+      !>C
+      !>C     Constant   Meaning
+      !>C     --------   ------------------------------------------
+      !>C     J2         J2 gravitational harmonic for Earth.
+      !>C     J3         J3 gravitational harmonic for Earth.
+      !>C     J4         J4 gravitational harmonic for Earth.
+      !>C     KE         Square root of the GM for Earth.
+      !>C     QO         High altitude bound for atmospheric model.
+      !>C     SO         Low altitude bound for atmospheric model.
+      !>C     ER         Equatorial radius of the Earth.
+      !>C     AE         Distance units/earth radius.
+      !>C
+      !>      DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
+      !>     .                         'QO', 'SO', 'ER', 'AE'  /
       !>
-      !>        C
-      !>        C     Define the Two-Line Element set for LUME-1.
-      !>        C
-      !>              TLE(1)  = '1 43908U 18111AJ  20146.60805006  .00000806'
-      !>             .      //                   '  00000-0  34965-4 0  9999'
-      !>              TLE(2)  = '2 43908  97.2676  47.2136 0020001 220.6050 '
-      !>             .      //                   '139.3698 15.24999521 78544'
+      !>C
+      !>C     Define the Two-Line Element set for LUME-1.
+      !>C
+      !>      TLE(1)  = '1 43908U 18111AJ  20146.60805006  .00000806'
+      !>     .      //                   '  00000-0  34965-4 0  9999'
+      !>      TLE(2)  = '2 43908  97.2676  47.2136 0020001 220.6050 '
+      !>     .      //                   '139.3698 15.24999521 78544'
       !>
-      !>        C
-      !>        C     Load the MK file that includes the PCK file that provides
-      !>        C     the geophysical constants required for the evaluation of
-      !>        C     the two-line elements sets and the LSK, as it is required
-      !>        C     by GETELM to perform time conversions.
-      !>        C
-      !>              CALL FURNSH ( 'evsgp4_ex1.tm' )
+      !>C
+      !>C     Load the MK file that includes the PCK file that provides
+      !>C     the geophysical constants required for the evaluation of
+      !>C     the two-line elements sets and the LSK, as it is required
+      !>C     by GETELM to perform time conversions.
+      !>C
+      !>      CALL FURNSH ( 'evsgp4_ex1.tm' )
       !>
-      !>        C
-      !>        C     Retrieve the data from the kernel, and place it on
-      !>        C     the GEOPHS array.
-      !>        C
-      !>              DO I = 1, 8
-      !>                 CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
-      !>              END DO
+      !>C
+      !>C     Retrieve the data from the kernel, and place it on
+      !>C     the GEOPHS array.
+      !>C
+      !>      DO I = 1, 8
+      !>         CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Convert the Two Line Elements lines to the element sets.
-      !>        C     Set the lower bound for the years to be the beginning
-      !>        C     of the space age.
-      !>        C
-      !>              CALL GETELM ( 1957, TLE, EPOCH, ELEMS )
+      !>C
+      !>C     Convert the Two Line Elements lines to the element sets.
+      !>C     Set the lower bound for the years to be the beginning
+      !>C     of the space age.
+      !>C
+      !>      CALL GETELM ( 1957, TLE, EPOCH, ELEMS )
       !>
-      !>        C
-      !>        C     Now propagate the state using EVSGP4 to the epoch of
-      !>        C     interest.
-      !>        C
-      !>              CALL STR2ET ( TIMSTR, ET )
-      !>              CALL EVSGP4 ( ET, GEOPHS, ELEMS, STATE )
+      !>C
+      !>C     Now propagate the state using EVSGP4 to the epoch of
+      !>C     interest.
+      !>C
+      !>      CALL STR2ET ( TIMSTR, ET )
+      !>      CALL EVSGP4 ( ET, GEOPHS, ELEMS, STATE )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              WRITE(*,'(2A)')       'Epoch   : ', TIMSTR
-      !>              WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
-      !>              WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      WRITE(*,'(2A)')       'Epoch   : ', TIMSTR
+      !>      WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
+      !>      WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, the output was:
@@ -8679,67 +8691,69 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GEOREC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GEOREC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Load a PCK file containing a triaxial
-      !>        C     ellipsoidal shape model and orientation
-      !>        C     data for the Earth.
-      !>        C
-      !>              CALL FURNSH ( 'pck00010.tpc' )
+      !>C
+      !>C     Load a PCK file containing a triaxial
+      !>C     ellipsoidal shape model and orientation
+      !>C     data for the Earth.
+      !>C
+      !>      CALL FURNSH ( 'pck00010.tpc' )
       !>
-      !>        C
-      !>        C     Retrieve the triaxial radii of the Earth
-      !>        C
-      !>              CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Retrieve the triaxial radii of the Earth
+      !>C
+      !>      CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Set a geodetic position.
-      !>        C
-      !>              LON = 118.D0 * RPD()
-      !>              LAT =  30.D0 * RPD()
-      !>              ALT =   0.D0
+      !>C
+      !>C     Set a geodetic position.
+      !>C
+      !>      LON = 118.D0 * RPD()
+      !>      LAT =  30.D0 * RPD()
+      !>      ALT =   0.D0
       !>
-      !>        C
-      !>        C     Do the conversion.
-      !>        C
-      !>              CALL GEOREC( LON, LAT, ALT, RADII(1), F, RECTAN )
+      !>C
+      !>C     Do the conversion.
+      !>C
+      !>      CALL GEOREC( LON, LAT, ALT, RADII(1), F, RECTAN )
       !>
-      !>              WRITE (*,*) 'Geodetic coordinates in deg and '
-      !>             . //         'km (lon, lat, alt)'
-      !>              WRITE (*,'(A,3F14.6)') ' ', LON * DPR(), LAT * DPR(), ALT
-      !>              WRITE (*,*) 'Rectangular coordinates in km (x, y, z)'
-      !>              WRITE (*,'(A,3F14.6)') ' ', RECTAN
+      !>      WRITE (*,*) 'Geodetic coordinates in deg and '
+      !>     . //         'km (lon, lat, alt)'
+      !>      WRITE (*,'(A,3F14.6)') ' ', LON * DPR(), LAT * DPR(), ALT
+      !>      WRITE (*,*) 'Rectangular coordinates in km (x, y, z)'
+      !>      WRITE (*,'(A,3F14.6)') ' ', RECTAN
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -8765,87 +8779,89 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GEOREC_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GEOREC_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NREC
-      !>              PARAMETER           ( NREC = 11 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NREC
+      !>      PARAMETER           ( NREC = 11 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ALT    ( NREC )
-      !>              DOUBLE PRECISION      CLARKR
-      !>              DOUBLE PRECISION      CLARKF
-      !>              DOUBLE PRECISION      LAT    ( NREC )
-      !>              DOUBLE PRECISION      LON    ( NREC )
-      !>              DOUBLE PRECISION      RECTAN ( 3    )
-      !>              DOUBLE PRECISION      RLAT
-      !>              DOUBLE PRECISION      RLON
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ALT    ( NREC )
+      !>      DOUBLE PRECISION      CLARKR
+      !>      DOUBLE PRECISION      CLARKF
+      !>      DOUBLE PRECISION      LAT    ( NREC )
+      !>      DOUBLE PRECISION      LON    ( NREC )
+      !>      DOUBLE PRECISION      RECTAN ( 3    )
+      !>      DOUBLE PRECISION      RLAT
+      !>      DOUBLE PRECISION      RLON
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Define the input geodetic coordinates. Angles in
-      !>        C     degrees.
-      !>        C
-      !>              DATA                 LON /  0.D0,   0.D0,  90.D0,
-      !>             .                            0.D0, 180.D0, -90.D0,
-      !>             .                            0.D0,  45.D0,   0.D0,
-      !>             .                           90.D0,  45.D0         /
+      !>C
+      !>C     Define the input geodetic coordinates. Angles in
+      !>C     degrees.
+      !>C
+      !>      DATA                 LON /  0.D0,   0.D0,  90.D0,
+      !>     .                            0.D0, 180.D0, -90.D0,
+      !>     .                            0.D0,  45.D0,   0.D0,
+      !>     .                           90.D0,  45.D0         /
       !>
-      !>              DATA                 LAT / 90.D0,     0.D0,     0.D0,
-      !>             .                           90.D0,     0.D0,     0.D0,
-      !>             .                          -90.D0,     0.D0,    88.707D0,
-      !>             .                           88.707D0, 88.1713D0         /
+      !>      DATA                 LAT / 90.D0,     0.D0,     0.D0,
+      !>     .                           90.D0,     0.D0,     0.D0,
+      !>     .                          -90.D0,     0.D0,    88.707D0,
+      !>     .                           88.707D0, 88.1713D0         /
       !>
-      !>              DATA                 ALT /   -6356.5838D0,     0.D0,
-      !>             .                   0.D0,         0.D0,         0.D0,
-      !>             .                   0.D0,         0.D0,         0.D0,
-      !>             .               -6355.5725D0, -6355.5725D0, -6355.5612D0 /
+      !>      DATA                 ALT /   -6356.5838D0,     0.D0,
+      !>     .                   0.D0,         0.D0,         0.D0,
+      !>     .                   0.D0,         0.D0,         0.D0,
+      !>     .               -6355.5725D0, -6355.5725D0, -6355.5612D0 /
       !>
-      !>        C
-      !>        C     Using the equatorial radius of the Clark66 spheroid
-      !>        C     (CLARKR = 6378.2064 km) and the Clark 66 flattening
-      !>        C     factor (CLARKF = 1.0 / 294.9787 ) convert from
-      !>        C     body fixed rectangular coordinates.
-      !>        C
-      !>              CLARKR = 6378.2064D0
-      !>              CLARKF = 1.0D0 / 294.9787D0
+      !>C
+      !>C     Using the equatorial radius of the Clark66 spheroid
+      !>C     (CLARKR = 6378.2064 km) and the Clark 66 flattening
+      !>C     factor (CLARKF = 1.0 / 294.9787 ) convert from
+      !>C     body fixed rectangular coordinates.
+      !>C
+      !>      CLARKR = 6378.2064D0
+      !>      CLARKF = 1.0D0 / 294.9787D0
       !>
-      !>        C
-      !>        C     Print the banner.
-      !>        C
-      !>              WRITE(*,*) '   LON      LAT       ALT    '
-      !>             . //        ' RECTAN(1)  RECTAN(2)  RECTAN(3)'
-      !>              WRITE(*,*) ' -------  -------  --------- '
-      !>             . //        ' ---------  ---------  ---------'
+      !>C
+      !>C     Print the banner.
+      !>C
+      !>      WRITE(*,*) '   LON      LAT       ALT    '
+      !>     . //        ' RECTAN(1)  RECTAN(2)  RECTAN(3)'
+      !>      WRITE(*,*) ' -------  -------  --------- '
+      !>     . //        ' ---------  ---------  ---------'
       !>
-      !>        C
-      !>        C     Do the conversion.
-      !>        C
-      !>              DO I = 1, NREC
+      !>C
+      !>C     Do the conversion.
+      !>C
+      !>      DO I = 1, NREC
       !>
-      !>                 RLON = LON(I) * RPD()
-      !>                 RLAT = LAT(I) * RPD()
+      !>         RLON = LON(I) * RPD()
+      !>         RLAT = LAT(I) * RPD()
       !>
-      !>                 CALL GEOREC( RLON,   RLAT,   ALT(I),
-      !>             .                CLARKR, CLARKF, RECTAN )
+      !>         CALL GEOREC( RLON,   RLAT,   ALT(I),
+      !>     .                CLARKR, CLARKF, RECTAN )
       !>
-      !>                 WRITE (*,'(2F9.3,F11.3,3F11.3)')
-      !>             .             LON(I), LAT(I), ALT(I), RECTAN
+      !>         WRITE (*,'(2F9.3,F11.3,3F11.3)')
+      !>     .             LON(I), LAT(I), ALT(I), RECTAN
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -9429,77 +9445,79 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GETFOV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GETFOV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               MAXBND
-      !>              PARAMETER           ( MAXBND = 4 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               MAXBND
+      !>      PARAMETER           ( MAXBND = 4 )
       !>
-      !>              INTEGER               NUMINS
-      !>              PARAMETER           ( NUMINS = 4 )
+      !>      INTEGER               NUMINS
+      !>      PARAMETER           ( NUMINS = 4 )
       !>
-      !>              INTEGER               WDSIZE
-      !>              PARAMETER           ( WDSIZE = 32 )
+      !>      INTEGER               WDSIZE
+      !>      PARAMETER           ( WDSIZE = 32 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(WDSIZE)    FRAME
-      !>              CHARACTER*(WDSIZE)    SHAPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(WDSIZE)    FRAME
+      !>      CHARACTER*(WDSIZE)    SHAPE
       !>
-      !>              DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
-      !>              DOUBLE PRECISION      BSIGHT ( 3 )
+      !>      DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
+      !>      DOUBLE PRECISION      BSIGHT ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               INSIDS ( NUMINS )
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               INSIDS ( NUMINS )
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Define the instrument IDs.
-      !>        C
-      !>              DATA                  INSIDS  /  -999001, -999002,
-      !>             .                                 -999003, -999004  /
+      !>C
+      !>C     Define the instrument IDs.
+      !>C
+      !>      DATA                  INSIDS  /  -999001, -999002,
+      !>     .                                 -999003, -999004  /
       !>
-      !>        C
-      !>        C     Load the IK file.
-      !>        C
-      !>              CALL FURNSH( 'getfov_ex1.ti' )
+      !>C
+      !>C     Load the IK file.
+      !>C
+      !>      CALL FURNSH( 'getfov_ex1.ti' )
       !>
-      !>        C
-      !>        C     For each instrument ...
-      !>        C
-      !>              WRITE (*,'(A)') '--------------------------------------'
-      !>              DO I = 1, NUMINS
+      !>C
+      !>C     For each instrument ...
+      !>C
+      !>      WRITE (*,'(A)') '--------------------------------------'
+      !>      DO I = 1, NUMINS
       !>
-      !>        C
-      !>        C        ... fetch FOV parameters and ...
-      !>        C
-      !>                 CALL GETFOV ( INSIDS(I), MAXBND,
-      !>             .                 SHAPE, FRAME, BSIGHT, N, BOUNDS )
+      !>C
+      !>C        ... fetch FOV parameters and ...
+      !>C
+      !>         CALL GETFOV ( INSIDS(I), MAXBND,
+      !>     .                 SHAPE, FRAME, BSIGHT, N, BOUNDS )
       !>
-      !>        C
-      !>        C        ... print them to the screen.
-      !>        C
-      !>                 WRITE (*,'(A,I7)')     'Instrument ID: ', INSIDS(I)
-      !>                 WRITE (*,'(2A)')       '    FOV shape: ', SHAPE
-      !>                 WRITE (*,'(2A)')       '    FOV frame: ', frame
-      !>                 WRITE (*,'(A,3F12.8)') 'FOV boresight: ', BSIGHT
+      !>C
+      !>C        ... print them to the screen.
+      !>C
+      !>         WRITE (*,'(A,I7)')     'Instrument ID: ', INSIDS(I)
+      !>         WRITE (*,'(2A)')       '    FOV shape: ', SHAPE
+      !>         WRITE (*,'(2A)')       '    FOV frame: ', frame
+      !>         WRITE (*,'(A,3F12.8)') 'FOV boresight: ', BSIGHT
       !>
-      !>                 WRITE (*,'(A)') '  FOV corners: '
-      !>                 DO J = 1, N
-      !>                    WRITE (*,'(A,3F12.8)') '               ',
-      !>             .                  BOUNDS(1,J), BOUNDS(2,J), BOUNDS(3,J)
-      !>                 END DO
-      !>                 WRITE (*,'(A)')
-      !>             .            '--------------------------------------'
+      !>         WRITE (*,'(A)') '  FOV corners: '
+      !>         DO J = 1, N
+      !>            WRITE (*,'(A,3F12.8)') '               ',
+      !>     .                  BOUNDS(1,J), BOUNDS(2,J), BOUNDS(3,J)
+      !>         END DO
+      !>         WRITE (*,'(A)')
+      !>     .            '--------------------------------------'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11156,126 +11174,128 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ILLUM_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>```fortran
+      !>      PROGRAM ILLUM_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 32 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 25 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 25 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(NAMLEN)    OBSRVR
-      !>              CHARACTER*(NAMLEN)    TARGET
-      !>              CHARACTER*(TIMLEN)    UTC
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(NAMLEN)    OBSRVR
+      !>      CHARACTER*(NAMLEN)    TARGET
+      !>      CHARACTER*(TIMLEN)    UTC
       !>
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      SSCEMI
-      !>              DOUBLE PRECISION      SSCPHS
-      !>              DOUBLE PRECISION      SSCSOL
-      !>              DOUBLE PRECISION      SSLEMI
-      !>              DOUBLE PRECISION      SSLPHS
-      !>              DOUBLE PRECISION      SSLSOL
-      !>              DOUBLE PRECISION      SSOLPT ( 3 )
-      !>              DOUBLE PRECISION      SSCPT  ( 3 )
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      SSCEMI
+      !>      DOUBLE PRECISION      SSCPHS
+      !>      DOUBLE PRECISION      SSCSOL
+      !>      DOUBLE PRECISION      SSLEMI
+      !>      DOUBLE PRECISION      SSLPHS
+      !>      DOUBLE PRECISION      SSLSOL
+      !>      DOUBLE PRECISION      SSOLPT ( 3 )
+      !>      DOUBLE PRECISION      SSCPT  ( 3 )
       !>
-      !>        C
-      !>        C     Load kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'illum_ex1.tm' )
+      !>C
+      !>C     Load kernel files.
+      !>C
+      !>      CALL FURNSH ( 'illum_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert our UTC time to ephemeris seconds past J2000.
-      !>        C
-      !>              UTC = '2003 OCT 13 06:00:00'
-      !>              CALL UTC2ET ( UTC, ET )
+      !>C
+      !>C     Convert our UTC time to ephemeris seconds past J2000.
+      !>C
+      !>      UTC = '2003 OCT 13 06:00:00'
+      !>      CALL UTC2ET ( UTC, ET )
       !>
-      !>        C
-      !>        C     Assign observer and target names.  The acronym MGS
-      !>        C     indicates Mars Global Surveyor.  See NAIF_IDS for a
-      !>        C     list of names recognized by SPICE.
-      !>        C
-      !>              TARGET = 'Mars'
-      !>              OBSRVR = 'MGS'
+      !>C
+      !>C     Assign observer and target names.  The acronym MGS
+      !>C     indicates Mars Global Surveyor.  See NAIF_IDS for a
+      !>C     list of names recognized by SPICE.
+      !>C
+      !>      TARGET = 'Mars'
+      !>      OBSRVR = 'MGS'
       !>
-      !>        C
-      !>        C     Find the sub-solar point on the Earth as seen from
-      !>        C     the MGS spacecraft at ET.  Use the "surface intercept"
-      !>        C     style of sub-point definition. This makes it easy
-      !>        C     to verify the solar incidence angle.
-      !>        C
-      !>              CALL SUBSOL ( 'Near point', TARGET,  ET,
-      !>             .              'LT+S',       OBSRVR,  SSOLPT  )
+      !>C
+      !>C     Find the sub-solar point on the Earth as seen from
+      !>C     the MGS spacecraft at ET.  Use the "surface intercept"
+      !>C     style of sub-point definition. This makes it easy
+      !>C     to verify the solar incidence angle.
+      !>C
+      !>      CALL SUBSOL ( 'Near point', TARGET,  ET,
+      !>     .              'LT+S',       OBSRVR,  SSOLPT  )
       !>
-      !>        C
-      !>        C     Now find the sub-spacecraft point.  Use the
-      !>        C     "nearest point" definition of the sub-point
-      !>        C     here---this makes it easy to verify the emission angle.
-      !>        C
-      !>              CALL SUBPT ( 'Near point',  TARGET,  ET,
-      !>             .             'LT+S',        OBSRVR,  SSCPT,  ALT )
+      !>C
+      !>C     Now find the sub-spacecraft point.  Use the
+      !>C     "nearest point" definition of the sub-point
+      !>C     here---this makes it easy to verify the emission angle.
+      !>C
+      !>      CALL SUBPT ( 'Near point',  TARGET,  ET,
+      !>     .             'LT+S',        OBSRVR,  SSCPT,  ALT )
       !>
-      !>        C
-      !>        C     Find the phase, solar incidence, and emission
-      !>        C     angles at the sub-solar point on the Earth as seen
-      !>        C     from Mars Global Surveyor at time ET.
-      !>        C
-      !>              CALL ILLUM ( TARGET, ET,     'LT+S', OBSRVR,
-      !>             .             SSOLPT, SSLPHS, SSLSOL, SSLEMI )
+      !>C
+      !>C     Find the phase, solar incidence, and emission
+      !>C     angles at the sub-solar point on the Earth as seen
+      !>C     from Mars Global Surveyor at time ET.
+      !>C
+      !>      CALL ILLUM ( TARGET, ET,     'LT+S', OBSRVR,
+      !>     .             SSOLPT, SSLPHS, SSLSOL, SSLEMI )
       !>
-      !>        C
-      !>        C     Do the same for the sub-spacecraft point.
-      !>        C
-      !>              CALL ILLUM ( TARGET, ET,     'LT+S', OBSRVR,
-      !>             .             SSCPT,  SSCPHS, SSCSOL, SSCEMI )
+      !>C
+      !>C     Do the same for the sub-spacecraft point.
+      !>C
+      !>      CALL ILLUM ( TARGET, ET,     'LT+S', OBSRVR,
+      !>     .             SSCPT,  SSCPHS, SSCSOL, SSCEMI )
       !>
-      !>        C
-      !>        C     Convert the angles to degrees and write them out.
-      !>        C
-      !>              SSLPHS = DPR() * SSLPHS
-      !>              SSLSOL = DPR() * SSLSOL
-      !>              SSLEMI = DPR() * SSLEMI
+      !>C
+      !>C     Convert the angles to degrees and write them out.
+      !>C
+      !>      SSLPHS = DPR() * SSLPHS
+      !>      SSLSOL = DPR() * SSLSOL
+      !>      SSLEMI = DPR() * SSLEMI
       !>
-      !>              SSCPHS = DPR() * SSCPHS
-      !>              SSCSOL = DPR() * SSCSOL
-      !>              SSCEMI = DPR() * SSCEMI
+      !>      SSCPHS = DPR() * SSCPHS
+      !>      SSCSOL = DPR() * SSCSOL
+      !>      SSCEMI = DPR() * SSCEMI
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'UTC epoch is ', UTC
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Illumination angles at the sub-solar point:'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Phase angle           (deg.): ', SSLPHS
-      !>              WRITE (*,*) 'Solar incidence angle (deg.): ', SSLSOL
-      !>              WRITE (*,*) 'Emission angle        (deg.): ', SSLEMI
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'The solar incidence angle should be 0.'
-      !>              WRITE (*,*) 'The emission and phase angles should '//
-      !>             .            'should be equal.'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'UTC epoch is ', UTC
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Illumination angles at the sub-solar point:'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Phase angle           (deg.): ', SSLPHS
+      !>      WRITE (*,*) 'Solar incidence angle (deg.): ', SSLSOL
+      !>      WRITE (*,*) 'Emission angle        (deg.): ', SSLEMI
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'The solar incidence angle should be 0.'
+      !>      WRITE (*,*) 'The emission and phase angles should '//
+      !>     .            'should be equal.'
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Illumination angles at the sub-s/c point:'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Phase angle           (deg.): ', SSCPHS
-      !>              WRITE (*,*) 'Solar incidence angle (deg.): ', SSCSOL
-      !>              WRITE (*,*) 'Emission angle        (deg.): ', SSCEMI
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'The emission angle should be 0.'
-      !>              WRITE (*,*) 'The solar incidence and phase angles '//
-      !>             .            'should be equal.'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Illumination angles at the sub-s/c point:'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Phase angle           (deg.): ', SSCPHS
+      !>      WRITE (*,*) 'Solar incidence angle (deg.): ', SSCSOL
+      !>      WRITE (*,*) 'Emission angle        (deg.): ', SSCEMI
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'The emission angle should be 0.'
+      !>      WRITE (*,*) 'The solar incidence and phase angles '//
+      !>     .            'should be equal.'
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12352,91 +12372,93 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KPLFRM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KPLFRM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'frmtyp.inc'
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'kplfrm_ex1.tm' )
+      !>      INCLUDE 'frmtyp.inc'
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'kplfrm_ex1.tm' )
       !>
-      !>              INTEGER               NFRAME
-      !>              PARAMETER           ( NFRAME = 1000 )
+      !>      INTEGER               NFRAME
+      !>      PARAMETER           ( NFRAME = 1000 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FRNMLN)    FRNAME
-      !>              CHARACTER*(LNSIZE)    OUTLIN
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FRNMLN)    FRNAME
+      !>      CHARACTER*(LNSIZE)    OUTLIN
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDSET ( LBCELL : NFRAME )
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               IDSET ( LBCELL : NFRAME )
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Initialize the frame set.
-      !>        C
-      !>              CALL SSIZEI ( NFRAME, IDSET )
+      !>C
+      !>C     Initialize the frame set.
+      !>C
+      !>      CALL SSIZEI ( NFRAME, IDSET )
       !>
-      !>        C
-      !>        C     Load kernels that contain frame specifications.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels that contain frame specifications.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Fetch and display the frames of each class.
-      !>        C
-      !>              DO I = 1, 7
+      !>C
+      !>C     Fetch and display the frames of each class.
+      !>C
+      !>      DO I = 1, 7
       !>
-      !>                 IF ( I .LT. 7 ) THEN
-      !>        C
-      !>        C           Fetch the frames of class I.
-      !>        C
-      !>                    CALL KPLFRM ( I, IDSET )
+      !>         IF ( I .LT. 7 ) THEN
+      !>C
+      !>C           Fetch the frames of class I.
+      !>C
+      !>            CALL KPLFRM ( I, IDSET )
       !>
-      !>                    OUTLIN = 'Number of frames of class #: #'
-      !>                    CALL REPMI ( OUTLIN, '#', I,            OUTLIN )
-      !>                    CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
+      !>            OUTLIN = 'Number of frames of class #: #'
+      !>            CALL REPMI ( OUTLIN, '#', I,            OUTLIN )
+      !>            CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
       !>
-      !>                 ELSE
-      !>        C
-      !>        C           Fetch IDs of all frames specified in the kernel
-      !>        C           pool.
-      !>        C
-      !>                    CALL KPLFRM ( ALL, IDSET )
+      !>         ELSE
+      !>C
+      !>C           Fetch IDs of all frames specified in the kernel
+      !>C           pool.
+      !>C
+      !>            CALL KPLFRM ( ALL, IDSET )
       !>
-      !>                    OUTLIN = 'Number of frames in the kernel pool: #'
-      !>                    CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
+      !>            OUTLIN = 'Number of frames in the kernel pool: #'
+      !>            CALL REPMI ( OUTLIN, '#', CARDI(IDSET), OUTLIN )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 CALL TOSTDO ( ' '    )
-      !>                 CALL TOSTDO ( OUTLIN )
-      !>                 CALL TOSTDO ( '   Frame IDs and names' )
+      !>         CALL TOSTDO ( ' '    )
+      !>         CALL TOSTDO ( OUTLIN )
+      !>         CALL TOSTDO ( '   Frame IDs and names' )
       !>
-      !>                 DO J = 1, CARDI(IDSET)
-      !>                    CALL FRMNAM ( IDSET(J), FRNAME )
-      !>                    WRITE (*,*) IDSET(J), '  ', FRNAME
-      !>                 END DO
+      !>         DO J = 1, CARDI(IDSET)
+      !>            CALL FRMNAM ( IDSET(J), FRNAME )
+      !>            WRITE (*,*) IDSET(J), '  ', FRNAME
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13354,64 +13376,66 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LSPCN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LSPCN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      LSPCN
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      LSPCN
       !>
-      !>              CHARACTER*(*)         ABCORR
-      !>              PARAMETER           ( ABCORR = 'NONE' )
+      !>      CHARACTER*(*)         ABCORR
+      !>      PARAMETER           ( ABCORR = 'NONE' )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 36 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 36 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>              CHARACTER*(NAMLEN)    BODY
-      !>              CHARACTER*(FILSIZ)    LSK
-      !>              CHARACTER*(FILSIZ)    PCK
-      !>              CHARACTER*(FILSIZ)    SPK
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(NAMLEN)    BODY
+      !>      CHARACTER*(FILSIZ)    LSK
+      !>      CHARACTER*(FILSIZ)    PCK
+      !>      CHARACTER*(FILSIZ)    SPK
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LON
       !>
-      !>              CALL PROMPT ( 'Enter name of LSK file > ', LSK )
-      !>              CALL PROMPT ( 'Enter name of PCK file > ', PCK )
-      !>              CALL PROMPT ( 'Enter name of SPK file > ', SPK )
+      !>      CALL PROMPT ( 'Enter name of LSK file > ', LSK )
+      !>      CALL PROMPT ( 'Enter name of PCK file > ', PCK )
+      !>      CALL PROMPT ( 'Enter name of SPK file > ', SPK )
       !>
-      !>              CALL FURNSH ( LSK )
-      !>              CALL FURNSH ( PCK )
-      !>              CALL FURNSH ( SPK )
+      !>      CALL FURNSH ( LSK )
+      !>      CALL FURNSH ( PCK )
+      !>      CALL FURNSH ( SPK )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Kernels have been loaded.'
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Kernels have been loaded.'
+      !>      WRITE (*,*) ' '
       !>
-      !>              CALL PROMPT ( 'Enter name of central body       > ',
-      !>             .               BODY                                  )
-      !>              CALL PROMPT ( 'Enter calendar, JD, or DOY time  > ',
-      !>             .               TIMSTR                                )
+      !>      CALL PROMPT ( 'Enter name of central body       > ',
+      !>     .               BODY                                  )
+      !>      CALL PROMPT ( 'Enter calendar, JD, or DOY time  > ',
+      !>     .               TIMSTR                                )
       !>
-      !>              CALL STR2ET ( TIMSTR, ET )
+      !>      CALL STR2ET ( TIMSTR, ET )
       !>
-      !>        C
-      !>        C     Convert longitude to degrees.
-      !>        C
-      !>              LON = DPR() * LSPCN ( BODY, ET, ABCORR )
+      !>C
+      !>C     Convert longitude to degrees.
+      !>C
+      !>      LON = DPR() * LSPCN ( BODY, ET, ABCORR )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Central body              = ',  BODY
-      !>              WRITE (*,*) 'Time                      = ',  TIMSTR
-      !>              WRITE (*,*) 'Planetocentric L_s (deg.) = ',  LON
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Central body              = ',  BODY
+      !>      WRITE (*,*) 'Time                      = ',  TIMSTR
+      !>      WRITE (*,*) 'Planetocentric L_s (deg.) = ',  LON
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the LSK file named naif0012.tls, the PCK file
@@ -15230,78 +15254,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM OSCELT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM OSCELT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ELTS   (8)
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      MU     (1)
-      !>              DOUBLE PRECISION      STATE  (6)
-      !>              DOUBLE PRECISION      STEP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ELTS   (8)
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      MU     (1)
+      !>      DOUBLE PRECISION      STATE  (6)
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>        C
-      !>        C     Load the meta kernel listing the needed SPK, LSK and
-      !>        C     PCK with gravitational parameters kernels.
-      !>        C
-      !>              CALL FURNSH ( 'oscelt_ex1.tm' )
+      !>C
+      !>C     Load the meta kernel listing the needed SPK, LSK and
+      !>C     PCK with gravitational parameters kernels.
+      !>C
+      !>      CALL FURNSH ( 'oscelt_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert the time string to ephemeris time
-      !>        C
-      !>              CALL STR2ET ( 'Dec 25, 2007', ET )
+      !>C
+      !>C     Convert the time string to ephemeris time
+      !>C
+      !>      CALL STR2ET ( 'Dec 25, 2007', ET )
       !>
-      !>        C
-      !>        C     Retrieve the state of Phobos with respect to Mars in
-      !>        C     J2000.
-      !>        C
-      !>              CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
-      !>             .               STATE,   LT                          )
+      !>C
+      !>C     Retrieve the state of Phobos with respect to Mars in
+      !>C     J2000.
+      !>C
+      !>      CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+      !>     .               STATE,   LT                          )
       !>
-      !>        C
-      !>        C     Read the gravitational parameter for Mars.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
+      !>C
+      !>C     Read the gravitational parameter for Mars.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
       !>
-      !>        C
-      !>        C     Convert the state 6-vector to the elts 8-vector. Note:
-      !>        C     BODVRD returns data as arrays, so to access the
-      !>        C     gravitational parameter (the only value in the array),
-      !>        C     we use MU(1).
-      !>        C
-      !>              CALL OSCELT ( STATE, ET, MU(1), ELTS )
+      !>C
+      !>C     Convert the state 6-vector to the elts 8-vector. Note:
+      !>C     BODVRD returns data as arrays, so to access the
+      !>C     gravitational parameter (the only value in the array),
+      !>C     we use MU(1).
+      !>C
+      !>      CALL OSCELT ( STATE, ET, MU(1), ELTS )
       !>
-      !>        C
-      !>        C     Output the elts vector.
-      !>        C
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Perifocal distance          (km): ', ELTS(1)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Eccentricity                    : ', ELTS(2)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Inclination                (deg): ', ELTS(3) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Lon of ascending node      (deg): ', ELTS(4) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Argument of periapsis      (deg): ', ELTS(5) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Mean anomaly at epoch      (deg): ', ELTS(6) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Epoch                        (s): ', ELTS(7)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Gravitational parameter (km3/s2): ', ELTS(8)
+      !>C
+      !>C     Output the elts vector.
+      !>C
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Perifocal distance          (km): ', ELTS(1)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Eccentricity                    : ', ELTS(2)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Inclination                (deg): ', ELTS(3) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Lon of ascending node      (deg): ', ELTS(4) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Argument of periapsis      (deg): ', ELTS(5) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Mean anomaly at epoch      (deg): ', ELTS(6) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Epoch                        (s): ', ELTS(7)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Gravitational parameter (km3/s2): ', ELTS(8)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -15323,85 +15349,87 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM OSCELT_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM OSCELT_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      SPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      SPD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 24 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 24 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ELTS   (8)
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      MU     (1)
-      !>              DOUBLE PRECISION      STATE  (6)
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      ELTS   (8)
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      MU     (1)
+      !>      DOUBLE PRECISION      STATE  (6)
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               DIM
-      !>              INTEGER               I
+      !>      INTEGER               DIM
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load the meta kernel listing the needed SPK, LSK and
-      !>        C     PCK with gravitational parameters kernels.
-      !>        C
-      !>              CALL FURNSH ( 'oscelt_ex1.tm' )
+      !>C
+      !>C     Load the meta kernel listing the needed SPK, LSK and
+      !>C     PCK with gravitational parameters kernels.
+      !>C
+      !>      CALL FURNSH ( 'oscelt_ex1.tm' )
       !>
-      !>        C
-      !>        C     Read the gravitational parameter for Mars.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
+      !>C
+      !>C     Read the gravitational parameter for Mars.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
       !>
-      !>        C
-      !>        C     Convert the time string to ephemeris time
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1, 2000 12:00:00', ET )
+      !>C
+      !>C     Convert the time string to ephemeris time
+      !>C
+      !>      CALL STR2ET ( 'Jan 1, 2000 12:00:00', ET )
       !>
-      !>        C
-      !>        C     A step of six months - in seconds.
-      !>        C
-      !>              STEP = 180.0D0 * SPD( )
+      !>C
+      !>C     A step of six months - in seconds.
+      !>C
+      !>      STEP = 180.0D0 * SPD( )
       !>
-      !>        C
-      !>        C     10 years in steps of six months starting
-      !>        C     approximately Jan 1, 2000.
-      !>        C
-      !>              WRITE(*,'(A)') '        UCT Time          Inclination'
-      !>              WRITE(*,'(A)') '------------------------  -----------'
+      !>C
+      !>C     10 years in steps of six months starting
+      !>C     approximately Jan 1, 2000.
+      !>C
+      !>      WRITE(*,'(A)') '        UCT Time          Inclination'
+      !>      WRITE(*,'(A)') '------------------------  -----------'
       !>
-      !>              DO I= 1, 20
+      !>      DO I= 1, 20
       !>
-      !>        C
-      !>        C        Retrieve the state; convert to osculating elements.
-      !>        C
-      !>                 CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
-      !>             .                  STATE,   LT                          )
-      !>                 CALL OSCELT ( STATE, ET, MU(1), ELTS )
+      !>C
+      !>C        Retrieve the state; convert to osculating elements.
+      !>C
+      !>         CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+      !>     .                  STATE,   LT                          )
+      !>         CALL OSCELT ( STATE, ET, MU(1), ELTS )
       !>
-      !>        C
-      !>        C        Convert the ephemeris time to calendar UTC.
-      !>        C
-      !>                 CALL ET2UTC ( ET, 'C', 3, UTCSTR )
+      !>C
+      !>C        Convert the ephemeris time to calendar UTC.
+      !>C
+      !>         CALL ET2UTC ( ET, 'C', 3, UTCSTR )
       !>
-      !>                 WRITE(*,'(A,X,F12.6)') UTCSTR,  ELTS(3) * DPR( )
+      !>         WRITE(*,'(A,X,F12.6)') UTCSTR,  ELTS(3) * DPR( )
       !>
-      !>                 ET = ET + STEP
+      !>         ET = ET + STEP
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -16400,66 +16428,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PROMPT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PROMPT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(A,F22.10)' )
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 36 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(A,F22.10)' )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 36 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    OBS
-      !>              CHARACTER*(STRLEN)    TARGET
-      !>              CHARACTER*(STRLEN)    EPOCH
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    OBS
+      !>      CHARACTER*(STRLEN)    TARGET
+      !>      CHARACTER*(STRLEN)    EPOCH
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE ( 6 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE ( 6 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load kernel.
-      !>        C
-      !>              CALL FURNSH( 'prompt_ex1.tm' )
+      !>C
+      !>C     Load kernel.
+      !>C
+      !>      CALL FURNSH( 'prompt_ex1.tm' )
       !>
-      !>        C
-      !>        C     Prompt for the required inputs.
-      !>        C
-      !>              CALL PROMPT ( 'Enter UTC epoch             > ', EPOCH  )
-      !>              CALL PROMPT ( 'Enter observer name         > ', OBS    )
-      !>              CALL PROMPT ( 'Enter target name           > ', TARGET )
+      !>C
+      !>C     Prompt for the required inputs.
+      !>C
+      !>      CALL PROMPT ( 'Enter UTC epoch             > ', EPOCH  )
+      !>      CALL PROMPT ( 'Enter observer name         > ', OBS    )
+      !>      CALL PROMPT ( 'Enter target name           > ', TARGET )
       !>
-      !>        C
-      !>        C     Convert the UTC request time to ET (seconds past
-      !>        C     J2000, TDB).
-      !>        C
-      !>              CALL STR2ET( EPOCH, ET )
+      !>C
+      !>C     Convert the UTC request time to ET (seconds past
+      !>C     J2000, TDB).
+      !>C
+      !>      CALL STR2ET( EPOCH, ET )
       !>
-      !>        C
-      !>        C     Look up the state vector at the requested ET
-      !>        C
-      !>              CALL SPKEZR( TARGET, ET, 'J2000', 'NONE', OBS, STATE, LT)
+      !>C
+      !>C     Look up the state vector at the requested ET
+      !>C
+      !>      CALL SPKEZR( TARGET, ET, 'J2000', 'NONE', OBS, STATE, LT)
       !>
-      !>        C
-      !>        C     Output...
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT) 'Epoch               : ', ET
-      !>              WRITE(*,FMT) '   x-position   (km): ', STATE(1)
-      !>              WRITE(*,FMT) '   y-position   (km): ', STATE(2)
-      !>              WRITE(*,FMT) '   z-position   (km): ', STATE(3)
-      !>              WRITE(*,FMT) '   x-velocity (km/s): ', STATE(4)
-      !>              WRITE(*,FMT) '   y-velocity (km/s): ', STATE(5)
-      !>              WRITE(*,FMT) '   z-velocity (km/s): ', STATE(6)
+      !>C
+      !>C     Output...
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT) 'Epoch               : ', ET
+      !>      WRITE(*,FMT) '   x-position   (km): ', STATE(1)
+      !>      WRITE(*,FMT) '   y-position   (km): ', STATE(2)
+      !>      WRITE(*,FMT) '   z-position   (km): ', STATE(3)
+      !>      WRITE(*,FMT) '   x-velocity (km/s): ', STATE(4)
+      !>      WRITE(*,FMT) '   y-velocity (km/s): ', STATE(5)
+      !>      WRITE(*,FMT) '   z-velocity (km/s): ', STATE(6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the time string '2017-07-14T19:46:00' as epoch,
@@ -16804,53 +16834,55 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PRSDP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PRSDP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               SETSIZ
-      !>              PARAMETER           ( SETSIZ = 8  )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               SETSIZ
+      !>      PARAMETER           ( SETSIZ = 8  )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 11 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 11 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
       !>
-      !>              DOUBLE PRECISION      DPVAL
+      !>      DOUBLE PRECISION      DPVAL
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initialize the array of strings.
-      !>        C
-      !>              DATA                  STRVAL / '100,000,000',
-      !>             .                               ' -2 690 192',
-      !>             .                               '  +12.2 e-1',
-      !>             .                               '-3. 141 592',
-      !>             .                               '     1.2e12',
-      !>             .                               '        E10',
-      !>             .                               '         Pi',
-      !>             .                               '        -PI' /
+      !>C
+      !>C     Initialize the array of strings.
+      !>C
+      !>      DATA                  STRVAL / '100,000,000',
+      !>     .                               ' -2 690 192',
+      !>     .                               '  +12.2 e-1',
+      !>     .                               '-3. 141 592',
+      !>     .                               '     1.2e12',
+      !>     .                               '        E10',
+      !>     .                               '         Pi',
+      !>     .                               '        -PI' /
       !>
-      !>        C
-      !>        C     Parse each string into a DOUBLE PRECISION variable.
-      !>        C
-      !>              WRITE(*,'(A)') '   STRVAL               DPVAL'
-      !>              WRITE(*,'(A)') '-----------  --------------------------'
-      !>              DO I = 1, SETSIZ
+      !>C
+      !>C     Parse each string into a DOUBLE PRECISION variable.
+      !>C
+      !>      WRITE(*,'(A)') '   STRVAL               DPVAL'
+      !>      WRITE(*,'(A)') '-----------  --------------------------'
+      !>      DO I = 1, SETSIZ
       !>
-      !>                 CALL PRSDP ( STRVAL(I), DPVAL )
+      !>         CALL PRSDP ( STRVAL(I), DPVAL )
       !>
-      !>                 WRITE(*,'(A11,F28.12)') STRVAL(I), DPVAL
+      !>         WRITE(*,'(A11,F28.12)') STRVAL(I), DPVAL
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -17336,300 +17368,302 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PXFRM2_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>        C     Degrees per radian
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>        C
-      !>        C     Distance between two vectors
-      !>        C
-      !>              DOUBLE PRECISION      VDIST
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C     ABCORR is the desired light time and stellar
-      !>        C     aberration correction setting.
-      !>        C
-      !>              CHARACTER*(*)         ABCORR
-      !>              PARAMETER           ( ABCORR = 'CN+S' )
-      !>        C
-      !>        C     MGS_MOC_NA is the name of the camera that took
-      !>        C     the picture being analyzed.
-      !>        C
-      !>              CHARACTER*(*)         CAMERA
-      !>              PARAMETER           ( CAMERA = 'MGS_MOC_NA' )
+      !>```fortran
+      !>      PROGRAM PXFRM2_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>C     Degrees per radian
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>C
+      !>C     Distance between two vectors
+      !>C
+      !>      DOUBLE PRECISION      VDIST
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C     ABCORR is the desired light time and stellar
+      !>C     aberration correction setting.
+      !>C
+      !>      CHARACTER*(*)         ABCORR
+      !>      PARAMETER           ( ABCORR = 'CN+S' )
+      !>C
+      !>C     MGS_MOC_NA is the name of the camera that took
+      !>C     the picture being analyzed.
+      !>C
+      !>      CHARACTER*(*)         CAMERA
+      !>      PARAMETER           ( CAMERA = 'MGS_MOC_NA' )
       !>
-      !>              CHARACTER*(*)         METAKR
-      !>              PARAMETER           ( METAKR = 'pxfrm2_ex1.tm' )
+      !>      CHARACTER*(*)         METAKR
+      !>      PARAMETER           ( METAKR = 'pxfrm2_ex1.tm' )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               NCORNR
-      !>              PARAMETER           ( NCORNR = 4 )
+      !>      INTEGER               NCORNR
+      !>      PARAMETER           ( NCORNR = 4 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 80 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>        C     OBSREF is the observer reference frame on MGS.
-      !>        C
-      !>              CHARACTER*(FRNMLN)    OBSREF
-      !>              CHARACTER*(SHPLEN)    SHAPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>C     OBSREF is the observer reference frame on MGS.
+      !>C
+      !>      CHARACTER*(FRNMLN)    OBSREF
+      !>      CHARACTER*(SHPLEN)    SHAPE
       !>
-      !>              DOUBLE PRECISION      BOUNDS ( 3, NCORNR )
-      !>              DOUBLE PRECISION      BNDVEC ( 3 )
-      !>              DOUBLE PRECISION      BSIGHT ( 3 )
-      !>        C
-      !>        C     ETEMIT is the time at which the photons were
-      !>        C     emitted from Mars.  ETREC is the time at
-      !>        C     which the picture was taken by MGS.
-      !>        C
-      !>              DOUBLE PRECISION      ETREC
-      !>              DOUBLE PRECISION      ETEMIT
-      !>              DOUBLE PRECISION      DIST
-      !>        C
-      !>        C     LAT and LON are the latitude and longitude
-      !>        C     associated with one of the boundary FOV vectors.
-      !>        C
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>        C
-      !>        C     PMGSMR is the opposite of the apparent position of
-      !>        C     Mars with respect to MGS.
-      !>        C
-      !>              DOUBLE PRECISION      PMGSMR ( 3 )
-      !>        C
-      !>        C     RADII is a vector of the semi-axes of Mars.
-      !>        C
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RADIUS
-      !>        C
-      !>        C     ROTATE is a position transformation matrix from
-      !>        C     the camera frame at ETREC to the IAU_MARS frame
-      !>        C     at ETEMIT.
-      !>        C
-      !>              DOUBLE PRECISION      ROTATE ( 3, 3 )
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TMP    ( 3 )
+      !>      DOUBLE PRECISION      BOUNDS ( 3, NCORNR )
+      !>      DOUBLE PRECISION      BNDVEC ( 3 )
+      !>      DOUBLE PRECISION      BSIGHT ( 3 )
+      !>C
+      !>C     ETEMIT is the time at which the photons were
+      !>C     emitted from Mars.  ETREC is the time at
+      !>C     which the picture was taken by MGS.
+      !>C
+      !>      DOUBLE PRECISION      ETREC
+      !>      DOUBLE PRECISION      ETEMIT
+      !>      DOUBLE PRECISION      DIST
+      !>C
+      !>C     LAT and LON are the latitude and longitude
+      !>C     associated with one of the boundary FOV vectors.
+      !>C
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>C
+      !>C     PMGSMR is the opposite of the apparent position of
+      !>C     Mars with respect to MGS.
+      !>C
+      !>      DOUBLE PRECISION      PMGSMR ( 3 )
+      !>C
+      !>C     RADII is a vector of the semi-axes of Mars.
+      !>C
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RADIUS
+      !>C
+      !>C     ROTATE is a position transformation matrix from
+      !>C     the camera frame at ETREC to the IAU_MARS frame
+      !>C     at ETEMIT.
+      !>C
+      !>      DOUBLE PRECISION      ROTATE ( 3, 3 )
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TMP    ( 3 )
       !>
-      !>              INTEGER               CAMID
-      !>              INTEGER               DIM
-      !>              INTEGER               N
+      !>      INTEGER               CAMID
+      !>      INTEGER               DIM
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
-      !>        C
-      !>        C     ------------------ Program Setup ------------------
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( METAKR )
-      !>        C
-      !>        C     Convert the time the picture was taken from a
-      !>        C     UTC time string to seconds past J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2003 OCT 13 06:00:00 UTC', ETREC )
-      !>        C
-      !>        C     Assume the one-way light times from different
-      !>        C     surface points on Mars to MGS within the camera's
-      !>        C     FOV are equal. This means the photons that make
-      !>        C     up different pixels were all emitted from Mars at
-      !>        C     ETEMIT and received by the MGS MOC camera at ETREC. It
-      !>        C     would be slow to process images using SINCPT for every
-      !>        C     pixel. Instead, we will use SINCPT on the
-      !>        C     boresight pixel and use SURFPT for one of the FOV
-      !>        C     boundary pixels. If this example program were extended
-      !>        C     to include all of the camera's pixels, SURFPT would
-      !>        C     be used for the remaining pixels.
-      !>        C
-      !>        C     Get the MGS MOC Narrow angle camera (MGS_MOC_NA)
-      !>        C     ID code. Then look up the field of view (FOV)
-      !>        C     parameters by calling GETFOV.
-      !>        C
-      !>              CALL BODN2C ( CAMERA, CAMID, FOUND )
+      !>      LOGICAL               FOUND
+      !>C
+      !>C     ------------------ Program Setup ------------------
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( METAKR )
+      !>C
+      !>C     Convert the time the picture was taken from a
+      !>C     UTC time string to seconds past J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2003 OCT 13 06:00:00 UTC', ETREC )
+      !>C
+      !>C     Assume the one-way light times from different
+      !>C     surface points on Mars to MGS within the camera's
+      !>C     FOV are equal. This means the photons that make
+      !>C     up different pixels were all emitted from Mars at
+      !>C     ETEMIT and received by the MGS MOC camera at ETREC. It
+      !>C     would be slow to process images using SINCPT for every
+      !>C     pixel. Instead, we will use SINCPT on the
+      !>C     boresight pixel and use SURFPT for one of the FOV
+      !>C     boundary pixels. If this example program were extended
+      !>C     to include all of the camera's pixels, SURFPT would
+      !>C     be used for the remaining pixels.
+      !>C
+      !>C     Get the MGS MOC Narrow angle camera (MGS_MOC_NA)
+      !>C     ID code. Then look up the field of view (FOV)
+      !>C     parameters by calling GETFOV.
+      !>C
+      !>      CALL BODN2C ( CAMERA, CAMID, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'Could not find ID code for ' //
-      !>             .                 'instrument #.'               )
-      !>                 CALL ERRCH  ( '#', CAMERA                   )
-      !>                 CALL SIGERR ( 'SPICE(NOTRANSLATION)'        )
+      !>         CALL SETMSG ( 'Could not find ID code for ' //
+      !>     .                 'instrument #.'               )
+      !>         CALL ERRCH  ( '#', CAMERA                   )
+      !>         CALL SIGERR ( 'SPICE(NOTRANSLATION)'        )
       !>
-      !>              END IF
-      !>        C
-      !>        C     GETFOV will return the name of the camera-fixed frame
-      !>        C     in the string OBSREF, the camera boresight vector in
-      !>        C     the array BSIGHT, and the FOV corner vectors in the
-      !>        C     array BOUNDS.
-      !>        C
-      !>              CALL GETFOV ( CAMID,  NCORNR, SHAPE, OBSREF,
-      !>             .              BSIGHT, N,      BOUNDS       )
+      !>      END IF
+      !>C
+      !>C     GETFOV will return the name of the camera-fixed frame
+      !>C     in the string OBSREF, the camera boresight vector in
+      !>C     the array BSIGHT, and the FOV corner vectors in the
+      !>C     array BOUNDS.
+      !>C
+      !>      CALL GETFOV ( CAMID,  NCORNR, SHAPE, OBSREF,
+      !>     .              BSIGHT, N,      BOUNDS       )
       !>
-      !>              WRITE (*,*) 'Observation Reference frame:  ', OBSREF
+      !>      WRITE (*,*) 'Observation Reference frame:  ', OBSREF
       !>
-      !>        C
-      !>        C     ----------- Boresight Surface Intercept -----------
-      !>        C
-      !>        C     Retrieve the time, surface intercept point, and vector
-      !>        C     from MGS to the boresight surface intercept point
-      !>        C     in IAU_MARS coordinates.
-      !>        C
-      !>              CALL SINCPT ( 'ELLIPSOID', 'MARS',  ETREC, 'IAU_MARS',
-      !>             .               ABCORR,     'MGS',   OBSREF, BSIGHT,
-      !>             .               SPOINT,      ETEMIT, SRFVEC, FOUND  )
+      !>C
+      !>C     ----------- Boresight Surface Intercept -----------
+      !>C
+      !>C     Retrieve the time, surface intercept point, and vector
+      !>C     from MGS to the boresight surface intercept point
+      !>C     in IAU_MARS coordinates.
+      !>C
+      !>      CALL SINCPT ( 'ELLIPSOID', 'MARS',  ETREC, 'IAU_MARS',
+      !>     .               ABCORR,     'MGS',   OBSREF, BSIGHT,
+      !>     .               SPOINT,      ETEMIT, SRFVEC, FOUND  )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'Intercept not found for the ' //
-      !>             .                 'boresight vector.'  )
-      !>                 CALL SIGERR ( 'SPICE(NOINTERCEPT)' )
+      !>         CALL SETMSG ( 'Intercept not found for the ' //
+      !>     .                 'boresight vector.'  )
+      !>         CALL SIGERR ( 'SPICE(NOINTERCEPT)' )
       !>
-      !>              END IF
-      !>        C
-      !>        C     Convert the intersection point of the boresight
-      !>        C     vector and Mars from rectangular into latitudinal
-      !>        C     coordinates. Convert radians to degrees.
-      !>        C
-      !>              CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
+      !>      END IF
+      !>C
+      !>C     Convert the intersection point of the boresight
+      !>C     vector and Mars from rectangular into latitudinal
+      !>C     coordinates. Convert radians to degrees.
+      !>C
+      !>      CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
       !>
-      !>              LON = LON * DPR ()
-      !>              LAT = LAT * DPR ()
+      !>      LON = LON * DPR ()
+      !>      LAT = LAT * DPR ()
       !>
-      !>              WRITE (*,*) 'Boresight surface intercept ' //
-      !>             .            'coordinates:'
-      !>              WRITE (*,*) '   Radius    (km) :  ', RADIUS
-      !>              WRITE (*,*) '   Latitude  (deg):  ', LAT
-      !>              WRITE (*,*) '   Longitude (deg):  ', LON
+      !>      WRITE (*,*) 'Boresight surface intercept ' //
+      !>     .            'coordinates:'
+      !>      WRITE (*,*) '   Radius    (km) :  ', RADIUS
+      !>      WRITE (*,*) '   Latitude  (deg):  ', LAT
+      !>      WRITE (*,*) '   Longitude (deg):  ', LON
       !>
-      !>        C
-      !>        C     ------- A Boundary FOV Surface Intercept (SURFPT) -------
-      !>        C
-      !>        C     Now we will transform one of the FOV corner vectors into
-      !>        C     the IAU_MARS frame so the surface intercept point can be
-      !>        C     calculated using SURFPT, which is faster than SUBPNT.
-      !>        C
-      !>        C     If this example program were extended to include all
-      !>        C     of the pixels in the camera's FOV, a few steps, such as
-      !>        C     finding the rotation matrix from the camera frame to the
-      !>        C     IAU_MARS frame, looking up the radii values for Mars,
-      !>        C     and finding the position of MGS with respect to Mars
-      !>        C     could be done once and used for every pixel.
-      !>        C
-      !>        C     Find the rotation matrix from the ray's reference
-      !>        C     frame at the time the photons were received (ETREC)
-      !>        C     to IAU_MARS at the time the photons were emitted
-      !>        C     (ETEMIT).
-      !>        C
-      !>              CALL PXFRM2 ( OBSREF, 'IAU_MARS', ETREC, ETEMIT, ROTATE )
+      !>C
+      !>C     ------- A Boundary FOV Surface Intercept (SURFPT) -------
+      !>C
+      !>C     Now we will transform one of the FOV corner vectors into
+      !>C     the IAU_MARS frame so the surface intercept point can be
+      !>C     calculated using SURFPT, which is faster than SUBPNT.
+      !>C
+      !>C     If this example program were extended to include all
+      !>C     of the pixels in the camera's FOV, a few steps, such as
+      !>C     finding the rotation matrix from the camera frame to the
+      !>C     IAU_MARS frame, looking up the radii values for Mars,
+      !>C     and finding the position of MGS with respect to Mars
+      !>C     could be done once and used for every pixel.
+      !>C
+      !>C     Find the rotation matrix from the ray's reference
+      !>C     frame at the time the photons were received (ETREC)
+      !>C     to IAU_MARS at the time the photons were emitted
+      !>C     (ETEMIT).
+      !>C
+      !>      CALL PXFRM2 ( OBSREF, 'IAU_MARS', ETREC, ETEMIT, ROTATE )
       !>
-      !>        C
-      !>        C     Look up the radii values for Mars.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, DIM, RADII )
+      !>C
+      !>C     Look up the radii values for Mars.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, DIM, RADII )
       !>
-      !>        C
-      !>        C     Find the position of the center of Mars with respect
-      !>        C     to MGS.  The position of the observer with respect
-      !>        C     to Mars is required for the call to SURFPT.  Note:
-      !>        C     the apparent position of MGS with respect to Mars is
-      !>        C     not the same as the negative of Mars with respect to MGS.
-      !>        C
-      !>              CALL VSUB   ( SPOINT, SRFVEC, PMGSMR )
+      !>C
+      !>C     Find the position of the center of Mars with respect
+      !>C     to MGS.  The position of the observer with respect
+      !>C     to Mars is required for the call to SURFPT.  Note:
+      !>C     the apparent position of MGS with respect to Mars is
+      !>C     not the same as the negative of Mars with respect to MGS.
+      !>C
+      !>      CALL VSUB   ( SPOINT, SRFVEC, PMGSMR )
       !>
-      !>        C
-      !>        C     The selected boundary FOV pixel must be rotated into the
-      !>        C     IAU_MARS reference frame.
-      !>        C
-      !>              CALL MXV    ( ROTATE, BOUNDS(1,1), BNDVEC )
+      !>C
+      !>C     The selected boundary FOV pixel must be rotated into the
+      !>C     IAU_MARS reference frame.
+      !>C
+      !>      CALL MXV    ( ROTATE, BOUNDS(1,1), BNDVEC )
       !>
-      !>        C
-      !>        C     Calculate the surface point of the boundary FOV
-      !>        C     vector.
-      !>        C
-      !>              CALL SURFPT ( PMGSMR,   BNDVEC, RADII(1), RADII(2),
-      !>             .              RADII(3), SPOINT, FOUND )
+      !>C
+      !>C     Calculate the surface point of the boundary FOV
+      !>C     vector.
+      !>C
+      !>      CALL SURFPT ( PMGSMR,   BNDVEC, RADII(1), RADII(2),
+      !>     .              RADII(3), SPOINT, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'Could not calculate surface point.')
-      !>                 CALL SIGERR ( 'SPICE(NOTFOUND)' )
+      !>         CALL SETMSG ( 'Could not calculate surface point.')
+      !>         CALL SIGERR ( 'SPICE(NOTFOUND)' )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              CALL VEQU   ( SPOINT, TMP )
-      !>        C
-      !>        C     Convert the intersection point of the boundary
-      !>        C     FOV vector and Mars from rectangular into
-      !>        C     latitudinal coordinates. Convert radians
-      !>        C     to degrees.
-      !>        C
-      !>              CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
+      !>      CALL VEQU   ( SPOINT, TMP )
+      !>C
+      !>C     Convert the intersection point of the boundary
+      !>C     FOV vector and Mars from rectangular into
+      !>C     latitudinal coordinates. Convert radians
+      !>C     to degrees.
+      !>C
+      !>      CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
       !>
-      !>              LON = LON * DPR ()
-      !>              LAT = LAT * DPR ()
+      !>      LON = LON * DPR ()
+      !>      LAT = LAT * DPR ()
       !>
-      !>              WRITE (*,*) 'Boundary vector surface intercept ' //
-      !>             .               'coordinates using SURFPT:'
-      !>              WRITE (*,*) '   Radius    (km) :  ', RADIUS
-      !>              WRITE (*,*) '   Latitude  (deg):  ', LAT
-      !>              WRITE (*,*) '   Longitude (deg):  ', LON
-      !>              WRITE (*,*) '   Emit time using'
-      !>              WRITE (*,*) '   boresight LT(s):  ', ETEMIT
+      !>      WRITE (*,*) 'Boundary vector surface intercept ' //
+      !>     .               'coordinates using SURFPT:'
+      !>      WRITE (*,*) '   Radius    (km) :  ', RADIUS
+      !>      WRITE (*,*) '   Latitude  (deg):  ', LAT
+      !>      WRITE (*,*) '   Longitude (deg):  ', LON
+      !>      WRITE (*,*) '   Emit time using'
+      !>      WRITE (*,*) '   boresight LT(s):  ', ETEMIT
       !>
-      !>        C
-      !>        C     ----  A Boundary FOV Surface Intercept Verification -----
-      !>        C
-      !>        C     For verification only, we will calculate the surface
-      !>        C     intercept coordinates for the selected boundary vector
-      !>        C     using SINCPT and compare to the faster SURFPT method.
-      !>        C
-      !>              CALL SINCPT ( 'ELLIPSOID', 'MARS',  ETREC, 'IAU_MARS',
-      !>             .               ABCORR,     'MGS',   OBSREF, BOUNDS(1,1),
-      !>             .               SPOINT,      ETEMIT, SRFVEC, FOUND )
+      !>C
+      !>C     ----  A Boundary FOV Surface Intercept Verification -----
+      !>C
+      !>C     For verification only, we will calculate the surface
+      !>C     intercept coordinates for the selected boundary vector
+      !>C     using SINCPT and compare to the faster SURFPT method.
+      !>C
+      !>      CALL SINCPT ( 'ELLIPSOID', 'MARS',  ETREC, 'IAU_MARS',
+      !>     .               ABCORR,     'MGS',   OBSREF, BOUNDS(1,1),
+      !>     .               SPOINT,      ETEMIT, SRFVEC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'Intercept not found for the ' //
-      !>             .                 'boresight vector.'  )
-      !>                 CALL SIGERR ( 'SPICE(NOINTERCEPT)' )
+      !>         CALL SETMSG ( 'Intercept not found for the ' //
+      !>     .                 'boresight vector.'  )
+      !>         CALL SIGERR ( 'SPICE(NOINTERCEPT)' )
       !>
-      !>              END IF
-      !>        C
-      !>        C     Convert the intersection point of the selected boundary
-      !>        C     vector and Mars from rectangular into latitudinal
-      !>        C     coordinates. Convert radians to degrees.
-      !>        C
-      !>              CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
+      !>      END IF
+      !>C
+      !>C     Convert the intersection point of the selected boundary
+      !>C     vector and Mars from rectangular into latitudinal
+      !>C     coordinates. Convert radians to degrees.
+      !>C
+      !>      CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
       !>
-      !>              LON = LON * DPR ()
-      !>              LAT = LAT * DPR ()
+      !>      LON = LON * DPR ()
+      !>      LAT = LAT * DPR ()
       !>
-      !>              WRITE (*,*) 'Boundary vector surface intercept ' //
-      !>             .               'coordinates using SINCPT:'
-      !>              WRITE (*,*) '   Radius    (km) :  ', RADIUS
-      !>              WRITE (*,*) '   Latitude  (deg):  ', LAT
-      !>              WRITE (*,*) '   Longitude (deg):  ', LON
-      !>              WRITE (*,*) '   Emit time using'
-      !>              WRITE (*,*) '   boundary LT(s) :  ', ETEMIT
+      !>      WRITE (*,*) 'Boundary vector surface intercept ' //
+      !>     .               'coordinates using SINCPT:'
+      !>      WRITE (*,*) '   Radius    (km) :  ', RADIUS
+      !>      WRITE (*,*) '   Latitude  (deg):  ', LAT
+      !>      WRITE (*,*) '   Longitude (deg):  ', LON
+      !>      WRITE (*,*) '   Emit time using'
+      !>      WRITE (*,*) '   boundary LT(s) :  ', ETEMIT
       !>
-      !>        C
-      !>        C     We expect this to be a very small distance.
-      !>        C
-      !>              DIST = VDIST ( TMP, SPOINT )
+      !>C
+      !>C     We expect this to be a very small distance.
+      !>C
+      !>      DIST = VDIST ( TMP, SPOINT )
       !>
-      !>              WRITE (*,*) 'Distance between surface points'
-      !>              WRITE (*,*) 'of the selected boundary vector using'
-      !>              WRITE (*,*) 'SURFPT and SINCPT:'
-      !>              WRITE (*,*) '   Distance (mm):     ', DIST*(1.E6)
+      !>      WRITE (*,*) 'Distance between surface points'
+      !>      WRITE (*,*) 'of the selected boundary vector using'
+      !>      WRITE (*,*) 'SURFPT and SINCPT:'
+      !>      WRITE (*,*) '   Distance (mm):     ', DIST*(1.E6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18038,62 +18072,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMCT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMCT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Uppercase
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'INVALID COMMAND. WORD # NOT RECOGNIZED.'
+      !>C
+      !>C     1. Uppercase
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'INVALID COMMAND. WORD # NOT RECOGNIZED.'
       !>
-      !>              CALL REPMCT ( INSTR, MARKER, 5, 'U', OUTSTR )
+      !>      CALL REPMCT ( INSTR, MARKER, 5, 'U', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Replacement text in uppercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 1: Replacement text in uppercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Lowercase
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Word XX of the XX sentence was ...'
+      !>C
+      !>C     2. Lowercase
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Word XX of the XX sentence was ...'
       !>
-      !>              CALL REPMCT ( INSTR, MARKER, 5, 'L', OUTSTR )
+      !>      CALL REPMCT ( INSTR, MARKER, 5, 'L', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Replacement text in lowercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 2: Replacement text in lowercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Capitalized
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Name:  YY.  Rank:  XX.'
+      !>C
+      !>C     2. Capitalized
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Name:  YY.  Rank:  XX.'
       !>
-      !>              CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
-      !>              CALL REPMCT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
+      !>      CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
+      !>      CALL REPMCT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 3: Replacement text capitalized.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) 'Case 3: Replacement text capitalized.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18364,61 +18400,63 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPML_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPML_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Uppercase
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #.'
+      !>C
+      !>C     1. Uppercase
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #.'
       !>
-      !>              CALL REPML ( INSTR, MARKER, .FALSE. , 'U' , OUTSTR )
+      !>      CALL REPML ( INSTR, MARKER, .FALSE. , 'U' , OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Replacement text in uppercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 1: Replacement text in uppercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Lowercase
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Invalid value. The value was:  XX.'
+      !>C
+      !>C     2. Lowercase
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Invalid value. The value was:  XX.'
       !>
-      !>              CALL REPML ( INSTR, MARKER, .TRUE. , 'l' , OUTSTR )
+      !>      CALL REPML ( INSTR, MARKER, .TRUE. , 'l' , OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Replacement text in lowercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 2: Replacement text in lowercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Capitalized
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #.'
+      !>C
+      !>C     2. Capitalized
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #.'
       !>
-      !>              CALL REPML ( INSTR, MARKER, .FALSE. , 'c' , OUTSTR )
+      !>      CALL REPML ( INSTR, MARKER, .FALSE. , 'c' , OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 3: Replacement text capitalized.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) 'Case 3: Replacement text capitalized.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18644,43 +18682,45 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ROTVEC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ROTVEC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      PI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      PI
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ANGLE
-      !>              DOUBLE PRECISION      V1    ( 3 )
-      !>              DOUBLE PRECISION      VOUT  ( 3 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ANGLE
+      !>      DOUBLE PRECISION      V1    ( 3 )
+      !>      DOUBLE PRECISION      VOUT  ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IAXIS
+      !>      INTEGER               I
+      !>      INTEGER               IAXIS
       !>
-      !>        C
-      !>        C     Input values.
-      !>        C
-      !>              DATA                  V1  / 1.414D0, 0.D0, 0.D0 /
+      !>C
+      !>C     Input values.
+      !>C
+      !>      DATA                  V1  / 1.414D0, 0.D0, 0.D0 /
       !>
-      !>              ANGLE = PI( )/4
-      !>              IAXIS = 3
+      !>      ANGLE = PI( )/4
+      !>      IAXIS = 3
       !>
-      !>        C
-      !>        C     Rotate V1 by ANGLE radians about IAXIS
-      !>        C
-      !>              CALL ROTVEC (V1, ANGLE, IAXIS, VOUT)
+      !>C
+      !>C     Rotate V1 by ANGLE radians about IAXIS
+      !>C
+      !>      CALL ROTVEC (V1, ANGLE, IAXIS, VOUT)
       !>
-      !>              WRITE(*,'(A,3F10.3)') 'Input vector  :',
-      !>             .                        ( V1(I), I=1,3 )
-      !>              WRITE(*,'(A,3F10.3)') 'Rotated vector:',
-      !>             .                      ( VOUT(I), I=1,3 )
+      !>      WRITE(*,'(A,3F10.3)') 'Input vector  :',
+      !>     .                        ( V1(I), I=1,3 )
+      !>      WRITE(*,'(A,3F10.3)') 'Rotated vector:',
+      !>     .                      ( VOUT(I), I=1,3 )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -19555,26 +19595,28 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPHSD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPHSD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION        SPHSD
-      !>              DOUBLE PRECISION        PI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION        SPHSD
+      !>      DOUBLE PRECISION        PI
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        DIST
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        DIST
       !>
-      !>              DIST = SPHSD ( 1.D3, PI()/2.D0, PI()/4.D0,
-      !>             .                          0.D0, PI()/4.D0 )
+      !>      DIST = SPHSD ( 1.D3, PI()/2.D0, PI()/4.D0,
+      !>     .                          0.D0, PI()/4.D0 )
       !>
-      !>              WRITE(*,*) 'Spherical surface distance:', DIST
+      !>      WRITE(*,*) 'Spherical surface distance:', DIST
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20030,75 +20072,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SRFREC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SRFREC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      X     ( 3 )
-      !>              DOUBLE PRECISION      RADIUS
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      X     ( 3 )
+      !>      DOUBLE PRECISION      RADIUS
       !>
-      !>        C
-      !>        C     Load the kernel pool with a PCK file that contains
-      !>        C     values for the radii of the Earth.
-      !>        C
-      !>              CALL FURNSH ( 'pck00008.tpc' )
+      !>C
+      !>C     Load the kernel pool with a PCK file that contains
+      !>C     values for the radii of the Earth.
+      !>C
+      !>      CALL FURNSH ( 'pck00008.tpc' )
       !>
-      !>        C
-      !>        C     Find X, the rectangular coordinates of the
-      !>        C     surface point defined by LAT and LON.  The
-      !>        C     NAIF integer code for the Earth is 399.
-      !>        C     (See the NAIF_IDS required reading file for
-      !>        C     the complete set of codes.)
-      !>        C
-      !>              LON  =  100.D0
-      !>              LAT   =  -35.D0
+      !>C
+      !>C     Find X, the rectangular coordinates of the
+      !>C     surface point defined by LAT and LON.  The
+      !>C     NAIF integer code for the Earth is 399.
+      !>C     (See the NAIF_IDS required reading file for
+      !>C     the complete set of codes.)
+      !>C
+      !>      LON  =  100.D0
+      !>      LAT   =  -35.D0
       !>
-      !>              WRITE (*,*) 'Original latitudinal coordinates'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  Longitude (deg) = ', LON
-      !>              WRITE (*,*) '  Latitude  (deg) = ', LAT
+      !>      WRITE (*,*) 'Original latitudinal coordinates'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  Longitude (deg) = ', LON
+      !>      WRITE (*,*) '  Latitude  (deg) = ', LAT
       !>
-      !>        C
-      !>        C     Convert angles to radians on input to SRFREC.
-      !>        C
-      !>              CALL SRFREC ( 399, LON*RPD(), LAT*RPD(), X )
+      !>C
+      !>C     Convert angles to radians on input to SRFREC.
+      !>C
+      !>      CALL SRFREC ( 399, LON*RPD(), LAT*RPD(), X )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Rectangular coordinates '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  X (km)          = ', X(1)
-      !>              WRITE (*,*) '  Y (km)          = ', X(2)
-      !>              WRITE (*,*) '  Z (km)          = ', X(3)
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Rectangular coordinates '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  X (km)          = ', X(1)
+      !>      WRITE (*,*) '  Y (km)          = ', X(2)
+      !>      WRITE (*,*) '  Z (km)          = ', X(3)
       !>
-      !>        C
-      !>        C     Now try to recover the original latitudinal
-      !>        C     coordinates from the rectangular coordinates
-      !>        C     found by SRFREC.
-      !>        C
-      !>              CALL RECLAT ( X, RADIUS, LON, LAT )
+      !>C
+      !>C     Now try to recover the original latitudinal
+      !>C     coordinates from the rectangular coordinates
+      !>C     found by SRFREC.
+      !>C
+      !>      CALL RECLAT ( X, RADIUS, LON, LAT )
       !>
-      !>        C
-      !>        C     Convert angles to degrees for display.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Latitudinal coordinates recovered '   //
-      !>             .            'from rectangular coordinates'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  Longitude (deg) = ', LON * DPR()
-      !>              WRITE (*,*) '  Latitude  (deg) = ', LAT * DPR()
-      !>              WRITE (*,*) '  Radius    (km)  = ', RADIUS
+      !>C
+      !>C     Convert angles to degrees for display.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Latitudinal coordinates recovered '   //
+      !>     .            'from rectangular coordinates'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  Longitude (deg) = ', LON * DPR()
+      !>      WRITE (*,*) '  Latitude  (deg) = ', LAT * DPR()
+      !>      WRITE (*,*) '  Radius    (km)  = ', RADIUS
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20857,131 +20901,133 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TWOVXF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TWOVXF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>              DOUBLE PRECISION      JYEAR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>      DOUBLE PRECISION      JYEAR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'twovxf_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'twovxf_ex1.tm' )
       !>
-      !>        C
-      !>        C     Define the Right Ascension and Declination, and the
-      !>        C     proper motion in both coordinates, of Canopus, relative
-      !>        C     to the J2000 frame at J2000 epoch, in degrees and
-      !>        C     arcsecond/yr respectively. Note that the values used here
-      !>        C     may not be suitable for real applications.
-      !>        C
-      !>              DOUBLE PRECISION      RAJ2K
-      !>              PARAMETER           ( RAJ2K   =  90.3991968556D0 )
+      !>C
+      !>C     Define the Right Ascension and Declination, and the
+      !>C     proper motion in both coordinates, of Canopus, relative
+      !>C     to the J2000 frame at J2000 epoch, in degrees and
+      !>C     arcsecond/yr respectively. Note that the values used here
+      !>C     may not be suitable for real applications.
+      !>C
+      !>      DOUBLE PRECISION      RAJ2K
+      !>      PARAMETER           ( RAJ2K   =  90.3991968556D0 )
       !>
-      !>              DOUBLE PRECISION      DECJ2K
-      !>              PARAMETER           ( DECJ2K  = -52.6956610556D0 )
+      !>      DOUBLE PRECISION      DECJ2K
+      !>      PARAMETER           ( DECJ2K  = -52.6956610556D0 )
       !>
-      !>              DOUBLE PRECISION      PMRA
-      !>              PARAMETER           ( PMRA    =  19.93D-3        )
+      !>      DOUBLE PRECISION      PMRA
+      !>      PARAMETER           ( PMRA    =  19.93D-3        )
       !>
-      !>              DOUBLE PRECISION      PMDEC
-      !>              PARAMETER           ( PMDEC   =  23.24D-3        )
+      !>      DOUBLE PRECISION      PMDEC
+      !>      PARAMETER           ( PMDEC   =  23.24D-3        )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      CANREC ( 3    )
-      !>              DOUBLE PRECISION      DEC
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PCANO  ( 3    )
-      !>              DOUBLE PRECISION      RA
-      !>              DOUBLE PRECISION      RPMRA
-      !>              DOUBLE PRECISION      RPMDEC
-      !>              DOUBLE PRECISION      STATE  ( 6    )
-      !>              DOUBLE PRECISION      STCANO ( 6    )
-      !>              DOUBLE PRECISION      STERTH ( 6    )
-      !>              DOUBLE PRECISION      STSUN  ( 6    )
-      !>              DOUBLE PRECISION      XFISC  ( 6, 6 )
-      !>              DOUBLE PRECISION      XFORM  ( 3, 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      CANREC ( 3    )
+      !>      DOUBLE PRECISION      DEC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PCANO  ( 3    )
+      !>      DOUBLE PRECISION      RA
+      !>      DOUBLE PRECISION      RPMRA
+      !>      DOUBLE PRECISION      RPMDEC
+      !>      DOUBLE PRECISION      STATE  ( 6    )
+      !>      DOUBLE PRECISION      STCANO ( 6    )
+      !>      DOUBLE PRECISION      STERTH ( 6    )
+      !>      DOUBLE PRECISION      STSUN  ( 6    )
+      !>      DOUBLE PRECISION      XFISC  ( 6, 6 )
+      !>      DOUBLE PRECISION      XFORM  ( 3, 3 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the TDB input time string to seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
+      !>C
+      !>C     Convert the TDB input time string to seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
       !>
-      !>        C
-      !>        C     Define an approximate "state vector" for Canopus using
-      !>        C     the J2000-relative, unit direction vector toward Canopus
-      !>        C     at a specified time ET (time is needed to compute proper
-      !>        C     motion) as position and the zero vector as velocity.
-      !>        C
-      !>              CALL CONVRT ( PMRA,  'ARCSECONDS', 'RADIANS', RPMRA  )
-      !>              CALL CONVRT ( PMDEC, 'ARCSECONDS', 'RADIANS', RPMDEC )
+      !>C
+      !>C     Define an approximate "state vector" for Canopus using
+      !>C     the J2000-relative, unit direction vector toward Canopus
+      !>C     at a specified time ET (time is needed to compute proper
+      !>C     motion) as position and the zero vector as velocity.
+      !>C
+      !>      CALL CONVRT ( PMRA,  'ARCSECONDS', 'RADIANS', RPMRA  )
+      !>      CALL CONVRT ( PMDEC, 'ARCSECONDS', 'RADIANS', RPMDEC )
       !>
-      !>              RA  = RAJ2K  * RPD() + RPMRA  * ET/JYEAR()
-      !>              DEC = DECJ2K * RPD() + RPMDEC * ET/JYEAR()
+      !>      RA  = RAJ2K  * RPD() + RPMRA  * ET/JYEAR()
+      !>      DEC = DECJ2K * RPD() + RPMDEC * ET/JYEAR()
       !>
-      !>              CALL RADREC ( 1.D0, RA, DEC, PCANO )
+      !>      CALL RADREC ( 1.D0, RA, DEC, PCANO )
       !>
-      !>        C
-      !>        C     Compute MRO geometric velocity w.r.t. the Solar System
-      !>        C     Barycenter, and use it to correct the Canopus direction
-      !>        C     for stellar aberration.
-      !>        C
-      !>              CALL SPKEZR ( 'MRO', ET,    'J2000', 'NONE',
-      !>             .              'SSB', STATE,  LT             )
+      !>C
+      !>C     Compute MRO geometric velocity w.r.t. the Solar System
+      !>C     Barycenter, and use it to correct the Canopus direction
+      !>C     for stellar aberration.
+      !>C
+      !>      CALL SPKEZR ( 'MRO', ET,    'J2000', 'NONE',
+      !>     .              'SSB', STATE,  LT             )
       !>
-      !>              CALL STELAB ( PCANO, STATE(4), STCANO       )
+      !>      CALL STELAB ( PCANO, STATE(4), STCANO       )
       !>
-      !>              CALL VPACK  ( 0.D0, 0.D0, 0.D0, STCANO(4)   )
+      !>      CALL VPACK  ( 0.D0, 0.D0, 0.D0, STCANO(4)   )
       !>
-      !>        C
-      !>        C     Let STSUN be the J2000-relative apparent state of the Sun
-      !>        C     relative to the spacecraft at ET.
-      !>        C
-      !>              CALL SPKEZR ( 'SUN', ET,    'J2000', 'CN+S',
-      !>             .              'MRO', STSUN, LT               )
+      !>C
+      !>C     Let STSUN be the J2000-relative apparent state of the Sun
+      !>C     relative to the spacecraft at ET.
+      !>C
+      !>      CALL SPKEZR ( 'SUN', ET,    'J2000', 'CN+S',
+      !>     .              'MRO', STSUN, LT               )
       !>
-      !>        C
-      !>        C     The matrix XFISC transforms states from J2000 frame
-      !>        C     to the Sun-Canopus reference frame at ET.
-      !>        C
-      !>              CALL TWOVXF ( STSUN, 3, STCANO, 1, XFISC )
+      !>C
+      !>C     The matrix XFISC transforms states from J2000 frame
+      !>C     to the Sun-Canopus reference frame at ET.
+      !>C
+      !>      CALL TWOVXF ( STSUN, 3, STCANO, 1, XFISC )
       !>
-      !>        C
-      !>        C     Compute the apparent state of the Earth as seen from MRO
-      !>        C     in the J2000 frame at ET and transform that vector into
-      !>        C     the Sun-Canopus reference frame.
-      !>        C
-      !>              CALL SPKEZR ( 'EARTH', ET, 'J2000', 'CN+S',
-      !>             .              'MRO', STATE, LT              )
+      !>C
+      !>C     Compute the apparent state of the Earth as seen from MRO
+      !>C     in the J2000 frame at ET and transform that vector into
+      !>C     the Sun-Canopus reference frame.
+      !>C
+      !>      CALL SPKEZR ( 'EARTH', ET, 'J2000', 'CN+S',
+      !>     .              'MRO', STATE, LT              )
       !>
-      !>              CALL MXVG ( XFISC, STATE, 6, 6, STERTH )
+      !>      CALL MXVG ( XFISC, STATE, 6, 6, STERTH )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              WRITE(*,'(A)') 'Earth as seen from MRO in Sun-Canopus '
-      !>             .           //  'frame (km and km/s):'
-      !>              WRITE(*,'(A,3F16.3)') '   position:',
-      !>             .                     ( STERTH(I), I=1,3 )
-      !>              WRITE(*,'(A,3F16.3)') '   velocity:',
-      !>             .                     ( STERTH(I), I=4,6 )
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      WRITE(*,'(A)') 'Earth as seen from MRO in Sun-Canopus '
+      !>     .           //  'frame (km and km/s):'
+      !>      WRITE(*,'(A,3F16.3)') '   position:',
+      !>     .                     ( STERTH(I), I=1,3 )
+      !>      WRITE(*,'(A,3F16.3)') '   velocity:',
+      !>     .                     ( STERTH(I), I=4,6 )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -21183,72 +21229,74 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM UDDF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM UDDF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              EXTERNAL                 UDFUNC
+      !>      EXTERNAL                 UDFUNC
       !>
-      !>              DOUBLE PRECISION         ET
-      !>              DOUBLE PRECISION         DT
-      !>              DOUBLE PRECISION         DERIV
+      !>      DOUBLE PRECISION         ET
+      !>      DOUBLE PRECISION         DT
+      !>      DOUBLE PRECISION         DERIV
       !>
-      !>        C
-      !>        C     Load leapsecond and SPK kernels. The name of the
-      !>        C     meta kernel file shown here is fictitious; you
-      !>        C     must supply the name of a file available
-      !>        C     on your own computer system.
-      !>        C
-      !>              CALL FURNSH ( 'uddf_ex1.tm' )
+      !>C
+      !>C     Load leapsecond and SPK kernels. The name of the
+      !>C     meta kernel file shown here is fictitious; you
+      !>C     must supply the name of a file available
+      !>C     on your own computer system.
+      !>C
+      !>      CALL FURNSH ( 'uddf_ex1.tm' )
       !>
-      !>        C
-      !>        C     Use a shift of one second off the epoch of interest.
-      !>        C
-      !>              DT = 1.D0
+      !>C
+      !>C     Use a shift of one second off the epoch of interest.
+      !>C
+      !>      DT = 1.D0
       !>
-      !>        C
-      !>        C     Convert the epoch date string to ephemeris seconds.
-      !>        C
-      !>              CALL STR2ET ( 'JAN 1 2009', ET )
+      !>C
+      !>C     Convert the epoch date string to ephemeris seconds.
+      !>C
+      !>      CALL STR2ET ( 'JAN 1 2009', ET )
       !>
-      !>        C
-      !>        C     Calculate the derivative of UDFUNC at ET.
-      !>        C
-      !>              CALL UDDF ( UDFUNC, ET, DT, DERIV )
+      !>C
+      !>C     Calculate the derivative of UDFUNC at ET.
+      !>C
+      !>      CALL UDDF ( UDFUNC, ET, DT, DERIV )
       !>
-      !>        C
-      !>        C     Output the calculated derivative.
-      !>        C
-      !>              WRITE(*,*) DERIV
+      !>C
+      !>C     Output the calculated derivative.
+      !>C
+      !>      WRITE(*,*) DERIV
       !>
-      !>              END
+      !>      END
       !>
-      !>        C
-      !>        C     A scalar quantity function that returns the light-time
-      !>        C     between the Moon and Mercury at ET.
-      !>        C
-      !>              SUBROUTINE UDFUNC ( ET, VALUE )
+      !>C
+      !>C     A scalar quantity function that returns the light-time
+      !>C     between the Moon and Mercury at ET.
+      !>C
+      !>      SUBROUTINE UDFUNC ( ET, VALUE )
       !>
-      !>              IMPLICIT NONE
+      !>      IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION         ET
-      !>              DOUBLE PRECISION         VALUE
+      !>      DOUBLE PRECISION         ET
+      !>      DOUBLE PRECISION         VALUE
       !>
-      !>              DOUBLE PRECISION         POS  (3)
-      !>              DOUBLE PRECISION         LT
+      !>      DOUBLE PRECISION         POS  (3)
+      !>      DOUBLE PRECISION         LT
       !>
-      !>        C
-      !>        C     Evaluate the apparent position of Mercury with respect
-      !>        C     to the Moon at ET.
-      !>        C
-      !>              CALL SPKPOS ( 'MERCURY', ET, 'J2000', 'LT+S', 'MOON',
-      !>             .               POS,   LT )
+      !>C
+      !>C     Evaluate the apparent position of Mercury with respect
+      !>C     to the Moon at ET.
+      !>C
+      !>      CALL SPKPOS ( 'MERCURY', ET, 'J2000', 'LT+S', 'MOON',
+      !>     .               POS,   LT )
       !>
-      !>        C
-      !>        C     Return the light-time value as the scalar quantity.
-      !>        C
-      !>              VALUE = LT
+      !>C
+      !>C     Return the light-time value as the scalar quantity.
+      !>C
+      !>      VALUE = LT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -22687,66 +22735,68 @@ contains
       !>
       !>     Example code begins here.
       !>
-      !>           PROGRAM EX1
-      !>           IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EX1
+      !>      IMPLICIT NONE
       !>
-      !>     C
-      !>     C     SPICELIB functions
-      !>     C
-      !>           DOUBLE PRECISION      DPR
-      !>           DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>     C
-      !>     C     Local variables
-      !>     C
-      !>           DOUBLE PRECISION      DLON
-      !>           DOUBLE PRECISION      EP     ( 3, 2 )
-      !>           DOUBLE PRECISION      EPTLAT
-      !>           DOUBLE PRECISION      MIDLAT
-      !>           DOUBLE PRECISION      MIDLON
-      !>           DOUBLE PRECISION      MIDRAD
-      !>           DOUBLE PRECISION      MIDPT  ( 3 )
-      !>           DOUBLE PRECISION      OUTLAT
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DLON
+      !>      DOUBLE PRECISION      EP     ( 3, 2 )
+      !>      DOUBLE PRECISION      EPTLAT
+      !>      DOUBLE PRECISION      MIDLAT
+      !>      DOUBLE PRECISION      MIDLON
+      !>      DOUBLE PRECISION      MIDRAD
+      !>      DOUBLE PRECISION      MIDPT  ( 3 )
+      !>      DOUBLE PRECISION      OUTLAT
       !>
-      !>     C
-      !>     C     Let the segment have a longitude extent
-      !>     C     of 60 degrees.
-      !>     C
-      !>           DLON   = 60.D0 * RPD()
+      !>C
+      !>C     Let the segment have a longitude extent
+      !>C     of 60 degrees.
+      !>C
+      !>      DLON   = 60.D0 * RPD()
       !>
-      !>     C
-      !>     C     Let the midpoint of the segment have
-      !>     C     a latitude of 30 degrees.
-      !>     C
-      !>           MIDLAT = 30.D0 * RPD()
+      !>C
+      !>C     Let the midpoint of the segment have
+      !>C     a latitude of 30 degrees.
+      !>C
+      !>      MIDLAT = 30.D0 * RPD()
       !>
-      !>     C
-      !>     C     Find the latitude of the segment's endpoints.
-      !>     C
-      !>           CALL ZZCHRLAT ( MIDLAT, DLON, EPTLAT )
+      !>C
+      !>C     Find the latitude of the segment's endpoints.
+      !>C
+      !>      CALL ZZCHRLAT ( MIDLAT, DLON, EPTLAT )
       !>
-      !>           WRITE (*,*) 'Endpoint latitude (deg) = ', EPTLAT*DPR()
+      !>      WRITE (*,*) 'Endpoint latitude (deg) = ', EPTLAT*DPR()
       !>
-      !>     C
-      !>     C     Generate the endpoints and the latitude
-      !>     C     of the segment's midpoint.
-      !>     C
-      !>     C     Note that the scale is arbitrary: we can set it
-      !>     C     to 1.0. The longitudes of the endpoints are
-      !>     C     arbitrary as well; only the difference is known.
-      !>     C
-      !>           CALL LATREC ( 1.D0, 0.D0, EPTLAT, EP(1,1) )
-      !>           CALL LATREC ( 1.D0, DLON, EPTLAT, EP(1,2) )
+      !>C
+      !>C     Generate the endpoints and the latitude
+      !>C     of the segment's midpoint.
+      !>C
+      !>C     Note that the scale is arbitrary: we can set it
+      !>C     to 1.0. The longitudes of the endpoints are
+      !>C     arbitrary as well; only the difference is known.
+      !>C
+      !>      CALL LATREC ( 1.D0, 0.D0, EPTLAT, EP(1,1) )
+      !>      CALL LATREC ( 1.D0, DLON, EPTLAT, EP(1,2) )
       !>
-      !>           CALL VLCOM  ( 0.5D0, EP(1,1),
-      !>          .              0.5D0, EP(1,2), MIDPT )
+      !>      CALL VLCOM  ( 0.5D0, EP(1,1),
+      !>     .              0.5D0, EP(1,2), MIDPT )
       !>
-      !>           CALL RECLAT ( MIDPT, MIDRAD, MIDLON, OUTLAT )
+      !>      CALL RECLAT ( MIDPT, MIDRAD, MIDLON, OUTLAT )
       !>
-      !>           WRITE (*,*) 'Check: difference (deg) = ',
-      !>          .            (MIDLAT - OUTLAT) * DPR()
+      !>      WRITE (*,*) 'Check: difference (deg) = ',
+      !>     .            (MIDLAT - OUTLAT) * DPR()
       !>
-      !>           END
+      !>      END
+      !>```
       !>
       !>     When this program was executed on a PC/Linux/gfortran 64-bit
       !>     platform, the output was:
@@ -26282,45 +26332,47 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>                 PROGRAM DSKGSR_EX1
-      !>                 IMPLICIT NONE
+      !>```fortran
+      !>            PROGRAM DSKGSR_EX1
+      !>            IMPLICIT NONE
       !>
-      !>                 INCLUDE 'dskdsc.inc'
+      !>            INCLUDE 'dskdsc.inc'
       !>
-      !>                 DOUBLE PRECISION      ZZDSKSGR
-      !>                 DOUBLE PRECISION      PI
+      !>            DOUBLE PRECISION      ZZDSKSGR
+      !>            DOUBLE PRECISION      PI
       !>
-      !>                 DOUBLE PRECISION      DSKDSC( DSKDSZ )
+      !>            DOUBLE PRECISION      DSKDSC( DSKDSZ )
       !>
-      !>           C
-      !>           C     Latitudinal coordinates:
-      !>           C
-      !>                 CALL CLEARD( DSKDSZ, DSKDSC )
+      !>      C
+      !>      C     Latitudinal coordinates:
+      !>      C
+      !>            CALL CLEARD( DSKDSZ, DSKDSC )
       !>
-      !>                 DSKDSC( SYSIDX ) = LATSYS
+      !>            DSKDSC( SYSIDX ) = LATSYS
       !>
-      !>           C
-      !>           C     Fill in the coordinate bounds in the descriptor.
-      !>           C
-      !>           C     Longitude:
-      !>           C
-      !>                 DSKDSC(MN1IDX) =  - PI()/2
-      !>                 DSKDSC(MX1IDX) =    PI()/2
-      !>           C
-      !>           C     Latitude:
-      !>           C
-      !>                 DSKDSC(MN2IDX) =    0
-      !>                 DSKDSC(MX2IDX) =    PI()/4
-      !>           C
-      !>           C     Radius:
-      !>           C
-      !>                 DSKDSC(MN3IDX) =    1.D3
-      !>                 DSKDSC(MX3IDX) =    1.1D3
+      !>      C
+      !>      C     Fill in the coordinate bounds in the descriptor.
+      !>      C
+      !>      C     Longitude:
+      !>      C
+      !>            DSKDSC(MN1IDX) =  - PI()/2
+      !>            DSKDSC(MX1IDX) =    PI()/2
+      !>      C
+      !>      C     Latitude:
+      !>      C
+      !>            DSKDSC(MN2IDX) =    0
+      !>            DSKDSC(MX2IDX) =    PI()/4
+      !>      C
+      !>      C     Radius:
+      !>      C
+      !>            DSKDSC(MN3IDX) =    1.D3
+      !>            DSKDSC(MX3IDX) =    1.1D3
       !>
-      !>                 WRITE (*,*) 'Radius bound for latitudinal section: ',
-      !>                .            ZZDSKSGR( DSKDSC )
+      !>            WRITE (*,*) 'Radius bound for latitudinal section: ',
+      !>           .            ZZDSKSGR( DSKDSC )
       !>
-      !>                 END
+      !>            END
+      !>```
       !>
       !>        When run on a PC/Linux/gfortran platform, the output
       !>        from this program was:
@@ -36703,135 +36755,137 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DPGRDR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DPGRDR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      DRECTN ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PGRVEL ( 3 )
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      STATE  ( 6 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      DRECTN ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PGRVEL ( 3 )
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      STATE  ( 6 )
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Load SPK, PCK, and LSK kernels, use a meta kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'dpgrdr_ex1.tm' )
+      !>C
+      !>C     Load SPK, PCK, and LSK kernels, use a meta kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'dpgrdr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Look up the radii for Mars.  Although we
-      !>        C     omit it here, we could first call BADKPV
-      !>        C     to make sure the variable BODY499_RADII
-      !>        C     has three elements and numeric data type.
-      !>        C     If the variable is not present in the kernel
-      !>        C     pool, BODVRD will signal an error.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the radii for Mars.  Although we
+      !>C     omit it here, we could first call BADKPV
+      !>C     to make sure the variable BODY499_RADII
+      !>C     has three elements and numeric data type.
+      !>C     If the variable is not present in the kernel
+      !>C     pool, BODVRD will signal an error.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Look up the geometric state of earth as seen from Mars at
-      !>        C     January 1, 2005 TDB, relative to the J2000 reference
-      !>        C     frame.
-      !>        C
-      !>              CALL STR2ET ( 'January 1, 2005 TDB', ET )
+      !>C
+      !>C     Look up the geometric state of earth as seen from Mars at
+      !>C     January 1, 2005 TDB, relative to the J2000 reference
+      !>C     frame.
+      !>C
+      !>      CALL STR2ET ( 'January 1, 2005 TDB', ET )
       !>
-      !>              CALL SPKEZR ( 'Earth', ET,    'J2000', 'LT+S',
-      !>             .              'Mars',  STATE, LT               )
+      !>      CALL SPKEZR ( 'Earth', ET,    'J2000', 'LT+S',
+      !>     .              'Mars',  STATE, LT               )
       !>
-      !>        C
-      !>        C     Convert position to planetographic coordinates.
-      !>        C
-      !>              CALL RECPGR ( 'MARS', STATE, RE, F, LON, LAT, ALT )
+      !>C
+      !>C     Convert position to planetographic coordinates.
+      !>C
+      !>      CALL RECPGR ( 'MARS', STATE, RE, F, LON, LAT, ALT )
       !>
-      !>        C
-      !>        C     Convert velocity to planetographic coordinates.
-      !>        C
+      !>C
+      !>C     Convert velocity to planetographic coordinates.
+      !>C
       !>
-      !>              CALL DPGRDR ( 'MARS', STATE(1), STATE(2), STATE(3),
-      !>             .               RE,    F,        JACOBI             )
+      !>      CALL DPGRDR ( 'MARS', STATE(1), STATE(2), STATE(3),
+      !>     .               RE,    F,        JACOBI             )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), PGRVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), PGRVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the planetographic state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL PGRREC ( 'MARS', LON, LAT, ALT, RE, F, RECTAN )
+      !>C
+      !>C     As a check, convert the planetographic state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL PGRREC ( 'MARS', LON, LAT, ALT, RE, F, RECTAN )
       !>
-      !>              CALL DRDPGR ( 'MARS', LON, LAT, ALT, RE, F, JACOBI )
+      !>      CALL DRDPGR ( 'MARS', LON, LAT, ALT, RE, F, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, PGRVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, PGRVEL, DRECTN )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  X (km)                 = ', STATE(1)
-      !>              WRITE(*,*) '  Y (km)                 = ', STATE(2)
-      !>              WRITE(*,*) '  Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,*) '  dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,*) '  dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Ellipsoid shape parameters: '
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  Equatorial radius (km) = ', RE
-      !>              WRITE(*,*) '  Polar radius      (km) = ', RP
-      !>              WRITE(*,*) '  Flattening coefficient = ', F
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Planetographic coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  Longitude (deg)        = ', LON / RPD()
-      !>              WRITE(*,*) '  Latitude  (deg)        = ', LAT / RPD()
-      !>              WRITE(*,*) '  Altitude  (km)         = ', ALT
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Planetographic velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  d Longitude/dt (deg/s) = ', PGRVEL(1)/RPD()
-      !>              WRITE(*,*) '  d Latitude/dt  (deg/s) = ', PGRVEL(2)/RPD()
-      !>              WRITE(*,*) '  d Altitude/dt  (km/s)  = ', PGRVEL(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates from inverse ' //
-      !>             .           'mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,*) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,*) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity from inverse mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,*) '  dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,*) '  dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*) ' '
-      !>              END
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  X (km)                 = ', STATE(1)
+      !>      WRITE(*,*) '  Y (km)                 = ', STATE(2)
+      !>      WRITE(*,*) '  Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,*) '  dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,*) '  dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Ellipsoid shape parameters: '
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  Equatorial radius (km) = ', RE
+      !>      WRITE(*,*) '  Polar radius      (km) = ', RP
+      !>      WRITE(*,*) '  Flattening coefficient = ', F
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Planetographic coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  Longitude (deg)        = ', LON / RPD()
+      !>      WRITE(*,*) '  Latitude  (deg)        = ', LAT / RPD()
+      !>      WRITE(*,*) '  Altitude  (km)         = ', ALT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Planetographic velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  d Longitude/dt (deg/s) = ', PGRVEL(1)/RPD()
+      !>      WRITE(*,*) '  d Latitude/dt  (deg/s) = ', PGRVEL(2)/RPD()
+      !>      WRITE(*,*) '  d Altitude/dt  (km/s)  = ', PGRVEL(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates from inverse ' //
+      !>     .           'mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,*) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,*) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity from inverse mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,*) '  dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,*) '  dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -37373,135 +37427,137 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DRDPGR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DRDPGR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      DRECTN ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PGRVEL ( 3 )
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      STATE  ( 6 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      DRECTN ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PGRVEL ( 3 )
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      STATE  ( 6 )
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Load SPK, PCK, and LSK kernels, use a meta kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'drdpgr_ex1.tm' )
+      !>C
+      !>C     Load SPK, PCK, and LSK kernels, use a meta kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'drdpgr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Look up the radii for Mars.  Although we
-      !>        C     omit it here, we could first call BADKPV
-      !>        C     to make sure the variable BODY499_RADII
-      !>        C     has three elements and numeric data type.
-      !>        C     If the variable is not present in the kernel
-      !>        C     pool, BODVRD will signal an error.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the radii for Mars.  Although we
+      !>C     omit it here, we could first call BADKPV
+      !>C     to make sure the variable BODY499_RADII
+      !>C     has three elements and numeric data type.
+      !>C     If the variable is not present in the kernel
+      !>C     pool, BODVRD will signal an error.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Look up the geometric state of earth as seen from Mars at
-      !>        C     January 1, 2005 TDB, relative to the J2000 reference
-      !>        C     frame.
-      !>        C
-      !>              CALL STR2ET ( 'January 1, 2005 TDB', ET )
+      !>C
+      !>C     Look up the geometric state of earth as seen from Mars at
+      !>C     January 1, 2005 TDB, relative to the J2000 reference
+      !>C     frame.
+      !>C
+      !>      CALL STR2ET ( 'January 1, 2005 TDB', ET )
       !>
-      !>              CALL SPKEZR ( 'Earth', ET,    'J2000', 'LT+S',
-      !>             .              'Mars',  STATE, LT               )
+      !>      CALL SPKEZR ( 'Earth', ET,    'J2000', 'LT+S',
+      !>     .              'Mars',  STATE, LT               )
       !>
-      !>        C
-      !>        C     Convert position to planetographic coordinates.
-      !>        C
-      !>              CALL RECPGR ( 'MARS', STATE, RE, F, LON, LAT, ALT )
+      !>C
+      !>C     Convert position to planetographic coordinates.
+      !>C
+      !>      CALL RECPGR ( 'MARS', STATE, RE, F, LON, LAT, ALT )
       !>
-      !>        C
-      !>        C     Convert velocity to planetographic coordinates.
-      !>        C
+      !>C
+      !>C     Convert velocity to planetographic coordinates.
+      !>C
       !>
-      !>              CALL DPGRDR ( 'MARS', STATE(1), STATE(2), STATE(3),
-      !>             .               RE,    F,        JACOBI             )
+      !>      CALL DPGRDR ( 'MARS', STATE(1), STATE(2), STATE(3),
+      !>     .               RE,    F,        JACOBI             )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), PGRVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), PGRVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the planetographic state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL PGRREC ( 'MARS', LON, LAT, ALT, RE, F, RECTAN )
+      !>C
+      !>C     As a check, convert the planetographic state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL PGRREC ( 'MARS', LON, LAT, ALT, RE, F, RECTAN )
       !>
-      !>              CALL DRDPGR ( 'MARS', LON, LAT, ALT, RE, F, JACOBI )
+      !>      CALL DRDPGR ( 'MARS', LON, LAT, ALT, RE, F, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, PGRVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, PGRVEL, DRECTN )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  X (km)                 = ', STATE(1)
-      !>              WRITE(*,*) '  Y (km)                 = ', STATE(2)
-      !>              WRITE(*,*) '  Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,*) '  dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,*) '  dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Ellipsoid shape parameters: '
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  Equatorial radius (km) = ', RE
-      !>              WRITE(*,*) '  Polar radius      (km) = ', RP
-      !>              WRITE(*,*) '  Flattening coefficient = ', F
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Planetographic coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  Longitude (deg)        = ', LON / RPD()
-      !>              WRITE(*,*) '  Latitude  (deg)        = ', LAT / RPD()
-      !>              WRITE(*,*) '  Altitude  (km)         = ', ALT
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Planetographic velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  d Longitude/dt (deg/s) = ', PGRVEL(1)/RPD()
-      !>              WRITE(*,*) '  d Latitude/dt  (deg/s) = ', PGRVEL(2)/RPD()
-      !>              WRITE(*,*) '  d Altitude/dt  (km/s)  = ', PGRVEL(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates from inverse ' //
-      !>             .           'mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,*) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,*) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity from inverse mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) '  dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,*) '  dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,*) '  dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*) ' '
-      !>              END
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  X (km)                 = ', STATE(1)
+      !>      WRITE(*,*) '  Y (km)                 = ', STATE(2)
+      !>      WRITE(*,*) '  Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,*) '  dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,*) '  dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Ellipsoid shape parameters: '
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  Equatorial radius (km) = ', RE
+      !>      WRITE(*,*) '  Polar radius      (km) = ', RP
+      !>      WRITE(*,*) '  Flattening coefficient = ', F
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Planetographic coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  Longitude (deg)        = ', LON / RPD()
+      !>      WRITE(*,*) '  Latitude  (deg)        = ', LAT / RPD()
+      !>      WRITE(*,*) '  Altitude  (km)         = ', ALT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Planetographic velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  d Longitude/dt (deg/s) = ', PGRVEL(1)/RPD()
+      !>      WRITE(*,*) '  d Latitude/dt  (deg/s) = ', PGRVEL(2)/RPD()
+      !>      WRITE(*,*) '  d Altitude/dt  (km/s)  = ', PGRVEL(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates from inverse ' //
+      !>     .           'mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,*) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,*) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity from inverse mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) '  dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,*) '  dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,*) '  dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -37965,53 +38021,55 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DVSEP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DVSEP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      DSEPT
-      !>              DOUBLE PRECISION      STATEE (6)
-      !>              DOUBLE PRECISION      STATEM (6)
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      DSEPT
+      !>      DOUBLE PRECISION      STATEE (6)
+      !>      DOUBLE PRECISION      STATEM (6)
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>              CHARACTER*(STRLEN)    BEGSTR
+      !>      CHARACTER*(STRLEN)    BEGSTR
       !>
-      !>              DOUBLE PRECISION      DVSEP
+      !>      DOUBLE PRECISION      DVSEP
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ('dvsep_ex1.tm')
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ('dvsep_ex1.tm')
       !>
-      !>        C
-      !>        C     An arbitrary time.
-      !>        C
-      !>              BEGSTR = 'JAN 1 2009'
-      !>              CALL STR2ET( BEGSTR, ET )
+      !>C
+      !>C     An arbitrary time.
+      !>C
+      !>      BEGSTR = 'JAN 1 2009'
+      !>      CALL STR2ET( BEGSTR, ET )
       !>
-      !>        C
-      !>        C     Calculate the state vectors Sun to Moon, and
-      !>        C     Sun to Earth at ET.
-      !>        C
-      !>        C
-      !>              CALL SPKEZR ( 'EARTH', ET, 'J2000', 'NONE', 'SUN',
-      !>             .               STATEE, LT)
+      !>C
+      !>C     Calculate the state vectors Sun to Moon, and
+      !>C     Sun to Earth at ET.
+      !>C
+      !>C
+      !>      CALL SPKEZR ( 'EARTH', ET, 'J2000', 'NONE', 'SUN',
+      !>     .               STATEE, LT)
       !>
-      !>              CALL SPKEZR ( 'MOON', ET, 'J2000', 'NONE', 'SUN',
-      !>             .               STATEM, LT)
+      !>      CALL SPKEZR ( 'MOON', ET, 'J2000', 'NONE', 'SUN',
+      !>     .               STATEM, LT)
       !>
-      !>        C
-      !>        C     Calculate the time derivative of the angular separation
-      !>        C     of the Earth and Moon as seen from the Sun at ET.
-      !>        C
-      !>              DSEPT = DVSEP( STATEE, STATEM )
-      !>              WRITE(*,*) 'Time derivative of angular'
-      !>              WRITE(*,*) '   separation (rad/sec): ', DSEPT
+      !>C
+      !>C     Calculate the time derivative of the angular separation
+      !>C     of the Earth and Moon as seen from the Sun at ET.
+      !>C
+      !>      DSEPT = DVSEP( STATEE, STATEM )
+      !>      WRITE(*,*) 'Time derivative of angular'
+      !>      WRITE(*,*) '   separation (rad/sec): ', DSEPT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -38523,187 +38581,189 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EDTERM_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VDIST
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT0
-      !>              PARAMETER           ( FMT0   = '(1X,A,I2,A)' )
+      !>```fortran
+      !>      PROGRAM EDTERM_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VDIST
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT0
+      !>      PARAMETER           ( FMT0   = '(1X,A,I2,A)' )
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A,F18.9)' )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A,F18.9)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'edterm_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'edterm_ex1.tm' )
       !>
-      !>              INTEGER               NPTS
-      !>              PARAMETER           ( NPTS   = 3 )
+      !>      INTEGER               NPTS
+      !>      PARAMETER           ( NPTS   = 3 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 5 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 5 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               TYPLEN
-      !>              PARAMETER           ( TYPLEN = 10 )
+      !>      INTEGER               TYPLEN
+      !>      PARAMETER           ( TYPLEN = 10 )
       !>
-      !>              INTEGER               NTYPES
-      !>              PARAMETER           ( NTYPES = 2 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    SOURCE
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(TYPLEN)    TRMTPS ( NTYPES )
-      !>              CHARACTER*(TIMLEN)    UTC
+      !>      INTEGER               NTYPES
+      !>      PARAMETER           ( NTYPES = 2 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    SOURCE
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(TYPLEN)    TRMTPS ( NTYPES )
+      !>      CHARACTER*(TIMLEN)    UTC
       !>
-      !>              DOUBLE PRECISION      ANGRAD
-      !>              DOUBLE PRECISION      EMISSN
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      OBSPOS ( 3 )
-      !>              DOUBLE PRECISION      PHASE
-      !>              DOUBLE PRECISION      RADIUS
-      !>              DOUBLE PRECISION      S      ( NTYPES )
-      !>              DOUBLE PRECISION      SOLAR
-      !>              DOUBLE PRECISION      SRCPOS ( 3 )
-      !>              DOUBLE PRECISION      SRCRAD ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      TRMPTS ( 3, NPTS )
+      !>      DOUBLE PRECISION      ANGRAD
+      !>      DOUBLE PRECISION      EMISSN
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      OBSPOS ( 3 )
+      !>      DOUBLE PRECISION      PHASE
+      !>      DOUBLE PRECISION      RADIUS
+      !>      DOUBLE PRECISION      S      ( NTYPES )
+      !>      DOUBLE PRECISION      SOLAR
+      !>      DOUBLE PRECISION      SRCPOS ( 3 )
+      !>      DOUBLE PRECISION      SRCRAD ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      TRMPTS ( 3, NPTS )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>              INTEGER               TRMIDX
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>      INTEGER               TRMIDX
       !>
-      !>              LOGICAL               FIRST
+      !>      LOGICAL               FIRST
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  FIRST  / .TRUE.               /
-      !>              DATA                  TRMTPS / 'UMBRAL', 'PENUMBRAL'/
-      !>              DATA                  S      / -1.D0,    1.D0       /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  FIRST  / .TRUE.               /
+      !>      DATA                  TRMTPS / 'UMBRAL', 'PENUMBRAL'/
+      !>      DATA                  S      / -1.D0,    1.D0       /
       !>
-      !>        C
-      !>        C     Load the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Set the observation time.
-      !>        C
-      !>              UTC    = '2007 FEB 3 00:00:00.000'
+      !>C
+      !>C     Set the observation time.
+      !>C
+      !>      UTC    = '2007 FEB 3 00:00:00.000'
       !>
-      !>              CALL STR2ET ( UTC, ET )
+      !>      CALL STR2ET ( UTC, ET )
       !>
-      !>        C
-      !>        C     Set the participating objects, the reference
-      !>        C     frame, and the aberration correction.
-      !>        C
-      !>              OBSRVR = 'EARTH'
-      !>              TARGET = 'MOON'
-      !>              SOURCE = 'SUN'
-      !>              FIXREF = 'IAU_MOON'
-      !>              ABCORR = 'LT+S'
-      !>        C
-      !>        C     Look up the radii of the Sun.
-      !>        C
-      !>              CALL BODVRD ( SOURCE, 'RADII', 3, N, SRCRAD )
+      !>C
+      !>C     Set the participating objects, the reference
+      !>C     frame, and the aberration correction.
+      !>C
+      !>      OBSRVR = 'EARTH'
+      !>      TARGET = 'MOON'
+      !>      SOURCE = 'SUN'
+      !>      FIXREF = 'IAU_MOON'
+      !>      ABCORR = 'LT+S'
+      !>C
+      !>C     Look up the radii of the Sun.
+      !>C
+      !>      CALL BODVRD ( SOURCE, 'RADII', 3, N, SRCRAD )
       !>
-      !>        C
-      !>        C     Compute terminator points.
-      !>        C
-      !>              DO TRMIDX = 1, 2
+      !>C
+      !>C     Compute terminator points.
+      !>C
+      !>      DO TRMIDX = 1, 2
       !>
-      !>                 CALL EDTERM ( TRMTPS(TRMIDX), SOURCE, TARGET,
-      !>             .                 ET,             FIXREF, ABCORR,
-      !>             .                 OBSRVR,         NPTS,   TRGEPC,
-      !>             .                 OBSPOS,         TRMPTS          )
-      !>        C
-      !>        C        Validate terminator points.
-      !>        C
-      !>        C        Look up the target-sun vector at the light-time
-      !>        C        corrected target epoch.
-      !>        C
-      !>                 IF ( FIRST ) THEN
+      !>         CALL EDTERM ( TRMTPS(TRMIDX), SOURCE, TARGET,
+      !>     .                 ET,             FIXREF, ABCORR,
+      !>     .                 OBSRVR,         NPTS,   TRGEPC,
+      !>     .                 OBSPOS,         TRMPTS          )
+      !>C
+      !>C        Validate terminator points.
+      !>C
+      !>C        Look up the target-sun vector at the light-time
+      !>C        corrected target epoch.
+      !>C
+      !>         IF ( FIRST ) THEN
       !>
-      !>                    CALL SPKPOS ( SOURCE, TRGEPC, FIXREF,
-      !>             .                    ABCORR, TARGET, SRCPOS, LT )
-      !>                    FIRST = .FALSE.
+      !>            CALL SPKPOS ( SOURCE, TRGEPC, FIXREF,
+      !>     .                    ABCORR, TARGET, SRCPOS, LT )
+      !>            FIRST = .FALSE.
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Terminator type: '//TRMTPS(TRMIDX)
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Terminator type: '//TRMTPS(TRMIDX)
       !>
-      !>                 DO I = 1, NPTS
+      !>         DO I = 1, NPTS
       !>
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
       !>
-      !>                    CALL RECLAT ( TRMPTS(1,I), RADIUS, LON, LAT )
+      !>            CALL RECLAT ( TRMPTS(1,I), RADIUS, LON, LAT )
       !>
-      !>                    WRITE (*,FMT0) '  Terminator point ', I, ':'
-      !>                    WRITE (*,FMT1)
-      !>             .            '    Radius                     (km):  ',
-      !>             .            RADIUS
-      !>                    WRITE (*,FMT1)
-      !>             .            '    Planetocentric longitude   (deg): ',
-      !>             .            LON*DPR()
-      !>                    WRITE (*,FMT1)
-      !>             .            '    Planetocentric latitude    (deg): ',
-      !>             .            LAT*DPR()
+      !>            WRITE (*,FMT0) '  Terminator point ', I, ':'
+      !>            WRITE (*,FMT1)
+      !>     .            '    Radius                     (km):  ',
+      !>     .            RADIUS
+      !>            WRITE (*,FMT1)
+      !>     .            '    Planetocentric longitude   (deg): ',
+      !>     .            LON*DPR()
+      !>            WRITE (*,FMT1)
+      !>     .            '    Planetocentric latitude    (deg): ',
+      !>     .            LAT*DPR()
       !>
-      !>        C
-      !>        C           Find the illumination angles at the
-      !>        C           Ith terminator point.
-      !>        C
-      !>                    CALL ILUMIN ( 'Ellipsoid',  TARGET, ET,
-      !>             .                     FIXREF,      ABCORR, OBSRVR,
-      !>             .                     TRMPTS(1,I), TRGEPC, SRFVEC,
-      !>             .                     PHASE,       SOLAR,  EMISSN )
+      !>C
+      !>C           Find the illumination angles at the
+      !>C           Ith terminator point.
+      !>C
+      !>            CALL ILUMIN ( 'Ellipsoid',  TARGET, ET,
+      !>     .                     FIXREF,      ABCORR, OBSRVR,
+      !>     .                     TRMPTS(1,I), TRGEPC, SRFVEC,
+      !>     .                     PHASE,       SOLAR,  EMISSN )
       !>
-      !>                    WRITE (*,FMT1)
-      !>             .            '    Solar incidence angle      (deg): ',
-      !>             .            SOLAR*DPR()
-      !>        C
-      !>        C           Display the solar incidence angle after
-      !>        C           adjusting the angle for the angular radius
-      !>        C           of the Sun as seen from the Ith terminator
-      !>        C           point. The result should be approximately
-      !>        C           90 degrees.
-      !>        C
-      !>                    ANGRAD = ASIN(   SRCRAD(1)
-      !>             .                     / VDIST( SRCPOS, TRMPTS(1,I) ) )
+      !>            WRITE (*,FMT1)
+      !>     .            '    Solar incidence angle      (deg): ',
+      !>     .            SOLAR*DPR()
+      !>C
+      !>C           Display the solar incidence angle after
+      !>C           adjusting the angle for the angular radius
+      !>C           of the Sun as seen from the Ith terminator
+      !>C           point. The result should be approximately
+      !>C           90 degrees.
+      !>C
+      !>            ANGRAD = ASIN(   SRCRAD(1)
+      !>     .                     / VDIST( SRCPOS, TRMPTS(1,I) ) )
       !>
-      !>                    WRITE (*, '(1X,A)' )
-      !>             .            '    Solar incidence angle adjusted for'
-      !>                    WRITE (*,FMT1)
-      !>             .            '    sun''s angular radius (deg):       ',
-      !>             .            (SOLAR + S(TRMIDX)*ANGRAD) * DPR()
-      !>                 END DO
+      !>            WRITE (*, '(1X,A)' )
+      !>     .            '    Solar incidence angle adjusted for'
+      !>            WRITE (*,FMT1)
+      !>     .            '    sun''s angular radius (deg):       ',
+      !>     .            (SOLAR + S(TRMIDX)*ANGRAD) * DPR()
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -39251,202 +39311,204 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GETELM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GETELM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              DOUBLE PRECISION      SPD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      DOUBLE PRECISION      SPD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40               )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40               )
       !>
-      !>              INTEGER               PNAMLN
-      !>              PARAMETER           ( PNAMLN = 2                )
+      !>      INTEGER               PNAMLN
+      !>      PARAMETER           ( PNAMLN = 2                )
       !>
-      !>              CHARACTER*(*)         SPK10
-      !>              PARAMETER           ( SPK10  = 'getelm_ex1.bsp' )
+      !>      CHARACTER*(*)         SPK10
+      !>      PARAMETER           ( SPK10  = 'getelm_ex1.bsp' )
       !>
-      !>              INTEGER               TLELLN
-      !>              PARAMETER           ( TLELLN = 69               )
+      !>      INTEGER               TLELLN
+      !>      PARAMETER           ( TLELLN = 69               )
       !>
-      !>        C
-      !>        C     The SPK type 10 segment will contain 18 two-line
-      !>        C     elements sets for the NORAD spacecraft 18123 with
-      !>        C     respect to the Earth (ID 399) in the J2000 reference
-      !>        C     frame.
-      !>        C
-      !>        C     As stated in the naif_ids required reading, for Earth
-      !>        C     orbiting spacecraft lacking a DSN identification code,
-      !>        C     the NAIF ID is derived from the tracking ID assigned to
-      !>        C     it by NORAD via:
-      !>        C
-      !>        C        NAIF ID = -100000 - NORAD ID code
-      !>        C
-      !>              INTEGER               TLESSZ
-      !>              PARAMETER           ( TLESSZ = 9       )
+      !>C
+      !>C     The SPK type 10 segment will contain 18 two-line
+      !>C     elements sets for the NORAD spacecraft 18123 with
+      !>C     respect to the Earth (ID 399) in the J2000 reference
+      !>C     frame.
+      !>C
+      !>C     As stated in the naif_ids required reading, for Earth
+      !>C     orbiting spacecraft lacking a DSN identification code,
+      !>C     the NAIF ID is derived from the tracking ID assigned to
+      !>C     it by NORAD via:
+      !>C
+      !>C        NAIF ID = -100000 - NORAD ID code
+      !>C
+      !>      INTEGER               TLESSZ
+      !>      PARAMETER           ( TLESSZ = 9       )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = -118123 )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = -118123 )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 399     )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 399     )
       !>
-      !>              CHARACTER*(*)         FRMNAM
-      !>              PARAMETER           ( FRMNAM = 'J2000' )
+      !>      CHARACTER*(*)         FRMNAM
+      !>      PARAMETER           ( FRMNAM = 'J2000' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(PNAMLN)    NOADPN ( 8           )
-      !>              CHARACTER*(NAMLEN)    SEGID
-      !>              CHARACTER*(TLELLN)    TLE    ( 2  * TLESSZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(PNAMLN)    NOADPN ( 8           )
+      !>      CHARACTER*(NAMLEN)    SEGID
+      !>      CHARACTER*(TLELLN)    TLE    ( 2  * TLESSZ )
       !>
-      !>              DOUBLE PRECISION      CONSTS ( 8           )
-      !>              DOUBLE PRECISION      ELEMS  ( 10 * TLESSZ )
-      !>              DOUBLE PRECISION      EPOCHS (      TLESSZ )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      CONSTS ( 8           )
+      !>      DOUBLE PRECISION      ELEMS  ( 10 * TLESSZ )
+      !>      DOUBLE PRECISION      EPOCHS (      TLESSZ )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     These are the variables that will hold the constants
-      !>        C     required by SPK type 10. These constants are available
-      !>        C     from the loaded PCK file, which provides the actual
-      !>        C     values and units as used by NORAD propagation model.
-      !>        C
-      !>        C        Constant   Meaning
-      !>        C        --------   ------------------------------------------
-      !>        C        J2         J2 gravitational harmonic for Earth.
-      !>        C        J3         J3 gravitational harmonic for Earth.
-      !>        C        J4         J4 gravitational harmonic for Earth.
-      !>        C        KE         Square root of the GM for Earth.
-      !>        C        QO         High altitude bound for atmospheric model.
-      !>        C        SO         Low altitude bound for atmospheric model.
-      !>        C        ER         Equatorial radius of the Earth.
-      !>        C        AE         Distance units/earth radius.
-      !>        C
-      !>              DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
-      !>             .                         'QO', 'SO', 'ER', 'AE'  /
+      !>C
+      !>C     These are the variables that will hold the constants
+      !>C     required by SPK type 10. These constants are available
+      !>C     from the loaded PCK file, which provides the actual
+      !>C     values and units as used by NORAD propagation model.
+      !>C
+      !>C        Constant   Meaning
+      !>C        --------   ------------------------------------------
+      !>C        J2         J2 gravitational harmonic for Earth.
+      !>C        J3         J3 gravitational harmonic for Earth.
+      !>C        J4         J4 gravitational harmonic for Earth.
+      !>C        KE         Square root of the GM for Earth.
+      !>C        QO         High altitude bound for atmospheric model.
+      !>C        SO         Low altitude bound for atmospheric model.
+      !>C        ER         Equatorial radius of the Earth.
+      !>C        AE         Distance units/earth radius.
+      !>C
+      !>      DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
+      !>     .                         'QO', 'SO', 'ER', 'AE'  /
       !>
-      !>        C
-      !>        C     Define the Two-Line Element sets.
-      !>        C
-      !>              TLE(1)  = '1 18123U 87 53  A 87324.61041692 -.00000023'
-      !>             .      //                   '  00000-0 -75103-5 0 00675'
-      !>              TLE(2)  = '2 18123  98.8296 152.0074 0014950 168.7820 '
-      !>             .      //                   '191.3688 14.12912554 21686'
-      !>              TLE(3)  = '1 18123U 87 53  A 87326.73487726  .00000045'
-      !>             .      //                   '  00000-0  28709-4 0 00684'
-      !>              TLE(4)  = '2 18123  98.8335 154.1103 0015643 163.5445 '
-      !>             .      //                   '196.6235 14.12912902 21988'
-      !>              TLE(5)  = '1 18123U 87 53  A 87331.40868801  .00000104'
-      !>             .      //                   '  00000-0  60183-4 0 00690'
-      !>              TLE(6)  = '2 18123  98.8311 158.7160 0015481 149.9848 '
-      !>             .      //                   '210.2220 14.12914624 22644'
-      !>              TLE(7)  = '1 18123U 87 53  A 87334.24129978  .00000086'
-      !>             .      //                   '  00000-0  51111-4 0 00702'
-      !>              TLE(8)  = '2 18123  98.8296 161.5054 0015372 142.4159 '
-      !>             .      //                   '217.8089 14.12914879 23045'
-      !>              TLE(9)  = '1 18123U 87 53  A 87336.93227900 -.00000107'
-      !>             .      //                   '  00000-0 -52860-4 0 00713'
-      !>              TLE(10) = '2 18123  98.8317 164.1627 0014570 135.9191 '
-      !>             .      //                   '224.2321 14.12910572 23425'
-      !>              TLE(11) = '1 18123U 87 53  A 87337.28635487  .00000173'
-      !>             .      //                   '  00000-0  10226-3 0 00726'
-      !>              TLE(12) = '2 18123  98.8284 164.5113 0015289 133.5979 '
-      !>             .      //                   '226.6438 14.12916140 23475'
-      !>              TLE(13) = '1 18123U 87 53  A 87339.05673569  .00000079'
-      !>             .      //                   '  00000-0  47069-4 0 00738'
-      !>              TLE(14) = '2 18123  98.8288 166.2585 0015281 127.9985 '
-      !>             .      //                   '232.2567 14.12916010 24908'
-      !>              TLE(15) = '1 18123U 87 53  A 87345.43010859  .00000022'
-      !>             .      //                   '  00000-0  16481-4 0 00758'
-      !>              TLE(16) = '2 18123  98.8241 172.5226 0015362 109.1515 '
-      !>             .      //                   '251.1323 14.12915487 24626'
-      !>              TLE(17) = '1 18123U 87 53  A 87349.04167543  .00000042'
-      !>             .      //                   '  00000-0  27370-4 0 00764'
-      !>              TLE(18) = '2 18123  98.8301 176.1010 0015565 100.0881 '
-      !>             .      //                   '260.2047 14.12916361 25138'
+      !>C
+      !>C     Define the Two-Line Element sets.
+      !>C
+      !>      TLE(1)  = '1 18123U 87 53  A 87324.61041692 -.00000023'
+      !>     .      //                   '  00000-0 -75103-5 0 00675'
+      !>      TLE(2)  = '2 18123  98.8296 152.0074 0014950 168.7820 '
+      !>     .      //                   '191.3688 14.12912554 21686'
+      !>      TLE(3)  = '1 18123U 87 53  A 87326.73487726  .00000045'
+      !>     .      //                   '  00000-0  28709-4 0 00684'
+      !>      TLE(4)  = '2 18123  98.8335 154.1103 0015643 163.5445 '
+      !>     .      //                   '196.6235 14.12912902 21988'
+      !>      TLE(5)  = '1 18123U 87 53  A 87331.40868801  .00000104'
+      !>     .      //                   '  00000-0  60183-4 0 00690'
+      !>      TLE(6)  = '2 18123  98.8311 158.7160 0015481 149.9848 '
+      !>     .      //                   '210.2220 14.12914624 22644'
+      !>      TLE(7)  = '1 18123U 87 53  A 87334.24129978  .00000086'
+      !>     .      //                   '  00000-0  51111-4 0 00702'
+      !>      TLE(8)  = '2 18123  98.8296 161.5054 0015372 142.4159 '
+      !>     .      //                   '217.8089 14.12914879 23045'
+      !>      TLE(9)  = '1 18123U 87 53  A 87336.93227900 -.00000107'
+      !>     .      //                   '  00000-0 -52860-4 0 00713'
+      !>      TLE(10) = '2 18123  98.8317 164.1627 0014570 135.9191 '
+      !>     .      //                   '224.2321 14.12910572 23425'
+      !>      TLE(11) = '1 18123U 87 53  A 87337.28635487  .00000173'
+      !>     .      //                   '  00000-0  10226-3 0 00726'
+      !>      TLE(12) = '2 18123  98.8284 164.5113 0015289 133.5979 '
+      !>     .      //                   '226.6438 14.12916140 23475'
+      !>      TLE(13) = '1 18123U 87 53  A 87339.05673569  .00000079'
+      !>     .      //                   '  00000-0  47069-4 0 00738'
+      !>      TLE(14) = '2 18123  98.8288 166.2585 0015281 127.9985 '
+      !>     .      //                   '232.2567 14.12916010 24908'
+      !>      TLE(15) = '1 18123U 87 53  A 87345.43010859  .00000022'
+      !>     .      //                   '  00000-0  16481-4 0 00758'
+      !>      TLE(16) = '2 18123  98.8241 172.5226 0015362 109.1515 '
+      !>     .      //                   '251.1323 14.12915487 24626'
+      !>      TLE(17) = '1 18123U 87 53  A 87349.04167543  .00000042'
+      !>     .      //                   '  00000-0  27370-4 0 00764'
+      !>      TLE(18) = '2 18123  98.8301 176.1010 0015565 100.0881 '
+      !>     .      //                   '260.2047 14.12916361 25138'
       !>
-      !>        C
-      !>        C     Load the PCK file that provides the geophysical
-      !>        C     constants required for the evaluation of the two-line
-      !>        C     elements sets. Load also an LSK, as it is required by
-      !>        C     GETELM to perform time conversions. Use a metakernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'getelm_ex1.tm' )
+      !>C
+      !>C     Load the PCK file that provides the geophysical
+      !>C     constants required for the evaluation of the two-line
+      !>C     elements sets. Load also an LSK, as it is required by
+      !>C     GETELM to perform time conversions. Use a metakernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'getelm_ex1.tm' )
       !>
-      !>        C
-      !>        C     Retrieve the data from the kernel, and place it on
-      !>        C     the CONSTS array.
-      !>        C
-      !>              DO I = 1, 8
+      !>C
+      !>C     Retrieve the data from the kernel, and place it on
+      !>C     the CONSTS array.
+      !>C
+      !>      DO I = 1, 8
       !>
-      !>                 CALL BODVCD ( CENTER, NOADPN(I), 1, N, CONSTS(I) )
+      !>         CALL BODVCD ( CENTER, NOADPN(I), 1, N, CONSTS(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Convert the Two Line Elements lines to the
-      !>        C     element sets.
-      !>        C
-      !>              DO I = 1, TLESSZ
+      !>C
+      !>C     Convert the Two Line Elements lines to the
+      !>C     element sets.
+      !>C
+      !>      DO I = 1, TLESSZ
       !>
-      !>                 CALL GETELM ( 1950,      TLE( (I-1)*2 + 1 ),
-      !>             .                 EPOCHS(I), ELEMS( (I-1)*10 + 1 ) )
+      !>         CALL GETELM ( 1950,      TLE( (I-1)*2 + 1 ),
+      !>     .                 EPOCHS(I), ELEMS( (I-1)*10 + 1 ) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Define the beginning and end of the segment to be
-      !>        C     -/+ 12 hours from the first and last epochs,
-      !>        C     respectively.
-      !>        C
-      !>              FIRST = EPOCHS(1     ) - 0.5D0 * SPD()
-      !>              LAST  = EPOCHS(TLESSZ) + 0.5D0 * SPD()
+      !>C
+      !>C     Define the beginning and end of the segment to be
+      !>C     -/+ 12 hours from the first and last epochs,
+      !>C     respectively.
+      !>C
+      !>      FIRST = EPOCHS(1     ) - 0.5D0 * SPD()
+      !>      LAST  = EPOCHS(TLESSZ) + 0.5D0 * SPD()
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Test for type 10 SPK internal file name'
-      !>              SEGID  = 'SPK type 10 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Test for type 10 SPK internal file name'
+      !>      SEGID  = 'SPK type 10 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK10, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK10, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Now add the segment.
-      !>        C
-      !>              CALL SPKW10 ( HANDLE, BODY,  CENTER, FRMNAM,
-      !>             .              FIRST,  LAST,  SEGID,  CONSTS,
-      !>             .              TLESSZ, ELEMS, EPOCHS         )
+      !>C
+      !>C     Now add the segment.
+      !>C
+      !>      CALL SPKW10 ( HANDLE, BODY,  CENTER, FRMNAM,
+      !>     .              FIRST,  LAST,  SEGID,  CONSTS,
+      !>     .              TLESSZ, ELEMS, EPOCHS         )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 10 exists in
@@ -39462,112 +39524,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GETELM_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GETELM_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         TIMSTR
-      !>              PARAMETER           ( TIMSTR = '2020-05-26 02:25:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         TIMSTR
+      !>      PARAMETER           ( TIMSTR = '2020-05-26 02:25:00' )
       !>
-      !>              INTEGER               PNAMLN
-      !>              PARAMETER           ( PNAMLN = 2  )
+      !>      INTEGER               PNAMLN
+      !>      PARAMETER           ( PNAMLN = 2  )
       !>
-      !>              INTEGER               TLELLN
-      !>              PARAMETER           ( TLELLN = 69 )
+      !>      INTEGER               TLELLN
+      !>      PARAMETER           ( TLELLN = 69 )
       !>
-      !>        C
-      !>        C     The LUME-1 cubesat is an Earth orbiting object; set
-      !>        C     the center ID to the Earth ID.
-      !>        C
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER  = 399     )
+      !>C
+      !>C     The LUME-1 cubesat is an Earth orbiting object; set
+      !>C     the center ID to the Earth ID.
+      !>C
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER  = 399     )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMLN)    NOADPN ( 8  )
-      !>              CHARACTER*(TLELLN)    TLE    ( 2  )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMLN)    NOADPN ( 8  )
+      !>      CHARACTER*(TLELLN)    TLE    ( 2  )
       !>
-      !>              DOUBLE PRECISION      ELEMS  ( 10 )
-      !>              DOUBLE PRECISION      EPOCH
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      GEOPHS ( 8  )
-      !>              DOUBLE PRECISION      STATE  ( 6  )
+      !>      DOUBLE PRECISION      ELEMS  ( 10 )
+      !>      DOUBLE PRECISION      EPOCH
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      GEOPHS ( 8  )
+      !>      DOUBLE PRECISION      STATE  ( 6  )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     These are the variables that will hold the constants
-      !>        C     required by EV2LIN. These constants are available from
-      !>        C     the loaded PCK file, which provides the actual values
-      !>        C     and units as used by NORAD propagation model.
-      !>        C
-      !>        C        Constant   Meaning
-      !>        C        --------   ------------------------------------------
-      !>        C        J2         J2 gravitational harmonic for Earth.
-      !>        C        J3         J3 gravitational harmonic for Earth.
-      !>        C        J4         J4 gravitational harmonic for Earth.
-      !>        C        KE         Square root of the GM for Earth.
-      !>        C        QO         High altitude bound for atmospheric model.
-      !>        C        SO         Low altitude bound for atmospheric model.
-      !>        C        ER         Equatorial radius of the Earth.
-      !>        C        AE         Distance units/earth radius.
-      !>        C
-      !>              DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
-      !>             .                         'QO', 'SO', 'ER', 'AE'  /
+      !>C
+      !>C     These are the variables that will hold the constants
+      !>C     required by EV2LIN. These constants are available from
+      !>C     the loaded PCK file, which provides the actual values
+      !>C     and units as used by NORAD propagation model.
+      !>C
+      !>C        Constant   Meaning
+      !>C        --------   ------------------------------------------
+      !>C        J2         J2 gravitational harmonic for Earth.
+      !>C        J3         J3 gravitational harmonic for Earth.
+      !>C        J4         J4 gravitational harmonic for Earth.
+      !>C        KE         Square root of the GM for Earth.
+      !>C        QO         High altitude bound for atmospheric model.
+      !>C        SO         Low altitude bound for atmospheric model.
+      !>C        ER         Equatorial radius of the Earth.
+      !>C        AE         Distance units/earth radius.
+      !>C
+      !>      DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
+      !>     .                         'QO', 'SO', 'ER', 'AE'  /
       !>
-      !>        C
-      !>        C     Define the Two-Line Element set for LUME-1.
-      !>        C
-      !>              TLE(1)  = '1 43908U 18111AJ  20146.60805006  .00000806'
-      !>             .      //                   '  00000-0  34965-4 0  9999'
-      !>              TLE(2)  = '2 43908  97.2676  47.2136 0020001 220.6050 '
-      !>             .      //                   '139.3698 15.24999521 78544'
+      !>C
+      !>C     Define the Two-Line Element set for LUME-1.
+      !>C
+      !>      TLE(1)  = '1 43908U 18111AJ  20146.60805006  .00000806'
+      !>     .      //                   '  00000-0  34965-4 0  9999'
+      !>      TLE(2)  = '2 43908  97.2676  47.2136 0020001 220.6050 '
+      !>     .      //                   '139.3698 15.24999521 78544'
       !>
-      !>        C
-      !>        C     Load the PCK file that provides the geophysical
-      !>        C     constants required for the evaluation of the two-line
-      !>        C     elements sets. Load also an LSK, as it is required by
-      !>        C     GETELM to perform time conversions. Use a metakernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'getelm_ex1.tm' )
+      !>C
+      !>C     Load the PCK file that provides the geophysical
+      !>C     constants required for the evaluation of the two-line
+      !>C     elements sets. Load also an LSK, as it is required by
+      !>C     GETELM to perform time conversions. Use a metakernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'getelm_ex1.tm' )
       !>
-      !>        C
-      !>        C     Retrieve the data from the kernel, and place it on
-      !>        C     the GEOPHS array.
-      !>        C
-      !>              DO I = 1, 8
+      !>C
+      !>C     Retrieve the data from the kernel, and place it on
+      !>C     the GEOPHS array.
+      !>C
+      !>      DO I = 1, 8
       !>
-      !>                 CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
+      !>         CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Convert the Two Line Elements lines to the element sets.
-      !>        C     Set the lower bound for the years to be the beginning
-      !>        C     of the space age.
-      !>        C
-      !>              CALL GETELM ( 1957, TLE, EPOCH, ELEMS )
+      !>C
+      !>C     Convert the Two Line Elements lines to the element sets.
+      !>C     Set the lower bound for the years to be the beginning
+      !>C     of the space age.
+      !>C
+      !>      CALL GETELM ( 1957, TLE, EPOCH, ELEMS )
       !>
-      !>        C
-      !>        C     Now propagate the state using EV2LIN to the epoch of
-      !>        C     interest.
-      !>        C
-      !>              CALL STR2ET ( TIMSTR, ET )
-      !>              CALL EVSGP4 ( ET, GEOPHS, ELEMS, STATE )
+      !>C
+      !>C     Now propagate the state using EV2LIN to the epoch of
+      !>C     interest.
+      !>C
+      !>      CALL STR2ET ( TIMSTR, ET )
+      !>      CALL EVSGP4 ( ET, GEOPHS, ELEMS, STATE )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              WRITE(*,'(2A)')       'Epoch   : ', TIMSTR
-      !>              WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
-      !>              WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      WRITE(*,'(2A)')       'Epoch   : ', TIMSTR
+      !>      WRITE(*,'(A,3F16.8)') 'Position:', (STATE(I), I=1,3)
+      !>      WRITE(*,'(A,3F16.8)') 'Velocity:', (STATE(I), I=4,6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -40154,79 +40218,81 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GETFVN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GETFVN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               MAXBND
-      !>              PARAMETER           ( MAXBND = 4 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               MAXBND
+      !>      PARAMETER           ( MAXBND = 4 )
       !>
-      !>              INTEGER               NUMINS
-      !>              PARAMETER           ( NUMINS = 4 )
+      !>      INTEGER               NUMINS
+      !>      PARAMETER           ( NUMINS = 4 )
       !>
-      !>              INTEGER               WDSIZE
-      !>              PARAMETER           ( WDSIZE = 32 )
+      !>      INTEGER               WDSIZE
+      !>      PARAMETER           ( WDSIZE = 32 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(WDSIZE)    INSTNM ( NUMINS )
-      !>              CHARACTER*(WDSIZE)    FRAME
-      !>              CHARACTER*(WDSIZE)    SHAPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(WDSIZE)    INSTNM ( NUMINS )
+      !>      CHARACTER*(WDSIZE)    FRAME
+      !>      CHARACTER*(WDSIZE)    SHAPE
       !>
-      !>              DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
-      !>              DOUBLE PRECISION      BSIGHT ( 3 )
+      !>      DOUBLE PRECISION      BOUNDS ( 3, MAXBND )
+      !>      DOUBLE PRECISION      BSIGHT ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Define the instrument IDs.
-      !>        C
-      !>              DATA                  INSTNM  /  'SC999_INST001',
-      !>             .                                 'SC999_INST002',
-      !>             .                                 'SC999_INST003',
-      !>             .                                 'SC999_INST004'  /
+      !>C
+      !>C     Define the instrument IDs.
+      !>C
+      !>      DATA                  INSTNM  /  'SC999_INST001',
+      !>     .                                 'SC999_INST002',
+      !>     .                                 'SC999_INST003',
+      !>     .                                 'SC999_INST004'  /
       !>
-      !>        C
-      !>        C     Load the IK file.
-      !>        C
-      !>              CALL FURNSH( 'getfvn_ex1.ti' )
+      !>C
+      !>C     Load the IK file.
+      !>C
+      !>      CALL FURNSH( 'getfvn_ex1.ti' )
       !>
-      !>        C
-      !>        C     For each instrument ...
-      !>        C
-      !>              WRITE (*,'(A)') '--------------------------------------'
-      !>              DO I = 1, NUMINS
+      !>C
+      !>C     For each instrument ...
+      !>C
+      !>      WRITE (*,'(A)') '--------------------------------------'
+      !>      DO I = 1, NUMINS
       !>
-      !>        C
-      !>        C        ... fetch FOV parameters and ...
-      !>        C
-      !>                 CALL GETFVN ( INSTNM(I), MAXBND,
-      !>             .                 SHAPE, FRAME, BSIGHT, N, BOUNDS )
+      !>C
+      !>C        ... fetch FOV parameters and ...
+      !>C
+      !>         CALL GETFVN ( INSTNM(I), MAXBND,
+      !>     .                 SHAPE, FRAME, BSIGHT, N, BOUNDS )
       !>
-      !>        C
-      !>        C        ... print them to the screen.
-      !>        C
-      !>                 WRITE (*,'(2A)')       'Instrument NAME: ', INSTNM(I)
-      !>                 WRITE (*,'(2A)')       '    FOV shape: ', SHAPE
-      !>                 WRITE (*,'(2A)')       '    FOV frame: ', frame
-      !>                 WRITE (*,'(A,3F12.8)') 'FOV boresight: ', BSIGHT
+      !>C
+      !>C        ... print them to the screen.
+      !>C
+      !>         WRITE (*,'(2A)')       'Instrument NAME: ', INSTNM(I)
+      !>         WRITE (*,'(2A)')       '    FOV shape: ', SHAPE
+      !>         WRITE (*,'(2A)')       '    FOV frame: ', frame
+      !>         WRITE (*,'(A,3F12.8)') 'FOV boresight: ', BSIGHT
       !>
-      !>                 WRITE (*,'(A)') '  FOV corners: '
-      !>                 DO J = 1, N
-      !>                    WRITE (*,'(A,3F12.8)') '               ',
-      !>             .                  BOUNDS(1,J), BOUNDS(2,J), BOUNDS(3,J)
-      !>                 END DO
-      !>                 WRITE (*,'(A)')
-      !>             .            '--------------------------------------'
+      !>         WRITE (*,'(A)') '  FOV corners: '
+      !>         DO J = 1, N
+      !>            WRITE (*,'(A,3F12.8)') '               ',
+      !>     .                  BOUNDS(1,J), BOUNDS(2,J), BOUNDS(3,J)
+      !>         END DO
+      !>         WRITE (*,'(A)')
+      !>     .            '--------------------------------------'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -40875,86 +40941,88 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM OSCLTX_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM OSCLTX_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'oscltx.inc'
+      !>      INCLUDE 'oscltx.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ELTS   ( OSCXSZ )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      MU     ( 1 )
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      STEP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ELTS   ( OSCXSZ )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      MU     ( 1 )
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>        C
-      !>        C     Load the meta kernel listing the needed SPK, LSK and
-      !>        C     PCK with gravitational parameters kernels.
-      !>        C
-      !>              CALL FURNSH ( 'oscltx_ex1.tm' )
+      !>C
+      !>C     Load the meta kernel listing the needed SPK, LSK and
+      !>C     PCK with gravitational parameters kernels.
+      !>C
+      !>      CALL FURNSH ( 'oscltx_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert the time string to ephemeris time
-      !>        C
-      !>              CALL STR2ET ( 'Dec 25, 2007', ET )
+      !>C
+      !>C     Convert the time string to ephemeris time
+      !>C
+      !>      CALL STR2ET ( 'Dec 25, 2007', ET )
       !>
-      !>        C
-      !>        C     Retrieve the state of Phobos with respect to Mars in
-      !>        C     J2000.
-      !>        C
-      !>              CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
-      !>             .               STATE,   LT                          )
+      !>C
+      !>C     Retrieve the state of Phobos with respect to Mars in
+      !>C     J2000.
+      !>C
+      !>      CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+      !>     .               STATE,   LT                          )
       !>
-      !>        C
-      !>        C     Read the gravitational parameter for Mars.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
+      !>C
+      !>C     Read the gravitational parameter for Mars.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
       !>
-      !>        C
-      !>        C     Convert the state 6-vector to the elts 8-vector. Note:
-      !>        C     BODVRD returns data as arrays, so to access the
-      !>        C     gravitational parameter (the only value in the array),
-      !>        C     we use MU(1).
-      !>        C
-      !>              CALL OSCLTX ( STATE, ET, MU(1), ELTS )
+      !>C
+      !>C     Convert the state 6-vector to the elts 8-vector. Note:
+      !>C     BODVRD returns data as arrays, so to access the
+      !>C     gravitational parameter (the only value in the array),
+      !>C     we use MU(1).
+      !>C
+      !>      CALL OSCLTX ( STATE, ET, MU(1), ELTS )
       !>
-      !>        C
-      !>        C     Output the elts vector.
-      !>        C
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Perifocal distance          (km): ', ELTS(1)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Eccentricity                    : ', ELTS(2)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Inclination                (deg): ', ELTS(3) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Lon of ascending node      (deg): ', ELTS(4) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Argument of periapsis      (deg): ', ELTS(5) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Mean anomaly at epoch      (deg): ', ELTS(6) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Epoch                        (s): ', ELTS(7)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Gravitational parameter (km3/s2): ', ELTS(8)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'True anomaly at epoch      (deg): ', ELTS(9) * DPR( )
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Orbital semi-major axis     (km): ', ELTS(10)
-      !>              WRITE(*,'(A,F21.10)')
-      !>             .  'Orbital period               (s): ', ELTS(11)
+      !>C
+      !>C     Output the elts vector.
+      !>C
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Perifocal distance          (km): ', ELTS(1)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Eccentricity                    : ', ELTS(2)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Inclination                (deg): ', ELTS(3) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Lon of ascending node      (deg): ', ELTS(4) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Argument of periapsis      (deg): ', ELTS(5) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Mean anomaly at epoch      (deg): ', ELTS(6) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Epoch                        (s): ', ELTS(7)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Gravitational parameter (km3/s2): ', ELTS(8)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'True anomaly at epoch      (deg): ', ELTS(9) * DPR( )
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Orbital semi-major axis     (km): ', ELTS(10)
+      !>      WRITE(*,'(A,F21.10)')
+      !>     .  'Orbital period               (s): ', ELTS(11)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -40978,87 +41046,89 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM OSCLTX_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM OSCLTX_EX2
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'oscltx.inc'
+      !>      INCLUDE 'oscltx.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      SPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      SPD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 24 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 24 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ELTS   ( OSCXSZ )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      MU     ( 1 )
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      ELTS   ( OSCXSZ )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      MU     ( 1 )
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               DIM
-      !>              INTEGER               I
+      !>      INTEGER               DIM
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Load the meta kernel listing the needed SPK, LSK and
-      !>        C     PCK with gravitational parameters kernels.
-      !>        C
-      !>              CALL FURNSH ( 'oscltx_ex1.tm' )
+      !>C
+      !>C     Load the meta kernel listing the needed SPK, LSK and
+      !>C     PCK with gravitational parameters kernels.
+      !>C
+      !>      CALL FURNSH ( 'oscltx_ex1.tm' )
       !>
-      !>        C
-      !>        C     Read the gravitational parameter for Mars.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
+      !>C
+      !>C     Read the gravitational parameter for Mars.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'GM', 1, DIM, MU )
       !>
-      !>        C
-      !>        C     Convert the time string to ephemeris time
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1, 2000 12:00:00', ET )
+      !>C
+      !>C     Convert the time string to ephemeris time
+      !>C
+      !>      CALL STR2ET ( 'Jan 1, 2000 12:00:00', ET )
       !>
-      !>        C
-      !>        C     A step of six months - in seconds.
-      !>        C
-      !>              STEP = 180.0D0 * SPD( )
+      !>C
+      !>C     A step of six months - in seconds.
+      !>C
+      !>      STEP = 180.0D0 * SPD( )
       !>
-      !>        C
-      !>        C     10 years in steps of six months starting
-      !>        C     approximately Jan 1, 2000.
-      !>        C
-      !>              WRITE(*,'(A)') '        UCT Time             Period'
-      !>              WRITE(*,'(A)') '------------------------  ------------'
+      !>C
+      !>C     10 years in steps of six months starting
+      !>C     approximately Jan 1, 2000.
+      !>C
+      !>      WRITE(*,'(A)') '        UCT Time             Period'
+      !>      WRITE(*,'(A)') '------------------------  ------------'
       !>
-      !>              DO I= 1, 20
+      !>      DO I= 1, 20
       !>
-      !>        C
-      !>        C        Retrieve the state; convert to osculating elements.
-      !>        C
-      !>                 CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
-      !>             .                  STATE,   LT                         )
-      !>                 CALL OSCLTX ( STATE, ET, MU(1), ELTS )
+      !>C
+      !>C        Retrieve the state; convert to osculating elements.
+      !>C
+      !>         CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+      !>     .                  STATE,   LT                         )
+      !>         CALL OSCLTX ( STATE, ET, MU(1), ELTS )
       !>
-      !>        C
-      !>        C        Convert the ephemeris time to calendar UTC.
-      !>        C
-      !>                 CALL ET2UTC ( ET, 'C', 3, UTCSTR )
+      !>C
+      !>C        Convert the ephemeris time to calendar UTC.
+      !>C
+      !>         CALL ET2UTC ( ET, 'C', 3, UTCSTR )
       !>
-      !>                 WRITE(*,'(A,2X,F12.6)') UTCSTR,  ELTS(11)
+      !>         WRITE(*,'(A,2X,F12.6)') UTCSTR,  ELTS(11)
       !>
-      !>                 ET = ET + STEP
+      !>         ET = ET + STEP
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -41654,80 +41724,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PGRREC_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
+      !>```fortran
+      !>      PROGRAM PGRREC_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
       !>
-      !>              INTEGER               N
-      !>        C
-      !>        C     Load a PCK file containing a triaxial
-      !>        C     ellipsoidal shape model and orientation
-      !>        C     data for Mars.
-      !>        C
-      !>              CALL FURNSH ( 'pck00008.tpc' )
+      !>      INTEGER               N
+      !>C
+      !>C     Load a PCK file containing a triaxial
+      !>C     ellipsoidal shape model and orientation
+      !>C     data for Mars.
+      !>C
+      !>      CALL FURNSH ( 'pck00008.tpc' )
       !>
-      !>        C
-      !>        C     Look up the radii for Mars.  Although we
-      !>        C     omit it here, we could first call BADKPV
-      !>        C     to make sure the variable BODY499_RADII
-      !>        C     has three elements and numeric data type.
-      !>        C     If the variable is not present in the kernel
-      !>        C     pool, BODVRD will signal an error.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the radii for Mars.  Although we
+      !>C     omit it here, we could first call BADKPV
+      !>C     to make sure the variable BODY499_RADII
+      !>C     has three elements and numeric data type.
+      !>C     If the variable is not present in the kernel
+      !>C     pool, BODVRD will signal an error.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Do the conversion.  Note that we must provide
-      !>        C     longitude and latitude in radians.
-      !>        C
-      !>              LON =  90.D0 * RPD()
-      !>              LAT =  45.D0 * RPD()
-      !>              ALT =   3.D2
+      !>C
+      !>C     Do the conversion.  Note that we must provide
+      !>C     longitude and latitude in radians.
+      !>C
+      !>      LON =  90.D0 * RPD()
+      !>      LAT =  45.D0 * RPD()
+      !>      ALT =   3.D2
       !>
-      !>              CALL PGRREC ( 'MARS', LON, LAT, ALT, RE, F, RECTAN )
+      !>      CALL PGRREC ( 'MARS', LON, LAT, ALT, RE, F, RECTAN )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Planetographic coordinates:'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  Longitude (deg)        = ', LON / RPD()
-      !>              WRITE (*,*) '  Latitude  (deg)        = ', LAT / RPD()
-      !>              WRITE (*,*) '  Altitude  (km)         = ', ALT
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Ellipsoid shape parameters: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  Equatorial radius (km) = ', RE
-      !>              WRITE (*,*) '  Polar radius      (km) = ', RP
-      !>              WRITE (*,*) '  Flattening coefficient = ', F
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Rectangular coordinates:'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE (*,*) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE (*,*) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Planetographic coordinates:'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  Longitude (deg)        = ', LON / RPD()
+      !>      WRITE (*,*) '  Latitude  (deg)        = ', LAT / RPD()
+      !>      WRITE (*,*) '  Altitude  (km)         = ', ALT
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Ellipsoid shape parameters: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  Equatorial radius (km) = ', RE
+      !>      WRITE (*,*) '  Polar radius      (km) = ', RP
+      !>      WRITE (*,*) '  Flattening coefficient = ', F
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Rectangular coordinates:'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE (*,*) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE (*,*) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -42233,79 +42305,81 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM RECPGR_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
+      !>```fortran
+      !>      PROGRAM RECPGR_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
       !>
-      !>              INTEGER               N
-      !>        C
-      !>        C     Load a PCK file containing a triaxial
-      !>        C     ellipsoidal shape model and orientation
-      !>        C     data for Mars.
-      !>        C
-      !>              CALL FURNSH ( 'pck00008.tpc' )
+      !>      INTEGER               N
+      !>C
+      !>C     Load a PCK file containing a triaxial
+      !>C     ellipsoidal shape model and orientation
+      !>C     data for Mars.
+      !>C
+      !>      CALL FURNSH ( 'pck00008.tpc' )
       !>
-      !>        C
-      !>        C     Look up the radii for Mars.  Although we
-      !>        C     omit it here, we could first call BADKPV
-      !>        C     to make sure the variable BODY499_RADII
-      !>        C     has three elements and numeric data type.
-      !>        C     If the variable is not present in the kernel
-      !>        C     pool, BODVRD will signal an error.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the radii for Mars.  Although we
+      !>C     omit it here, we could first call BADKPV
+      !>C     to make sure the variable BODY499_RADII
+      !>C     has three elements and numeric data type.
+      !>C     If the variable is not present in the kernel
+      !>C     pool, BODVRD will signal an error.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Do the conversion.
-      !>        C
-      !>              RECTAN(1) =      0.D0
-      !>              RECTAN(2) =  -2620.678914818178D0
-      !>              RECTAN(3) =   2592.408908856967D0
+      !>C
+      !>C     Do the conversion.
+      !>C
+      !>      RECTAN(1) =      0.D0
+      !>      RECTAN(2) =  -2620.678914818178D0
+      !>      RECTAN(3) =   2592.408908856967D0
       !>
-      !>              CALL RECPGR ( 'MARS', RECTAN, RE, F, LON, LAT, ALT )
+      !>      CALL RECPGR ( 'MARS', RECTAN, RE, F, LON, LAT, ALT )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Rectangular coordinates:'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE (*,*) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE (*,*) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Ellipsoid shape parameters: '
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  Equatorial radius (km) = ', RE
-      !>              WRITE (*,*) '  Polar radius      (km) = ', RP
-      !>              WRITE (*,*) '  Flattening coefficient = ', F
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Planetographic coordinates:'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '  Longitude (deg)        = ', LON / RPD()
-      !>              WRITE (*,*) '  Latitude  (deg)        = ', LAT / RPD()
-      !>              WRITE (*,*) '  Altitude  (km)         = ', ALT
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Rectangular coordinates:'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE (*,*) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE (*,*) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Ellipsoid shape parameters: '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  Equatorial radius (km) = ', RE
+      !>      WRITE (*,*) '  Polar radius      (km) = ', RP
+      !>      WRITE (*,*) '  Flattening coefficient = ', F
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Planetographic coordinates:'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '  Longitude (deg)        = ', LON / RPD()
+      !>      WRITE (*,*) '  Latitude  (deg)        = ', LAT / RPD()
+      !>      WRITE (*,*) '  Altitude  (km)         = ', ALT
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -45097,131 +45171,133 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SURFPV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM SURFPV_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              CHARACTER*(*)         F1
-      !>              PARAMETER           ( F1 = '(A,3E20.12)' )
+      !>       CHARACTER*(*)         F1
+      !>       PARAMETER           ( F1 = '(A,3E20.12)' )
       !>
-      !>              DOUBLE PRECISION      A
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      C
-      !>              DOUBLE PRECISION      STVRTX ( 6 )
-      !>              DOUBLE PRECISION      STDIR  ( 6 )
-      !>              DOUBLE PRECISION      STX    ( 6 )
+      !>       DOUBLE PRECISION      A
+      !>       DOUBLE PRECISION      B
+      !>       DOUBLE PRECISION      C
+      !>       DOUBLE PRECISION      STVRTX ( 6 )
+      !>       DOUBLE PRECISION      STDIR  ( 6 )
+      !>       DOUBLE PRECISION      STX    ( 6 )
       !>
-      !>              INTEGER               I
+      !>       INTEGER               I
       !>
-      !>              LOGICAL               FOUND
+      !>       LOGICAL               FOUND
       !>
-      !>              A      = 1.D0
-      !>              B      = 2.D0
-      !>              C      = 3.D0
+      !>       A      = 1.D0
+      !>       B      = 2.D0
+      !>       C      = 3.D0
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Ellipsoid radii:'
-      !>              WRITE (*,*) '     A = ', A
-      !>              WRITE (*,*) '     B = ', B
-      !>              WRITE (*,*) '     C = ', C
+      !>       WRITE (*,*) ' '
+      !>       WRITE (*,*) 'Ellipsoid radii:'
+      !>       WRITE (*,*) '     A = ', A
+      !>       WRITE (*,*) '     B = ', B
+      !>       WRITE (*,*) '     C = ', C
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Case 1: Vertex varies, direction '
-      !>             .         // 'is constant'
-      !>              WRITE (*,*) ' '
+      !>       WRITE (*,*) ' '
+      !>       WRITE (*,*) 'Case 1: Vertex varies, direction '
+      !>      .         // 'is constant'
+      !>       WRITE (*,*) ' '
       !>
-      !>              STVRTX( 1 ) =  2.D0
-      !>              STVRTX( 2 ) =  0.D0
-      !>              STVRTX( 3 ) =  0.D0
-      !>              STVRTX( 4 ) =  0.D0
-      !>              STVRTX( 5 ) =  0.D0
-      !>              STVRTX( 6 ) =  3.D0
+      !>       STVRTX( 1 ) =  2.D0
+      !>       STVRTX( 2 ) =  0.D0
+      !>       STVRTX( 3 ) =  0.D0
+      !>       STVRTX( 4 ) =  0.D0
+      !>       STVRTX( 5 ) =  0.D0
+      !>       STVRTX( 6 ) =  3.D0
       !>
-      !>              STDIR ( 1 ) = -1.D0
-      !>              STDIR ( 2 ) =  0.D0
-      !>              STDIR ( 3 ) =  0.D0
-      !>              STDIR ( 4 ) =  0.D0
-      !>              STDIR ( 5 ) =  0.D0
-      !>              STDIR ( 6 ) =  0.D0
+      !>       STDIR ( 1 ) = -1.D0
+      !>       STDIR ( 2 ) =  0.D0
+      !>       STDIR ( 3 ) =  0.D0
+      !>       STDIR ( 4 ) =  0.D0
+      !>       STDIR ( 5 ) =  0.D0
+      !>       STDIR ( 6 ) =  0.D0
       !>
-      !>              WRITE (*,* ) 'Vertex:'
-      !>              WRITE (*,F1) ' ', ( STVRTX(I), I = 1,3 )
-      !>              WRITE (*,* ) 'Vertex velocity:'
-      !>              WRITE (*,F1) ' ', ( STVRTX(I), I = 4,6 )
-      !>              WRITE (*,* ) 'Direction:'
-      !>              WRITE (*,F1) ' ', ( STDIR(I),  I = 1,3 )
-      !>              WRITE (*,* ) 'Direction velocity:'
-      !>              WRITE (*,F1) ' ', ( STDIR(I),  I = 4,6 )
+      !>       WRITE (*,* ) 'Vertex:'
+      !>       WRITE (*,F1) ' ', ( STVRTX(I), I = 1,3 )
+      !>       WRITE (*,* ) 'Vertex velocity:'
+      !>       WRITE (*,F1) ' ', ( STVRTX(I), I = 4,6 )
+      !>       WRITE (*,* ) 'Direction:'
+      !>       WRITE (*,F1) ' ', ( STDIR(I),  I = 1,3 )
+      !>       WRITE (*,* ) 'Direction velocity:'
+      !>       WRITE (*,F1) ' ', ( STDIR(I),  I = 4,6 )
       !>
-      !>              CALL SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
+      !>       CALL SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 WRITE (*,*) ' No intercept state found.'
-      !>              ELSE
-      !>                 WRITE (*,* ) 'Intercept:'
-      !>                 WRITE (*,F1) ' ', ( STX(I),  I = 1,3 )
-      !>                 WRITE (*,* ) 'Intercept velocity:'
-      !>                 WRITE (*,F1) ' ', ( STX(I),  I = 4,6 )
-      !>                 WRITE (*,* ) ' '
-      !>              END IF
+      !>       IF ( .NOT. FOUND ) THEN
+      !>          WRITE (*,*) ' No intercept state found.'
+      !>       ELSE
+      !>          WRITE (*,* ) 'Intercept:'
+      !>          WRITE (*,F1) ' ', ( STX(I),  I = 1,3 )
+      !>          WRITE (*,* ) 'Intercept velocity:'
+      !>          WRITE (*,F1) ' ', ( STX(I),  I = 4,6 )
+      !>          WRITE (*,* ) ' '
+      !>       END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Case 2: Vertex and direction both vary'
-      !>              WRITE (*,*) ' '
+      !>       WRITE (*,*) ' '
+      !>       WRITE (*,*) 'Case 2: Vertex and direction both vary'
+      !>       WRITE (*,*) ' '
       !>
-      !>              STDIR ( 6 ) =  4.D0
+      !>       STDIR ( 6 ) =  4.D0
       !>
-      !>              WRITE (*,* ) 'Vertex:'
-      !>              WRITE (*,F1) ' ', ( STVRTX(I), I = 1,3 )
-      !>              WRITE (*,* ) 'Vertex velocity:'
-      !>              WRITE (*,F1) ' ', ( STVRTX(I), I = 4,6 )
-      !>              WRITE (*,* ) 'Direction:'
-      !>              WRITE (*,F1) ' ', ( STDIR(I),  I = 1,3 )
-      !>              WRITE (*,* ) 'Direction velocity:'
-      !>              WRITE (*,F1) ' ', ( STDIR(I),  I = 4,6 )
+      !>       WRITE (*,* ) 'Vertex:'
+      !>       WRITE (*,F1) ' ', ( STVRTX(I), I = 1,3 )
+      !>       WRITE (*,* ) 'Vertex velocity:'
+      !>       WRITE (*,F1) ' ', ( STVRTX(I), I = 4,6 )
+      !>       WRITE (*,* ) 'Direction:'
+      !>       WRITE (*,F1) ' ', ( STDIR(I),  I = 1,3 )
+      !>       WRITE (*,* ) 'Direction velocity:'
+      !>       WRITE (*,F1) ' ', ( STDIR(I),  I = 4,6 )
       !>
-      !>              CALL SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
+      !>       CALL SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 WRITE (*,*) ' No intercept state found.'
-      !>              ELSE
-      !>                 WRITE (*,* ) 'Intercept:'
-      !>                 WRITE (*,F1) ' ', ( STX(I),  I = 1,3 )
-      !>                 WRITE (*,* ) 'Intercept velocity:'
-      !>                 WRITE (*,F1) ' ', ( STX(I),  I = 4,6 )
-      !>                 WRITE (*,* ) ' '
-      !>              END IF
+      !>       IF ( .NOT. FOUND ) THEN
+      !>          WRITE (*,*) ' No intercept state found.'
+      !>       ELSE
+      !>          WRITE (*,* ) 'Intercept:'
+      !>          WRITE (*,F1) ' ', ( STX(I),  I = 1,3 )
+      !>          WRITE (*,* ) 'Intercept velocity:'
+      !>          WRITE (*,F1) ' ', ( STX(I),  I = 4,6 )
+      !>          WRITE (*,* ) ' '
+      !>       END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Case 3: Vertex and direction both vary;'
-      !>              WRITE (*,*) '        near-tangent case.'
-      !>              WRITE (*,*) ' '
+      !>       WRITE (*,*) ' '
+      !>       WRITE (*,*) 'Case 3: Vertex and direction both vary;'
+      !>       WRITE (*,*) '        near-tangent case.'
+      !>       WRITE (*,*) ' '
       !>
-      !>              STVRTX( 3 ) =  C - 1.D-15
-      !>              STVRTX( 6 ) =  1.D299
-      !>              STDIR ( 6 ) =  1.D299
+      !>       STVRTX( 3 ) =  C - 1.D-15
+      !>       STVRTX( 6 ) =  1.D299
+      !>       STDIR ( 6 ) =  1.D299
       !>
-      !>              WRITE (*,* ) 'Vertex:'
-      !>              WRITE (*,F1) ' ', ( STVRTX(I), I = 1,3 )
-      !>              WRITE (*,* ) 'Vertex velocity:'
-      !>              WRITE (*,F1) ' ', ( STVRTX(I), I = 4,6 )
-      !>              WRITE (*,* ) 'Direction:'
-      !>              WRITE (*,F1) ' ', ( STDIR(I),  I = 1,3 )
-      !>              WRITE (*,* ) 'Direction velocity:'
-      !>              WRITE (*,F1) ' ', ( STDIR(I),  I = 4,6 )
+      !>       WRITE (*,* ) 'Vertex:'
+      !>       WRITE (*,F1) ' ', ( STVRTX(I), I = 1,3 )
+      !>       WRITE (*,* ) 'Vertex velocity:'
+      !>       WRITE (*,F1) ' ', ( STVRTX(I), I = 4,6 )
+      !>       WRITE (*,* ) 'Direction:'
+      !>       WRITE (*,F1) ' ', ( STDIR(I),  I = 1,3 )
+      !>       WRITE (*,* ) 'Direction velocity:'
+      !>       WRITE (*,F1) ' ', ( STDIR(I),  I = 4,6 )
       !>
-      !>              CALL SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
+      !>       CALL SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 WRITE (*,*) ' No intercept state found.'
-      !>              ELSE
-      !>                 WRITE (*,* ) 'Intercept:'
-      !>                 WRITE (*,F1) ' ', ( STX(I),  I = 1,3 )
-      !>                 WRITE (*,* ) 'Intercept velocity:'
-      !>                 WRITE (*,F1) ' ', ( STX(I),  I = 4,6 )
-      !>                 WRITE (*,* ) ' '
-      !>              END IF
+      !>       IF ( .NOT. FOUND ) THEN
+      !>          WRITE (*,*) ' No intercept state found.'
+      !>       ELSE
+      !>          WRITE (*,* ) 'Intercept:'
+      !>          WRITE (*,F1) ' ', ( STX(I),  I = 1,3 )
+      !>          WRITE (*,* ) 'Intercept velocity:'
+      !>          WRITE (*,F1) ' ', ( STX(I),  I = 4,6 )
+      !>          WRITE (*,* ) ' '
+      !>       END IF
       !>
-      !>              END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -45845,72 +45921,74 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TRGSEP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TRGSEP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      TRGSEP
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      TRGSEP
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)        TARG  (2)
-      !>              CHARACTER*(32)        SHAPE (2)
-      !>              CHARACTER*(32)        FRAME (2)
-      !>              CHARACTER*(64)        TDBSTR
-      !>              CHARACTER*(32)        OBSRVR
-      !>              CHARACTER*(32)        ABCORR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)        TARG  (2)
+      !>      CHARACTER*(32)        SHAPE (2)
+      !>      CHARACTER*(32)        FRAME (2)
+      !>      CHARACTER*(64)        TDBSTR
+      !>      CHARACTER*(32)        OBSRVR
+      !>      CHARACTER*(32)        ABCORR
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      VALUE
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      VALUE
       !>
-      !>              DATA             FRAME  / 'IAU_MOON', 'IAU_EARTH' /
+      !>      DATA             FRAME  / 'IAU_MOON', 'IAU_EARTH' /
       !>
-      !>              DATA             TARG   / 'MOON', 'EARTH'   /
+      !>      DATA             TARG   / 'MOON', 'EARTH'   /
       !>
-      !>              DATA             SHAPE  / 'POINT', 'SPHERE' /
+      !>      DATA             SHAPE  / 'POINT', 'SPHERE' /
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH( 'trgsep_ex1.tm')
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH( 'trgsep_ex1.tm')
       !>
-      !>              TDBSTR = '2007-JAN-11 11:21:20.213872 (TDB)'
-      !>              OBSRVR = 'SUN'
-      !>              ABCORR = 'LT+S'
+      !>      TDBSTR = '2007-JAN-11 11:21:20.213872 (TDB)'
+      !>      OBSRVR = 'SUN'
+      !>      ABCORR = 'LT+S'
       !>
-      !>              CALL STR2ET ( TDBSTR, ET )
+      !>      CALL STR2ET ( TDBSTR, ET )
       !>
-      !>              VALUE = TRGSEP( ET,
-      !>             .             TARG(1),  SHAPE(1), FRAME(1),
-      !>             .             TARG(2),  SHAPE(1), FRAME(2),
-      !>             .             OBSRVR,   ABCORR )
+      !>      VALUE = TRGSEP( ET,
+      !>     .             TARG(1),  SHAPE(1), FRAME(1),
+      !>     .             TARG(2),  SHAPE(1), FRAME(2),
+      !>     .             OBSRVR,   ABCORR )
       !>
-      !>              WRITE(*, FMT='(A,A6,A6)') 'Bodies:          ',
-      !>             .                                      TARG(1), TARG(2)
-      !>              WRITE(*, FMT='(A,A6)')    'as seen from:    ', OBSRVR
-      !>              WRITE(*, FMT='(A,A36)')   'at TDB time:     ', TDBSTR
-      !>              WRITE(*, FMT='(A,A)')     'with correction: ', ABCORR
-      !>              WRITE(*,*)
+      !>      WRITE(*, FMT='(A,A6,A6)') 'Bodies:          ',
+      !>     .                                      TARG(1), TARG(2)
+      !>      WRITE(*, FMT='(A,A6)')    'as seen from:    ', OBSRVR
+      !>      WRITE(*, FMT='(A,A36)')   'at TDB time:     ', TDBSTR
+      !>      WRITE(*, FMT='(A,A)')     'with correction: ', ABCORR
+      !>      WRITE(*,*)
       !>
-      !>              WRITE(*, FMT='(A)') 'Apparent angular separation:'
-      !>              WRITE(*, FMT='(A,F12.8)')
-      !>             .     '   point body models  (deg.): ',
-      !>             .                                        VALUE * DPR()
+      !>      WRITE(*, FMT='(A)') 'Apparent angular separation:'
+      !>      WRITE(*, FMT='(A,F12.8)')
+      !>     .     '   point body models  (deg.): ',
+      !>     .                                        VALUE * DPR()
       !>
-      !>              VALUE = TRGSEP( ET,
-      !>             .             TARG(1),  SHAPE(2), FRAME(1),
-      !>             .             TARG(2),  SHAPE(2), FRAME(2),
-      !>             .             OBSRVR, ABCORR )
+      !>      VALUE = TRGSEP( ET,
+      !>     .             TARG(1),  SHAPE(2), FRAME(1),
+      !>     .             TARG(2),  SHAPE(2), FRAME(2),
+      !>     .             OBSRVR, ABCORR )
       !>
-      !>              WRITE(*, FMT='(A,F12.8)')
-      !>             .     '   sphere body models (deg.): ',
-      !>             .                                        VALUE * DPR()
+      !>      WRITE(*, FMT='(A,F12.8)')
+      !>     .     '   sphere body models (deg.): ',
+      !>     .                                        VALUE * DPR()
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -51825,70 +51903,72 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CGV2EL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CGV2EL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 UBEL
-      !>              PARAMETER             ( UBEL =   9 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 UBEL
+      !>      PARAMETER             ( UBEL =   9 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        CENTER ( 3    )
-      !>              DOUBLE PRECISION        ECENTR ( 3    )
-      !>              DOUBLE PRECISION        ELLIPS ( UBEL )
-      !>              DOUBLE PRECISION        SMAJOR ( 3    )
-      !>              DOUBLE PRECISION        SMINOR ( 3    )
-      !>              DOUBLE PRECISION        VEC1   ( 3    )
-      !>              DOUBLE PRECISION        VEC2   ( 3    )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        CENTER ( 3    )
+      !>      DOUBLE PRECISION        ECENTR ( 3    )
+      !>      DOUBLE PRECISION        ELLIPS ( UBEL )
+      !>      DOUBLE PRECISION        SMAJOR ( 3    )
+      !>      DOUBLE PRECISION        SMINOR ( 3    )
+      !>      DOUBLE PRECISION        VEC1   ( 3    )
+      !>      DOUBLE PRECISION        VEC2   ( 3    )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Define the center and two linearly independent
-      !>        C     generating vectors of an ellipse (the vectors need not
-      !>        C     be linearly independent).
-      !>        C
-      !>              DATA                    CENTER / -1.D0,  1.D0, -1.D0 /
+      !>C
+      !>C     Define the center and two linearly independent
+      !>C     generating vectors of an ellipse (the vectors need not
+      !>C     be linearly independent).
+      !>C
+      !>      DATA                    CENTER / -1.D0,  1.D0, -1.D0 /
       !>
-      !>              DATA                    VEC1   /  1.D0,  1.D0,  1.D0 /
+      !>      DATA                    VEC1   /  1.D0,  1.D0,  1.D0 /
       !>
-      !>              DATA                    VEC2   /  1.D0, -1.D0,  1.D0 /
+      !>      DATA                    VEC2   /  1.D0, -1.D0,  1.D0 /
       !>
-      !>        C
-      !>        C     Create the ELLIPS.
-      !>        C
-      !>              CALL CGV2EL ( CENTER, VEC1, VEC2, ELLIPS )
+      !>C
+      !>C     Create the ELLIPS.
+      !>C
+      !>      CALL CGV2EL ( CENTER, VEC1, VEC2, ELLIPS )
       !>
-      !>        C
-      !>        C     In a real application, please use SPICELIB API EL2CGV
-      !>        C     to retrieve the center and generating vectors from the
-      !>        C     ellipse structure (see next block).
-      !>        C
-      !>              WRITE(*,'(A)') 'SPICE ellipse:'
-      !>              WRITE(*,'(A,3F10.6)') '  Semi-minor axis:',
-      !>             .                                    ( ELLIPS(I), I=7,9 )
-      !>              WRITE(*,'(A,3F10.6)') '  Semi-major axis:',
-      !>             .                                    ( ELLIPS(I), I=4,6 )
-      !>              WRITE(*,'(A,3F10.6)') '  Center         :',
-      !>             .                                    ( ELLIPS(I), I=1,3 )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     In a real application, please use SPICELIB API EL2CGV
+      !>C     to retrieve the center and generating vectors from the
+      !>C     ellipse structure (see next block).
+      !>C
+      !>      WRITE(*,'(A)') 'SPICE ellipse:'
+      !>      WRITE(*,'(A,3F10.6)') '  Semi-minor axis:',
+      !>     .                                    ( ELLIPS(I), I=7,9 )
+      !>      WRITE(*,'(A,3F10.6)') '  Semi-major axis:',
+      !>     .                                    ( ELLIPS(I), I=4,6 )
+      !>      WRITE(*,'(A,3F10.6)') '  Center         :',
+      !>     .                                    ( ELLIPS(I), I=1,3 )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Obtain the center and generating vectors from the
-      !>        C     ELLIPS.
-      !>        C
-      !>              CALL EL2CGV ( ELLIPS, ECENTR, SMAJOR, SMINOR )
+      !>C
+      !>C     Obtain the center and generating vectors from the
+      !>C     ELLIPS.
+      !>C
+      !>      CALL EL2CGV ( ELLIPS, ECENTR, SMAJOR, SMINOR )
       !>
-      !>              WRITE(*,'(A)') 'SPICE ellipse (using EL2CGV):'
-      !>              WRITE(*,'(A,3F10.6)') '  Semi-minor axis:', SMINOR
-      !>              WRITE(*,'(A,3F10.6)') '  Semi-major axis:', SMAJOR
-      !>              WRITE(*,'(A,3F10.6)') '  Center         :', ECENTR
+      !>      WRITE(*,'(A)') 'SPICE ellipse (using EL2CGV):'
+      !>      WRITE(*,'(A,3F10.6)') '  Semi-minor axis:', SMINOR
+      !>      WRITE(*,'(A,3F10.6)') '  Semi-major axis:', SMAJOR
+      !>      WRITE(*,'(A,3F10.6)') '  Center         :', ECENTR
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -51907,67 +51987,69 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CGV2EL_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CGV2EL_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 UBEL
-      !>              PARAMETER             ( UBEL =   9 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 UBEL
+      !>      PARAMETER             ( UBEL =   9 )
       !>
-      !>              INTEGER                 UBPL
-      !>              PARAMETER             ( UBPL =   4 )
+      !>      INTEGER                 UBPL
+      !>      PARAMETER             ( UBPL =   4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        CENTER ( 3    )
-      !>              DOUBLE PRECISION        ELLIPS ( UBEL )
-      !>              DOUBLE PRECISION        NORMAL ( 3    )
-      !>              DOUBLE PRECISION        PLANE  ( UBPL )
-      !>              DOUBLE PRECISION        VEC1   ( 3    )
-      !>              DOUBLE PRECISION        VEC2   ( 3    )
-      !>              DOUBLE PRECISION        XPTS   ( 3, 2 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        CENTER ( 3    )
+      !>      DOUBLE PRECISION        ELLIPS ( UBEL )
+      !>      DOUBLE PRECISION        NORMAL ( 3    )
+      !>      DOUBLE PRECISION        PLANE  ( UBPL )
+      !>      DOUBLE PRECISION        VEC1   ( 3    )
+      !>      DOUBLE PRECISION        VEC2   ( 3    )
+      !>      DOUBLE PRECISION        XPTS   ( 3, 2 )
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 NXPTS
+      !>      INTEGER                 I
+      !>      INTEGER                 NXPTS
       !>
-      !>        C
-      !>        C     The ellipse is defined by the vectors CENTER, VEC1, and
-      !>        C     VEC2. The plane is defined by the normal vector NORMAL
-      !>        C     and the CENTER.
-      !>        C
-      !>              DATA                    CENTER /  0.D0,  0.D0,  0.D0 /
-      !>              DATA                    VEC1   /  1.D0,  7.D0,  2.D0 /
-      !>              DATA                    VEC2   / -1.D0,  1.D0,  3.D0 /
+      !>C
+      !>C     The ellipse is defined by the vectors CENTER, VEC1, and
+      !>C     VEC2. The plane is defined by the normal vector NORMAL
+      !>C     and the CENTER.
+      !>C
+      !>      DATA                    CENTER /  0.D0,  0.D0,  0.D0 /
+      !>      DATA                    VEC1   /  1.D0,  7.D0,  2.D0 /
+      !>      DATA                    VEC2   / -1.D0,  1.D0,  3.D0 /
       !>
-      !>              DATA                    NORMAL /  0.D0,  1.D0,  0.D0 /
+      !>      DATA                    NORMAL /  0.D0,  1.D0,  0.D0 /
       !>
-      !>        C
-      !>        C     Make a SPICE ellipse and a plane.
-      !>        C
-      !>              CALL CGV2EL ( CENTER, VEC1, VEC2, ELLIPS )
-      !>              CALL NVP2PL ( NORMAL, CENTER,     PLANE  )
+      !>C
+      !>C     Make a SPICE ellipse and a plane.
+      !>C
+      !>      CALL CGV2EL ( CENTER, VEC1, VEC2, ELLIPS )
+      !>      CALL NVP2PL ( NORMAL, CENTER,     PLANE  )
       !>
-      !>        C
-      !>        C     Find the intersection of the ellipse and plane.
-      !>        C     NXPTS is the number of intersection points; XPTS
-      !>        C     are the points themselves.
-      !>        C
-      !>              CALL INELPL ( ELLIPS,    PLANE,    NXPTS,
-      !>             .              XPTS(1,1), XPTS(1,2)       )
+      !>C
+      !>C     Find the intersection of the ellipse and plane.
+      !>C     NXPTS is the number of intersection points; XPTS
+      !>C     are the points themselves.
+      !>C
+      !>      CALL INELPL ( ELLIPS,    PLANE,    NXPTS,
+      !>     .              XPTS(1,1), XPTS(1,2)       )
       !>
-      !>              WRITE(*,'(A,I2)') 'Number of intercept points: ', NXPTS
+      !>      WRITE(*,'(A,I2)') 'Number of intercept points: ', NXPTS
       !>
-      !>              DO I = 1, NXPTS
+      !>      DO I = 1, NXPTS
       !>
-      !>                 WRITE(*,'(A,I2,A,3F10.6)') '  Point', I, ':',
-      !>             .                         XPTS(1,I), XPTS(2,I), XPTS(3,I)
+      !>         WRITE(*,'(A,I2,A,3F10.6)') '  Point', I, ':',
+      !>     .                         XPTS(1,I), XPTS(2,I), XPTS(3,I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -52248,134 +52330,136 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DPSPCE_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DPSPCE_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               PNAMLN
-      !>              PARAMETER           ( PNAMLN = 2  )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               PNAMLN
+      !>      PARAMETER           ( PNAMLN = 2  )
       !>
-      !>              INTEGER               TIMSLN
-      !>              PARAMETER           ( TIMSLN = 25 )
+      !>      INTEGER               TIMSLN
+      !>      PARAMETER           ( TIMSLN = 25 )
       !>
-      !>              INTEGER               TLELLN
-      !>              PARAMETER           ( TLELLN = 69 )
+      !>      INTEGER               TLELLN
+      !>      PARAMETER           ( TLELLN = 69 )
       !>
-      !>        C
-      !>        C     The TDRS-4 satellite is an Earth orbiting object; set
-      !>        C     the center ID to the Earth ID.
-      !>        C
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER  = 399     )
+      !>C
+      !>C     The TDRS-4 satellite is an Earth orbiting object; set
+      !>C     the center ID to the Earth ID.
+      !>C
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER  = 399     )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMLN)    NOADPN ( 8  )
-      !>              CHARACTER*(TIMSLN)    TIMSTR
-      !>              CHARACTER*(TLELLN)    TLE    ( 2  )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMLN)    NOADPN ( 8  )
+      !>      CHARACTER*(TIMSLN)    TIMSTR
+      !>      CHARACTER*(TLELLN)    TLE    ( 2  )
       !>
-      !>              DOUBLE PRECISION      DELT
-      !>              DOUBLE PRECISION      ELEMS  ( 10 )
-      !>              DOUBLE PRECISION      EPOCH
-      !>              DOUBLE PRECISION      GEOPHS ( 8  )
-      !>              DOUBLE PRECISION      STATE  ( 6  )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      TF
+      !>      DOUBLE PRECISION      DELT
+      !>      DOUBLE PRECISION      ELEMS  ( 10 )
+      !>      DOUBLE PRECISION      EPOCH
+      !>      DOUBLE PRECISION      GEOPHS ( 8  )
+      !>      DOUBLE PRECISION      STATE  ( 6  )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      TF
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     These are the variables that will hold the constants
-      !>        C     required by DPSPCE. These constants are available from
-      !>        C     the loaded PCK file, which provides the actual values
-      !>        C     and units as used by NORAD propagation model.
-      !>        C
-      !>        C        Constant   Meaning
-      !>        C        --------   ------------------------------------------
-      !>        C        J2         J2 gravitational harmonic for Earth.
-      !>        C        J3         J3 gravitational harmonic for Earth.
-      !>        C        J4         J4 gravitational harmonic for Earth.
-      !>        C        KE         Square root of the GM for Earth.
-      !>        C        QO         High altitude bound for atmospheric model.
-      !>        C        SO         Low altitude bound for atmospheric model.
-      !>        C        ER         Equatorial radius of the Earth.
-      !>        C        AE         Distance units/earth radius.
-      !>        C
-      !>              DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
-      !>             .                         'QO', 'SO', 'ER', 'AE'  /
+      !>C
+      !>C     These are the variables that will hold the constants
+      !>C     required by DPSPCE. These constants are available from
+      !>C     the loaded PCK file, which provides the actual values
+      !>C     and units as used by NORAD propagation model.
+      !>C
+      !>C        Constant   Meaning
+      !>C        --------   ------------------------------------------
+      !>C        J2         J2 gravitational harmonic for Earth.
+      !>C        J3         J3 gravitational harmonic for Earth.
+      !>C        J4         J4 gravitational harmonic for Earth.
+      !>C        KE         Square root of the GM for Earth.
+      !>C        QO         High altitude bound for atmospheric model.
+      !>C        SO         Low altitude bound for atmospheric model.
+      !>C        ER         Equatorial radius of the Earth.
+      !>C        AE         Distance units/earth radius.
+      !>C
+      !>      DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
+      !>     .                         'QO', 'SO', 'ER', 'AE'  /
       !>
-      !>        C
-      !>        C     Define the Two-Line Element set for TDRS-4.
-      !>        C
-      !>              TLE(1)  = '1 19883U 89021B   97133.05943164 -.00000277'
-      !>             .      //                   '  00000-0  10000-3 0  3315'
-      !>              TLE(2)  = '2 19883   0.5548  86.7278 0001786 312.2904 '
-      !>             .      //                   '172.2391  1.00269108202415'
+      !>C
+      !>C     Define the Two-Line Element set for TDRS-4.
+      !>C
+      !>      TLE(1)  = '1 19883U 89021B   97133.05943164 -.00000277'
+      !>     .      //                   '  00000-0  10000-3 0  3315'
+      !>      TLE(2)  = '2 19883   0.5548  86.7278 0001786 312.2904 '
+      !>     .      //                   '172.2391  1.00269108202415'
       !>
-      !>        C
-      !>        C     Load the PCK file that provides the geophysical
-      !>        C     constants required for the evaluation of the two-line
-      !>        C     elements sets. Load also an LSK, as it is required by
-      !>        C     GETELM to perform time conversions. Use a meta-kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'dpspce_ex1.tm' )
+      !>C
+      !>C     Load the PCK file that provides the geophysical
+      !>C     constants required for the evaluation of the two-line
+      !>C     elements sets. Load also an LSK, as it is required by
+      !>C     GETELM to perform time conversions. Use a meta-kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'dpspce_ex1.tm' )
       !>
-      !>        C
-      !>        C     Retrieve the data from the kernel, and place it on
-      !>        C     the GEOPHS array.
-      !>        C
-      !>              DO I = 1, 8
+      !>C
+      !>C     Retrieve the data from the kernel, and place it on
+      !>C     the GEOPHS array.
+      !>C
+      !>      DO I = 1, 8
       !>
-      !>                 CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
+      !>         CALL BODVCD ( CENTER, NOADPN(I), 1, N, GEOPHS(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Convert the Two Line Elements lines to the element sets.
-      !>        C     Set the lower bound for the years to be the earliest
-      !>        C     first year for the elements.
-      !>        C
-      !>              CALL GETELM ( 1988, TLE, EPOCH, ELEMS )
+      !>C
+      !>C     Convert the Two Line Elements lines to the element sets.
+      !>C     Set the lower bound for the years to be the earliest
+      !>C     first year for the elements.
+      !>C
+      !>      CALL GETELM ( 1988, TLE, EPOCH, ELEMS )
       !>
-      !>        C
-      !>        C     Define the final time past epoch, 1400 mins (in seconds),
-      !>        C     the step size for elements output, 360 mins (in seconds),
-      !>        C     and the start time keyed off epoch.
-      !>        C
-      !>              TF   = 1440.D0 * 60.D0
-      !>              DELT = 360.D0  * 60.D0
-      !>              ET   = EPOCH - 4.D0 * DELT
+      !>C
+      !>C     Define the final time past epoch, 1400 mins (in seconds),
+      !>C     the step size for elements output, 360 mins (in seconds),
+      !>C     and the start time keyed off epoch.
+      !>C
+      !>      TF   = 1440.D0 * 60.D0
+      !>      DELT = 360.D0  * 60.D0
+      !>      ET   = EPOCH - 4.D0 * DELT
       !>
-      !>        C
-      !>        C     Display the reference epoch for the elements.
-      !>        C
-      !>              CALL ET2UTC ( EPOCH, 'C', 3, TIMSTR )
-      !>              WRITE(*,'(2A)') 'Reference epoch: ', TIMSTR
+      !>C
+      !>C     Display the reference epoch for the elements.
+      !>C
+      !>      CALL ET2UTC ( EPOCH, 'C', 3, TIMSTR )
+      !>      WRITE(*,'(2A)') 'Reference epoch: ', TIMSTR
       !>
-      !>        C
-      !>        C     Obtain the state at different epochs around the
-      !>        C     reference epoch.
-      !>        C
-      !>              DO WHILE ( DABS(TIME - EPOCH) .LE. DABS(TF) )
+      !>C
+      !>C     Obtain the state at different epochs around the
+      !>C     reference epoch.
+      !>C
+      !>      DO WHILE ( DABS(TIME - EPOCH) .LE. DABS(TF) )
       !>
-      !>                 CALL DPSPCE ( ET, GEOPHS, ELEMS, STATE  )
-      !>                 CALL ET2UTC ( ET, 'C',    3,     TIMSTR )
+      !>         CALL DPSPCE ( ET, GEOPHS, ELEMS, STATE  )
+      !>         CALL ET2UTC ( ET, 'C',    3,     TIMSTR )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,'(2A)')       'Time    : ', TIMSTR
-      !>                 WRITE(*,'(A,3F16.8)') 'Position: ', (STATE(I), I=1,3)
-      !>                 WRITE(*,'(A,3F16.8)') 'Velocity: ', (STATE(I), I=4,6)
+      !>         WRITE(*,*)
+      !>         WRITE(*,'(2A)')       'Time    : ', TIMSTR
+      !>         WRITE(*,'(A,3F16.8)') 'Position: ', (STATE(I), I=1,3)
+      !>         WRITE(*,'(A,3F16.8)') 'Velocity: ', (STATE(I), I=4,6)
       !>
-      !>                 ET = ET + DELT
+      !>         ET = ET + DELT
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -53260,69 +53344,71 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ET2LST_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ET2LST_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(A,F7.2,A)'    )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(A,F7.2,A)'    )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'et2lst_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'et2lst_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE   = 'PLANETOGRAPHIC' )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE   = 'PLANETOGRAPHIC' )
       !>
-      !>              INTEGER               AMPMLEN
-      !>              PARAMETER           ( AMPMLEN = 51 )
+      !>      INTEGER               AMPMLEN
+      !>      PARAMETER           ( AMPMLEN = 51 )
       !>
-      !>              INTEGER               MARS
-      !>              PARAMETER           ( MARS   = 499 )
+      !>      INTEGER               MARS
+      !>      PARAMETER           ( MARS   = 499 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 51 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 51 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(AMPMLEN)   AMPM
-      !>              CHARACTER*(TIMLEN)    TIME
-      !>              CHARACTER*(20)        UTCSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(AMPMLEN)   AMPM
+      !>      CHARACTER*(TIMLEN)    TIME
+      !>      CHARACTER*(20)        UTCSTR
       !>
-      !>              DOUBLE PRECISION      DLON
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RLON
+      !>      DOUBLE PRECISION      DLON
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RLON
       !>
-      !>              INTEGER               HR
-      !>              INTEGER               MN
-      !>              INTEGER               SC
+      !>      INTEGER               HR
+      !>      INTEGER               MN
+      !>      INTEGER               SC
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>              DLON   =  326.17D0
-      !>              RLON   =  DLON * RPD( )
-      !>              UTCSTR = '2002 SEP 02 00:00:00'
+      !>      DLON   =  326.17D0
+      !>      RLON   =  DLON * RPD( )
+      !>      UTCSTR = '2002 SEP 02 00:00:00'
       !>
-      !>              CALL STR2ET ( UTCSTR, ET )
+      !>      CALL STR2ET ( UTCSTR, ET )
       !>
-      !>              CALL ET2LST ( ET, MARS, RLON, TYPE,
-      !>             .              HR, MN,   SC,   TIME, AMPM )
+      !>      CALL ET2LST ( ET, MARS, RLON, TYPE,
+      !>     .              HR, MN,   SC,   TIME, AMPM )
       !>
-      !>              WRITE(*,FMT) 'Local time at Mars', DLON,
-      !>             .             ' degrees planetographic longitude:'
-      !>              WRITE(*,*)   '   at UTC ', UTCSTR, ', LST = ', AMPM
+      !>      WRITE(*,FMT) 'Local time at Mars', DLON,
+      !>     .             ' degrees planetographic longitude:'
+      !>      WRITE(*,*)   '   at UTC ', UTCSTR, ', LST = ', AMPM
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -53794,69 +53880,71 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INCNSG_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,3F13.8)' )
+      !>```fortran
+      !>      PROGRAM INCNSG_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,3F13.8)' )
       !>
-      !>              CHARACTER*(*)         FMT2
-      !>              PARAMETER           ( FMT2 = '(A,I2)' )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ANGLE
-      !>              DOUBLE PRECISION      APEX   ( 3 )
-      !>              DOUBLE PRECISION      AXIS   ( 3 )
-      !>              DOUBLE PRECISION      ENDPT1 ( 3 )
-      !>              DOUBLE PRECISION      ENDPT2 ( 3 )
-      !>              DOUBLE PRECISION      SQ3
-      !>              DOUBLE PRECISION      XPT1   ( 3 )
-      !>              DOUBLE PRECISION      XPT2   ( 3 )
+      !>      CHARACTER*(*)         FMT2
+      !>      PARAMETER           ( FMT2 = '(A,I2)' )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ANGLE
+      !>      DOUBLE PRECISION      APEX   ( 3 )
+      !>      DOUBLE PRECISION      AXIS   ( 3 )
+      !>      DOUBLE PRECISION      ENDPT1 ( 3 )
+      !>      DOUBLE PRECISION      ENDPT2 ( 3 )
+      !>      DOUBLE PRECISION      SQ3
+      !>      DOUBLE PRECISION      XPT1   ( 3 )
+      !>      DOUBLE PRECISION      XPT2   ( 3 )
       !>
-      !>              INTEGER               NXPTS
+      !>      INTEGER               NXPTS
       !>
-      !>        C
-      !>        C     Set up the cone's geometric attributes.
-      !>        C
-      !>              CALL VPACK ( 0.D0, 0.D0, 0.D0, APEX )
-      !>              CALL VPACK ( 1.D0, 0.D0, 0.D0, AXIS )
+      !>C
+      !>C     Set up the cone's geometric attributes.
+      !>C
+      !>      CALL VPACK ( 0.D0, 0.D0, 0.D0, APEX )
+      !>      CALL VPACK ( 1.D0, 0.D0, 0.D0, AXIS )
       !>
-      !>              ANGLE = 45.D0 * RPD()
-      !>        C
-      !>        C     Initialize the line segment's endpoints.
-      !>        C
-      !>              SQ3 = SQRT( 3.D0  )
+      !>      ANGLE = 45.D0 * RPD()
+      !>C
+      !>C     Initialize the line segment's endpoints.
+      !>C
+      !>      SQ3 = SQRT( 3.D0  )
       !>
-      !>              CALL VPACK ( 1.D0, -2.D0, SQ3/2, ENDPT1 )
-      !>              CALL VPACK ( 1.D0,  2.D0, SQ3/2, ENDPT2 )
-      !>        C
-      !>        C     Find the points of intersection.
-      !>        C
-      !>              CALL INCNSG ( APEX,   AXIS,  ANGLE, ENDPT1,
-      !>             .              ENDPT2, NXPTS, XPT1,  XPT2   )
+      !>      CALL VPACK ( 1.D0, -2.D0, SQ3/2, ENDPT1 )
+      !>      CALL VPACK ( 1.D0,  2.D0, SQ3/2, ENDPT2 )
+      !>C
+      !>C     Find the points of intersection.
+      !>C
+      !>      CALL INCNSG ( APEX,   AXIS,  ANGLE, ENDPT1,
+      !>     .              ENDPT2, NXPTS, XPT1,  XPT2   )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Apex:        ', APEX
-      !>              WRITE (*,FMT1) 'Axis:        ', AXIS
-      !>              WRITE (*,FMT1) 'Angle (deg): ', ANGLE/RPD()
-      !>              WRITE (*,FMT1) 'Endpoint 1:  ', ENDPT1
-      !>              WRITE (*,FMT1) 'Endpoint 2:  ', ENDPT2
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT2) 'Number of intersection points: ',
-      !>             .            NXPTS
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Point 1:    ', XPT1
-      !>              WRITE (*,FMT1) 'Point 2:    ', XPT2
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Apex:        ', APEX
+      !>      WRITE (*,FMT1) 'Axis:        ', AXIS
+      !>      WRITE (*,FMT1) 'Angle (deg): ', ANGLE/RPD()
+      !>      WRITE (*,FMT1) 'Endpoint 1:  ', ENDPT1
+      !>      WRITE (*,FMT1) 'Endpoint 2:  ', ENDPT2
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT2) 'Number of intersection points: ',
+      !>     .            NXPTS
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Point 1:    ', XPT1
+      !>      WRITE (*,FMT1) 'Point 2:    ', XPT2
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -55256,98 +55344,100 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM XFMSTA_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C     METAKR is the meta-kernel's filename.
-      !>        C
-      !>              CHARACTER*(*)         METAKR
-      !>              PARAMETER           ( METAKR = 'xfmsta_ex1.tm' )
+      !>```fortran
+      !>      PROGRAM XFMSTA_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C     METAKR is the meta-kernel's filename.
+      !>C
+      !>      CHARACTER*(*)         METAKR
+      !>      PARAMETER           ( METAKR = 'xfmsta_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         FORM
-      !>              PARAMETER           ( FORM = '(F16.6, F16.6, F16.6)' )
+      !>      CHARACTER*(*)         FORM
+      !>      PARAMETER           ( FORM = '(F16.6, F16.6, F16.6)' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>        C     STAREC is the state of Phoebe with respect to CASSINI in
-      !>        C     rectangular coordinates. STALAT is the state rotated into
-      !>        C     latitudinal coordinates. STREC2 is the state transformed
-      !>        C     back into rectangular coordinates from latitudinal.
-      !>        C
-      !>              DOUBLE PRECISION      STAREC (6)
-      !>              DOUBLE PRECISION      STALAT (6)
-      !>              DOUBLE PRECISION      STREC2 (6)
+      !>C
+      !>C     Local variables
+      !>C
+      !>C     STAREC is the state of Phoebe with respect to CASSINI in
+      !>C     rectangular coordinates. STALAT is the state rotated into
+      !>C     latitudinal coordinates. STREC2 is the state transformed
+      !>C     back into rectangular coordinates from latitudinal.
+      !>C
+      !>      DOUBLE PRECISION      STAREC (6)
+      !>      DOUBLE PRECISION      STALAT (6)
+      !>      DOUBLE PRECISION      STREC2 (6)
       !>
-      !>        C
-      !>        C     ET is the ephemeris time (TDB) corresponding to the
-      !>        C     observation.
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
+      !>C
+      !>C     ET is the ephemeris time (TDB) corresponding to the
+      !>C     observation.
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     The required kernels must be loaded.
-      !>        C
-      !>              CALL FURNSH ( METAKR )
+      !>C
+      !>C     The required kernels must be loaded.
+      !>C
+      !>      CALL FURNSH ( METAKR )
       !>
-      !>        C
-      !>        C     Calculate the state at 2004 Jun 11 19:32:00 UTC.
-      !>        C
-      !>              CALL STR2ET ( '2004-JUN-11-19:32:00', ET )
+      !>C
+      !>C     Calculate the state at 2004 Jun 11 19:32:00 UTC.
+      !>C
+      !>      CALL STR2ET ( '2004-JUN-11-19:32:00', ET )
       !>
-      !>        C
-      !>        C     Calculate the apparent state of Phoebe as seen by
-      !>        C     CASSINI in the J2000 frame.
-      !>        C
-      !>              CALL SPKEZR ( 'PHOEBE',  ET, 'IAU_PHOEBE', 'LT+S',
-      !>             .              'CASSINI', STAREC, LT              )
+      !>C
+      !>C     Calculate the apparent state of Phoebe as seen by
+      !>C     CASSINI in the J2000 frame.
+      !>C
+      !>      CALL SPKEZR ( 'PHOEBE',  ET, 'IAU_PHOEBE', 'LT+S',
+      !>     .              'CASSINI', STAREC, LT              )
       !>
-      !>        C
-      !>        C     Transform the state from rectangular to latitudinal.
-      !>        C     Notice that since neither the input nor output
-      !>        C     coordinate frames are 'geodetic' or 'planetographic',
-      !>        C     the input for the body name is a blank string.
-      !>        C
-      !>              CALL XFMSTA ( STAREC, 'RECTANGULAR', 'LATITUDINAL', ' ',
-      !>             .              STALAT )
+      !>C
+      !>C     Transform the state from rectangular to latitudinal.
+      !>C     Notice that since neither the input nor output
+      !>C     coordinate frames are 'geodetic' or 'planetographic',
+      !>C     the input for the body name is a blank string.
+      !>C
+      !>      CALL XFMSTA ( STAREC, 'RECTANGULAR', 'LATITUDINAL', ' ',
+      !>     .              STALAT )
       !>
-      !>        C
-      !>        C     Transform the state back to rectangular from latitudinal
-      !>        C     for verification. This result should be very similar to
-      !>        C     STAREC.
-      !>        C
-      !>              CALL XFMSTA ( STALAT, 'LATITUDINAL', 'RECTANGULAR',' ',
-      !>             .              STREC2 )
+      !>C
+      !>C     Transform the state back to rectangular from latitudinal
+      !>C     for verification. This result should be very similar to
+      !>C     STAREC.
+      !>C
+      !>      CALL XFMSTA ( STALAT, 'LATITUDINAL', 'RECTANGULAR',' ',
+      !>     .              STREC2 )
       !>
-      !>        C
-      !>        C     Report the results.
-      !>        C
-      !>              WRITE (*,*)    ' '
-      !>              WRITE (*,*)    'Phoebe as seen by CASSINI - rectangular'
-      !>              WRITE (*,*)    '  Position [km]:'
-      !>              WRITE (*,FORM) (STAREC(I), I = 1, 3)
-      !>              WRITE (*,*)    '  Velocity [km/s]:'
-      !>              WRITE (*,FORM) (STAREC(I), I = 4, 6)
-      !>              WRITE (*,*)    ' '
-      !>              WRITE (*,*)    'Phoebe as seen by CASSINI - latitudinal'
-      !>              WRITE (*,*)    '  Position [km, rad, rad]:'
-      !>              WRITE (*,FORM) (STALAT(I), I = 1, 3)
-      !>              WRITE (*,*)    '  Velocity [km/s, rad/s, rad/s]:'
-      !>              WRITE (*,FORM) (STALAT(I), I = 4, 6)
-      !>              WRITE (*,*)    ' '
-      !>              WRITE (*,*)    'Verification: '
-      !>              WRITE (*,*)    'Phoebe as seen by CASSINI - rectangular'
-      !>              WRITE (*,*)    '  Position [km]:'
-      !>              WRITE (*,FORM) (STREC2(I), I = 1, 3)
-      !>              WRITE (*,*)    '  Velocity [km/s]:'
-      !>              WRITE (*,FORM) (STREC2(I), I = 4, 6)
+      !>C
+      !>C     Report the results.
+      !>C
+      !>      WRITE (*,*)    ' '
+      !>      WRITE (*,*)    'Phoebe as seen by CASSINI - rectangular'
+      !>      WRITE (*,*)    '  Position [km]:'
+      !>      WRITE (*,FORM) (STAREC(I), I = 1, 3)
+      !>      WRITE (*,*)    '  Velocity [km/s]:'
+      !>      WRITE (*,FORM) (STAREC(I), I = 4, 6)
+      !>      WRITE (*,*)    ' '
+      !>      WRITE (*,*)    'Phoebe as seen by CASSINI - latitudinal'
+      !>      WRITE (*,*)    '  Position [km, rad, rad]:'
+      !>      WRITE (*,FORM) (STALAT(I), I = 1, 3)
+      !>      WRITE (*,*)    '  Velocity [km/s, rad/s, rad/s]:'
+      !>      WRITE (*,FORM) (STALAT(I), I = 4, 6)
+      !>      WRITE (*,*)    ' '
+      !>      WRITE (*,*)    'Verification: '
+      !>      WRITE (*,*)    'Phoebe as seen by CASSINI - rectangular'
+      !>      WRITE (*,*)    '  Position [km]:'
+      !>      WRITE (*,FORM) (STREC2(I), I = 1, 3)
+      !>      WRITE (*,*)    '  Velocity [km/s]:'
+      !>      WRITE (*,FORM) (STREC2(I), I = 4, 6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -55381,79 +55471,81 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM XFMSTA_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM XFMSTA_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FORM
-      !>              PARAMETER           ( FORM = '(F16.6, F16.6, F16.6)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FORM
+      !>      PARAMETER           ( FORM = '(F16.6, F16.6, F16.6)' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>        C     STACYL is the state in cylindrical coordinates.
-      !>        C
-      !>              DOUBLE PRECISION      STACYL (6)
-      !>        C
-      !>        C     STAPLN is the state transformed into planetographic
-      !>        C     coordinates.
-      !>        C
-      !>              DOUBLE PRECISION      STAPLN (6)
-      !>        C
-      !>        C     STCYL2 is the state transformed back into
-      !>        C     cylindrical coordinates from planetographic.
-      !>        C
-      !>              DOUBLE PRECISION      STCYL2 (6)
+      !>C
+      !>C     Local variables
+      !>C
+      !>C     STACYL is the state in cylindrical coordinates.
+      !>C
+      !>      DOUBLE PRECISION      STACYL (6)
+      !>C
+      !>C     STAPLN is the state transformed into planetographic
+      !>C     coordinates.
+      !>C
+      !>      DOUBLE PRECISION      STAPLN (6)
+      !>C
+      !>C     STCYL2 is the state transformed back into
+      !>C     cylindrical coordinates from planetographic.
+      !>C
+      !>      DOUBLE PRECISION      STCYL2 (6)
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              DATA STACYL / 1.0D0, 0.5D0, 0.5D0, 0.2D0, 0.1D0, -0.2D0 /
+      !>      DATA STACYL / 1.0D0, 0.5D0, 0.5D0, 0.2D0, 0.1D0, -0.2D0 /
       !>
-      !>        C
-      !>        C     The required kernels must be loaded.
-      !>        C
-      !>              CALL FURNSH ( 'pck00010.tpc' )
+      !>C
+      !>C     The required kernels must be loaded.
+      !>C
+      !>      CALL FURNSH ( 'pck00010.tpc' )
       !>
-      !>        C
-      !>        C     Transform the state from cylindrical to planetographic.
-      !>        C     Note that since one of the coordinate systems is
-      !>        C     planetographic, the body name must be input.
-      !>        C
-      !>              CALL XFMSTA ( STACYL, 'CYLINDRICAL', 'PLANETOGRAPHIC',
-      !>             .              'EARTH', STAPLN )
+      !>C
+      !>C     Transform the state from cylindrical to planetographic.
+      !>C     Note that since one of the coordinate systems is
+      !>C     planetographic, the body name must be input.
+      !>C
+      !>      CALL XFMSTA ( STACYL, 'CYLINDRICAL', 'PLANETOGRAPHIC',
+      !>     .              'EARTH', STAPLN )
       !>
-      !>        C
-      !>        C     Transform the state back to cylindrical from
-      !>        C     planetographic for verification. The result should be
-      !>        C     very close to STACYL.
-      !>        C
-      !>              CALL XFMSTA ( STAPLN, 'PLANETOGRAPHIC', 'CYLINDRICAL',
-      !>             .              'EARTH', STCYL2 )
+      !>C
+      !>C     Transform the state back to cylindrical from
+      !>C     planetographic for verification. The result should be
+      !>C     very close to STACYL.
+      !>C
+      !>      CALL XFMSTA ( STAPLN, 'PLANETOGRAPHIC', 'CYLINDRICAL',
+      !>     .              'EARTH', STCYL2 )
       !>
-      !>        C
-      !>        C     Report the results.
-      !>        C
-      !>              WRITE (*,*)    'Cylindrical state'
-      !>              WRITE (*,*)    '  Position [km, rad, km]:'
-      !>              WRITE (*,FORM) (STACYL(I), I = 1, 3)
-      !>              WRITE (*,*)    '  Velocity [km/s, rad/s, km/s]:'
-      !>              WRITE (*,FORM) (STACYL(I), I = 4, 6)
-      !>              WRITE (*,*)    ' '
-      !>              WRITE (*,*) 'Planetographic state'
-      !>              WRITE (*,*)    '  Position [rad, rad, km]:'
-      !>              WRITE (*,FORM) (STAPLN(I), I = 1, 3)
-      !>              WRITE (*,*)    '  Velocity [rad/s, rad/s, km/s]:'
-      !>              WRITE (*,FORM) (STAPLN(I), I = 4, 6)
-      !>              WRITE (*,*)    ' '
-      !>              WRITE (*,*)    'Verification:  Cylindrical state'
-      !>              WRITE (*,*)    '  Position [km, rad, km]:'
-      !>              WRITE (*,FORM) (STCYL2(I), I = 1, 3)
-      !>              WRITE (*,*)    '  Velocity [km/s, rad/s, km/s]:'
-      !>              WRITE (*,FORM) (STCYL2(I), I = 4, 6)
+      !>C
+      !>C     Report the results.
+      !>C
+      !>      WRITE (*,*)    'Cylindrical state'
+      !>      WRITE (*,*)    '  Position [km, rad, km]:'
+      !>      WRITE (*,FORM) (STACYL(I), I = 1, 3)
+      !>      WRITE (*,*)    '  Velocity [km/s, rad/s, km/s]:'
+      !>      WRITE (*,FORM) (STACYL(I), I = 4, 6)
+      !>      WRITE (*,*)    ' '
+      !>      WRITE (*,*) 'Planetographic state'
+      !>      WRITE (*,*)    '  Position [rad, rad, km]:'
+      !>      WRITE (*,FORM) (STAPLN(I), I = 1, 3)
+      !>      WRITE (*,*)    '  Velocity [rad/s, rad/s, km/s]:'
+      !>      WRITE (*,FORM) (STAPLN(I), I = 4, 6)
+      !>      WRITE (*,*)    ' '
+      !>      WRITE (*,*)    'Verification:  Cylindrical state'
+      !>      WRITE (*,*)    '  Position [km, rad, km]:'
+      !>      WRITE (*,FORM) (STCYL2(I), I = 1, 3)
+      !>      WRITE (*,*)    '  Velocity [km/s, rad/s, km/s]:'
+      !>      WRITE (*,FORM) (STCYL2(I), I = 4, 6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -58436,116 +58528,118 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INEDPL_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INEDPL_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)           UTCSTR
-      !>              PARAMETER             ( UTCSTR = '2016 Jul 14 19:45:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)           UTCSTR
+      !>      PARAMETER             ( UTCSTR = '2016 Jul 14 19:45:00' )
       !>
-      !>              INTEGER                 UBEL
-      !>              PARAMETER             ( UBEL =   9 )
+      !>      INTEGER                 UBEL
+      !>      PARAMETER             ( UBEL =   9 )
       !>
-      !>              INTEGER                 UBPL
-      !>              PARAMETER             ( UBPL =   4 )
+      !>      INTEGER                 UBPL
+      !>      PARAMETER             ( UBPL =   4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        CENTER ( 3    )
-      !>              DOUBLE PRECISION        ET
-      !>              DOUBLE PRECISION        JPOS   ( 3    )
-      !>              DOUBLE PRECISION        LIMB   ( UBEL )
-      !>              DOUBLE PRECISION        LT
-      !>              DOUBLE PRECISION        PLANE  ( UBPL )
-      !>              DOUBLE PRECISION        RAD    ( 3    )
-      !>              DOUBLE PRECISION        SMAJOR ( 3    )
-      !>              DOUBLE PRECISION        SMINOR ( 3    )
-      !>              DOUBLE PRECISION        SCPOS  ( 3    )
-      !>              DOUBLE PRECISION        TIPM   ( 3, 3 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        CENTER ( 3    )
+      !>      DOUBLE PRECISION        ET
+      !>      DOUBLE PRECISION        JPOS   ( 3    )
+      !>      DOUBLE PRECISION        LIMB   ( UBEL )
+      !>      DOUBLE PRECISION        LT
+      !>      DOUBLE PRECISION        PLANE  ( UBPL )
+      !>      DOUBLE PRECISION        RAD    ( 3    )
+      !>      DOUBLE PRECISION        SMAJOR ( 3    )
+      !>      DOUBLE PRECISION        SMINOR ( 3    )
+      !>      DOUBLE PRECISION        SCPOS  ( 3    )
+      !>      DOUBLE PRECISION        TIPM   ( 3, 3 )
       !>
-      !>              INTEGER                 N
+      !>      INTEGER                 N
       !>
-      !>              LOGICAL                 FOUND
+      !>      LOGICAL                 FOUND
       !>
-      !>        C
-      !>        C     Load the required kernels.
-      !>        C
-      !>              CALL FURNSH ( 'inedpl_ex2.tm' )
+      !>C
+      !>C     Load the required kernels.
+      !>C
+      !>      CALL FURNSH ( 'inedpl_ex2.tm' )
       !>
-      !>        C
-      !>        C     Find the viewing point in Jupiter-fixed coordinates. To
-      !>        C     do this, find the apparent position of Jupiter as seen
-      !>        C     from the spacecraft in Jupiter-fixed coordinates and
-      !>        C     negate this vector. In this case we'll use light time
-      !>        C     and stellar aberration corrections to arrive at the
-      !>        C     apparent limb. JPOS is the Jupiter's position as seen
-      !>        C     from the spacecraft.  SCPOS is the spacecraft's position
-      !>        C     relative to Jupiter.
-      !>        C
-      !>              CALL STR2ET ( UTCSTR,    ET )
-      !>              CALL SPKPOS ( 'JUPITER', ET, 'J2000', 'LT+S', 'JUNO',
-      !>             .               JPOS,     LT                         )
+      !>C
+      !>C     Find the viewing point in Jupiter-fixed coordinates. To
+      !>C     do this, find the apparent position of Jupiter as seen
+      !>C     from the spacecraft in Jupiter-fixed coordinates and
+      !>C     negate this vector. In this case we'll use light time
+      !>C     and stellar aberration corrections to arrive at the
+      !>C     apparent limb. JPOS is the Jupiter's position as seen
+      !>C     from the spacecraft.  SCPOS is the spacecraft's position
+      !>C     relative to Jupiter.
+      !>C
+      !>      CALL STR2ET ( UTCSTR,    ET )
+      !>      CALL SPKPOS ( 'JUPITER', ET, 'J2000', 'LT+S', 'JUNO',
+      !>     .               JPOS,     LT                         )
       !>
-      !>              CALL VMINUS ( JPOS, SCPOS )
+      !>      CALL VMINUS ( JPOS, SCPOS )
       !>
-      !>        C
-      !>        C     Get Jupiter's semi-axis lengths...
-      !>        C
-      !>              CALL BODVRD ( 'JUPITER', 'RADII', 3, N, RAD )
+      !>C
+      !>C     Get Jupiter's semi-axis lengths...
+      !>C
+      !>      CALL BODVRD ( 'JUPITER', 'RADII', 3, N, RAD )
       !>
-      !>        C
-      !>        C     ...and the transformation from J2000 to Jupiter
-      !>        C     equator and prime meridian coordinates. Note that we
-      !>        C     use the orientation of Jupiter at the time of
-      !>        C     emission of the light that arrived at the
-      !>        C     spacecraft at time ET.
-      !>        C
-      !>              CALL PXFORM ( 'J2000', 'IAU_JUPITER', ET-LT, TIPM )
+      !>C
+      !>C     ...and the transformation from J2000 to Jupiter
+      !>C     equator and prime meridian coordinates. Note that we
+      !>C     use the orientation of Jupiter at the time of
+      !>C     emission of the light that arrived at the
+      !>C     spacecraft at time ET.
+      !>C
+      !>      CALL PXFORM ( 'J2000', 'IAU_JUPITER', ET-LT, TIPM )
       !>
-      !>        C
-      !>        C     Transform the spacecraft's position into Jupiter-
-      !>        C     fixed coordinates.
-      !>        C
-      !>              CALL MXV ( TIPM, SCPOS, SCPOS )
+      !>C
+      !>C     Transform the spacecraft's position into Jupiter-
+      !>C     fixed coordinates.
+      !>C
+      !>      CALL MXV ( TIPM, SCPOS, SCPOS )
       !>
-      !>        C
-      !>        C     Normalize the position to factors of the radii.
-      !>        C
-      !>              SCPOS(1) = SCPOS(1) / RAD(1)**2
-      !>              SCPOS(2) = SCPOS(2) / RAD(2)**2
-      !>              SCPOS(3) = SCPOS(3) / RAD(3)**2
+      !>C
+      !>C     Normalize the position to factors of the radii.
+      !>C
+      !>      SCPOS(1) = SCPOS(1) / RAD(1)**2
+      !>      SCPOS(2) = SCPOS(2) / RAD(2)**2
+      !>      SCPOS(3) = SCPOS(3) / RAD(3)**2
       !>
-      !>        C
-      !>        C     Find the apparent limb.  LIMB is a SPICE ellipse
-      !>        C     representing the limb.
-      !>        C
-      !>              CALL NVC2PL ( SCPOS,  1.0D0,  PLANE  )
-      !>              CALL INEDPL ( RAD(1), RAD(2), RAD(3),
-      !>             .              PLANE,  LIMB,   FOUND  )
+      !>C
+      !>C     Find the apparent limb.  LIMB is a SPICE ellipse
+      !>C     representing the limb.
+      !>C
+      !>      CALL NVC2PL ( SCPOS,  1.0D0,  PLANE  )
+      !>      CALL INEDPL ( RAD(1), RAD(2), RAD(3),
+      !>     .              PLANE,  LIMB,   FOUND  )
       !>
-      !>        C
-      !>        C     CENTER, SMAJOR, and SMINOR are the limb's center,
-      !>        C     semi-major axis of the limb, and a semi-minor axis
-      !>        C     of the limb.  We obtain these from LIMB using the
-      !>        C     SPICELIB routine EL2CGV ( Ellipse to center and
-      !>        C     generating vectors ).
-      !>        C
-      !>              CALL EL2CGV ( LIMB, CENTER, SMAJOR, SMINOR )
+      !>C
+      !>C     CENTER, SMAJOR, and SMINOR are the limb's center,
+      !>C     semi-major axis of the limb, and a semi-minor axis
+      !>C     of the limb.  We obtain these from LIMB using the
+      !>C     SPICELIB routine EL2CGV ( Ellipse to center and
+      !>C     generating vectors ).
+      !>C
+      !>      CALL EL2CGV ( LIMB, CENTER, SMAJOR, SMINOR )
       !>
-      !>        C
-      !>        C     Output the structure components.
-      !>        C
-      !>              WRITE(*,'(A)') 'Apparent limb of Jupiter as seen '
-      !>             .            // 'from JUNO:'
-      !>              WRITE(*,'(2A)')       '   UTC time       : ', UTCSTR
-      !>              WRITE(*,'(A,3F14.6)') '   Semi-minor axis:', SMINOR
-      !>              WRITE(*,'(A,3F14.6)') '   Semi-major axis:', SMAJOR
-      !>              WRITE(*,'(A,3F14.6)') '   Center         :', CENTER
+      !>C
+      !>C     Output the structure components.
+      !>C
+      !>      WRITE(*,'(A)') 'Apparent limb of Jupiter as seen '
+      !>     .            // 'from JUNO:'
+      !>      WRITE(*,'(2A)')       '   UTC time       : ', UTCSTR
+      !>      WRITE(*,'(A,3F14.6)') '   Semi-minor axis:', SMINOR
+      !>      WRITE(*,'(A,3F14.6)') '   Semi-major axis:', SMAJOR
+      !>      WRITE(*,'(A,3F14.6)') '   Center         :', CENTER
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -59289,54 +59383,56 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SRFC2S_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM SRFC2S_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              INCLUDE 'srftrn.inc'
+      !>       INCLUDE 'srftrn.inc'
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>       INTEGER               FILSIZ
+      !>       PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               NCASE
-      !>              PARAMETER           ( NCASE  = 5 )
+      !>       INTEGER               NCASE
+      !>       PARAMETER           ( NCASE  = 5 )
       !>
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(SFNMLN)    SRFNAM
+      !>       CHARACTER*(FILSIZ)    META
+      !>       CHARACTER*(SFNMLN)    SRFNAM
       !>
-      !>              INTEGER               BODYID ( NCASE )
-      !>              INTEGER               I
-      !>              INTEGER               SURFID ( NCASE )
+      !>       INTEGER               BODYID ( NCASE )
+      !>       INTEGER               I
+      !>       INTEGER               SURFID ( NCASE )
       !>
-      !>              LOGICAL               ISNAME
+      !>       LOGICAL               ISNAME
       !>
-      !>              DATA  ( SURFID(I), BODYID(I), I = 1, NCASE ) /
-      !>             .
-      !>             .        1,         499,
-      !>             .        1,         401,
-      !>             .        2,         499,
-      !>             .        3,         499,
-      !>             .        1,          -1                      /
+      !>       DATA  ( SURFID(I), BODYID(I), I = 1, NCASE ) /
+      !>      .
+      !>      .        1,         499,
+      !>      .        1,         401,
+      !>      .        2,         499,
+      !>      .        3,         499,
+      !>      .        1,          -1                      /
       !>
-      !>              META = 'srfc2s_ex1.tm'
+      !>       META = 'srfc2s_ex1.tm'
       !>
-      !>              CALL FURNSH ( META )
+      !>       CALL FURNSH ( META )
       !>
-      !>              WRITE (*,*) ' '
+      !>       WRITE (*,*) ' '
       !>
-      !>              DO I = 1, NCASE
+      !>       DO I = 1, NCASE
       !>
-      !>                 CALL SRFC2S ( SURFID(I), BODYID(I),
-      !>             .                 SRFNAM,    ISNAME    )
+      !>          CALL SRFC2S ( SURFID(I), BODYID(I),
+      !>      .                 SRFNAM,    ISNAME    )
       !>
-      !>                 WRITE (*,*) 'surface ID     = ', SURFID(I)
-      !>                 WRITE (*,*) 'body ID        = ', BODYID(I)
-      !>                 WRITE (*,*) 'name found     = ', ISNAME
-      !>                 WRITE (*,*) 'surface string = ', SRFNAM
-      !>                 WRITE (*,*) ' '
+      !>          WRITE (*,*) 'surface ID     = ', SURFID(I)
+      !>          WRITE (*,*) 'body ID        = ', BODYID(I)
+      !>          WRITE (*,*) 'name found     = ', ISNAME
+      !>          WRITE (*,*) 'surface string = ', SRFNAM
+      !>          WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>       END DO
       !>
-      !>              END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -59604,57 +59700,59 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SRFCSS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM SRFCSS_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              INCLUDE 'srftrn.inc'
+      !>       INCLUDE 'srftrn.inc'
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>       INTEGER               FILSIZ
+      !>       PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               NCASE
-      !>              PARAMETER           ( NCASE = 5 )
+      !>       INTEGER               NCASE
+      !>       PARAMETER           ( NCASE = 5 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>       INTEGER               BDNMLN
+      !>       PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              CHARACTER*(BDNMLN)    BODSTR ( NCASE )
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(SFNMLN)    SRFNAM
+      !>       CHARACTER*(BDNMLN)    BODSTR ( NCASE )
+      !>       CHARACTER*(FILSIZ)    META
+      !>       CHARACTER*(SFNMLN)    SRFNAM
       !>
-      !>              INTEGER               I
-      !>              INTEGER               SURFID ( NCASE )
+      !>       INTEGER               I
+      !>       INTEGER               SURFID ( NCASE )
       !>
-      !>              LOGICAL               ISNAME
+      !>       LOGICAL               ISNAME
       !>
-      !>              DATA  ( SURFID(I), BODSTR(I), I = 1, NCASE ) /
-      !>             .
-      !>             .        1,         'MARS',
-      !>             .        1,         'PHOBOS',
-      !>             .        2,         '499',
-      !>             .        3,         'MARS',
-      !>             .        1,         'ZZZ'                     /
+      !>       DATA  ( SURFID(I), BODSTR(I), I = 1, NCASE ) /
+      !>      .
+      !>      .        1,         'MARS',
+      !>      .        1,         'PHOBOS',
+      !>      .        2,         '499',
+      !>      .        3,         'MARS',
+      !>      .        1,         'ZZZ'                     /
       !>
-      !>              META = 'srfcss_ex1.tm'
+      !>       META = 'srfcss_ex1.tm'
       !>
-      !>              CALL FURNSH ( META )
+      !>       CALL FURNSH ( META )
       !>
-      !>              WRITE (*,*) ' '
+      !>       WRITE (*,*) ' '
       !>
-      !>              DO I = 1, NCASE
+      !>       DO I = 1, NCASE
       !>
-      !>                 CALL SRFCSS ( SURFID(I), BODSTR(I),
-      !>             .                 SRFNAM,    ISNAME     )
+      !>          CALL SRFCSS ( SURFID(I), BODSTR(I),
+      !>      .                 SRFNAM,    ISNAME     )
       !>
-      !>                 WRITE (*,*) 'surface ID     = ', SURFID(I)
-      !>                 WRITE (*,*) 'body string    = ', BODSTR(I)
-      !>                 WRITE (*,*) 'name found     = ', ISNAME
-      !>                 WRITE (*,*) 'surface string = ', SRFNAM
-      !>                 WRITE (*,*) ' '
+      !>          WRITE (*,*) 'surface ID     = ', SURFID(I)
+      !>          WRITE (*,*) 'body string    = ', BODSTR(I)
+      !>          WRITE (*,*) 'name found     = ', ISNAME
+      !>          WRITE (*,*) 'surface string = ', SRFNAM
+      !>          WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>       END DO
       !>
-      !>              END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -59937,64 +60035,66 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SRFS2C_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM SRFS2C_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              INCLUDE 'srftrn.inc'
+      !>       INCLUDE 'srftrn.inc'
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>       INTEGER               FILSIZ
+      !>       PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               NCASE
-      !>              PARAMETER           ( NCASE = 8 )
+      !>       INTEGER               NCASE
+      !>       PARAMETER           ( NCASE = 8 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>       INTEGER               BDNMLN
+      !>       PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              CHARACTER*(BDNMLN)    BODSTR ( NCASE )
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(SFNMLN)    SRFSTR ( NCASE )
+      !>       CHARACTER*(BDNMLN)    BODSTR ( NCASE )
+      !>       CHARACTER*(FILSIZ)    META
+      !>       CHARACTER*(SFNMLN)    SRFSTR ( NCASE )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               SURFID
+      !>       INTEGER               I
+      !>       INTEGER               SURFID
       !>
-      !>              LOGICAL               FOUND
+      !>       LOGICAL               FOUND
       !>
-      !>              DATA  ( SRFSTR(I), BODSTR(I), I = 1, NCASE )  /
-      !>             .
-      !>             .        'MGS MOLA  64 pixel/deg',    'MARS',
-      !>             .        'PHOBOS GASKELL Q512',       'PHOBOS',
-      !>             .        'MGS MOLA 128 pixel/deg',    'MARS',
-      !>             .        'MGS MOLA  64 pixel/deg',    '499',
-      !>             .        '1',                         'PHOBOS',
-      !>             .        '2',                         '499',
-      !>             .        'ZZZ',                       'MARS',
-      !>             .        '1',                         'ZZZ'    /
+      !>       DATA  ( SRFSTR(I), BODSTR(I), I = 1, NCASE )  /
+      !>      .
+      !>      .        'MGS MOLA  64 pixel/deg',    'MARS',
+      !>      .        'PHOBOS GASKELL Q512',       'PHOBOS',
+      !>      .        'MGS MOLA 128 pixel/deg',    'MARS',
+      !>      .        'MGS MOLA  64 pixel/deg',    '499',
+      !>      .        '1',                         'PHOBOS',
+      !>      .        '2',                         '499',
+      !>      .        'ZZZ',                       'MARS',
+      !>      .        '1',                         'ZZZ'    /
       !>
-      !>              META = 'srfs2c_ex1.tm'
+      !>       META = 'srfs2c_ex1.tm'
       !>
-      !>              CALL FURNSH ( META )
+      !>       CALL FURNSH ( META )
       !>
-      !>              WRITE (*,*) ' '
+      !>       WRITE (*,*) ' '
       !>
-      !>              DO I = 1, NCASE
+      !>       DO I = 1, NCASE
       !>
-      !>                 CALL SRFS2C ( SRFSTR(I), BODSTR(I),
-      !>             .                 SURFID,    FOUND     )
+      !>          CALL SRFS2C ( SRFSTR(I), BODSTR(I),
+      !>      .                 SURFID,    FOUND     )
       !>
-      !>                 WRITE (*,*) 'surface string   = ', SRFSTR(I)
-      !>                 WRITE (*,*) 'body string      = ', BODSTR(I)
-      !>                 WRITE (*,*) 'surface ID found = ', FOUND
+      !>          WRITE (*,*) 'surface string   = ', SRFSTR(I)
+      !>          WRITE (*,*) 'body string      = ', BODSTR(I)
+      !>          WRITE (*,*) 'surface ID found = ', FOUND
       !>
-      !>                 IF ( FOUND ) THEN
-      !>                    WRITE (*,*) 'surface ID       = ', SURFID
-      !>                 END IF
+      !>          IF ( FOUND ) THEN
+      !>             WRITE (*,*) 'surface ID       = ', SURFID
+      !>          END IF
       !>
-      !>                 WRITE (*,*) ' '
+      !>          WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>       END DO
       !>
-      !>              END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -60287,63 +60387,65 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SRFSCC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM SRFSCC_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              INCLUDE 'srftrn.inc'
+      !>       INCLUDE 'srftrn.inc'
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>       INTEGER               FILSIZ
+      !>       PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               NCASE
-      !>              PARAMETER           ( NCASE = 7 )
+      !>       INTEGER               NCASE
+      !>       PARAMETER           ( NCASE = 7 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>       INTEGER               BDNMLN
+      !>       PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(SFNMLN)    SRFSTR ( NCASE )
+      !>       CHARACTER*(FILSIZ)    META
+      !>       CHARACTER*(SFNMLN)    SRFSTR ( NCASE )
       !>
-      !>              INTEGER               BODYID ( NCASE )
-      !>              INTEGER               I
-      !>              INTEGER               SURFID
+      !>       INTEGER               BODYID ( NCASE )
+      !>       INTEGER               I
+      !>       INTEGER               SURFID
       !>
-      !>              LOGICAL               FOUND
+      !>       LOGICAL               FOUND
       !>
-      !>              DATA  ( SRFSTR(I), BODYID(I), I = 1, NCASE )  /
-      !>             .
-      !>             .        'MGS MOLA  64 pixel/deg',    499,
-      !>             .        'PHOBOS GASKELL Q512',       401,
-      !>             .        'MGS MOLA 128 pixel/deg',    499,
-      !>             .        '1',                         499,
-      !>             .        '1',                         401,
-      !>             .        '2',                         499,
-      !>             .        'ZZZ',                       499      /
+      !>       DATA  ( SRFSTR(I), BODYID(I), I = 1, NCASE )  /
+      !>      .
+      !>      .        'MGS MOLA  64 pixel/deg',    499,
+      !>      .        'PHOBOS GASKELL Q512',       401,
+      !>      .        'MGS MOLA 128 pixel/deg',    499,
+      !>      .        '1',                         499,
+      !>      .        '1',                         401,
+      !>      .        '2',                         499,
+      !>      .        'ZZZ',                       499      /
       !>
-      !>              META = 'srfscc_ex1.tm'
+      !>       META = 'srfscc_ex1.tm'
       !>
-      !>              CALL FURNSH ( META )
+      !>       CALL FURNSH ( META )
       !>
-      !>              WRITE (*,*) ' '
+      !>       WRITE (*,*) ' '
       !>
-      !>              DO I = 1, NCASE
+      !>       DO I = 1, NCASE
       !>
-      !>                 CALL SRFSCC ( SRFSTR(I), BODYID(I),
-      !>             .                 SURFID,    FOUND     )
+      !>          CALL SRFSCC ( SRFSTR(I), BODYID(I),
+      !>      .                 SURFID,    FOUND     )
       !>
-      !>                 WRITE (*,*) 'surface string   = ', SRFSTR(I)
-      !>                 WRITE (*,*) 'body ID          = ', BODYID(I)
-      !>                 WRITE (*,*) 'surface ID found = ', FOUND
+      !>          WRITE (*,*) 'surface string   = ', SRFSTR(I)
+      !>          WRITE (*,*) 'body ID          = ', BODYID(I)
+      !>          WRITE (*,*) 'surface ID found = ', FOUND
       !>
-      !>                 IF ( FOUND ) THEN
-      !>                    WRITE (*,*) 'surface ID       = ', SURFID
-      !>                 END IF
+      !>          IF ( FOUND ) THEN
+      !>             WRITE (*,*) 'surface ID       = ', SURFID
+      !>          END IF
       !>
-      !>                 WRITE (*,*) ' '
+      !>          WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>       END DO
       !>
-      !>              END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -63050,56 +63152,58 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EDLIMB_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EDLIMB_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 UBEL
-      !>              PARAMETER             ( UBEL =   9 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 UBEL
+      !>      PARAMETER             ( UBEL =   9 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A
-      !>              DOUBLE PRECISION        B
-      !>              DOUBLE PRECISION        C
-      !>              DOUBLE PRECISION        ECENTR ( 3    )
-      !>              DOUBLE PRECISION        LIMB   ( UBEL )
-      !>              DOUBLE PRECISION        SMAJOR ( 3    )
-      !>              DOUBLE PRECISION        SMINOR ( 3    )
-      !>              DOUBLE PRECISION        VIEWPT ( 3    )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A
+      !>      DOUBLE PRECISION        B
+      !>      DOUBLE PRECISION        C
+      !>      DOUBLE PRECISION        ECENTR ( 3    )
+      !>      DOUBLE PRECISION        LIMB   ( UBEL )
+      !>      DOUBLE PRECISION        SMAJOR ( 3    )
+      !>      DOUBLE PRECISION        SMINOR ( 3    )
+      !>      DOUBLE PRECISION        VIEWPT ( 3    )
       !>
-      !>        C
-      !>        C     Define a viewpoint exterior to the ellipsoid.
-      !>        C
-      !>              DATA                    VIEWPT /  2.D0,  0.D0,  0.D0 /
+      !>C
+      !>C     Define a viewpoint exterior to the ellipsoid.
+      !>C
+      !>      DATA                    VIEWPT /  2.D0,  0.D0,  0.D0 /
       !>
-      !>        C
-      !>        C     Define an ellipsoid.
-      !>        C
-      !>              A = SQRT( 2.D0 )
-      !>              B = 2.D0 * SQRT( 2.D0 )
-      !>              C = SQRT( 2.D0 )
+      !>C
+      !>C     Define an ellipsoid.
+      !>C
+      !>      A = SQRT( 2.D0 )
+      !>      B = 2.D0 * SQRT( 2.D0 )
+      !>      C = SQRT( 2.D0 )
       !>
-      !>        C
-      !>        C     Calculate the limb ellipse as seen by from the
-      !>        C     viewpoint.
-      !>        C
-      !>              CALL EDLIMB ( A, B, C, VIEWPT, LIMB )
+      !>C
+      !>C     Calculate the limb ellipse as seen by from the
+      !>C     viewpoint.
+      !>C
+      !>      CALL EDLIMB ( A, B, C, VIEWPT, LIMB )
       !>
-      !>        C
-      !>        C     Output the structure components.
-      !>        C
-      !>              CALL EL2CGV ( LIMB, ECENTR, SMAJOR, SMINOR )
+      !>C
+      !>C     Output the structure components.
+      !>C
+      !>      CALL EL2CGV ( LIMB, ECENTR, SMAJOR, SMINOR )
       !>
-      !>              WRITE(*,'(A)') 'Limb ellipse as seen from viewpoint:'
-      !>              WRITE(*,'(A,3F11.6)') '   Semi-minor axis:', SMINOR
-      !>              WRITE(*,'(A,3F11.6)') '   Semi-major axis:', SMAJOR
-      !>              WRITE(*,'(A,3F11.6)') '   Center         :', ECENTR
+      !>      WRITE(*,'(A)') 'Limb ellipse as seen from viewpoint:'
+      !>      WRITE(*,'(A,3F11.6)') '   Semi-minor axis:', SMINOR
+      !>      WRITE(*,'(A,3F11.6)') '   Semi-major axis:', SMAJOR
+      !>      WRITE(*,'(A,3F11.6)') '   Center         :', ECENTR
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -63151,102 +63255,104 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EDLIMB_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EDLIMB_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)           UTCSTR
-      !>              PARAMETER             ( UTCSTR = '2016 Jul 14 19:45:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)           UTCSTR
+      !>      PARAMETER             ( UTCSTR = '2016 Jul 14 19:45:00' )
       !>
-      !>              INTEGER                 UBEL
-      !>              PARAMETER             ( UBEL =   9 )
+      !>      INTEGER                 UBEL
+      !>      PARAMETER             ( UBEL =   9 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        CENTER ( 3    )
-      !>              DOUBLE PRECISION        ET
-      !>              DOUBLE PRECISION        JPOS   ( 3    )
-      !>              DOUBLE PRECISION        LIMB   ( UBEL )
-      !>              DOUBLE PRECISION        LT
-      !>              DOUBLE PRECISION        RAD    ( 3    )
-      !>              DOUBLE PRECISION        SMAJOR ( 3    )
-      !>              DOUBLE PRECISION        SMINOR ( 3    )
-      !>              DOUBLE PRECISION        SCPJFC ( 3    )
-      !>              DOUBLE PRECISION        SCPOS  ( 3    )
-      !>              DOUBLE PRECISION        TIPM   ( 3, 3 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        CENTER ( 3    )
+      !>      DOUBLE PRECISION        ET
+      !>      DOUBLE PRECISION        JPOS   ( 3    )
+      !>      DOUBLE PRECISION        LIMB   ( UBEL )
+      !>      DOUBLE PRECISION        LT
+      !>      DOUBLE PRECISION        RAD    ( 3    )
+      !>      DOUBLE PRECISION        SMAJOR ( 3    )
+      !>      DOUBLE PRECISION        SMINOR ( 3    )
+      !>      DOUBLE PRECISION        SCPJFC ( 3    )
+      !>      DOUBLE PRECISION        SCPOS  ( 3    )
+      !>      DOUBLE PRECISION        TIPM   ( 3, 3 )
       !>
-      !>              INTEGER                 N
+      !>      INTEGER                 N
       !>
-      !>        C
-      !>        C     Load the required kernels.
-      !>        C
-      !>              CALL FURNSH ( 'edlimb_ex2.tm' )
+      !>C
+      !>C     Load the required kernels.
+      !>C
+      !>      CALL FURNSH ( 'edlimb_ex2.tm' )
       !>
-      !>        C
-      !>        C     Find the viewing point in Jupiter-fixed coordinates. To
-      !>        C     do this, find the apparent position of Jupiter as seen
-      !>        C     from the spacecraft in Jupiter-fixed coordinates and
-      !>        C     negate this vector. In this case we'll use light time
-      !>        C     and stellar aberration corrections to arrive at the
-      !>        C     apparent limb. JPOS is the Jupiter's position as seen
-      !>        C     from the spacecraft.  SCPOS is the spacecraft's position
-      !>        C     relative to Jupiter.
-      !>        C
-      !>              CALL STR2ET ( UTCSTR,    ET )
-      !>              CALL SPKPOS ( 'JUPITER', ET, 'J2000', 'LT+S', 'JUNO',
-      !>             .               JPOS,     LT                         )
+      !>C
+      !>C     Find the viewing point in Jupiter-fixed coordinates. To
+      !>C     do this, find the apparent position of Jupiter as seen
+      !>C     from the spacecraft in Jupiter-fixed coordinates and
+      !>C     negate this vector. In this case we'll use light time
+      !>C     and stellar aberration corrections to arrive at the
+      !>C     apparent limb. JPOS is the Jupiter's position as seen
+      !>C     from the spacecraft.  SCPOS is the spacecraft's position
+      !>C     relative to Jupiter.
+      !>C
+      !>      CALL STR2ET ( UTCSTR,    ET )
+      !>      CALL SPKPOS ( 'JUPITER', ET, 'J2000', 'LT+S', 'JUNO',
+      !>     .               JPOS,     LT                         )
       !>
-      !>              CALL VMINUS ( JPOS, SCPOS )
+      !>      CALL VMINUS ( JPOS, SCPOS )
       !>
-      !>        C
-      !>        C     Get Jupiter's semi-axis lengths...
-      !>        C
-      !>              CALL BODVRD ( 'JUPITER', 'RADII', 3, N, RAD )
+      !>C
+      !>C     Get Jupiter's semi-axis lengths...
+      !>C
+      !>      CALL BODVRD ( 'JUPITER', 'RADII', 3, N, RAD )
       !>
-      !>        C
-      !>        C     ...and the transformation from J2000 to Jupiter
-      !>        C     equator and prime meridian coordinates. Note that we
-      !>        C     use the orientation of Jupiter at the time of
-      !>        C     emission of the light that arrived at the
-      !>        C     spacecraft at time ET.
-      !>        C
-      !>              CALL PXFORM ( 'J2000', 'IAU_JUPITER', ET-LT, TIPM )
+      !>C
+      !>C     ...and the transformation from J2000 to Jupiter
+      !>C     equator and prime meridian coordinates. Note that we
+      !>C     use the orientation of Jupiter at the time of
+      !>C     emission of the light that arrived at the
+      !>C     spacecraft at time ET.
+      !>C
+      !>      CALL PXFORM ( 'J2000', 'IAU_JUPITER', ET-LT, TIPM )
       !>
-      !>        C
-      !>        C     Transform the spacecraft's position into Jupiter-
-      !>        C     fixed coordinates.
-      !>        C
-      !>              CALL MXV ( TIPM, SCPOS, SCPJFC )
+      !>C
+      !>C     Transform the spacecraft's position into Jupiter-
+      !>C     fixed coordinates.
+      !>C
+      !>      CALL MXV ( TIPM, SCPOS, SCPJFC )
       !>
-      !>        C
-      !>        C     Find the apparent limb.  LIMB is a SPICE ellipse
-      !>        C     representing the limb.
-      !>        C
-      !>              CALL EDLIMB ( RAD(1), RAD(2), RAD(3), SCPJFC, LIMB )
+      !>C
+      !>C     Find the apparent limb.  LIMB is a SPICE ellipse
+      !>C     representing the limb.
+      !>C
+      !>      CALL EDLIMB ( RAD(1), RAD(2), RAD(3), SCPJFC, LIMB )
       !>
-      !>        C
-      !>        C     CENTER, SMAJOR, and SMINOR are the limb's center,
-      !>        C     semi-major axis of the limb, and a semi-minor axis
-      !>        C     of the limb.  We obtain these from LIMB using the
-      !>        C     SPICELIB routine EL2CGV ( Ellipse to center and
-      !>        C     generating vectors ).
-      !>        C
-      !>              CALL EL2CGV ( LIMB, CENTER, SMAJOR, SMINOR )
+      !>C
+      !>C     CENTER, SMAJOR, and SMINOR are the limb's center,
+      !>C     semi-major axis of the limb, and a semi-minor axis
+      !>C     of the limb.  We obtain these from LIMB using the
+      !>C     SPICELIB routine EL2CGV ( Ellipse to center and
+      !>C     generating vectors ).
+      !>C
+      !>      CALL EL2CGV ( LIMB, CENTER, SMAJOR, SMINOR )
       !>
-      !>        C
-      !>        C     Output the structure components.
-      !>        C
-      !>              WRITE(*,'(A)') 'Apparent limb of Jupiter as seen '
-      !>             .            // 'from JUNO:'
-      !>              WRITE(*,'(2A)')       '   UTC time       : ', UTCSTR
-      !>              WRITE(*,'(A,3F14.6)') '   Semi-minor axis:', SMINOR
-      !>              WRITE(*,'(A,3F14.6)') '   Semi-major axis:', SMAJOR
-      !>              WRITE(*,'(A,3F14.6)') '   Center         :', CENTER
+      !>C
+      !>C     Output the structure components.
+      !>C
+      !>      WRITE(*,'(A)') 'Apparent limb of Jupiter as seen '
+      !>     .            // 'from JUNO:'
+      !>      WRITE(*,'(2A)')       '   UTC time       : ', UTCSTR
+      !>      WRITE(*,'(A,3F14.6)') '   Semi-minor axis:', SMINOR
+      !>      WRITE(*,'(A,3F14.6)') '   Semi-major axis:', SMAJOR
+      !>      WRITE(*,'(A,3F14.6)') '   Center         :', CENTER
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -66302,205 +66408,207 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKX02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKX02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
-      !>        C
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DSKSGR
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
+      !>C
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DSKSGR
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               NLAT
-      !>              PARAMETER           ( NLAT   = 9 )
+      !>      INTEGER               NLAT
+      !>      PARAMETER           ( NLAT   = 9 )
       !>
-      !>              INTEGER               NLON
-      !>              PARAMETER           ( NLON   = 9 )
+      !>      INTEGER               NLON
+      !>      PARAMETER           ( NLON   = 9 )
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              DOUBLE PRECISION      TOL
-      !>              PARAMETER           ( TOL   =  1.D-12 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      DOUBLE PRECISION      TOL
+      !>      PARAMETER           ( TOL   =  1.D-12 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      MAXR
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      VERTEX ( 3 )
-      !>              DOUBLE PRECISION      XLAT
-      !>              DOUBLE PRECISION      XLON
-      !>              DOUBLE PRECISION      XPT    ( 3 )
-      !>              DOUBLE PRECISION      XR
+      !>      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      MAXR
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      VERTEX ( 3 )
+      !>      DOUBLE PRECISION      XLAT
+      !>      DOUBLE PRECISION      XLON
+      !>      DOUBLE PRECISION      XPT    ( 3 )
+      !>      DOUBLE PRECISION      XR
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               PLID
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               PLID
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the DSK to read.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
-      !>        C
-      !>        C     Open the DSK file for read access.
-      !>        C     We use the DAS-level interface for
-      !>        C     this function.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
-      !>        C
-      !>        C     Begin a forward search through the
-      !>        C     kernel, treating the file as a DLA.
-      !>        C     In this example, it's a very short
-      !>        C     search.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Prompt for the name of the DSK to read.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Open the DSK file for read access.
+      !>C     We use the DAS-level interface for
+      !>C     this function.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
+      !>C
+      !>C     Begin a forward search through the
+      !>C     kernel, treating the file as a DLA.
+      !>C     In this example, it's a very short
+      !>C     search.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>        C
-      !>        C        We arrive here only if the kernel
-      !>        C        contains no segments.  This is
-      !>        C        unexpected, but we're prepared for it.
-      !>        C
-      !>                 CALL SETMSG ( 'No segments found '
-      !>             .   //            'in DSK file #.'    )
-      !>                 CALL ERRCH  ( '#',  DSK           )
-      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>      IF ( .NOT. FOUND ) THEN
+      !>C
+      !>C        We arrive here only if the kernel
+      !>C        contains no segments.  This is
+      !>C        unexpected, but we're prepared for it.
+      !>C
+      !>         CALL SETMSG ( 'No segments found '
+      !>     .   //            'in DSK file #.'    )
+      !>         CALL ERRCH  ( '#',  DSK           )
+      !>         CALL SIGERR ( 'SPICE(NODATA)'     )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     If we made it this far, DLADSC is the
-      !>        C     DLA descriptor of the first segment.
-      !>        C
-      !>        C     We're going to generate the intercept points
-      !>        C     using a set of rays which point toward the
-      !>        C     origin and whose vertices are on a
-      !>        C     specified lat/lon grid.  To start out we
-      !>        C     must pick a reasonable range from the origin
-      !>        C     for the vertices:  the range must be large
-      !>        C     enough so that the vertices are guaranteed
-      !>        C     to be outside the target body but small
-      !>        C     enough that we don't lose too much precision
-      !>        C     in the surface intercept computation.
-      !>        C
-      !>        C     We'll look up the upper bound for the target
-      !>        C     radius, then use 2 times this value as the
-      !>        C     vertex magnitude.
-      !>        C
-      !>              CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      !>C
+      !>C     If we made it this far, DLADSC is the
+      !>C     DLA descriptor of the first segment.
+      !>C
+      !>C     We're going to generate the intercept points
+      !>C     using a set of rays which point toward the
+      !>C     origin and whose vertices are on a
+      !>C     specified lat/lon grid.  To start out we
+      !>C     must pick a reasonable range from the origin
+      !>C     for the vertices:  the range must be large
+      !>C     enough so that the vertices are guaranteed
+      !>C     to be outside the target body but small
+      !>C     enough that we don't lose too much precision
+      !>C     in the surface intercept computation.
+      !>C
+      !>C     We'll look up the upper bound for the target
+      !>C     radius, then use 2 times this value as the
+      !>C     vertex magnitude.
+      !>C
+      !>      CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
       !>
-      !>              MAXR = DSKDSC(MX3IDX)
-      !>              R    = 2.D0 * MAXR
+      !>      MAXR = DSKDSC(MX3IDX)
+      !>      R    = 2.D0 * MAXR
       !>
-      !>        C
-      !>        C     Now generate the intercept points.  We generate
-      !>        C     intercepts along latitude bounds, working from
-      !>        C     north to south. Latitude ranges from +80 to
-      !>        C     -80 degrees. Longitude ranges from 0 to 320
-      !>        C     degrees. The increment is 20 degrees for
-      !>        C     latitude and 40 degrees for longitude.
-      !>        C
-      !>              DO I = 1, NLAT
+      !>C
+      !>C     Now generate the intercept points.  We generate
+      !>C     intercepts along latitude bounds, working from
+      !>C     north to south. Latitude ranges from +80 to
+      !>C     -80 degrees. Longitude ranges from 0 to 320
+      !>C     degrees. The increment is 20 degrees for
+      !>C     latitude and 40 degrees for longitude.
+      !>C
+      !>      DO I = 1, NLAT
       !>
-      !>                 LAT = RPD() * ( 100.D0 - 20.D0*I )
+      !>         LAT = RPD() * ( 100.D0 - 20.D0*I )
       !>
-      !>                 DO J = 1, NLON
+      !>         DO J = 1, NLON
       !>
-      !>                    LON = RPD() * 40.D0 * (J-1)
-      !>        C
-      !>        C           Produce a ray vertex for the current
-      !>        C           lat/lon value.  Negate the vertex to
-      !>        C           produce the ray's direction vector.
-      !>        C
-      !>                    CALL LATREC ( R, LON, LAT, VERTEX )
-      !>                    CALL VMINUS ( VERTEX,      RAYDIR )
-      !>        C
-      !>        C           Find the surface intercept for this
-      !>        C           ray.
-      !>        C
-      !>                    CALL DSKX02 ( HANDLE, DLADSC, VERTEX,
-      !>             .                    RAYDIR, PLID,   XPT,    FOUND  )
-      !>        C
-      !>        C           Since the ray passes through the origin on
-      !>        C           the body-fixed frame associated with the
-      !>        C           target body, we'd rarely expect to find that
-      !>        C           the ray failed to intersect the surface.
-      !>        C           For safety, we check the FOUND flag.  (A
-      !>        C           "not found" condition could be a sign of
-      !>        C           a bug.)
-      !>        C
-      !>                    IF ( .NOT. FOUND ) THEN
+      !>            LON = RPD() * 40.D0 * (J-1)
+      !>C
+      !>C           Produce a ray vertex for the current
+      !>C           lat/lon value.  Negate the vertex to
+      !>C           produce the ray's direction vector.
+      !>C
+      !>            CALL LATREC ( R, LON, LAT, VERTEX )
+      !>            CALL VMINUS ( VERTEX,      RAYDIR )
+      !>C
+      !>C           Find the surface intercept for this
+      !>C           ray.
+      !>C
+      !>            CALL DSKX02 ( HANDLE, DLADSC, VERTEX,
+      !>     .                    RAYDIR, PLID,   XPT,    FOUND  )
+      !>C
+      !>C           Since the ray passes through the origin on
+      !>C           the body-fixed frame associated with the
+      !>C           target body, we'd rarely expect to find that
+      !>C           the ray failed to intersect the surface.
+      !>C           For safety, we check the FOUND flag.  (A
+      !>C           "not found" condition could be a sign of
+      !>C           a bug.)
+      !>C
+      !>            IF ( .NOT. FOUND ) THEN
       !>
-      !>                       WRITE(*,*) ' '
-      !>                       WRITE(*,*) 'Intercept not found!'
-      !>                       WRITE(*,*) '   Ray vertex:'
-      !>                       WRITE(*,*) '   Longitude (deg): ', LON/RPD()
-      !>                       WRITE(*,*) '   Latitude  (deg): ', LAT/RPD()
-      !>                       WRITE(*,*) '   Range      (km): ', R
-      !>                       WRITE(*,*) ' '
+      !>               WRITE(*,*) ' '
+      !>               WRITE(*,*) 'Intercept not found!'
+      !>               WRITE(*,*) '   Ray vertex:'
+      !>               WRITE(*,*) '   Longitude (deg): ', LON/RPD()
+      !>               WRITE(*,*) '   Latitude  (deg): ', LAT/RPD()
+      !>               WRITE(*,*) '   Range      (km): ', R
+      !>               WRITE(*,*) ' '
       !>
-      !>                    ELSE
-      !>        C
-      !>        C              This is the normal case.  Display the
-      !>        C              intercept plate ID and the intercept
-      !>        C              point in both Cartesian and latitudinal
-      !>        C              coordinates.  Show the corresponding ray
-      !>        C              vertex to facilitate validation of results.
-      !>        C
-      !>        C              Use RECRAD rather than RECLAT to produce
-      !>        C              non-negative longitudes.
-      !>        C
-      !>                       CALL RECRAD ( XPT, XR, XLON, XLAT )
+      !>            ELSE
+      !>C
+      !>C              This is the normal case.  Display the
+      !>C              intercept plate ID and the intercept
+      !>C              point in both Cartesian and latitudinal
+      !>C              coordinates.  Show the corresponding ray
+      !>C              vertex to facilitate validation of results.
+      !>C
+      !>C              Use RECRAD rather than RECLAT to produce
+      !>C              non-negative longitudes.
+      !>C
+      !>               CALL RECRAD ( XPT, XR, XLON, XLAT )
       !>
-      !>                       WRITE(*,*) ' '
-      !>                       WRITE(*,*) 'Intercept found:'
-      !>                       WRITE(*,*) '   Plate ID:             ', PLID
-      !>                       WRITE(*, '(1X,A,3F12.8)' )
-      !>             .         '   Cartesian coordinates:', XPT
-      !>                       WRITE(*,*) '   Latitudinal coordinates:'
-      !>                       WRITE(*,*) '   Longitude (deg): ', XLON/RPD()
-      !>                       WRITE(*,*) '   Latitude  (deg): ', XLAT/RPD()
-      !>                       WRITE(*,*) '   Range      (km): ', XR
-      !>                       WRITE(*,*)
-      !>                       WRITE(*,*) '   Ray vertex:'
-      !>                       WRITE(*,*) '   Longitude (deg): ', LON/RPD()
-      !>                       WRITE(*,*) '   Latitude  (deg): ', LAT/RPD()
-      !>                       WRITE(*,*) '   Range      (km): ', R
-      !>                       WRITE(*,*) ' '
+      !>               WRITE(*,*) ' '
+      !>               WRITE(*,*) 'Intercept found:'
+      !>               WRITE(*,*) '   Plate ID:             ', PLID
+      !>               WRITE(*, '(1X,A,3F12.8)' )
+      !>     .         '   Cartesian coordinates:', XPT
+      !>               WRITE(*,*) '   Latitudinal coordinates:'
+      !>               WRITE(*,*) '   Longitude (deg): ', XLON/RPD()
+      !>               WRITE(*,*) '   Latitude  (deg): ', XLAT/RPD()
+      !>               WRITE(*,*) '   Range      (km): ', XR
+      !>               WRITE(*,*)
+      !>               WRITE(*,*) '   Ray vertex:'
+      !>               WRITE(*,*) '   Longitude (deg): ', LON/RPD()
+      !>               WRITE(*,*) '   Latitude  (deg): ', LAT/RPD()
+      !>               WRITE(*,*) '   Range      (km): ', R
+      !>               WRITE(*,*) ' '
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
-      !>              END
+      !>      END DO
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos_3_3.bds, the output
@@ -68283,201 +68391,203 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SRFXPT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SRFXPT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               ABCLEN
-      !>              PARAMETER           ( ABCLEN = 20 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               ABCLEN
+      !>      PARAMETER           ( ABCLEN = 20 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 78 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 78 )
       !>
-      !>              INTEGER               METLEN
-      !>              PARAMETER           ( METLEN = 40 )
+      !>      INTEGER               METLEN
+      !>      PARAMETER           ( METLEN = 40 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 32 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 80 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 80 )
       !>
-      !>              INTEGER               NCORNR
-      !>              PARAMETER           ( NCORNR = 4 )
+      !>      INTEGER               NCORNR
+      !>      PARAMETER           ( NCORNR = 4 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ABCLEN)    ABCORR
-      !>              CHARACTER*(NAMLEN)    CAMERA
-      !>              CHARACTER*(NAMLEN)    DREF
-      !>              CHARACTER*(METLEN)    METHOD
-      !>              CHARACTER*(NAMLEN)    OBSRVR
-      !>              CHARACTER*(NAMLEN)    SHAPE
-      !>              CHARACTER*(NAMLEN)    TARGET
-      !>              CHARACTER*(LNSIZE)    TITLE
-      !>              CHARACTER*(TIMLEN)    UTC
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ABCLEN)    ABCORR
+      !>      CHARACTER*(NAMLEN)    CAMERA
+      !>      CHARACTER*(NAMLEN)    DREF
+      !>      CHARACTER*(METLEN)    METHOD
+      !>      CHARACTER*(NAMLEN)    OBSRVR
+      !>      CHARACTER*(NAMLEN)    SHAPE
+      !>      CHARACTER*(NAMLEN)    TARGET
+      !>      CHARACTER*(LNSIZE)    TITLE
+      !>      CHARACTER*(TIMLEN)    UTC
       !>
-      !>              DOUBLE PRECISION      BOUNDS ( 3, NCORNR )
-      !>              DOUBLE PRECISION      BSIGHT ( 3 )
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      DVEC   ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      OBSPOS ( 3 )
-      !>              DOUBLE PRECISION      RADIUS
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      BOUNDS ( 3, NCORNR )
+      !>      DOUBLE PRECISION      BSIGHT ( 3 )
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      DVEC   ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      OBSPOS ( 3 )
+      !>      DOUBLE PRECISION      RADIUS
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               CAMID
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               CAMID
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              DATA                  ABCORR / 'LT+S'      /
-      !>              DATA                  CAMERA / 'MGS_MOC_NA'/
-      !>              DATA                  METHOD / 'Ellipsoid' /
-      !>              DATA                  OBSRVR / 'MGS'       /
-      !>              DATA                  TARGET / 'Mars'      /
-      !>              DATA                  UTC    /
-      !>             .                '2003 OCT 13 06:00:00 UTC' /
+      !>      DATA                  ABCORR / 'LT+S'      /
+      !>      DATA                  CAMERA / 'MGS_MOC_NA'/
+      !>      DATA                  METHOD / 'Ellipsoid' /
+      !>      DATA                  OBSRVR / 'MGS'       /
+      !>      DATA                  TARGET / 'Mars'      /
+      !>      DATA                  UTC    /
+      !>     .                '2003 OCT 13 06:00:00 UTC' /
       !>
-      !>        C
-      !>        C     Load kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'srfxpt_ex1.tm' )
+      !>C
+      !>C     Load kernel files.
+      !>C
+      !>      CALL FURNSH ( 'srfxpt_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert the UTC request time to ET (seconds past
-      !>        C     J2000, TDB).
-      !>        C
-      !>              CALL STR2ET ( UTC, ET )
+      !>C
+      !>C     Convert the UTC request time to ET (seconds past
+      !>C     J2000, TDB).
+      !>C
+      !>      CALL STR2ET ( UTC, ET )
       !>
-      !>        C
-      !>        C     Get the MGS MOC Narrow angle camera (MGS_MOC_NA)
-      !>        C     ID code.  Then look up the field of view (FOV)
-      !>        C     parameters by calling GETFOV.
-      !>        C
-      !>              CALL BODN2C ( CAMERA, CAMID, FOUND )
+      !>C
+      !>C     Get the MGS MOC Narrow angle camera (MGS_MOC_NA)
+      !>C     ID code.  Then look up the field of view (FOV)
+      !>C     parameters by calling GETFOV.
+      !>C
+      !>      CALL BODN2C ( CAMERA, CAMID, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 CALL SETMSG ( 'Could not find ID code for ' //
-      !>             .                 'instrument #.'               )
-      !>                 CALL ERRCH  ( '#', CAMERA                   )
-      !>                 CALL SIGERR ( 'SPICE(NOTRANSLATION)'        )
-      !>              END IF
+      !>      IF ( .NOT. FOUND ) THEN
+      !>         CALL SETMSG ( 'Could not find ID code for ' //
+      !>     .                 'instrument #.'               )
+      !>         CALL ERRCH  ( '#', CAMERA                   )
+      !>         CALL SIGERR ( 'SPICE(NOTRANSLATION)'        )
+      !>      END IF
       !>
-      !>        C
-      !>        C     GETFOV will return the name of the camera-fixed frame
-      !>        C     in the string DREF, the camera boresight vector in
-      !>        C     the array BSIGHT, and the FOV corner vectors in the
-      !>        C     array BOUNDS.
-      !>        C
-      !>              CALL GETFOV ( CAMID,  NCORNR, SHAPE,  DREF,
-      !>             .              BSIGHT, N,      BOUNDS       )
+      !>C
+      !>C     GETFOV will return the name of the camera-fixed frame
+      !>C     in the string DREF, the camera boresight vector in
+      !>C     the array BSIGHT, and the FOV corner vectors in the
+      !>C     array BOUNDS.
+      !>C
+      !>      CALL GETFOV ( CAMID,  NCORNR, SHAPE,  DREF,
+      !>     .              BSIGHT, N,      BOUNDS       )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Surface Intercept Locations for Camera'
-      !>              WRITE (*,*) 'FOV Boundary and Boresight Vectors'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '   Instrument:            ', CAMERA
-      !>              WRITE (*,*) '   Epoch:                 ', UTC
-      !>              WRITE (*,*) '   Aberration correction: ', ABCORR
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Surface Intercept Locations for Camera'
+      !>      WRITE (*,*) 'FOV Boundary and Boresight Vectors'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '   Instrument:            ', CAMERA
+      !>      WRITE (*,*) '   Epoch:                 ', UTC
+      !>      WRITE (*,*) '   Aberration correction: ', ABCORR
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     Now compute and display the surface intercepts for the
-      !>        C     boresight and all of the FOV boundary vectors.
-      !>        C
-      !>              DO I = 1, NCORNR+1
+      !>C
+      !>C     Now compute and display the surface intercepts for the
+      !>C     boresight and all of the FOV boundary vectors.
+      !>C
+      !>      DO I = 1, NCORNR+1
       !>
-      !>                 IF ( I .LE. NCORNR ) THEN
+      !>         IF ( I .LE. NCORNR ) THEN
       !>
-      !>                    TITLE = 'Corner vector #'
-      !>                    CALL REPMI ( TITLE, '#', I, TITLE )
+      !>            TITLE = 'Corner vector #'
+      !>            CALL REPMI ( TITLE, '#', I, TITLE )
       !>
-      !>                    CALL VEQU ( BOUNDS(1,I), DVEC )
+      !>            CALL VEQU ( BOUNDS(1,I), DVEC )
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    TITLE = 'Boresight vector'
-      !>                    CALL VEQU ( BSIGHT, DVEC )
+      !>            TITLE = 'Boresight vector'
+      !>            CALL VEQU ( BSIGHT, DVEC )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Compute the surface intercept point using
-      !>        C        the specified aberration corrections.
-      !>        C
-      !>        C        SRFXPT will signal an error if required kernel
-      !>        C        data are unavailable.  See example (2) below for
-      !>        C        a suggestion on detecting absence of C-kernel
-      !>        C        data prior to calling SRFXPT.
-      !>        C
-      !>                 CALL SRFXPT ( METHOD, TARGET, ET,     ABCORR,
-      !>             .                 OBSRVR, DREF,   DVEC,   SPOINT,
-      !>             .                 DIST,   TRGEPC, OBSPOS, FOUND  )
+      !>C
+      !>C        Compute the surface intercept point using
+      !>C        the specified aberration corrections.
+      !>C
+      !>C        SRFXPT will signal an error if required kernel
+      !>C        data are unavailable.  See example (2) below for
+      !>C        a suggestion on detecting absence of C-kernel
+      !>C        data prior to calling SRFXPT.
+      !>C
+      !>         CALL SRFXPT ( METHOD, TARGET, ET,     ABCORR,
+      !>     .                 OBSRVR, DREF,   DVEC,   SPOINT,
+      !>     .                 DIST,   TRGEPC, OBSPOS, FOUND  )
       !>
-      !>                 IF ( FOUND ) THEN
-      !>        C
-      !>        C           Convert rectangular coordinates to planetocentric
-      !>        C           latitude and longitude. Convert radians to degrees.
-      !>        C
-      !>                    CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
+      !>         IF ( FOUND ) THEN
+      !>C
+      !>C           Convert rectangular coordinates to planetocentric
+      !>C           latitude and longitude. Convert radians to degrees.
+      !>C
+      !>            CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
       !>
-      !>                    LON = LON * DPR ()
-      !>                    LAT = LAT * DPR ()
-      !>        C
-      !>        C           Display the results.
-      !>        C
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) TITLE
+      !>            LON = LON * DPR ()
+      !>            LAT = LAT * DPR ()
+      !>C
+      !>C           Display the results.
+      !>C
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) TITLE
       !>
-      !>                    TITLE = '  Vector in # frame = '
-      !>                    CALL REPMC ( TITLE, '#', DREF, TITLE )
+      !>            TITLE = '  Vector in # frame = '
+      !>            CALL REPMC ( TITLE, '#', DREF, TITLE )
       !>
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) TITLE
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) TITLE
       !>
-      !>                    IF ( I .LE. NCORNR ) THEN
-      !>                       WRITE (*,'(A,3F20.14)') '  ',
-      !>             .                               ( BOUNDS(J,I), J=1,3 )
-      !>                    ELSE
-      !>                       WRITE (*,'(A,3F20.14)') '  ', BSIGHT
-      !>                    END IF
+      !>            IF ( I .LE. NCORNR ) THEN
+      !>               WRITE (*,'(A,3F20.14)') '  ',
+      !>     .                               ( BOUNDS(J,I), J=1,3 )
+      !>            ELSE
+      !>               WRITE (*,'(A,3F20.14)') '  ', BSIGHT
+      !>            END IF
       !>
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) '  Intercept:'
-      !>                    WRITE (*,*)
-      !>             .      '     Radius                   (km)  = ', RADIUS
-      !>                    WRITE (*,*)
-      !>             .      '     Planetocentric Latitude  (deg) = ', LAT
-      !>                    WRITE (*,*)
-      !>             .      '     Planetocentric Longitude (deg) = ', LON
-      !>                    WRITE (*,*)
-      !>             .      '     Range                    (km)  = ', DIST
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) '  Intercept:'
+      !>            WRITE (*,*)
+      !>     .      '     Radius                   (km)  = ', RADIUS
+      !>            WRITE (*,*)
+      !>     .      '     Planetocentric Latitude  (deg) = ', LAT
+      !>            WRITE (*,*)
+      !>     .      '     Planetocentric Longitude (deg) = ', LON
+      !>            WRITE (*,*)
+      !>     .      '     Range                    (km)  = ', DIST
+      !>            WRITE (*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) 'Intercept not found.'
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) 'Intercept not found.'
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -70229,179 +70339,181 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TANGPT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TANGPT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1F7
-      !>              PARAMETER           ( FMT1F7 = '(1X,A,F15.7)' )
+      !>C
+      !>C     Parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1F7
+      !>      PARAMETER           ( FMT1F7 = '(1X,A,F15.7)' )
       !>
-      !>              CHARACTER*(*)         FMT3F7
-      !>              PARAMETER           ( FMT3F7 = '(1X,A,3F15.7)' )
+      !>      CHARACTER*(*)         FMT3F7
+      !>      PARAMETER           ( FMT3F7 = '(1X,A,3F15.7)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'tangpt_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'tangpt_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .          'YYYY-MM-DD HR:MN:SC.###### UTC ::RND' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .          'YYYY-MM-DD HR:MN:SC.###### UTC ::RND' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 72 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 72 )
       !>
-      !>              INTEGER               LOCLEN
-      !>              PARAMETER           ( LOCLEN = 25 )
+      !>      INTEGER               LOCLEN
+      !>      PARAMETER           ( LOCLEN = 25 )
       !>
-      !>              INTEGER               NCASE
-      !>              PARAMETER           ( NCASE  =  3 )
+      !>      INTEGER               NCASE
+      !>      PARAMETER           ( NCASE  =  3 )
       !>
-      !>              INTEGER               NTIMES
-      !>              PARAMETER           ( NTIMES =  4 )
+      !>      INTEGER               NTIMES
+      !>      PARAMETER           ( NTIMES =  4 )
       !>
-      !>              INTEGER               ROOM
-      !>              PARAMETER           ( ROOM   = 12 )
+      !>      INTEGER               ROOM
+      !>      PARAMETER           ( ROOM   = 12 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 25 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 25 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 35 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 35 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(LNSIZE)    CASENM
-      !>              CHARACTER*(LNSIZE)    CASES  ( NCASE )
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(BDNMLN)    INSNAM
-      !>              CHARACTER*(LOCLEN)    LOCUS
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(FRNMLN)    RAYFRM
-      !>              CHARACTER*(SHPLEN)    SHAPE
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCTIM ( NTIMES )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(LNSIZE)    CASENM
+      !>      CHARACTER*(LNSIZE)    CASES  ( NCASE )
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(BDNMLN)    INSNAM
+      !>      CHARACTER*(LOCLEN)    LOCUS
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(FRNMLN)    RAYFRM
+      !>      CHARACTER*(SHPLEN)    SHAPE
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCTIM ( NTIMES )
       !>
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      BOUNDS ( 3, ROOM )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RANGE
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      SRFPT  ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TANPT  ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      BOUNDS ( 3, ROOM )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RANGE
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      SRFPT  ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TANPT  ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
-      !>              INTEGER               NVEC
+      !>      INTEGER               I
+      !>      INTEGER               NVEC
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CASES /
-      !>             .                      'Ray slightly above limb',
-      !>             .                      'Intercept',
-      !>             .                      'Look-away'    /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CASES /
+      !>     .                      'Ray slightly above limb',
+      !>     .                      'Intercept',
+      !>     .                      'Look-away'    /
       !>
-      !>              DATA                  INSNAM / 'MAVEN_IUVS' /
+      !>      DATA                  INSNAM / 'MAVEN_IUVS' /
       !>
-      !>              DATA                  UTCTIM /
-      !>             .            '2020-10-11 16:01:43.000000 UTC',
-      !>             .            '2020-10-11 16:17:43.000000 UTC',
-      !>             .            '2020-10-11 16:49:07.000000 UTC',
-      !>             .            '2020-10-11 17:12:08.000000 UTC' /
+      !>      DATA                  UTCTIM /
+      !>     .            '2020-10-11 16:01:43.000000 UTC',
+      !>     .            '2020-10-11 16:17:43.000000 UTC',
+      !>     .            '2020-10-11 16:49:07.000000 UTC',
+      !>     .            '2020-10-11 17:12:08.000000 UTC' /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*, '(A)') 'Instrument: ' // INSNAM
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*, '(A)') 'Instrument: ' // INSNAM
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Get the instrument reference frame name and
-      !>        C     the instrument boresight direction in the
-      !>        C     instrument frame.
-      !>        C
-      !>              CALL GETFVN ( INSNAM, ROOM,   SHAPE,
-      !>             .              RAYFRM, RAYDIR, NVEC, BOUNDS )
+      !>C
+      !>C     Get the instrument reference frame name and
+      !>C     the instrument boresight direction in the
+      !>C     instrument frame.
+      !>C
+      !>      CALL GETFVN ( INSNAM, ROOM,   SHAPE,
+      !>     .              RAYFRM, RAYDIR, NVEC, BOUNDS )
       !>
-      !>        C
-      !>        C     Initialize inputs to TANGPT, except for time.
-      !>        C
-      !>              TARGET = 'MARS'
-      !>              OBSRVR = 'MAVEN'
-      !>              FIXREF = 'IAU_MARS'
-      !>              ABCORR = 'CN+S'
-      !>              LOCUS  = 'TANGENT POINT'
+      !>C
+      !>C     Initialize inputs to TANGPT, except for time.
+      !>C
+      !>      TARGET = 'MARS'
+      !>      OBSRVR = 'MAVEN'
+      !>      FIXREF = 'IAU_MARS'
+      !>      ABCORR = 'CN+S'
+      !>      LOCUS  = 'TANGENT POINT'
       !>
-      !>        C
-      !>        C     Compute the apparent tangent point for each time.
-      !>        C
-      !>              WRITE(*,'(A)') 'Aberration correction:       ' // ABCORR
-      !>              WRITE(*,'(A)') 'Aberration correction locus: ' // LOCUS
+      !>C
+      !>C     Compute the apparent tangent point for each time.
+      !>C
+      !>      WRITE(*,'(A)') 'Aberration correction:       ' // ABCORR
+      !>      WRITE(*,'(A)') 'Aberration correction locus: ' // LOCUS
       !>
-      !>              DO I = 1, NTIMES
+      !>      DO I = 1, NTIMES
       !>
-      !>                 CALL STR2ET ( UTCTIM(I), ET )
+      !>         CALL STR2ET ( UTCTIM(I), ET )
       !>
-      !>                 CALL TANGPT ( 'ELLIPSOID',
-      !>             .                 TARGET, ET,     FIXREF, ABCORR,
-      !>             .                 LOCUS,  OBSRVR, RAYFRM, RAYDIR,
-      !>             .                 TANPT,  ALT,    RANGE,  SRFPT,
-      !>             .                 TRGEPC, SRFVEC                 )
+      !>         CALL TANGPT ( 'ELLIPSOID',
+      !>     .                 TARGET, ET,     FIXREF, ABCORR,
+      !>     .                 LOCUS,  OBSRVR, RAYFRM, RAYDIR,
+      !>     .                 TANPT,  ALT,    RANGE,  SRFPT,
+      !>     .                 TRGEPC, SRFVEC                 )
       !>
-      !>        C
-      !>        C        Set the label for the geometric case.
-      !>        C
-      !>                 IF ( ALT .EQ. 0 ) THEN
+      !>C
+      !>C        Set the label for the geometric case.
+      !>C
+      !>         IF ( ALT .EQ. 0 ) THEN
       !>
-      !>                    CASENM = CASES(2)
+      !>            CASENM = CASES(2)
       !>
-      !>                 ELSE IF ( RANGE .EQ. 0.D0 ) THEN
+      !>         ELSE IF ( RANGE .EQ. 0.D0 ) THEN
       !>
-      !>                    CASENM = CASES(3)
-      !>                 ELSE
-      !>                    CASENM = CASES(1)
-      !>                 END IF
+      !>            CASENM = CASES(3)
+      !>         ELSE
+      !>            CASENM = CASES(1)
+      !>         END IF
       !>
-      !>        C
-      !>        C        Convert the target epoch to a string for output.
-      !>        C
-      !>                 CALL TIMOUT ( TRGEPC, TIMFMT, TIMSTR )
+      !>C
+      !>C        Convert the target epoch to a string for output.
+      !>C
+      !>         CALL TIMOUT ( TRGEPC, TIMFMT, TIMSTR )
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>                 WRITE( *, '(A)') '  Observation Time = ' // UTCTIM(I)
-      !>                 WRITE( *, '(A)') '  Target Time      = ' // TIMSTR
+      !>         WRITE( *, '(A)') '  Observation Time = ' // UTCTIM(I)
+      !>         WRITE( *, '(A)') '  Target Time      = ' // TIMSTR
       !>
-      !>                 WRITE(*, FMT1F7) '   ALT    (km) = ', ALT
-      !>                 WRITE(*, FMT1F7) '   RANGE  (km) = ', RANGE
-      !>                 WRITE(*, FMT3F7) '   TANPT  (km) = ', TANPT
-      !>                 WRITE(*, FMT3F7) '   SRFPT  (km) = ', SRFPT
-      !>                 WRITE(*, FMT3F7) '   SRFVEC (km) = ', SRFVEC
+      !>         WRITE(*, FMT1F7) '   ALT    (km) = ', ALT
+      !>         WRITE(*, FMT1F7) '   RANGE  (km) = ', RANGE
+      !>         WRITE(*, FMT3F7) '   TANPT  (km) = ', TANPT
+      !>         WRITE(*, FMT3F7) '   SRFPT  (km) = ', SRFPT
+      !>         WRITE(*, FMT3F7) '   SRFVEC (km) = ', SRFVEC
       !>
-      !>                 WRITE( *, '(A)') '    Geometric case = ' // CASENM
+      !>         WRITE( *, '(A)') '    Geometric case = ' // CASENM
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, the output was:
@@ -70545,231 +70657,233 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TANGPT_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TANGPT_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1F7
-      !>              PARAMETER           ( FMT1F7  = '(1X,A,F15.7)' )
+      !>C
+      !>C     Parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1F7
+      !>      PARAMETER           ( FMT1F7  = '(1X,A,F15.7)' )
       !>
-      !>              CHARACTER*(*)         FMT3F7
-      !>              PARAMETER           ( FMT3F7  = '(1X,A,3F15.7)' )
+      !>      CHARACTER*(*)         FMT3F7
+      !>      PARAMETER           ( FMT3F7  = '(1X,A,3F15.7)' )
       !>
-      !>              CHARACTER*(*)         FMT1F4
-      !>              PARAMETER           ( FMT1F4 = '(1X,A,F10.4)' )
+      !>      CHARACTER*(*)         FMT1F4
+      !>      PARAMETER           ( FMT1F4 = '(1X,A,F10.4)' )
       !>
-      !>              CHARACTER*(*)         FMT3F4
-      !>              PARAMETER           ( FMT3F4 = '(1X,A,3F10.4)' )
+      !>      CHARACTER*(*)         FMT3F4
+      !>      PARAMETER           ( FMT3F4 = '(1X,A,3F10.4)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'tangpt_ex2.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'tangpt_ex2.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .          'YYYY-MM-DD HR:MN:SC.###### UTC ::RND' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .          'YYYY-MM-DD HR:MN:SC.###### UTC ::RND' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               LOCLEN
-      !>              PARAMETER           ( LOCLEN = 25 )
+      !>      INTEGER               LOCLEN
+      !>      PARAMETER           ( LOCLEN = 25 )
       !>
-      !>              INTEGER               NCASE
-      !>              PARAMETER           ( NCASE  =  5 )
+      !>      INTEGER               NCASE
+      !>      PARAMETER           ( NCASE  =  5 )
       !>
-      !>              INTEGER               ROOM
-      !>              PARAMETER           ( ROOM   =  4 )
+      !>      INTEGER               ROOM
+      !>      PARAMETER           ( ROOM   =  4 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 25 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 25 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 35 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 35 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(CORLEN)    CORRS  ( NCASE )
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(BDNMLN)    INSNAM
-      !>              CHARACTER*(LOCLEN)    LOCI   ( NCASE )
-      !>              CHARACTER*(LOCLEN)    LOCUS
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(FRNMLN)    RAYFRM
-      !>              CHARACTER*(SHPLEN)    SHAPE
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCTIM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(CORLEN)    CORRS  ( NCASE )
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(BDNMLN)    INSNAM
+      !>      CHARACTER*(LOCLEN)    LOCI   ( NCASE )
+      !>      CHARACTER*(LOCLEN)    LOCUS
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(FRNMLN)    RAYFRM
+      !>      CHARACTER*(SHPLEN)    SHAPE
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCTIM
       !>
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      BOUNDS ( 3, ROOM )
-      !>              DOUBLE PRECISION      DIFF   ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RANGE
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      SRFPT  ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      SVALT
-      !>              DOUBLE PRECISION      SVEPOC
-      !>              DOUBLE PRECISION      SVRANG
-      !>              DOUBLE PRECISION      SVSRFP ( 3 )
-      !>              DOUBLE PRECISION      SVSRFV ( 3 )
-      !>              DOUBLE PRECISION      SVTANP ( 3 )
-      !>              DOUBLE PRECISION      TANPT  ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      BOUNDS ( 3, ROOM )
+      !>      DOUBLE PRECISION      DIFF   ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RANGE
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      SRFPT  ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      SVALT
+      !>      DOUBLE PRECISION      SVEPOC
+      !>      DOUBLE PRECISION      SVRANG
+      !>      DOUBLE PRECISION      SVSRFP ( 3 )
+      !>      DOUBLE PRECISION      SVSRFV ( 3 )
+      !>      DOUBLE PRECISION      SVTANP ( 3 )
+      !>      DOUBLE PRECISION      TANPT  ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
-      !>              INTEGER               NVEC
+      !>      INTEGER               I
+      !>      INTEGER               NVEC
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CORRS  / 'CN+S', 'CN+S',
-      !>             .                               'CN',   'CN',
-      !>             .                               'NONE'           /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CORRS  / 'CN+S', 'CN+S',
+      !>     .                               'CN',   'CN',
+      !>     .                               'NONE'           /
       !>
-      !>              DATA                  INSNAM / 'MRO_MCS_A1'     /
+      !>      DATA                  INSNAM / 'MRO_MCS_A1'     /
       !>
-      !>              DATA                  LOCI   / 'TANGENT POINT',
-      !>             .                               'SURFACE POINT',
-      !>             .                               'TANGENT POINT',
-      !>             .                               'SURFACE POINT',
-      !>             .                               'TANGENT POINT'  /
+      !>      DATA                  LOCI   / 'TANGENT POINT',
+      !>     .                               'SURFACE POINT',
+      !>     .                               'TANGENT POINT',
+      !>     .                               'SURFACE POINT',
+      !>     .                               'TANGENT POINT'  /
       !>
-      !>              DATA                  UTCTIM /
-      !>             .              '2020-10-31 00:01:23.111492 UTC'  /
+      !>      DATA                  UTCTIM /
+      !>     .              '2020-10-31 00:01:23.111492 UTC'  /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>              WRITE( *, * ) ' '
-      !>              WRITE( *, '(A)') 'Instrument: ' // INSNAM
+      !>      WRITE( *, * ) ' '
+      !>      WRITE( *, '(A)') 'Instrument: ' // INSNAM
       !>
-      !>        C
-      !>        C     Get the instrument reference frame name and
-      !>        C     the instrument boresight direction in the
-      !>        C     instrument frame.
-      !>        C
-      !>              CALL GETFVN ( INSNAM, ROOM,   SHAPE,
-      !>             .              RAYFRM, RAYDIR, NVEC, BOUNDS )
+      !>C
+      !>C     Get the instrument reference frame name and
+      !>C     the instrument boresight direction in the
+      !>C     instrument frame.
+      !>C
+      !>      CALL GETFVN ( INSNAM, ROOM,   SHAPE,
+      !>     .              RAYFRM, RAYDIR, NVEC, BOUNDS )
       !>
-      !>        C
-      !>        C     Initialize inputs to TANGPT that are common to all
-      !>        C     cases.
-      !>        C
-      !>              TARGET = 'MARS'
-      !>              OBSRVR = 'MRO'
-      !>              FIXREF = 'IAU_MARS'
+      !>C
+      !>C     Initialize inputs to TANGPT that are common to all
+      !>C     cases.
+      !>C
+      !>      TARGET = 'MARS'
+      !>      OBSRVR = 'MRO'
+      !>      FIXREF = 'IAU_MARS'
       !>
-      !>        C
-      !>        C     Compute the apparent tangent point for each case.
-      !>        C
-      !>              DO I = 1, NCASE
+      !>C
+      !>C     Compute the apparent tangent point for each case.
+      !>C
+      !>      DO I = 1, NCASE
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>                 ABCORR = CORRS(I)
-      !>                 LOCUS  = LOCI(I)
+      !>         ABCORR = CORRS(I)
+      !>         LOCUS  = LOCI(I)
       !>
-      !>                 WRITE(*, '(A)') 'Aberration correction:       '
-      !>             .   //               ABCORR
+      !>         WRITE(*, '(A)') 'Aberration correction:       '
+      !>     .   //               ABCORR
       !>
-      !>                 WRITE(*, '(A)') 'Aberration correction locus: '
-      !>             .   //               LOCUS
+      !>         WRITE(*, '(A)') 'Aberration correction locus: '
+      !>     .   //               LOCUS
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>                 CALL STR2ET ( UTCTIM, ET )
+      !>         CALL STR2ET ( UTCTIM, ET )
       !>
-      !>                 CALL TANGPT ( 'ELLIPSOID',
-      !>             .                 TARGET, ET,     FIXREF, ABCORR,
-      !>             .                 LOCUS,  OBSRVR, RAYFRM, RAYDIR,
-      !>             .                 TANPT,  ALT,    RANGE,  SRFPT,
-      !>             .                 TRGEPC, SRFVEC                 )
+      !>         CALL TANGPT ( 'ELLIPSOID',
+      !>     .                 TARGET, ET,     FIXREF, ABCORR,
+      !>     .                 LOCUS,  OBSRVR, RAYFRM, RAYDIR,
+      !>     .                 TANPT,  ALT,    RANGE,  SRFPT,
+      !>     .                 TRGEPC, SRFVEC                 )
       !>
-      !>        C
-      !>        C        Convert the target epoch to a string for output.
-      !>        C
-      !>                 CALL TIMOUT ( TRGEPC, TIMFMT, TIMSTR )
+      !>C
+      !>C        Convert the target epoch to a string for output.
+      !>C
+      !>         CALL TIMOUT ( TRGEPC, TIMFMT, TIMSTR )
       !>
-      !>                 WRITE(*, '(A)') '  Observation Time = '
-      !>             .   //               UTCTIM
+      !>         WRITE(*, '(A)') '  Observation Time = '
+      !>     .   //               UTCTIM
       !>
-      !>                 WRITE(*, '(A)') '  Target Time      = '
-      !>             .   //                 TIMSTR
+      !>         WRITE(*, '(A)') '  Target Time      = '
+      !>     .   //                 TIMSTR
       !>
-      !>                 WRITE(*, FMT1F7) '   ALT    (km) = ', ALT
-      !>                 WRITE(*, FMT1F7) '   RANGE  (km) = ', RANGE
-      !>                 WRITE(*, FMT3F7) '   TANPT  (km) = ', TANPT
-      !>                 WRITE(*, FMT3F7) '   SRFPT  (km) = ', SRFPT
-      !>                 WRITE(*, FMT3F7) '   SRFVEC (km) = ', SRFVEC
+      !>         WRITE(*, FMT1F7) '   ALT    (km) = ', ALT
+      !>         WRITE(*, FMT1F7) '   RANGE  (km) = ', RANGE
+      !>         WRITE(*, FMT3F7) '   TANPT  (km) = ', TANPT
+      !>         WRITE(*, FMT3F7) '   SRFPT  (km) = ', SRFPT
+      !>         WRITE(*, FMT3F7) '   SRFVEC (km) = ', SRFVEC
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>        C
-      !>        C           Save results for comparison.
-      !>        C
-      !>                    SVALT  = ALT
-      !>                    SVEPOC = TRGEPC
-      !>                    SVRANG = RANGE
-      !>                    CALL VEQU( TANPT,  SVTANP )
-      !>                    CALL VEQU( SRFPT,  SVSRFP )
-      !>                    CALL VEQU( SRFVEC, SVSRFV )
+      !>         IF ( I .EQ. 1 ) THEN
+      !>C
+      !>C           Save results for comparison.
+      !>C
+      !>            SVALT  = ALT
+      !>            SVEPOC = TRGEPC
+      !>            SVRANG = RANGE
+      !>            CALL VEQU( TANPT,  SVTANP )
+      !>            CALL VEQU( SRFPT,  SVSRFP )
+      !>            CALL VEQU( SRFVEC, SVSRFV )
       !>
-      !>                 ELSE
-      !>        C
-      !>        C           Compare results to CN+S, tangent point
-      !>        C           locus case.
-      !>        C
-      !>                    WRITE(*,*) ' '
+      !>         ELSE
+      !>C
+      !>C           Compare results to CN+S, tangent point
+      !>C           locus case.
+      !>C
+      !>            WRITE(*,*) ' '
       !>
-      !>                    WRITE(*, '(A)')
-      !>             .      '  Differences from case 1 outputs:'
+      !>            WRITE(*, '(A)')
+      !>     .      '  Differences from case 1 outputs:'
       !>
-      !>                    WRITE(*, FMT1F4)
-      !>             .      '   Target time delta (ms) = ',
-      !>             .      1.D3 * ( TRGEPC - SVEPOC )
+      !>            WRITE(*, FMT1F4)
+      !>     .      '   Target time delta (ms) = ',
+      !>     .      1.D3 * ( TRGEPC - SVEPOC )
       !>
-      !>                    WRITE(*, FMT1F4)
-      !>             .      '   ALT    delta (m) = ',
-      !>             .      1.D3 * ( ALT - SVALT )
+      !>            WRITE(*, FMT1F4)
+      !>     .      '   ALT    delta (m) = ',
+      !>     .      1.D3 * ( ALT - SVALT )
       !>
-      !>                    WRITE(*, FMT1F4)
-      !>             .      '   RANGE  delta (m) = ',
-      !>             .      1.D3 * ( RANGE - SVRANG  )
+      !>            WRITE(*, FMT1F4)
+      !>     .      '   RANGE  delta (m) = ',
+      !>     .      1.D3 * ( RANGE - SVRANG  )
       !>
-      !>                    CALL VSUB   ( TANPT, SVTANP, DIFF )
-      !>                    CALL VSCLIP ( 1.D3,  DIFF )
-      !>                    WRITE(*, FMT3F4)
-      !>             .      '   TANPT  delta (m) = ', DIFF
+      !>            CALL VSUB   ( TANPT, SVTANP, DIFF )
+      !>            CALL VSCLIP ( 1.D3,  DIFF )
+      !>            WRITE(*, FMT3F4)
+      !>     .      '   TANPT  delta (m) = ', DIFF
       !>
-      !>                    CALL VSUB   ( SRFPT, SVSRFP, DIFF )
-      !>                    CALL VSCLIP ( 1.D3,  DIFF )
-      !>                    WRITE(*, FMT3F4)
-      !>             .      '   SRFPT  delta (m) = ', DIFF
+      !>            CALL VSUB   ( SRFPT, SVSRFP, DIFF )
+      !>            CALL VSCLIP ( 1.D3,  DIFF )
+      !>            WRITE(*, FMT3F4)
+      !>     .      '   SRFPT  delta (m) = ', DIFF
       !>
-      !>                    CALL VSUB   ( SRFVEC, SVSRFV, DIFF )
-      !>                    CALL VSCLIP ( 1.D3,   DIFF )
-      !>                    WRITE(*, FMT3F4)
-      !>             .      '   SRFVEC delta (m) = ', DIFF
+      !>            CALL VSUB   ( SRFVEC, SVSRFV, DIFF )
+      !>            CALL VSCLIP ( 1.D3,   DIFF )
+      !>            WRITE(*, FMT3F4)
+      !>     .      '   SRFVEC delta (m) = ', DIFF
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, the output was:
@@ -70932,229 +71046,231 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TANGPT_EX3
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TANGPT_EX3
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1F3
-      !>              PARAMETER           ( FMT1F3  = '(1X,A,F14.3)' )
+      !>C
+      !>C     Parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1F3
+      !>      PARAMETER           ( FMT1F3  = '(1X,A,F14.3)' )
       !>
-      !>              CHARACTER*(*)         FMT3F3
-      !>              PARAMETER           ( FMT3F3  = '(1X,A,3F14.3)' )
+      !>      CHARACTER*(*)         FMT3F3
+      !>      PARAMETER           ( FMT3F3  = '(1X,A,3F14.3)' )
       !>
-      !>              CHARACTER*(*)         FMT1F6
-      !>              PARAMETER           ( FMT1F6  = '(1X,A,F14.6)' )
+      !>      CHARACTER*(*)         FMT1F6
+      !>      PARAMETER           ( FMT1F6  = '(1X,A,F14.6)' )
       !>
-      !>              CHARACTER*(*)         FMTMF3
-      !>              PARAMETER           ( FMTMF3 = '(1X,A,2F13.3,F10.3)' )
+      !>      CHARACTER*(*)         FMTMF3
+      !>      PARAMETER           ( FMTMF3 = '(1X,A,2F13.3,F10.3)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'tangpt_ex3.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'tangpt_ex3.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .          'YYYY-MM-DD HR:MN:SC.###### UTC ::RND' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .          'YYYY-MM-DD HR:MN:SC.###### UTC ::RND' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               LOCLEN
-      !>              PARAMETER           ( LOCLEN = 25 )
+      !>      INTEGER               LOCLEN
+      !>      PARAMETER           ( LOCLEN = 25 )
       !>
-      !>              INTEGER               NCASE
-      !>              PARAMETER           ( NCASE  =  5 )
+      !>      INTEGER               NCASE
+      !>      PARAMETER           ( NCASE  =  5 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 35 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 35 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(CORLEN)    CORRS  ( NCASE )
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(LOCLEN)    LOCI   ( NCASE )
-      !>              CHARACTER*(LOCLEN)    LOCUS
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(FRNMLN)    RAYFRM
-      !>              CHARACTER*(BDNMLN)    SC
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCTIM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(CORLEN)    CORRS  ( NCASE )
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(LOCLEN)    LOCI   ( NCASE )
+      !>      CHARACTER*(LOCLEN)    LOCUS
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(FRNMLN)    RAYFRM
+      !>      CHARACTER*(BDNMLN)    SC
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCTIM
       !>
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      DIFF   ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RANGE
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      RAYLT
-      !>              DOUBLE PRECISION      SRFPT  ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      SVALT
-      !>              DOUBLE PRECISION      SVEPOC
-      !>              DOUBLE PRECISION      SVRANG
-      !>              DOUBLE PRECISION      SVSRFP ( 3 )
-      !>              DOUBLE PRECISION      SVSRFV ( 3 )
-      !>              DOUBLE PRECISION      SVTANP ( 3 )
-      !>              DOUBLE PRECISION      TANPT  ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      DIFF   ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RANGE
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      RAYLT
+      !>      DOUBLE PRECISION      SRFPT  ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      SVALT
+      !>      DOUBLE PRECISION      SVEPOC
+      !>      DOUBLE PRECISION      SVRANG
+      !>      DOUBLE PRECISION      SVSRFP ( 3 )
+      !>      DOUBLE PRECISION      SVSRFV ( 3 )
+      !>      DOUBLE PRECISION      SVTANP ( 3 )
+      !>      DOUBLE PRECISION      TANPT  ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CORRS  / 'CN+S', 'XCN+S',
-      !>             .                               'CN',   'NONE',
-      !>             .                               'CN+S'          /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CORRS  / 'CN+S', 'XCN+S',
+      !>     .                               'CN',   'NONE',
+      !>     .                               'CN+S'          /
       !>
-      !>              DATA                  LOCI   / 'TANGENT POINT',
-      !>             .                               'TANGENT POINT',
-      !>             .                               'TANGENT POINT',
-      !>             .                               'TANGENT POINT',
-      !>             .                               'SURFACE POINT'  /
+      !>      DATA                  LOCI   / 'TANGENT POINT',
+      !>     .                               'TANGENT POINT',
+      !>     .                               'TANGENT POINT',
+      !>     .                               'TANGENT POINT',
+      !>     .                               'SURFACE POINT'  /
       !>
-      !>              DATA                  UTCTIM /
-      !>             .              '2020-12-30 00:00:00 UTC'  /
+      !>      DATA                  UTCTIM /
+      !>     .              '2020-12-30 00:00:00 UTC'  /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Set name of spacecraft used to define ray direction.
-      !>        C
-      !>              SC = 'MRO'
+      !>C
+      !>C     Set name of spacecraft used to define ray direction.
+      !>C
+      !>      SC = 'MRO'
       !>
-      !>        C
-      !>        C     Initialize inputs to TANGPT that are common to all
-      !>        C     cases.
-      !>        C
-      !>              TARGET = 'MARS'
-      !>              OBSRVR = 'DSS-14'
-      !>              FIXREF = 'IAU_MARS'
-      !>              RAYFRM = 'J2000'
+      !>C
+      !>C     Initialize inputs to TANGPT that are common to all
+      !>C     cases.
+      !>C
+      !>      TARGET = 'MARS'
+      !>      OBSRVR = 'DSS-14'
+      !>      FIXREF = 'IAU_MARS'
+      !>      RAYFRM = 'J2000'
       !>
-      !>        C
-      !>        C     Convert observation time to TDB seconds past J2000.
-      !>        C
-      !>              CALL STR2ET ( UTCTIM, ET )
+      !>C
+      !>C     Convert observation time to TDB seconds past J2000.
+      !>C
+      !>      CALL STR2ET ( UTCTIM, ET )
       !>
-      !>        C
-      !>        C     Generate ray direction vector. Use apparent position
-      !>        C     of the MRO spacecraft.
-      !>        C
-      !>              CALL SPKPOS ( SC,     ET,     RAYFRM,
-      !>             .              'CN+S', OBSRVR, RAYDIR, RAYLT )
+      !>C
+      !>C     Generate ray direction vector. Use apparent position
+      !>C     of the MRO spacecraft.
+      !>C
+      !>      CALL SPKPOS ( SC,     ET,     RAYFRM,
+      !>     .              'CN+S', OBSRVR, RAYDIR, RAYLT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE( *, '(A)') 'Observer:   ' // OBSRVR
-      !>              WRITE( *, '(A)') 'Target:     ' // TARGET
-      !>              WRITE( *, '(A)') 'Spacecraft: ' // SC
+      !>      WRITE(*,*) ' '
+      !>      WRITE( *, '(A)') 'Observer:   ' // OBSRVR
+      !>      WRITE( *, '(A)') 'Target:     ' // TARGET
+      !>      WRITE( *, '(A)') 'Spacecraft: ' // SC
       !>
-      !>        C
-      !>        C     Compute the apparent tangent point for each case.
-      !>        C
-      !>              DO I = 1, NCASE
+      !>C
+      !>C     Compute the apparent tangent point for each case.
+      !>C
+      !>      DO I = 1, NCASE
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>                 ABCORR = CORRS(I)
-      !>                 LOCUS  = LOCI(I)
+      !>         ABCORR = CORRS(I)
+      !>         LOCUS  = LOCI(I)
       !>
-      !>                 WRITE(*, '(A)') 'Aberration correction:       '
-      !>             .   //               ABCORR
+      !>         WRITE(*, '(A)') 'Aberration correction:       '
+      !>     .   //               ABCORR
       !>
-      !>                 WRITE(*, '(A)') 'Aberration correction locus: '
-      !>             .   //               LOCUS
+      !>         WRITE(*, '(A)') 'Aberration correction locus: '
+      !>     .   //               LOCUS
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C        Compute tangent point.
-      !>        C
-      !>                 CALL TANGPT ( 'ELLIPSOID',
-      !>             .                 TARGET, ET,     FIXREF, ABCORR,
-      !>             .                 LOCUS,  OBSRVR, RAYFRM, RAYDIR,
-      !>             .                 TANPT,  ALT,    RANGE,  SRFPT,
-      !>             .                 TRGEPC, SRFVEC                 )
+      !>C
+      !>C        Compute tangent point.
+      !>C
+      !>         CALL TANGPT ( 'ELLIPSOID',
+      !>     .                 TARGET, ET,     FIXREF, ABCORR,
+      !>     .                 LOCUS,  OBSRVR, RAYFRM, RAYDIR,
+      !>     .                 TANPT,  ALT,    RANGE,  SRFPT,
+      !>     .                 TRGEPC, SRFVEC                 )
       !>
-      !>        C
-      !>        C        Convert the target epoch to a string for output.
-      !>        C
-      !>                 CALL TIMOUT ( TRGEPC, TIMFMT, TIMSTR )
+      !>C
+      !>C        Convert the target epoch to a string for output.
+      !>C
+      !>         CALL TIMOUT ( TRGEPC, TIMFMT, TIMSTR )
       !>
-      !>                 WRITE(*, '(A)') '  Observation Time = '
-      !>             .   //               UTCTIM
+      !>         WRITE(*, '(A)') '  Observation Time = '
+      !>     .   //               UTCTIM
       !>
-      !>                 WRITE(*, '(A)') '  Target Time      = '
-      !>             .   //                 TIMSTR
+      !>         WRITE(*, '(A)') '  Target Time      = '
+      !>     .   //                 TIMSTR
       !>
-      !>                 WRITE(*, FMT1F3) '   ALT    (km) = ', ALT
-      !>                 WRITE(*, FMT1F3) '   RANGE  (km) = ', RANGE
-      !>                 WRITE(*, FMT3F3) '   TANPT  (km) = ', TANPT
-      !>                 WRITE(*, FMT3F3) '   SRFPT  (km) = ', SRFPT
-      !>                 WRITE(*, FMT3F3) '   SRFVEC (km) = ', SRFVEC
+      !>         WRITE(*, FMT1F3) '   ALT    (km) = ', ALT
+      !>         WRITE(*, FMT1F3) '   RANGE  (km) = ', RANGE
+      !>         WRITE(*, FMT3F3) '   TANPT  (km) = ', TANPT
+      !>         WRITE(*, FMT3F3) '   SRFPT  (km) = ', SRFPT
+      !>         WRITE(*, FMT3F3) '   SRFVEC (km) = ', SRFVEC
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>        C
-      !>        C           Save results for comparison.
-      !>        C
-      !>                    SVALT  = ALT
-      !>                    SVEPOC = TRGEPC
-      !>                    SVRANG = RANGE
-      !>                    CALL VEQU( TANPT,  SVTANP )
-      !>                    CALL VEQU( SRFPT,  SVSRFP )
-      !>                    CALL VEQU( SRFVEC, SVSRFV )
+      !>         IF ( I .EQ. 1 ) THEN
+      !>C
+      !>C           Save results for comparison.
+      !>C
+      !>            SVALT  = ALT
+      !>            SVEPOC = TRGEPC
+      !>            SVRANG = RANGE
+      !>            CALL VEQU( TANPT,  SVTANP )
+      !>            CALL VEQU( SRFPT,  SVSRFP )
+      !>            CALL VEQU( SRFVEC, SVSRFV )
       !>
-      !>                 ELSE
-      !>        C
-      !>        C           Compare results to CN+S, tangent point
-      !>        C           locus case.
-      !>        C
-      !>                    WRITE(*,*) ' '
+      !>         ELSE
+      !>C
+      !>C           Compare results to CN+S, tangent point
+      !>C           locus case.
+      !>C
+      !>            WRITE(*,*) ' '
       !>
-      !>                    WRITE(*, '(A)')
-      !>             .      '  Differences from case 1 outputs:'
+      !>            WRITE(*, '(A)')
+      !>     .      '  Differences from case 1 outputs:'
       !>
-      !>                    WRITE(*, FMT1F6)
-      !>             .      '   Target time delta (s) = ',
-      !>             .      TRGEPC - SVEPOC
+      !>            WRITE(*, FMT1F6)
+      !>     .      '   Target time delta (s) = ',
+      !>     .      TRGEPC - SVEPOC
       !>
-      !>                    WRITE(*, FMTMF3)
-      !>             .      '   ALT    delta (km) = ', ALT - SVALT
+      !>            WRITE(*, FMTMF3)
+      !>     .      '   ALT    delta (km) = ', ALT - SVALT
       !>
-      !>                    WRITE(*, FMTMF3)
-      !>             .      '   RANGE  delta (km) = ', RANGE - SVRANG
+      !>            WRITE(*, FMTMF3)
+      !>     .      '   RANGE  delta (km) = ', RANGE - SVRANG
       !>
-      !>                    CALL VSUB   ( TANPT, SVTANP, DIFF )
-      !>                    WRITE(*, FMTMF3)
-      !>             .      '   TANPT  delta (km) = ', DIFF
+      !>            CALL VSUB   ( TANPT, SVTANP, DIFF )
+      !>            WRITE(*, FMTMF3)
+      !>     .      '   TANPT  delta (km) = ', DIFF
       !>
-      !>                    CALL VSUB   ( SRFPT, SVSRFP, DIFF )
-      !>                    WRITE(*, FMTMF3)
-      !>             .      '   SRFPT  delta (km) = ', DIFF
+      !>            CALL VSUB   ( SRFPT, SVSRFP, DIFF )
+      !>            WRITE(*, FMTMF3)
+      !>     .      '   SRFPT  delta (km) = ', DIFF
       !>
-      !>                    CALL VSUB   ( SRFVEC, SVSRFV, DIFF )
-      !>                    WRITE(*, FMTMF3)
-      !>             .      '   SRFVEC delta (km) = ', DIFF
+      !>            CALL VSUB   ( SRFVEC, SVSRFV, DIFF )
+      !>            WRITE(*, FMTMF3)
+      !>     .      '   SRFVEC delta (km) = ', DIFF
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, the output was:
@@ -76873,290 +76989,292 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKXSI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKXSI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Multi-segment spear program.
-      !>        C
-      !>        C     This program expects all loaded DSKs
-      !>        C     to represent the same body and surface.
-      !>        C
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dsk.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsksrc.inc'
-      !>              INCLUDE 'srftrn.inc'
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>              DOUBLE PRECISION      VDIST
+      !>C
+      !>C     Multi-segment spear program.
+      !>C
+      !>C     This program expects all loaded DSKs
+      !>C     to represent the same body and surface.
+      !>C
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dsk.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsksrc.inc'
+      !>      INCLUDE 'srftrn.inc'
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>      DOUBLE PRECISION      VDIST
       !>
-      !>              LOGICAL               FAILED
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              DOUBLE PRECISION      DTOL
-      !>              PARAMETER           ( DTOL   = 1.D-14 )
+      !>      LOGICAL               FAILED
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      DOUBLE PRECISION      DTOL
+      !>      PARAMETER           ( DTOL   = 1.D-14 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TYPLEN
-      !>              PARAMETER           ( TYPLEN = 4 )
+      !>      INTEGER               TYPLEN
+      !>      PARAMETER           ( TYPLEN = 4 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK1
-      !>              CHARACTER*(TYPLEN)    FILTYP
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(FILSIZ)    SOURCE
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK1
+      !>      CHARACTER*(TYPLEN)    FILTYP
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(FILSIZ)    META
+      !>      CHARACTER*(FILSIZ)    SOURCE
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      D
-      !>              DOUBLE PRECISION      DC     ( DCSIZE )
-      !>              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LATCRD ( 3 )
-      !>              DOUBLE PRECISION      LATSTP
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LONSTP
-      !>              DOUBLE PRECISION      POLMRG
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      RADIUS
-      !>              DOUBLE PRECISION      VERTEX ( 3 )
-      !>              DOUBLE PRECISION      XPT    ( 3 )
-      !>              DOUBLE PRECISION      XYZHIT ( 3 )
+      !>      DOUBLE PRECISION      D
+      !>      DOUBLE PRECISION      DC     ( DCSIZE )
+      !>      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LATCRD ( 3 )
+      !>      DOUBLE PRECISION      LATSTP
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LONSTP
+      !>      DOUBLE PRECISION      POLMRG
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      RADIUS
+      !>      DOUBLE PRECISION      VERTEX ( 3 )
+      !>      DOUBLE PRECISION      XPT    ( 3 )
+      !>      DOUBLE PRECISION      XYZHIT ( 3 )
       !>
-      !>              INTEGER               BODYID
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               DTYPE
-      !>              INTEGER               FRAMID
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( ICSIZE )
-      !>              INTEGER               NCASES
-      !>              INTEGER               NDERR
-      !>              INTEGER               NHITS
-      !>              INTEGER               NLSTEP
-      !>              INTEGER               NSURF
-      !>              INTEGER               PLID
-      !>              INTEGER               SRFLST ( MAXSRF )
-      !>              INTEGER               SURFID
+      !>      INTEGER               BODYID
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               DTYPE
+      !>      INTEGER               FRAMID
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( ICSIZE )
+      !>      INTEGER               NCASES
+      !>      INTEGER               NDERR
+      !>      INTEGER               NHITS
+      !>      INTEGER               NLSTEP
+      !>      INTEGER               NSURF
+      !>      INTEGER               PLID
+      !>      INTEGER               SRFLST ( MAXSRF )
+      !>      INTEGER               SURFID
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              CALL CHKIN ( 'SPEAR' )
+      !>      CALL CHKIN ( 'SPEAR' )
       !>
-      !>        C
-      !>        C     Prompt for the name of the meta-kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Enter meta-kernel name >  ', META )
+      !>C
+      !>C     Prompt for the name of the meta-kernel.
+      !>C
+      !>      CALL PROMPT ( 'Enter meta-kernel name >  ', META )
       !>
-      !>        C
-      !>        C     Load the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Get a handle for one of the loaded DSKs,
-      !>        C     then find the first segment and extract
-      !>        C     the body and surface IDs.
-      !>        C
-      !>              CALL KDATA  ( 1,      'DSK',  DSK1, FILTYP,
-      !>             .              SOURCE, HANDLE, FOUND )
+      !>C
+      !>C     Get a handle for one of the loaded DSKs,
+      !>C     then find the first segment and extract
+      !>C     the body and surface IDs.
+      !>C
+      !>      CALL KDATA  ( 1,      'DSK',  DSK1, FILTYP,
+      !>     .              SOURCE, HANDLE, FOUND )
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)' )
-      !>              END IF
+      !>      IF ( .NOT. FOUND ) THEN
+      !>         CALL SIGERR ( 'SPICE(NOSEGMENT)' )
+      !>      END IF
       !>
-      !>              CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      !>      CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
       !>
-      !>              BODYID = NINT( DSKDSC(CTRIDX) )
-      !>              SURFID = NINT( DSKDSC(SRFIDX) )
-      !>              FRAMID = NINT( DSKDSC(FRMIDX) )
+      !>      BODYID = NINT( DSKDSC(CTRIDX) )
+      !>      SURFID = NINT( DSKDSC(SRFIDX) )
+      !>      FRAMID = NINT( DSKDSC(FRMIDX) )
       !>
-      !>              CALL BODC2N ( BODYID, TARGET, FOUND )
+      !>      CALL BODC2N ( BODYID, TARGET, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 CALL SETMSG ( 'Cannot map body ID # to a name.' )
-      !>                 CALL ERRINT ( '#',  BODYID                      )
-      !>                 CALL SIGERR ( 'SPICE(BODYNAMENOTFOUND)'         )
-      !>              END IF
+      !>      IF ( .NOT. FOUND ) THEN
+      !>         CALL SETMSG ( 'Cannot map body ID # to a name.' )
+      !>         CALL ERRINT ( '#',  BODYID                      )
+      !>         CALL SIGERR ( 'SPICE(BODYNAMENOTFOUND)'         )
+      !>      END IF
       !>
-      !>              CALL FRMNAM ( FRAMID, FIXREF )
+      !>      CALL FRMNAM ( FRAMID, FIXREF )
       !>
-      !>              IF ( FIXREF .EQ. ' ' ) THEN
-      !>                 CALL SETMSG ( 'Cannot map frame ID # to a name.' )
-      !>                 CALL ERRINT ( '#',  FRAMID                       )
-      !>                 CALL SIGERR ( 'SPICE(FRAMENAMENOTFOUND)'         )
-      !>              END IF
+      !>      IF ( FIXREF .EQ. ' ' ) THEN
+      !>         CALL SETMSG ( 'Cannot map frame ID # to a name.' )
+      !>         CALL ERRINT ( '#',  FRAMID                       )
+      !>         CALL SIGERR ( 'SPICE(FRAMENAMENOTFOUND)'         )
+      !>      END IF
       !>
-      !>        C
-      !>        C     Set the magnitude of the ray vertices. Use a large
-      !>        C     number to ensure the vertices are outside of
-      !>        C     any realistic target.
-      !>        C
-      !>              R = 1.D10
+      !>C
+      !>C     Set the magnitude of the ray vertices. Use a large
+      !>C     number to ensure the vertices are outside of
+      !>C     any realistic target.
+      !>C
+      !>      R = 1.D10
       !>
-      !>        C
-      !>        C     Spear the target with rays pointing toward
-      !>        C     the origin.  Use a grid of ray vertices
-      !>        C     located on a sphere enclosing the target.
-      !>        C
-      !>        C     The variable POLMRG ("pole margin") can
-      !>        C     be set to a small positive value to reduce
-      !>        C     the number of intercepts done at the poles.
-      !>        C     This may speed up the computation for
-      !>        C     the multi-segment case, since rays parallel
-      !>        C     to the Z axis will cause all segments converging
-      !>        C     at the pole of interest to be tested for an
-      !>        C     intersection.
-      !>        C
-      !>              POLMRG = 5.D-1
-      !>              LATSTP = 1.D0
-      !>              LONSTP = 2.D0
+      !>C
+      !>C     Spear the target with rays pointing toward
+      !>C     the origin.  Use a grid of ray vertices
+      !>C     located on a sphere enclosing the target.
+      !>C
+      !>C     The variable POLMRG ("pole margin") can
+      !>C     be set to a small positive value to reduce
+      !>C     the number of intercepts done at the poles.
+      !>C     This may speed up the computation for
+      !>C     the multi-segment case, since rays parallel
+      !>C     to the Z axis will cause all segments converging
+      !>C     at the pole of interest to be tested for an
+      !>C     intersection.
+      !>C
+      !>      POLMRG = 5.D-1
+      !>      LATSTP = 1.D0
+      !>      LONSTP = 2.D0
       !>
-      !>              NCASES = 0
-      !>              NHITS  = 0
-      !>              NDERR  = 0
+      !>      NCASES = 0
+      !>      NHITS  = 0
+      !>      NDERR  = 0
       !>
-      !>              LON    = -180.D0
-      !>              LAT    = 90.D0
-      !>              NLSTEP = 0
+      !>      LON    = -180.D0
+      !>      LAT    = 90.D0
+      !>      NLSTEP = 0
       !>
-      !>        C
-      !>        C     Set the epoch for interval selection.
-      !>        C
-      !>              ET     = 0.D0
+      !>C
+      !>C     Set the epoch for interval selection.
+      !>C
+      !>      ET     = 0.D0
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Computing intercepts...'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Computing intercepts...'
       !>
-      !>              DO WHILE ( LON .LT. 180.D0 )
+      !>      DO WHILE ( LON .LT. 180.D0 )
       !>
-      !>                 DO WHILE ( NLSTEP .LE. 180  )
+      !>         DO WHILE ( NLSTEP .LE. 180  )
       !>
-      !>                    IF ( LON .EQ. -180.D0 ) THEN
+      !>            IF ( LON .EQ. -180.D0 ) THEN
       !>
-      !>                       LAT = 90.D0 - NLSTEP*LATSTP
+      !>               LAT = 90.D0 - NLSTEP*LATSTP
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       IF ( NLSTEP .EQ. 0 ) THEN
+      !>               IF ( NLSTEP .EQ. 0 ) THEN
       !>
-      !>                          LAT =  90.D0 - POLMRG
+      !>                  LAT =  90.D0 - POLMRG
       !>
-      !>                       ELSE IF ( NLSTEP .EQ. 180 ) THEN
+      !>               ELSE IF ( NLSTEP .EQ. 180 ) THEN
       !>
-      !>                          LAT = -90.D0 + POLMRG
+      !>                  LAT = -90.D0 + POLMRG
       !>
-      !>                       ELSE
+      !>               ELSE
       !>
-      !>                          LAT = 90.D0 - NLSTEP*LATSTP
+      !>                  LAT = 90.D0 - NLSTEP*LATSTP
       !>
-      !>                       END IF
+      !>               END IF
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                    NCASES = NCASES + 1
+      !>            NCASES = NCASES + 1
       !>
-      !>                    CALL LATREC ( R, LON*RPD(), LAT*RPD(), VERTEX )
-      !>                    CALL VMINUS ( VERTEX, RAYDIR )
+      !>            CALL LATREC ( R, LON*RPD(), LAT*RPD(), VERTEX )
+      !>            CALL VMINUS ( VERTEX, RAYDIR )
       !>
-      !>                    NSURF     = 1
-      !>                    SRFLST(1) = SURFID
+      !>            NSURF     = 1
+      !>            SRFLST(1) = SURFID
       !>
-      !>                    CALL DSKXSI ( .FALSE., TARGET, NSURF,  SRFLST,
-      !>             .                    ET,      FIXREF, VERTEX, RAYDIR,
-      !>             .                    DCSIZE,  ICSIZE, XPT,    HANDLE,
-      !>             .                    DLADSC, DSKDSC,  DC,     IC,
-      !>             .                    FOUND                           )
+      !>            CALL DSKXSI ( .FALSE., TARGET, NSURF,  SRFLST,
+      !>     .                    ET,      FIXREF, VERTEX, RAYDIR,
+      !>     .                    DCSIZE,  ICSIZE, XPT,    HANDLE,
+      !>     .                    DLADSC, DSKDSC,  DC,     IC,
+      !>     .                    FOUND                           )
       !>
-      !>                    IF ( .NOT. FAILED() .AND. FOUND ) THEN
-      !>        C
-      !>        C              Record that a new intercept was found.
-      !>        C
-      !>                       NHITS = NHITS + 1
-      !>        C
-      !>        C              Compute the latitude and longitude of
-      !>        C              the intercept. Make sure these agree
-      !>        C              well with those of the vertex.
-      !>        C
-      !>                       CALL RECLAT ( XPT,       LATCRD(1),
-      !>             .                       LATCRD(2), LATCRD(3) )
+      !>            IF ( .NOT. FAILED() .AND. FOUND ) THEN
+      !>C
+      !>C              Record that a new intercept was found.
+      !>C
+      !>               NHITS = NHITS + 1
+      !>C
+      !>C              Compute the latitude and longitude of
+      !>C              the intercept. Make sure these agree
+      !>C              well with those of the vertex.
+      !>C
+      !>               CALL RECLAT ( XPT,       LATCRD(1),
+      !>     .                       LATCRD(2), LATCRD(3) )
       !>
-      !>                       RADIUS = LATCRD(1)
+      !>               RADIUS = LATCRD(1)
       !>
-      !>                       CALL LATREC ( RADIUS,   LON*RPD(),
-      !>             .                       LAT*RPD(), XYZHIT    )
+      !>               CALL LATREC ( RADIUS,   LON*RPD(),
+      !>     .                       LAT*RPD(), XYZHIT    )
       !>
-      !>                       D = VDIST ( XPT, XYZHIT )
+      !>               D = VDIST ( XPT, XYZHIT )
       !>
-      !>                       IF ( D/R .GT. DTOL ) THEN
-      !>        C
-      !>        C                 Get the intercept segment's plate ID if
-      !>        C                 applicable.
-      !>        C
-      !>                          DTYPE = NINT( DSKDSC(TYPIDX) )
+      !>               IF ( D/R .GT. DTOL ) THEN
+      !>C
+      !>C                 Get the intercept segment's plate ID if
+      !>C                 applicable.
+      !>C
+      !>                  DTYPE = NINT( DSKDSC(TYPIDX) )
       !>
-      !>                          WRITE (*,*) '======================'
-      !>                          WRITE (*,*) 'LON, LAT       = ', LON, LAT
-      !>                          WRITE (*,*) 'Bad intercept'
-      !>                          WRITE (*,*) 'Distance error = ', D
-      !>                          WRITE (*,*) 'XPT            = ', XPT
-      !>                          WRITE (*,*) 'XYZHIT         = ', XYZHIT
+      !>                  WRITE (*,*) '======================'
+      !>                  WRITE (*,*) 'LON, LAT       = ', LON, LAT
+      !>                  WRITE (*,*) 'Bad intercept'
+      !>                  WRITE (*,*) 'Distance error = ', D
+      !>                  WRITE (*,*) 'XPT            = ', XPT
+      !>                  WRITE (*,*) 'XYZHIT         = ', XYZHIT
       !>
-      !>                          IF ( DTYPE .EQ. 2 ) THEN
-      !>                             PLID = IC(1)
-      !>                             WRITE (*,*) 'Plate ID      = ', PLID
-      !>                          END IF
+      !>                  IF ( DTYPE .EQ. 2 ) THEN
+      !>                     PLID = IC(1)
+      !>                     WRITE (*,*) 'Plate ID      = ', PLID
+      !>                  END IF
       !>
-      !>                          NDERR = NDERR + 1
+      !>                  NDERR = NDERR + 1
       !>
-      !>                       END IF
+      !>               END IF
       !>
-      !>                    ELSE
-      !>        C
-      !>        C              Missing the target entirely is a fatal error.
-      !>        C
-      !>                       WRITE (*,*) '======================'
-      !>                       WRITE (*,*) 'LON, LAT = ', LON, LAT
-      !>                       WRITE (*,*) 'No intercept'
-      !>                       WRITE (*,*) 'NCASES = ', NCASES
-      !>                       STOP
+      !>            ELSE
+      !>C
+      !>C              Missing the target entirely is a fatal error.
+      !>C
+      !>               WRITE (*,*) '======================'
+      !>               WRITE (*,*) 'LON, LAT = ', LON, LAT
+      !>               WRITE (*,*) 'No intercept'
+      !>               WRITE (*,*) 'NCASES = ', NCASES
+      !>               STOP
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                    NLSTEP = NLSTEP + 1
+      !>            NLSTEP = NLSTEP + 1
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 LON    = LON + LONSTP
-      !>                 LAT    = 90.D0
-      !>                 NLSTEP = 0
+      !>         LON    = LON + LONSTP
+      !>         LAT    = 90.D0
+      !>         NLSTEP = 0
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE (*,*) 'Done.'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'NCASES = ', NCASES
-      !>              WRITE (*,*) 'NHITS  = ', NHITS
-      !>              WRITE (*,*) 'NDERR  = ', NDERR
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) 'Done.'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'NCASES = ', NCASES
+      !>      WRITE (*,*) 'NHITS  = ', NHITS
+      !>      WRITE (*,*) 'NDERR  = ', NDERR
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using as input the meta-kernel dskxsi_ex1.tm, the
@@ -77771,331 +77889,333 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKXV_EX1
-      !>              IMPLICIT NONE
-      !>
-      !>        C
-      !>        C     Multi-segment, vectorized spear program.
-      !>        C
-      !>        C     This program expects all loaded DSKs
-      !>        C     to represent the same body and surface.
-      !>        C
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dsk.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
-      !>              DOUBLE PRECISION      VDIST
-      !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              DOUBLE PRECISION      DTOL
-      !>              PARAMETER           ( DTOL   = 1.D-14 )
-      !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
-      !>
-      !>              INTEGER               CMDLEN
-      !>              PARAMETER           ( CMDLEN = 1000 )
-      !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
-      !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
-      !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
-      !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN   = 100000 )
-      !>
-      !>              INTEGER               TYPLEN
-      !>              PARAMETER           ( TYPLEN = 4 )
-      !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CMDLEN)    CMD
-      !>              CHARACTER*(FILSIZ)    DSK1
-      !>              CHARACTER*(TYPLEN)    FILTYP
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(LNSIZE)    IDCH
-      !>              CHARACTER*(FILSIZ)    SOURCE
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>
-      !>              DOUBLE PRECISION      D
-      !>              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      !>              DOUBLE PRECISION      DIRARR ( 3, MAXN )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LATCRD ( 3 )
-      !>              DOUBLE PRECISION      LATSTP
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LONSTP
-      !>              DOUBLE PRECISION      POLMRG
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      RADIUS
-      !>              DOUBLE PRECISION      VLAT
-      !>              DOUBLE PRECISION      VLON
-      !>              DOUBLE PRECISION      VRAD
-      !>              DOUBLE PRECISION      VTXARR ( 3, MAXN )
-      !>              DOUBLE PRECISION      XPTARR ( 3, MAXN )
-      !>              DOUBLE PRECISION      XYZHIT ( 3 )
-      !>
-      !>              INTEGER               BODYID
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               FRAMID
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NDERR
-      !>              INTEGER               NHITS
-      !>              INTEGER               NLSTEP
-      !>              INTEGER               NRAYS
-      !>              INTEGER               NSURF
-      !>              INTEGER               SRFLST ( MAXSRF )
-      !>              INTEGER               SURFID
-      !>
-      !>              LOGICAL               FNDARR ( MAXN )
-      !>              LOGICAL               FOUND
-      !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     Save large arrays to avoid stack problems.
-      !>        C
-      !>              SAVE                  DIRARR
-      !>              SAVE                  FNDARR
-      !>              SAVE                  XPTARR
-      !>
-      !>              CALL CHKIN ( 'SPEAR' )
-      !>
-      !>        C
-      !>        C     Prompt for the name of the meta-kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Enter meta-kernel name >  ', FNAME )
-      !>
-      !>        C
-      !>        C     Load the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( FNAME )
+      !>```fortran
+      !>      PROGRAM DSKXV_EX1
+      !>      IMPLICIT NONE
+      !>
+      !>C
+      !>C     Multi-segment, vectorized spear program.
+      !>C
+      !>C     This program expects all loaded DSKs
+      !>C     to represent the same body and surface.
+      !>C
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dsk.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
+      !>      DOUBLE PRECISION      VDIST
+      !>
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      DOUBLE PRECISION      DTOL
+      !>      PARAMETER           ( DTOL   = 1.D-14 )
+      !>
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
+      !>
+      !>      INTEGER               CMDLEN
+      !>      PARAMETER           ( CMDLEN = 1000 )
+      !>
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
+      !>
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
+      !>
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
+      !>
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN   = 100000 )
+      !>
+      !>      INTEGER               TYPLEN
+      !>      PARAMETER           ( TYPLEN = 4 )
+      !>
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CMDLEN)    CMD
+      !>      CHARACTER*(FILSIZ)    DSK1
+      !>      CHARACTER*(TYPLEN)    FILTYP
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(LNSIZE)    IDCH
+      !>      CHARACTER*(FILSIZ)    SOURCE
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>
+      !>      DOUBLE PRECISION      D
+      !>      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      !>      DOUBLE PRECISION      DIRARR ( 3, MAXN )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LATCRD ( 3 )
+      !>      DOUBLE PRECISION      LATSTP
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LONSTP
+      !>      DOUBLE PRECISION      POLMRG
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      RADIUS
+      !>      DOUBLE PRECISION      VLAT
+      !>      DOUBLE PRECISION      VLON
+      !>      DOUBLE PRECISION      VRAD
+      !>      DOUBLE PRECISION      VTXARR ( 3, MAXN )
+      !>      DOUBLE PRECISION      XPTARR ( 3, MAXN )
+      !>      DOUBLE PRECISION      XYZHIT ( 3 )
+      !>
+      !>      INTEGER               BODYID
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               FRAMID
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NDERR
+      !>      INTEGER               NHITS
+      !>      INTEGER               NLSTEP
+      !>      INTEGER               NRAYS
+      !>      INTEGER               NSURF
+      !>      INTEGER               SRFLST ( MAXSRF )
+      !>      INTEGER               SURFID
+      !>
+      !>      LOGICAL               FNDARR ( MAXN )
+      !>      LOGICAL               FOUND
+      !>
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     Save large arrays to avoid stack problems.
+      !>C
+      !>      SAVE                  DIRARR
+      !>      SAVE                  FNDARR
+      !>      SAVE                  XPTARR
+      !>
+      !>      CALL CHKIN ( 'SPEAR' )
+      !>
+      !>C
+      !>C     Prompt for the name of the meta-kernel.
+      !>C
+      !>      CALL PROMPT ( 'Enter meta-kernel name >  ', FNAME )
+      !>
+      !>C
+      !>C     Load the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( FNAME )
       !>
-      !>        C
-      !>        C     Get a handle for one of the loaded DSKs,
-      !>        C     then find the first segment and extract
-      !>        C     the body and surface IDs.
-      !>        C
-      !>              CALL KDATA  ( 1,      'DSK',  DSK1, FILTYP,
-      !>             .              SOURCE, HANDLE, FOUND )
+      !>C
+      !>C     Get a handle for one of the loaded DSKs,
+      !>C     then find the first segment and extract
+      !>C     the body and surface IDs.
+      !>C
+      !>      CALL KDATA  ( 1,      'DSK',  DSK1, FILTYP,
+      !>     .              SOURCE, HANDLE, FOUND )
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)' )
-      !>              END IF
+      !>      IF ( .NOT. FOUND ) THEN
+      !>         CALL SIGERR ( 'SPICE(NOSEGMENT)' )
+      !>      END IF
       !>
-      !>              CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      !>      CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
       !>
-      !>              BODYID = NINT( DSKDSC(CTRIDX) )
-      !>              SURFID = NINT( DSKDSC(SRFIDX) )
-      !>              FRAMID = NINT( DSKDSC(FRMIDX) )
+      !>      BODYID = NINT( DSKDSC(CTRIDX) )
+      !>      SURFID = NINT( DSKDSC(SRFIDX) )
+      !>      FRAMID = NINT( DSKDSC(FRMIDX) )
       !>
-      !>              CALL BODC2N ( BODYID, TARGET, FOUND )
+      !>      CALL BODC2N ( BODYID, TARGET, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 CALL SETMSG ( 'Cannot map body ID # to a name.' )
-      !>                 CALL ERRINT ( '#',  BODYID                      )
-      !>                 CALL SIGERR ( 'SPICE(BODYNAMENOTFOUND)'         )
-      !>              END IF
+      !>      IF ( .NOT. FOUND ) THEN
+      !>         CALL SETMSG ( 'Cannot map body ID # to a name.' )
+      !>         CALL ERRINT ( '#',  BODYID                      )
+      !>         CALL SIGERR ( 'SPICE(BODYNAMENOTFOUND)'         )
+      !>      END IF
       !>
-      !>              CALL FRMNAM ( FRAMID, FIXREF )
+      !>      CALL FRMNAM ( FRAMID, FIXREF )
       !>
-      !>              IF ( FIXREF .EQ. ' ' ) THEN
-      !>                 CALL SETMSG ( 'Cannot map frame ID # to a name.' )
-      !>                 CALL ERRINT ( '#',  FRAMID                       )
-      !>                 CALL SIGERR ( 'SPICE(FRAMENAMENOTFOUND)'         )
-      !>              END IF
+      !>      IF ( FIXREF .EQ. ' ' ) THEN
+      !>         CALL SETMSG ( 'Cannot map frame ID # to a name.' )
+      !>         CALL ERRINT ( '#',  FRAMID                       )
+      !>         CALL SIGERR ( 'SPICE(FRAMENAMENOTFOUND)'         )
+      !>      END IF
       !>
-      !>        C
-      !>        C     Set the magnitude of the ray vertices. Use a large
-      !>        C     number to to ensure the vertices are outside of
-      !>        C     any realistic target.
-      !>        C
-      !>              R = 1.D10
+      !>C
+      !>C     Set the magnitude of the ray vertices. Use a large
+      !>C     number to to ensure the vertices are outside of
+      !>C     any realistic target.
+      !>C
+      !>      R = 1.D10
       !>
-      !>        C
-      !>        C     Spear the target with rays pointing toward
-      !>        C     the origin.  Use a grid of ray vertices
-      !>        C     located on a sphere enclosing the target.
-      !>        C
-      !>        C     The variable POLMRG ("pole margin") can
-      !>        C     be set to a small positive value to reduce
-      !>        C     the number of intercepts done at the poles.
-      !>        C     This may speed up the computation for
-      !>        C     the multi-segment case, since rays parallel
-      !>        C     to the Z axis will cause all segments converging
-      !>        C     at the pole of interest to be tested for an
-      !>        C     intersection.
-      !>        C
-      !>              POLMRG = 5.D-1
-      !>              LATSTP = 1.D0
-      !>              LONSTP = 2.D0
+      !>C
+      !>C     Spear the target with rays pointing toward
+      !>C     the origin.  Use a grid of ray vertices
+      !>C     located on a sphere enclosing the target.
+      !>C
+      !>C     The variable POLMRG ("pole margin") can
+      !>C     be set to a small positive value to reduce
+      !>C     the number of intercepts done at the poles.
+      !>C     This may speed up the computation for
+      !>C     the multi-segment case, since rays parallel
+      !>C     to the Z axis will cause all segments converging
+      !>C     at the pole of interest to be tested for an
+      !>C     intersection.
+      !>C
+      !>      POLMRG = 5.D-1
+      !>      LATSTP = 1.D0
+      !>      LONSTP = 2.D0
       !>
-      !>              NHITS  = 0
-      !>              NDERR  = 0
-      !>
-      !>              LON    = -180.D0
-      !>              LAT    = 90.D0
-      !>              NLSTEP = 0
-      !>              NRAYS  = 0
+      !>      NHITS  = 0
+      !>      NDERR  = 0
+      !>
+      !>      LON    = -180.D0
+      !>      LAT    = 90.D0
+      !>      NLSTEP = 0
+      !>      NRAYS  = 0
       !>
-      !>        C
-      !>        C     Set the epoch for interval selection.
-      !>        C
-      !>              ET     = 0.D0
-      !>
-      !>        C
-      !>        C     Generate rays.
-      !>        C
-      !>              DO WHILE ( LON .LT. 180.D0 )
-      !>
-      !>                 DO WHILE ( NLSTEP .LE. 180  )
-      !>
-      !>                    IF ( LON .EQ. -180.D0 ) THEN
-      !>
-      !>                       LAT = 90.D0 - NLSTEP*LATSTP
-      !>
-      !>                    ELSE
-      !>
-      !>                       IF ( NLSTEP .EQ. 0 ) THEN
-      !>
-      !>                          LAT =  90.D0 - POLMRG
-      !>
-      !>                       ELSE IF ( NLSTEP .EQ. 180 ) THEN
-      !>
-      !>                          LAT = -90.D0 + POLMRG
-      !>
-      !>                       ELSE
-      !>
-      !>                          LAT =  90.D0 - NLSTEP*LATSTP
-      !>
-      !>                       END IF
-      !>
-      !>                    END IF
-      !>
-      !>                    NRAYS  = NRAYS  + 1
-      !>
-      !>                    CALL LATREC ( R,               LON*RPD(),
-      !>             .                    LAT*RPD(),       VTXARR(1,NRAYS) )
-      !>                    CALL VMINUS ( VTXARR(1,NRAYS), DIRARR(1,NRAYS) )
-      !>
-      !>                    NLSTEP = NLSTEP + 1
-      !>
-      !>                 END DO
-      !>
-      !>                 LON    = LON + LONSTP
-      !>                 LAT    = 90.D0
-      !>                 NLSTEP = 0
-      !>
-      !>              END DO
-      !>
-      !>        C
-      !>        C     Assign surface ID list.
-      !>        C
-      !>        C     Note that, if we knew that all files had the desired
-      !>        C     surface ID, we could set `nsurf' to 0 and omit the
-      !>        C     initialization of the surface ID list.
-      !>        C
-      !>              NSURF     = 1
-      !>              SRFLST(1) = SURFID
-      !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Computing intercepts...'
-      !>
-      !>              CALL DSKXV ( .FALSE., TARGET, NSURF, SRFLST,
-      !>             .             ET,      FIXREF, NRAYS, VTXARR,
-      !>             .             DIRARR,  XPTARR, FNDARR        )
-      !>
-      !>              WRITE (*,*) 'Done.'
-      !>              WRITE (*,*) ' '
-      !>
-      !>        C
-      !>        C     Check results.
-      !>        C
-      !>              DO I = 1, NRAYS
-      !>
-      !>                 IF ( FNDARR(I) ) THEN
-      !>        C
-      !>        C           Record that a new intercept was found.
-      !>        C
-      !>                    NHITS = NHITS + 1
-      !>        C
-      !>        C           Compute the latitude and longitude of
-      !>        C           the intercept. Make sure these agree
-      !>        C           well with those of the vertex.
-      !>        C
-      !>                    CALL RECLAT ( XPTARR(1,I), LATCRD(1),
-      !>             .                    LATCRD(2),   LATCRD(3) )
-      !>
-      !>                    RADIUS = LATCRD(1)
-      !>
-      !>        C
-      !>        C           Recover the vertex longitude and latitude.
-      !>        C
-      !>                    CALL RECLAT ( VTXARR(1,I), VRAD, VLON, VLAT )
-      !>
-      !>                    CALL LATREC ( RADIUS,  VLON,
-      !>             .                    VLAT,    XYZHIT )
-      !>
-      !>                    D = VDIST ( XPTARR(1,I), XYZHIT )
-      !>
-      !>                    IF ( D/R .GT. DTOL ) THEN
-      !>        C
-      !>        C              Get the intercept segment's plate ID if
-      !>        C              applicable.
-      !>        C
-      !>                       WRITE (*,*) '======================'
-      !>                       WRITE (*,*) 'LON, LAT       = ', LON, LAT
-      !>                       WRITE (*,*) 'Bad intercept'
-      !>                       WRITE (*,*) 'Distance error = ', D
-      !>                       WRITE (*,*) 'XPT            = ',
-      !>             .                     ( XPTARR(J,I), J = 1, 3 )
-      !>                       WRITE (*,*) 'XYZHIT         = ', XYZHIT
-      !>
-      !>                       NDERR = NDERR + 1
-      !>
-      !>                    END IF
-      !>
-      !>                 ELSE
-      !>        C
-      !>        C           Missing the target entirely is a fatal error.
-      !>        C
-      !>        C           This is true only for this program, not in
-      !>        C           general. For example, if the target shape is
-      !>        C           a torus, many rays would miss the target.
-      !>        C
-      !>                    WRITE (*,*) '======================'
-      !>                    WRITE (*,*) 'LON, LAT = ', LON, LAT
-      !>                    WRITE (*,*) 'No intercept'
-      !>                    WRITE (*,*) 'I        = ', I
-      !>                    STOP
-      !>
-      !>                 END IF
-      !>
-      !>              END DO
-      !>
-      !>              WRITE (*,*) 'NRAYS  = ', NRAYS
-      !>              WRITE (*,*) 'NHITS  = ', NHITS
-      !>              WRITE (*,*) 'NDERR  = ', NDERR
-      !>              WRITE (*,*) ' '
-      !>
-      !>              END
+      !>C
+      !>C     Set the epoch for interval selection.
+      !>C
+      !>      ET     = 0.D0
+      !>
+      !>C
+      !>C     Generate rays.
+      !>C
+      !>      DO WHILE ( LON .LT. 180.D0 )
+      !>
+      !>         DO WHILE ( NLSTEP .LE. 180  )
+      !>
+      !>            IF ( LON .EQ. -180.D0 ) THEN
+      !>
+      !>               LAT = 90.D0 - NLSTEP*LATSTP
+      !>
+      !>            ELSE
+      !>
+      !>               IF ( NLSTEP .EQ. 0 ) THEN
+      !>
+      !>                  LAT =  90.D0 - POLMRG
+      !>
+      !>               ELSE IF ( NLSTEP .EQ. 180 ) THEN
+      !>
+      !>                  LAT = -90.D0 + POLMRG
+      !>
+      !>               ELSE
+      !>
+      !>                  LAT =  90.D0 - NLSTEP*LATSTP
+      !>
+      !>               END IF
+      !>
+      !>            END IF
+      !>
+      !>            NRAYS  = NRAYS  + 1
+      !>
+      !>            CALL LATREC ( R,               LON*RPD(),
+      !>     .                    LAT*RPD(),       VTXARR(1,NRAYS) )
+      !>            CALL VMINUS ( VTXARR(1,NRAYS), DIRARR(1,NRAYS) )
+      !>
+      !>            NLSTEP = NLSTEP + 1
+      !>
+      !>         END DO
+      !>
+      !>         LON    = LON + LONSTP
+      !>         LAT    = 90.D0
+      !>         NLSTEP = 0
+      !>
+      !>      END DO
+      !>
+      !>C
+      !>C     Assign surface ID list.
+      !>C
+      !>C     Note that, if we knew that all files had the desired
+      !>C     surface ID, we could set `nsurf' to 0 and omit the
+      !>C     initialization of the surface ID list.
+      !>C
+      !>      NSURF     = 1
+      !>      SRFLST(1) = SURFID
+      !>
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Computing intercepts...'
+      !>
+      !>      CALL DSKXV ( .FALSE., TARGET, NSURF, SRFLST,
+      !>     .             ET,      FIXREF, NRAYS, VTXARR,
+      !>     .             DIRARR,  XPTARR, FNDARR        )
+      !>
+      !>      WRITE (*,*) 'Done.'
+      !>      WRITE (*,*) ' '
+      !>
+      !>C
+      !>C     Check results.
+      !>C
+      !>      DO I = 1, NRAYS
+      !>
+      !>         IF ( FNDARR(I) ) THEN
+      !>C
+      !>C           Record that a new intercept was found.
+      !>C
+      !>            NHITS = NHITS + 1
+      !>C
+      !>C           Compute the latitude and longitude of
+      !>C           the intercept. Make sure these agree
+      !>C           well with those of the vertex.
+      !>C
+      !>            CALL RECLAT ( XPTARR(1,I), LATCRD(1),
+      !>     .                    LATCRD(2),   LATCRD(3) )
+      !>
+      !>            RADIUS = LATCRD(1)
+      !>
+      !>C
+      !>C           Recover the vertex longitude and latitude.
+      !>C
+      !>            CALL RECLAT ( VTXARR(1,I), VRAD, VLON, VLAT )
+      !>
+      !>            CALL LATREC ( RADIUS,  VLON,
+      !>     .                    VLAT,    XYZHIT )
+      !>
+      !>            D = VDIST ( XPTARR(1,I), XYZHIT )
+      !>
+      !>            IF ( D/R .GT. DTOL ) THEN
+      !>C
+      !>C              Get the intercept segment's plate ID if
+      !>C              applicable.
+      !>C
+      !>               WRITE (*,*) '======================'
+      !>               WRITE (*,*) 'LON, LAT       = ', LON, LAT
+      !>               WRITE (*,*) 'Bad intercept'
+      !>               WRITE (*,*) 'Distance error = ', D
+      !>               WRITE (*,*) 'XPT            = ',
+      !>     .                     ( XPTARR(J,I), J = 1, 3 )
+      !>               WRITE (*,*) 'XYZHIT         = ', XYZHIT
+      !>
+      !>               NDERR = NDERR + 1
+      !>
+      !>            END IF
+      !>
+      !>         ELSE
+      !>C
+      !>C           Missing the target entirely is a fatal error.
+      !>C
+      !>C           This is true only for this program, not in
+      !>C           general. For example, if the target shape is
+      !>C           a torus, many rays would miss the target.
+      !>C
+      !>            WRITE (*,*) '======================'
+      !>            WRITE (*,*) 'LON, LAT = ', LON, LAT
+      !>            WRITE (*,*) 'No intercept'
+      !>            WRITE (*,*) 'I        = ', I
+      !>            STOP
+      !>
+      !>         END IF
+      !>
+      !>      END DO
+      !>
+      !>      WRITE (*,*) 'NRAYS  = ', NRAYS
+      !>      WRITE (*,*) 'NHITS  = ', NHITS
+      !>      WRITE (*,*) 'NDERR  = ', NDERR
+      !>      WRITE (*,*) ' '
+      !>
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using as input the meta-kernel dskxv_ex1.tm, the
@@ -79128,195 +79248,197 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ILLUMG_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         F1
-      !>              PARAMETER           ( F1     = '(A,F15.9)' )
+      !>```fortran
+      !>      PROGRAM ILLUMG_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         F1
+      !>      PARAMETER           ( F1     = '(A,F15.9)' )
       !>
-      !>              CHARACTER*(*)         F2
-      !>              PARAMETER           ( F2     = '(A)' )
+      !>      CHARACTER*(*)         F2
+      !>      PARAMETER           ( F2     = '(A)' )
       !>
-      !>              CHARACTER*(*)         F3
-      !>              PARAMETER           ( F3     = '(A,2(2X,L))' )
+      !>      CHARACTER*(*)         F3
+      !>      PARAMETER           ( F3     = '(A,2(2X,L))' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'illumg_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'illumg_ex1.tm' )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 32 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 25 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 25 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 5 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 5 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(NAMLEN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
-      !>              CHARACTER*(NAMLEN)    OBSRVR
-      !>              CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
-      !>              CHARACTER*(NAMLEN)    TARGET
-      !>              CHARACTER*(TIMLEN)    UTC
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(NAMLEN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
+      !>      CHARACTER*(NAMLEN)    OBSRVR
+      !>      CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
+      !>      CHARACTER*(NAMLEN)    TARGET
+      !>      CHARACTER*(TIMLEN)    UTC
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      SSCEMI
-      !>              DOUBLE PRECISION      SSCPHS
-      !>              DOUBLE PRECISION      SSCPT  ( 3 )
-      !>              DOUBLE PRECISION      SSCSOL
-      !>              DOUBLE PRECISION      SSLEMI
-      !>              DOUBLE PRECISION      SSLPHS
-      !>              DOUBLE PRECISION      SSLSOL
-      !>              DOUBLE PRECISION      SSOLPT ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      SSCEMI
+      !>      DOUBLE PRECISION      SSCPHS
+      !>      DOUBLE PRECISION      SSCPT  ( 3 )
+      !>      DOUBLE PRECISION      SSCSOL
+      !>      DOUBLE PRECISION      SSLEMI
+      !>      DOUBLE PRECISION      SSLPHS
+      !>      DOUBLE PRECISION      SSLSOL
+      !>      DOUBLE PRECISION      SSOLPT ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  ILUMTH / 'Ellipsoid',
-      !>             .                               'DSK/Unprioritized' /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  ILUMTH / 'Ellipsoid',
+      !>     .                               'DSK/Unprioritized' /
       !>
-      !>              DATA                  SUBMTH / 'Near Point/Ellipsoid',
-      !>             .                            'DSK/Nadir/Unprioritized' /
+      !>      DATA                  SUBMTH / 'Near Point/Ellipsoid',
+      !>     .                            'DSK/Nadir/Unprioritized' /
       !>
-      !>        C
-      !>        C     Load kernel files.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Convert the UTC request time string to seconds past
-      !>        C     J2000 TDB.
-      !>        C
-      !>              UTC = '2003 OCT 13 06:00:00 UTC'
+      !>C
+      !>C     Load kernel files.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Convert the UTC request time string to seconds past
+      !>C     J2000 TDB.
+      !>C
+      !>      UTC = '2003 OCT 13 06:00:00 UTC'
       !>
-      !>              CALL UTC2ET ( UTC, ET )
+      !>      CALL UTC2ET ( UTC, ET )
       !>
-      !>              WRITE (*,F2) ' '
-      !>              WRITE (*,F2) 'UTC epoch is '//UTC
-      !>        C
-      !>        C     Assign observer and target names. The acronym MGS
-      !>        C     indicates Mars Global Surveyor. See NAIF_IDS for a
-      !>        C     list of names recognized by SPICE. Also set the
-      !>        C     aberration correction flag.
-      !>        C
-      !>              TARGET = 'Mars'
-      !>              OBSRVR = 'MGS'
-      !>              FIXREF = 'IAU_MARS'
-      !>              ABCORR = 'CN+S'
+      !>      WRITE (*,F2) ' '
+      !>      WRITE (*,F2) 'UTC epoch is '//UTC
+      !>C
+      !>C     Assign observer and target names. The acronym MGS
+      !>C     indicates Mars Global Surveyor. See NAIF_IDS for a
+      !>C     list of names recognized by SPICE. Also set the
+      !>C     aberration correction flag.
+      !>C
+      !>      TARGET = 'Mars'
+      !>      OBSRVR = 'MGS'
+      !>      FIXREF = 'IAU_MARS'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              DO I = 1, NMETH
-      !>        C
-      !>        C        Find the sub-solar point on Mars as
-      !>        C        seen from the MGS spacecraft at ET. Use the
-      !>        C        "near point" style of sub-point definition
-      !>        C        when the shape model is an ellipsoid, and use
-      !>        C        the "nadir" style when the shape model is
-      !>        C        provided by DSK data. This makes it easy to
-      !>        C        verify the solar incidence angle when
-      !>        C        the target is modeled as an  ellipsoid.
-      !>        C
-      !>                 CALL SUBSLR ( SUBMTH(I),  TARGET,  ET,
-      !>             .                 FIXREF,     ABCORR,  OBSRVR,
-      !>             .                 SSOLPT,     TRGEPC,  SRFVEC  )
-      !>        C
-      !>        C        Now find the sub-spacecraft point.
-      !>        C
-      !>                 CALL SUBPNT ( SUBMTH(I),  TARGET,  ET,
-      !>             .                 FIXREF,     ABCORR,  OBSRVR,
-      !>             .                 SSCPT,      TRGEPC,  SRFVEC )
-      !>        C
-      !>        C        Find the phase, solar incidence, and emission
-      !>        C        angles at the sub-solar point on Mars as
-      !>        C        seen from MGS at time ET.
-      !>        C
-      !>                 CALL ILLUMG ( ILUMTH(I), TARGET,  'SUN',
-      !>             .                 ET,        FIXREF,  ABCORR,
-      !>             .                 OBSRVR,    SSOLPT,  TRGEPC,
-      !>             .                 SRFVEC,    SSLPHS,  SSLSOL,
-      !>             .                 SSLEMI                      )
-      !>        C
-      !>        C        Do the same for the sub-spacecraft point.
-      !>        C
-      !>                 CALL ILLUMG ( ILUMTH(I), TARGET,  'SUN',
-      !>             .                 ET,        FIXREF,  ABCORR,
-      !>             .                 OBSRVR,    SSCPT,   TRGEPC,
-      !>             .                 SRFVEC,    SSCPHS,  SSCSOL,
-      !>             .                 SSCEMI                      )
-      !>        C
-      !>        C        Convert the angles to degrees and write them out.
-      !>        C
-      !>                 SSLPHS = DPR() * SSLPHS
-      !>                 SSLSOL = DPR() * SSLSOL
-      !>                 SSLEMI = DPR() * SSLEMI
+      !>      DO I = 1, NMETH
+      !>C
+      !>C        Find the sub-solar point on Mars as
+      !>C        seen from the MGS spacecraft at ET. Use the
+      !>C        "near point" style of sub-point definition
+      !>C        when the shape model is an ellipsoid, and use
+      !>C        the "nadir" style when the shape model is
+      !>C        provided by DSK data. This makes it easy to
+      !>C        verify the solar incidence angle when
+      !>C        the target is modeled as an  ellipsoid.
+      !>C
+      !>         CALL SUBSLR ( SUBMTH(I),  TARGET,  ET,
+      !>     .                 FIXREF,     ABCORR,  OBSRVR,
+      !>     .                 SSOLPT,     TRGEPC,  SRFVEC  )
+      !>C
+      !>C        Now find the sub-spacecraft point.
+      !>C
+      !>         CALL SUBPNT ( SUBMTH(I),  TARGET,  ET,
+      !>     .                 FIXREF,     ABCORR,  OBSRVR,
+      !>     .                 SSCPT,      TRGEPC,  SRFVEC )
+      !>C
+      !>C        Find the phase, solar incidence, and emission
+      !>C        angles at the sub-solar point on Mars as
+      !>C        seen from MGS at time ET.
+      !>C
+      !>         CALL ILLUMG ( ILUMTH(I), TARGET,  'SUN',
+      !>     .                 ET,        FIXREF,  ABCORR,
+      !>     .                 OBSRVR,    SSOLPT,  TRGEPC,
+      !>     .                 SRFVEC,    SSLPHS,  SSLSOL,
+      !>     .                 SSLEMI                      )
+      !>C
+      !>C        Do the same for the sub-spacecraft point.
+      !>C
+      !>         CALL ILLUMG ( ILUMTH(I), TARGET,  'SUN',
+      !>     .                 ET,        FIXREF,  ABCORR,
+      !>     .                 OBSRVR,    SSCPT,   TRGEPC,
+      !>     .                 SRFVEC,    SSCPHS,  SSCSOL,
+      !>     .                 SSCEMI                      )
+      !>C
+      !>C        Convert the angles to degrees and write them out.
+      !>C
+      !>         SSLPHS = DPR() * SSLPHS
+      !>         SSLSOL = DPR() * SSLSOL
+      !>         SSLEMI = DPR() * SSLEMI
       !>
-      !>                 SSCPHS = DPR() * SSCPHS
-      !>                 SSCSOL = DPR() * SSCSOL
-      !>                 SSCEMI = DPR() * SSCEMI
+      !>         SSCPHS = DPR() * SSCPHS
+      !>         SSCSOL = DPR() * SSCSOL
+      !>         SSCEMI = DPR() * SSCEMI
       !>
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F2) '   ILLUMG method: '//ILUMTH(I)
-      !>                 WRITE (*,F2) '   SUBPNT method: '//SUBMTH(I)
-      !>                 WRITE (*,F2) '   SUBSLR method: '//SUBMTH(I)
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F2) '      Illumination angles at the '
-      !>             .   //           'sub-solar point:'
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '   ILLUMG method: '//ILUMTH(I)
+      !>         WRITE (*,F2) '   SUBPNT method: '//SUBMTH(I)
+      !>         WRITE (*,F2) '   SUBSLR method: '//SUBMTH(I)
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '      Illumination angles at the '
+      !>     .   //           'sub-solar point:'
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 WRITE (*,F1) '      Phase angle           (deg.): ',
-      !>             .                SSLPHS
-      !>                 WRITE (*,F1) '      Solar incidence angle (deg.): ',
-      !>             .                SSLSOL
-      !>                 WRITE (*,F1) '      Emission angle        (deg.): ',
-      !>             .                SSLEMI
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F1) '      Phase angle           (deg.): ',
+      !>     .                SSLPHS
+      !>         WRITE (*,F1) '      Solar incidence angle (deg.): ',
+      !>     .                SSLSOL
+      !>         WRITE (*,F1) '      Emission angle        (deg.): ',
+      !>     .                SSLEMI
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>                    WRITE (*,F2) '        The solar incidence angle '
-      !>             .      //           'should be 0.'
-      !>                    WRITE (*,F2) '        The emission and phase '
-      !>             .      //           'angles should be equal.'
-      !>                    WRITE (*,F2) ' '
-      !>                 END IF
+      !>         IF ( I .EQ. 1 ) THEN
+      !>            WRITE (*,F2) '        The solar incidence angle '
+      !>     .      //           'should be 0.'
+      !>            WRITE (*,F2) '        The emission and phase '
+      !>     .      //           'angles should be equal.'
+      !>            WRITE (*,F2) ' '
+      !>         END IF
       !>
-      !>                 WRITE (*,F2) '      Illumination angles at the '
-      !>             .   //          'sub-s/c point:'
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F1) '      Phase angle           (deg.): ',
-      !>             .               SSCPHS
-      !>                 WRITE (*,F1) '      Solar incidence angle (deg.): ',
-      !>             .               SSCSOL
-      !>                 WRITE (*,F1) '      Emission angle        (deg.): ',
-      !>             .               SSCEMI
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '      Illumination angles at the '
+      !>     .   //          'sub-s/c point:'
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F1) '      Phase angle           (deg.): ',
+      !>     .               SSCPHS
+      !>         WRITE (*,F1) '      Solar incidence angle (deg.): ',
+      !>     .               SSCSOL
+      !>         WRITE (*,F1) '      Emission angle        (deg.): ',
+      !>     .               SSCEMI
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>                    WRITE (*,F2) '        The emission angle '
-      !>             .      //           'should be 0.'
-      !>                    WRITE (*,F2) '        The solar incidence '
-      !>             .      //           'and phase angles should be equal.'
-      !>                 END IF
+      !>         IF ( I .EQ. 1 ) THEN
+      !>            WRITE (*,F2) '        The emission angle '
+      !>     .      //           'should be 0.'
+      !>            WRITE (*,F2) '        The solar incidence '
+      !>     .      //           'and phase angles should be equal.'
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -80265,209 +80387,211 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SRFNRM_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A,F11.6)' )
+      !>```fortran
+      !>      PROGRAM SRFNRM_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A,F11.6)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'srfnrm_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'srfnrm_ex1.tm' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 79 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 79 )
       !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN   = 100000 )
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN   = 100000 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 80 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    METHOD ( 2 )
-      !>              CHARACTER*(LNSIZE)    OUTLIN
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 80 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    METHOD ( 2 )
+      !>      CHARACTER*(LNSIZE)    OUTLIN
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      DLAT
-      !>              DOUBLE PRECISION      DLON
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      GRID   ( 2, MAXN )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LAT0
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LON0
-      !>              DOUBLE PRECISION      NORMLS ( 3, MAXN, 2 )
-      !>              DOUBLE PRECISION      NRMLAT
-      !>              DOUBLE PRECISION      NRMLON
-      !>              DOUBLE PRECISION      NRMRAD
-      !>              DOUBLE PRECISION      SRFPTS ( 3, MAXN, 2 )
-      !>              DOUBLE PRECISION      XLAT
-      !>              DOUBLE PRECISION      XLON
-      !>              DOUBLE PRECISION      XR
+      !>      DOUBLE PRECISION      DLAT
+      !>      DOUBLE PRECISION      DLON
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      GRID   ( 2, MAXN )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LAT0
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LON0
+      !>      DOUBLE PRECISION      NORMLS ( 3, MAXN, 2 )
+      !>      DOUBLE PRECISION      NRMLAT
+      !>      DOUBLE PRECISION      NRMLON
+      !>      DOUBLE PRECISION      NRMRAD
+      !>      DOUBLE PRECISION      SRFPTS ( 3, MAXN, 2 )
+      !>      DOUBLE PRECISION      XLAT
+      !>      DOUBLE PRECISION      XLON
+      !>      DOUBLE PRECISION      XR
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
-      !>              INTEGER               NLAT
-      !>              INTEGER               NLON
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
+      !>      INTEGER               NLAT
+      !>      INTEGER               NLON
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>              SAVE                  GRID
-      !>              SAVE                  NORMLS
-      !>              SAVE                  SRFPTS
+      !>C
+      !>C     Saved variables
+      !>C
+      !>      SAVE                  GRID
+      !>      SAVE                  NORMLS
+      !>      SAVE                  SRFPTS
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Set target, reference frame, and epoch.
-      !>        C
-      !>              TARGET = 'PHOBOS'
-      !>              FIXREF = 'IAU_PHOBOS'
-      !>              ET     = 0.D0
-      !>        C
-      !>        C     Use both a reference ellipsoid and DSK data
-      !>        C     to represent the surface.
-      !>        C
-      !>              METHOD(1) = 'ELLIPSOID'
-      !>              METHOD(2) = 'DSK/UNPRIORITIZED'
-      !>        C
-      !>        C     Set the grid dimensions.
-      !>        C
-      !>              NLON   = 6
-      !>              NLAT   = 3
-      !>        C
-      !>        C     Derive evenly spaced grid separations and starting
-      !>        C     values in the longitude and latitude dimensions.
-      !>        C     Units are degrees.
-      !>        C
-      !>              LAT0 = 90.D0
-      !>              LON0 =  0.D0
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Set target, reference frame, and epoch.
+      !>C
+      !>      TARGET = 'PHOBOS'
+      !>      FIXREF = 'IAU_PHOBOS'
+      !>      ET     = 0.D0
+      !>C
+      !>C     Use both a reference ellipsoid and DSK data
+      !>C     to represent the surface.
+      !>C
+      !>      METHOD(1) = 'ELLIPSOID'
+      !>      METHOD(2) = 'DSK/UNPRIORITIZED'
+      !>C
+      !>C     Set the grid dimensions.
+      !>C
+      !>      NLON   = 6
+      !>      NLAT   = 3
+      !>C
+      !>C     Derive evenly spaced grid separations and starting
+      !>C     values in the longitude and latitude dimensions.
+      !>C     Units are degrees.
+      !>C
+      !>      LAT0 = 90.D0
+      !>      LON0 =  0.D0
       !>
-      !>              DLAT = 180.D0 / (NLAT + 1)
-      !>              DLON = 360.D0 /  NLON
+      !>      DLAT = 180.D0 / (NLAT + 1)
+      !>      DLON = 360.D0 /  NLON
       !>
-      !>        C
-      !>        C     Now generate the grid points.  We generate
-      !>        C     points along latitude bands, working from
-      !>        C     north to south.  The latitude range is selected
-      !>        C     to range from +45 to -45 degrees.  Longitude
-      !>        C     ranges from 0 to 300 degrees.  The increment
-      !>        C     is 45 degrees for latitude and 60 degrees for
-      !>        C     longitude.
-      !>        C
-      !>              N = 0
+      !>C
+      !>C     Now generate the grid points.  We generate
+      !>C     points along latitude bands, working from
+      !>C     north to south.  The latitude range is selected
+      !>C     to range from +45 to -45 degrees.  Longitude
+      !>C     ranges from 0 to 300 degrees.  The increment
+      !>C     is 45 degrees for latitude and 60 degrees for
+      !>C     longitude.
+      !>C
+      !>      N = 0
       !>
-      !>              DO I = 1, NLAT
+      !>      DO I = 1, NLAT
       !>
-      !>                 LAT = RPD() * ( LAT0 - I*DLAT )
+      !>         LAT = RPD() * ( LAT0 - I*DLAT )
       !>
-      !>                 DO J = 1, NLON
+      !>         DO J = 1, NLON
       !>
-      !>                    N   = N + 1
-      !>                    LON = RPD() * ( LON0 + (J-1)*DLON )
+      !>            N   = N + 1
+      !>            LON = RPD() * ( LON0 + (J-1)*DLON )
       !>
-      !>                    GRID(1,N) = LON
-      !>                    GRID(2,N) = LAT
+      !>            GRID(1,N) = LON
+      !>            GRID(2,N) = LAT
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Find the surface points corresponding to the grid points.
-      !>        C
-      !>        C
-      !>        C     Compute outward normal vectors at the surface points,
-      !>        C     using both surface representations.
-      !>        C
-      !>              DO I = 1, 2
+      !>C
+      !>C     Find the surface points corresponding to the grid points.
+      !>C
+      !>C
+      !>C     Compute outward normal vectors at the surface points,
+      !>C     using both surface representations.
+      !>C
+      !>      DO I = 1, 2
       !>
-      !>                 CALL LATSRF ( METHOD(I),    TARGET, ET,
-      !>             .                 FIXREF,       N,      GRID,
-      !>             .                 SRFPTS(1,1,I)              )
+      !>         CALL LATSRF ( METHOD(I),    TARGET, ET,
+      !>     .                 FIXREF,       N,      GRID,
+      !>     .                 SRFPTS(1,1,I)              )
       !>
-      !>                 CALL SRFNRM ( METHOD(I),    TARGET, ET,
-      !>             .                 FIXREF,       N,      SRFPTS(1,1,I),
-      !>             .                 NORMLS(1,1,I)                      )
-      !>              END DO
+      !>         CALL SRFNRM ( METHOD(I),    TARGET, ET,
+      !>     .                 FIXREF,       N,      SRFPTS(1,1,I),
+      !>     .                 NORMLS(1,1,I)                      )
+      !>      END DO
       !>
-      !>              WRITE (*,*) 'Number of grid points: ', N
+      !>      WRITE (*,*) 'Number of grid points: ', N
       !>
-      !>        C
-      !>        C     Print out the surface points in latitudinal
-      !>        C     coordinates and compare the derived lon/lat values
-      !>        C     to those of the input grid for the first 3 points.
-      !>        C
-      !>              DO I = 1, 3
-      !>        C
-      !>        C        Use RECRAD rather than RECLAT to produce
-      !>        C        non-negative longitudes.
-      !>        C
-      !>                 CALL RECRAD ( SRFPTS(1,I,1), XR, XLON, XLAT )
+      !>C
+      !>C     Print out the surface points in latitudinal
+      !>C     coordinates and compare the derived lon/lat values
+      !>C     to those of the input grid for the first 3 points.
+      !>C
+      !>      DO I = 1, 3
+      !>C
+      !>C        Use RECRAD rather than RECLAT to produce
+      !>C        non-negative longitudes.
+      !>C
+      !>         CALL RECRAD ( SRFPTS(1,I,1), XR, XLON, XLAT )
       !>
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
       !>
-      !>                 OUTLIN = ' Surface point for grid point #:'
-      !>                 CALL REPMI  ( OUTLIN, '#', I, OUTLIN )
-      !>                 CALL TOSTDO ( OUTLIN )
+      !>         OUTLIN = ' Surface point for grid point #:'
+      !>         CALL REPMI  ( OUTLIN, '#', I, OUTLIN )
+      !>         CALL TOSTDO ( OUTLIN )
       !>
-      !>                 WRITE (*,*)    '  Latitudinal Coordinates:'
-      !>                 WRITE (*,FMT1) '    Longitude           (deg): ',
-      !>             .                  XLON*DPR()
-      !>                 WRITE (*,FMT1) '    Latitude            (deg): ',
-      !>             .                  XLAT*DPR()
-      !>                 WRITE (*,FMT1) '    Ellipsoid Radius     (km): ',
-      !>             .                  XR
+      !>         WRITE (*,*)    '  Latitudinal Coordinates:'
+      !>         WRITE (*,FMT1) '    Longitude           (deg): ',
+      !>     .                  XLON*DPR()
+      !>         WRITE (*,FMT1) '    Latitude            (deg): ',
+      !>     .                  XLAT*DPR()
+      !>         WRITE (*,FMT1) '    Ellipsoid Radius     (km): ',
+      !>     .                  XR
       !>
-      !>                 CALL RECRAD ( SRFPTS(1,I,2), XR, XLON, XLAT )
+      !>         CALL RECRAD ( SRFPTS(1,I,2), XR, XLON, XLAT )
       !>
-      !>                 WRITE (*,FMT1) '    DSK Radius           (km): ',
-      !>             .                  XR
-      !>        C
-      !>        C        Convert the Ith normal vector to latitudinal
-      !>        C        coordinates.
-      !>        C
-      !>                 CALL RECRAD ( NORMLS(1,I,1), NRMRAD, NRMLON, NRMLAT )
+      !>         WRITE (*,FMT1) '    DSK Radius           (km): ',
+      !>     .                  XR
+      !>C
+      !>C        Convert the Ith normal vector to latitudinal
+      !>C        coordinates.
+      !>C
+      !>         CALL RECRAD ( NORMLS(1,I,1), NRMRAD, NRMLON, NRMLAT )
       !>
-      !>                 WRITE (*,*)    '  Ellipsoid normal vector direction:'
-      !>                 WRITE (*,FMT1) '    Longitude           (deg): ',
-      !>             .                       NRMLON*DPR()
-      !>                 WRITE (*,FMT1) '    Latitude            (deg): ',
-      !>             .                      NRMLAT*DPR()
+      !>         WRITE (*,*)    '  Ellipsoid normal vector direction:'
+      !>         WRITE (*,FMT1) '    Longitude           (deg): ',
+      !>     .                       NRMLON*DPR()
+      !>         WRITE (*,FMT1) '    Latitude            (deg): ',
+      !>     .                      NRMLAT*DPR()
       !>
-      !>                 CALL RECRAD ( NORMLS(1,I,2), NRMRAD, NRMLON, NRMLAT )
+      !>         CALL RECRAD ( NORMLS(1,I,2), NRMRAD, NRMLON, NRMLAT )
       !>
-      !>                 WRITE (*,*)    '  DSK normal vector direction:'
-      !>                 WRITE (*,FMT1) '    Longitude           (deg): ',
-      !>             .                  NRMLON*DPR()
-      !>                 WRITE (*,FMT1) '    Latitude            (deg): ',
-      !>             .                  NRMLAT*DPR()
+      !>         WRITE (*,*)    '  DSK normal vector direction:'
+      !>         WRITE (*,FMT1) '    Longitude           (deg): ',
+      !>     .                  NRMLON*DPR()
+      !>         WRITE (*,FMT1) '    Latitude            (deg): ',
+      !>     .                  NRMLAT*DPR()
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -82520,204 +82644,206 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ILLUMF_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         F1
-      !>              PARAMETER           ( F1     = '(A,F15.9)' )
+      !>```fortran
+      !>      PROGRAM ILLUMF_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         F1
+      !>      PARAMETER           ( F1     = '(A,F15.9)' )
       !>
-      !>              CHARACTER*(*)         F2
-      !>              PARAMETER           ( F2     = '(A)' )
+      !>      CHARACTER*(*)         F2
+      !>      PARAMETER           ( F2     = '(A)' )
       !>
-      !>              CHARACTER*(*)         F3
-      !>              PARAMETER           ( F3     = '(A,2(2X,L))' )
+      !>      CHARACTER*(*)         F3
+      !>      PARAMETER           ( F3     = '(A,2(2X,L))' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'illumf_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'illumf_ex1.tm' )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 32 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 25 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 25 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 5 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 5 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(NAMLEN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
-      !>              CHARACTER*(NAMLEN)    OBSRVR
-      !>              CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
-      !>              CHARACTER*(NAMLEN)    TARGET
-      !>              CHARACTER*(TIMLEN)    UTC
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(NAMLEN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
+      !>      CHARACTER*(NAMLEN)    OBSRVR
+      !>      CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
+      !>      CHARACTER*(NAMLEN)    TARGET
+      !>      CHARACTER*(TIMLEN)    UTC
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      SSCEMI
-      !>              DOUBLE PRECISION      SSCPHS
-      !>              DOUBLE PRECISION      SSCPT  ( 3 )
-      !>              DOUBLE PRECISION      SSCSOL
-      !>              DOUBLE PRECISION      SSLEMI
-      !>              DOUBLE PRECISION      SSLPHS
-      !>              DOUBLE PRECISION      SSLSOL
-      !>              DOUBLE PRECISION      SSOLPT ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      SSCEMI
+      !>      DOUBLE PRECISION      SSCPHS
+      !>      DOUBLE PRECISION      SSCPT  ( 3 )
+      !>      DOUBLE PRECISION      SSCSOL
+      !>      DOUBLE PRECISION      SSLEMI
+      !>      DOUBLE PRECISION      SSLPHS
+      !>      DOUBLE PRECISION      SSLSOL
+      !>      DOUBLE PRECISION      SSOLPT ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               SSCLIT
-      !>              LOGICAL               SSCVIS
-      !>              LOGICAL               SSLLIT
-      !>              LOGICAL               SSLVIS
+      !>      LOGICAL               SSCLIT
+      !>      LOGICAL               SSCVIS
+      !>      LOGICAL               SSLLIT
+      !>      LOGICAL               SSLVIS
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  ILUMTH / 'Ellipsoid',
-      !>             .                               'DSK/Unprioritized' /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  ILUMTH / 'Ellipsoid',
+      !>     .                               'DSK/Unprioritized' /
       !>
-      !>              DATA                  SUBMTH / 'Near Point/Ellipsoid',
-      !>             .                            'DSK/Nadir/Unprioritized' /
+      !>      DATA                  SUBMTH / 'Near Point/Ellipsoid',
+      !>     .                            'DSK/Nadir/Unprioritized' /
       !>
-      !>        C
-      !>        C     Load kernel files.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Convert the UTC request time string to seconds past
-      !>        C     J2000 TDB.
-      !>        C
-      !>              UTC = '2003 OCT 13 06:00:00 UTC'
+      !>C
+      !>C     Load kernel files.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Convert the UTC request time string to seconds past
+      !>C     J2000 TDB.
+      !>C
+      !>      UTC = '2003 OCT 13 06:00:00 UTC'
       !>
-      !>              CALL UTC2ET ( UTC, ET )
+      !>      CALL UTC2ET ( UTC, ET )
       !>
-      !>              WRITE (*,F2) ' '
-      !>              WRITE (*,F2) 'UTC epoch is '//UTC
-      !>        C
-      !>        C     Assign observer and target names. The acronym MGS
-      !>        C     indicates Mars Global Surveyor. See NAIF_IDS for a
-      !>        C     list of names recognized by SPICE. Also set the
-      !>        C     aberration correction flag.
-      !>        C
-      !>              TARGET = 'Mars'
-      !>              OBSRVR = 'MGS'
-      !>              FIXREF = 'IAU_MARS'
-      !>              ABCORR = 'CN+S'
+      !>      WRITE (*,F2) ' '
+      !>      WRITE (*,F2) 'UTC epoch is '//UTC
+      !>C
+      !>C     Assign observer and target names. The acronym MGS
+      !>C     indicates Mars Global Surveyor. See NAIF_IDS for a
+      !>C     list of names recognized by SPICE. Also set the
+      !>C     aberration correction flag.
+      !>C
+      !>      TARGET = 'Mars'
+      !>      OBSRVR = 'MGS'
+      !>      FIXREF = 'IAU_MARS'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              DO I = 1, NMETH
-      !>        C
-      !>        C        Find the sub-solar point on Mars as
-      !>        C        seen from the MGS spacecraft at ET. Use the
-      !>        C        "near point" style of sub-point definition
-      !>        C        when the shape model is an ellipsoid, and use
-      !>        C        the "nadir" style when the shape model is
-      !>        C        provided by DSK data. This makes it easy to
-      !>        C        verify the solar incidence angle when
-      !>        C        the target is modeled as an  ellipsoid.
-      !>        C
-      !>                 CALL SUBSLR ( SUBMTH(I),  TARGET,  ET,
-      !>             .                 FIXREF,     ABCORR,  OBSRVR,
-      !>             .                 SSOLPT,     TRGEPC,  SRFVEC  )
-      !>        C
-      !>        C        Now find the sub-spacecraft point.
-      !>        C
-      !>                 CALL SUBPNT ( SUBMTH(I),  TARGET,  ET,
-      !>             .                 FIXREF,     ABCORR,  OBSRVR,
-      !>             .                 SSCPT,      TRGEPC,  SRFVEC )
-      !>        C
-      !>        C        Find the phase, solar incidence, and emission
-      !>        C        angles at the sub-solar point on Mars as
-      !>        C        seen from MGS at time ET.
-      !>        C
-      !>                 CALL ILLUMF ( ILUMTH(I), TARGET,  'SUN',
-      !>             .                 ET,        FIXREF,  ABCORR,
-      !>             .                 OBSRVR,    SSOLPT,  TRGEPC,
-      !>             .                 SRFVEC,    SSLPHS,  SSLSOL,
-      !>             .                 SSLEMI,    SSLVIS,  SSLLIT )
-      !>        C
-      !>        C        Do the same for the sub-spacecraft point.
-      !>        C
-      !>                 CALL ILLUMF ( ILUMTH(I), TARGET,  'SUN',
-      !>             .                 ET,        FIXREF,  ABCORR,
-      !>             .                 OBSRVR,    SSCPT,   TRGEPC,
-      !>             .                 SRFVEC,    SSCPHS,  SSCSOL,
-      !>             .                 SSCEMI,    SSCVIS,  SSCLIT  )
-      !>        C
-      !>        C        Convert the angles to degrees and write them out.
-      !>        C
-      !>                 SSLPHS = DPR() * SSLPHS
-      !>                 SSLSOL = DPR() * SSLSOL
-      !>                 SSLEMI = DPR() * SSLEMI
+      !>      DO I = 1, NMETH
+      !>C
+      !>C        Find the sub-solar point on Mars as
+      !>C        seen from the MGS spacecraft at ET. Use the
+      !>C        "near point" style of sub-point definition
+      !>C        when the shape model is an ellipsoid, and use
+      !>C        the "nadir" style when the shape model is
+      !>C        provided by DSK data. This makes it easy to
+      !>C        verify the solar incidence angle when
+      !>C        the target is modeled as an  ellipsoid.
+      !>C
+      !>         CALL SUBSLR ( SUBMTH(I),  TARGET,  ET,
+      !>     .                 FIXREF,     ABCORR,  OBSRVR,
+      !>     .                 SSOLPT,     TRGEPC,  SRFVEC  )
+      !>C
+      !>C        Now find the sub-spacecraft point.
+      !>C
+      !>         CALL SUBPNT ( SUBMTH(I),  TARGET,  ET,
+      !>     .                 FIXREF,     ABCORR,  OBSRVR,
+      !>     .                 SSCPT,      TRGEPC,  SRFVEC )
+      !>C
+      !>C        Find the phase, solar incidence, and emission
+      !>C        angles at the sub-solar point on Mars as
+      !>C        seen from MGS at time ET.
+      !>C
+      !>         CALL ILLUMF ( ILUMTH(I), TARGET,  'SUN',
+      !>     .                 ET,        FIXREF,  ABCORR,
+      !>     .                 OBSRVR,    SSOLPT,  TRGEPC,
+      !>     .                 SRFVEC,    SSLPHS,  SSLSOL,
+      !>     .                 SSLEMI,    SSLVIS,  SSLLIT )
+      !>C
+      !>C        Do the same for the sub-spacecraft point.
+      !>C
+      !>         CALL ILLUMF ( ILUMTH(I), TARGET,  'SUN',
+      !>     .                 ET,        FIXREF,  ABCORR,
+      !>     .                 OBSRVR,    SSCPT,   TRGEPC,
+      !>     .                 SRFVEC,    SSCPHS,  SSCSOL,
+      !>     .                 SSCEMI,    SSCVIS,  SSCLIT  )
+      !>C
+      !>C        Convert the angles to degrees and write them out.
+      !>C
+      !>         SSLPHS = DPR() * SSLPHS
+      !>         SSLSOL = DPR() * SSLSOL
+      !>         SSLEMI = DPR() * SSLEMI
       !>
-      !>                 SSCPHS = DPR() * SSCPHS
-      !>                 SSCSOL = DPR() * SSCSOL
-      !>                 SSCEMI = DPR() * SSCEMI
+      !>         SSCPHS = DPR() * SSCPHS
+      !>         SSCSOL = DPR() * SSCSOL
+      !>         SSCEMI = DPR() * SSCEMI
       !>
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F2) '   ILLUMF method: '//ILUMTH(I)
-      !>                 WRITE (*,F2) '   SUBPNT method: '//SUBMTH(I)
-      !>                 WRITE (*,F2) '   SUBSLR method: '//SUBMTH(I)
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F2) '      Illumination angles at the '
-      !>             .   //           'sub-solar point:'
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '   ILLUMF method: '//ILUMTH(I)
+      !>         WRITE (*,F2) '   SUBPNT method: '//SUBMTH(I)
+      !>         WRITE (*,F2) '   SUBSLR method: '//SUBMTH(I)
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '      Illumination angles at the '
+      !>     .   //           'sub-solar point:'
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 WRITE (*,F1) '      Phase angle           (deg.): ',
-      !>             .                SSLPHS
-      !>                 WRITE (*,F1) '      Solar incidence angle (deg.): ',
-      !>             .                SSLSOL
-      !>                 WRITE (*,F1) '      Emission angle        (deg.): ',
-      !>             .                SSLEMI
-      !>                 WRITE (*,F3) '      Visible, Lit flags:           ',
-      !>             .                SSLVIS, SSLLIT
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F1) '      Phase angle           (deg.): ',
+      !>     .                SSLPHS
+      !>         WRITE (*,F1) '      Solar incidence angle (deg.): ',
+      !>     .                SSLSOL
+      !>         WRITE (*,F1) '      Emission angle        (deg.): ',
+      !>     .                SSLEMI
+      !>         WRITE (*,F3) '      Visible, Lit flags:           ',
+      !>     .                SSLVIS, SSLLIT
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>                    WRITE (*,F2) '        The solar incidence angle '
-      !>             .      //           'should be 0.'
-      !>                    WRITE (*,F2) '        The emission and phase '
-      !>             .      //           'angles should be equal.'
-      !>                    WRITE (*,F2) ' '
-      !>                 END IF
+      !>         IF ( I .EQ. 1 ) THEN
+      !>            WRITE (*,F2) '        The solar incidence angle '
+      !>     .      //           'should be 0.'
+      !>            WRITE (*,F2) '        The emission and phase '
+      !>     .      //           'angles should be equal.'
+      !>            WRITE (*,F2) ' '
+      !>         END IF
       !>
-      !>                 WRITE (*,F2) '      Illumination angles at the '
-      !>             .   //          'sub-s/c point:'
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F1) '      Phase angle           (deg.): ',
-      !>             .               SSCPHS
-      !>                 WRITE (*,F1) '      Solar incidence angle (deg.): ',
-      !>             .               SSCSOL
-      !>                 WRITE (*,F1) '      Emission angle        (deg.): ',
-      !>             .               SSCEMI
-      !>                 WRITE (*,F3) '      Visible, Lit flags:           ',
-      !>             .                SSCVIS, SSCLIT
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '      Illumination angles at the '
+      !>     .   //          'sub-s/c point:'
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F1) '      Phase angle           (deg.): ',
+      !>     .               SSCPHS
+      !>         WRITE (*,F1) '      Solar incidence angle (deg.): ',
+      !>     .               SSCSOL
+      !>         WRITE (*,F1) '      Emission angle        (deg.): ',
+      !>     .               SSCEMI
+      !>         WRITE (*,F3) '      Visible, Lit flags:           ',
+      !>     .                SSCVIS, SSCLIT
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>                    WRITE (*,F2) '        The emission angle '
-      !>             .      //           'should be 0.'
-      !>                    WRITE (*,F2) '        The solar incidence '
-      !>             .      //           'and phase angles should be equal.'
-      !>                 END IF
+      !>         IF ( I .EQ. 1 ) THEN
+      !>            WRITE (*,F2) '        The emission angle '
+      !>     .      //           'should be 0.'
+      !>            WRITE (*,F2) '        The solar incidence '
+      !>     .      //           'and phase angles should be equal.'
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -84081,195 +84207,197 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ILUMIN_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         F1
-      !>              PARAMETER           ( F1     = '(A,F15.9)' )
+      !>```fortran
+      !>      PROGRAM ILUMIN_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         F1
+      !>      PARAMETER           ( F1     = '(A,F15.9)' )
       !>
-      !>              CHARACTER*(*)         F2
-      !>              PARAMETER           ( F2     = '(A)' )
+      !>      CHARACTER*(*)         F2
+      !>      PARAMETER           ( F2     = '(A)' )
       !>
-      !>              CHARACTER*(*)         F3
-      !>              PARAMETER           ( F3     = '(A,2(2X,L))' )
+      !>      CHARACTER*(*)         F3
+      !>      PARAMETER           ( F3     = '(A,2(2X,L))' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'ilumin_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'ilumin_ex1.tm' )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 32 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 25 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 25 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 5 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 5 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(NAMLEN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
-      !>              CHARACTER*(NAMLEN)    OBSRVR
-      !>              CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
-      !>              CHARACTER*(NAMLEN)    TARGET
-      !>              CHARACTER*(TIMLEN)    UTC
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(NAMLEN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
+      !>      CHARACTER*(NAMLEN)    OBSRVR
+      !>      CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
+      !>      CHARACTER*(NAMLEN)    TARGET
+      !>      CHARACTER*(TIMLEN)    UTC
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      SSCEMI
-      !>              DOUBLE PRECISION      SSCPHS
-      !>              DOUBLE PRECISION      SSCPT  ( 3 )
-      !>              DOUBLE PRECISION      SSCSOL
-      !>              DOUBLE PRECISION      SSLEMI
-      !>              DOUBLE PRECISION      SSLPHS
-      !>              DOUBLE PRECISION      SSLSOL
-      !>              DOUBLE PRECISION      SSOLPT ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      SSCEMI
+      !>      DOUBLE PRECISION      SSCPHS
+      !>      DOUBLE PRECISION      SSCPT  ( 3 )
+      !>      DOUBLE PRECISION      SSCSOL
+      !>      DOUBLE PRECISION      SSLEMI
+      !>      DOUBLE PRECISION      SSLPHS
+      !>      DOUBLE PRECISION      SSLSOL
+      !>      DOUBLE PRECISION      SSOLPT ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  ILUMTH / 'Ellipsoid',
-      !>             .                               'DSK/Unprioritized' /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  ILUMTH / 'Ellipsoid',
+      !>     .                               'DSK/Unprioritized' /
       !>
-      !>              DATA                  SUBMTH / 'Near Point/Ellipsoid',
-      !>             .                            'DSK/Nadir/Unprioritized' /
+      !>      DATA                  SUBMTH / 'Near Point/Ellipsoid',
+      !>     .                            'DSK/Nadir/Unprioritized' /
       !>
-      !>        C
-      !>        C     Load kernel files.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Convert the UTC request time string to seconds past
-      !>        C     J2000 TDB.
-      !>        C
-      !>              UTC = '2003 OCT 13 06:00:00 UTC'
+      !>C
+      !>C     Load kernel files.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Convert the UTC request time string to seconds past
+      !>C     J2000 TDB.
+      !>C
+      !>      UTC = '2003 OCT 13 06:00:00 UTC'
       !>
-      !>              CALL UTC2ET ( UTC, ET )
+      !>      CALL UTC2ET ( UTC, ET )
       !>
-      !>              WRITE (*,F2) ' '
-      !>              WRITE (*,F2) 'UTC epoch is '//UTC
-      !>        C
-      !>        C     Assign observer and target names. The acronym MGS
-      !>        C     indicates Mars Global Surveyor. See NAIF_IDS for a
-      !>        C     list of names recognized by SPICE. Also set the
-      !>        C     aberration correction flag.
-      !>        C
-      !>              TARGET = 'Mars'
-      !>              OBSRVR = 'MGS'
-      !>              FIXREF = 'IAU_MARS'
-      !>              ABCORR = 'CN+S'
+      !>      WRITE (*,F2) ' '
+      !>      WRITE (*,F2) 'UTC epoch is '//UTC
+      !>C
+      !>C     Assign observer and target names. The acronym MGS
+      !>C     indicates Mars Global Surveyor. See NAIF_IDS for a
+      !>C     list of names recognized by SPICE. Also set the
+      !>C     aberration correction flag.
+      !>C
+      !>      TARGET = 'Mars'
+      !>      OBSRVR = 'MGS'
+      !>      FIXREF = 'IAU_MARS'
+      !>      ABCORR = 'CN+S'
       !>
-      !>              DO I = 1, NMETH
-      !>        C
-      !>        C        Find the sub-solar point on Mars as
-      !>        C        seen from the MGS spacecraft at ET. Use the
-      !>        C        "near point" style of sub-point definition
-      !>        C        when the shape model is an ellipsoid, and use
-      !>        C        the "nadir" style when the shape model is
-      !>        C        provided by DSK data. This makes it easy to
-      !>        C        verify the solar incidence angle when
-      !>        C        the target is modeled as an  ellipsoid.
-      !>        C
-      !>                 CALL SUBSLR ( SUBMTH(I),  TARGET,  ET,
-      !>             .                 FIXREF,     ABCORR,  OBSRVR,
-      !>             .                 SSOLPT,     TRGEPC,  SRFVEC  )
-      !>        C
-      !>        C        Now find the sub-spacecraft point.
-      !>        C
-      !>                 CALL SUBPNT ( SUBMTH(I),  TARGET,  ET,
-      !>             .                 FIXREF,     ABCORR,  OBSRVR,
-      !>             .                 SSCPT,      TRGEPC,  SRFVEC )
-      !>        C
-      !>        C        Find the phase, solar incidence, and emission
-      !>        C        angles at the sub-solar point on Mars as
-      !>        C        seen from MGS at time ET.
-      !>        C
-      !>                 CALL ILUMIN ( ILUMTH(I), TARGET,
-      !>             .                 ET,        FIXREF,  ABCORR,
-      !>             .                 OBSRVR,    SSOLPT,  TRGEPC,
-      !>             .                 SRFVEC,    SSLPHS,  SSLSOL,
-      !>             .                 SSLEMI                      )
-      !>        C
-      !>        C        Do the same for the sub-spacecraft point.
-      !>        C
-      !>                 CALL ILUMIN ( ILUMTH(I), TARGET,
-      !>             .                 ET,        FIXREF,  ABCORR,
-      !>             .                 OBSRVR,    SSCPT,   TRGEPC,
-      !>             .                 SRFVEC,    SSCPHS,  SSCSOL,
-      !>             .                 SSCEMI                      )
-      !>        C
-      !>        C        Convert the angles to degrees and write them out.
-      !>        C
-      !>                 SSLPHS = DPR() * SSLPHS
-      !>                 SSLSOL = DPR() * SSLSOL
-      !>                 SSLEMI = DPR() * SSLEMI
+      !>      DO I = 1, NMETH
+      !>C
+      !>C        Find the sub-solar point on Mars as
+      !>C        seen from the MGS spacecraft at ET. Use the
+      !>C        "near point" style of sub-point definition
+      !>C        when the shape model is an ellipsoid, and use
+      !>C        the "nadir" style when the shape model is
+      !>C        provided by DSK data. This makes it easy to
+      !>C        verify the solar incidence angle when
+      !>C        the target is modeled as an  ellipsoid.
+      !>C
+      !>         CALL SUBSLR ( SUBMTH(I),  TARGET,  ET,
+      !>     .                 FIXREF,     ABCORR,  OBSRVR,
+      !>     .                 SSOLPT,     TRGEPC,  SRFVEC  )
+      !>C
+      !>C        Now find the sub-spacecraft point.
+      !>C
+      !>         CALL SUBPNT ( SUBMTH(I),  TARGET,  ET,
+      !>     .                 FIXREF,     ABCORR,  OBSRVR,
+      !>     .                 SSCPT,      TRGEPC,  SRFVEC )
+      !>C
+      !>C        Find the phase, solar incidence, and emission
+      !>C        angles at the sub-solar point on Mars as
+      !>C        seen from MGS at time ET.
+      !>C
+      !>         CALL ILUMIN ( ILUMTH(I), TARGET,
+      !>     .                 ET,        FIXREF,  ABCORR,
+      !>     .                 OBSRVR,    SSOLPT,  TRGEPC,
+      !>     .                 SRFVEC,    SSLPHS,  SSLSOL,
+      !>     .                 SSLEMI                      )
+      !>C
+      !>C        Do the same for the sub-spacecraft point.
+      !>C
+      !>         CALL ILUMIN ( ILUMTH(I), TARGET,
+      !>     .                 ET,        FIXREF,  ABCORR,
+      !>     .                 OBSRVR,    SSCPT,   TRGEPC,
+      !>     .                 SRFVEC,    SSCPHS,  SSCSOL,
+      !>     .                 SSCEMI                      )
+      !>C
+      !>C        Convert the angles to degrees and write them out.
+      !>C
+      !>         SSLPHS = DPR() * SSLPHS
+      !>         SSLSOL = DPR() * SSLSOL
+      !>         SSLEMI = DPR() * SSLEMI
       !>
-      !>                 SSCPHS = DPR() * SSCPHS
-      !>                 SSCSOL = DPR() * SSCSOL
-      !>                 SSCEMI = DPR() * SSCEMI
+      !>         SSCPHS = DPR() * SSCPHS
+      !>         SSCSOL = DPR() * SSCSOL
+      !>         SSCEMI = DPR() * SSCEMI
       !>
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F2) '   ILUMIN method: '//ILUMTH(I)
-      !>                 WRITE (*,F2) '   SUBPNT method: '//SUBMTH(I)
-      !>                 WRITE (*,F2) '   SUBSLR method: '//SUBMTH(I)
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F2) '      Illumination angles at the '
-      !>             .   //           'sub-solar point:'
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '   ILUMIN method: '//ILUMTH(I)
+      !>         WRITE (*,F2) '   SUBPNT method: '//SUBMTH(I)
+      !>         WRITE (*,F2) '   SUBSLR method: '//SUBMTH(I)
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '      Illumination angles at the '
+      !>     .   //           'sub-solar point:'
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 WRITE (*,F1) '      Phase angle           (deg.): ',
-      !>             .                SSLPHS
-      !>                 WRITE (*,F1) '      Solar incidence angle (deg.): ',
-      !>             .                SSLSOL
-      !>                 WRITE (*,F1) '      Emission angle        (deg.): ',
-      !>             .                SSLEMI
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F1) '      Phase angle           (deg.): ',
+      !>     .                SSLPHS
+      !>         WRITE (*,F1) '      Solar incidence angle (deg.): ',
+      !>     .                SSLSOL
+      !>         WRITE (*,F1) '      Emission angle        (deg.): ',
+      !>     .                SSLEMI
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>                    WRITE (*,F2) '        The solar incidence angle '
-      !>             .      //           'should be 0.'
-      !>                    WRITE (*,F2) '        The emission and phase '
-      !>             .      //           'angles should be equal.'
-      !>                    WRITE (*,F2) ' '
-      !>                 END IF
+      !>         IF ( I .EQ. 1 ) THEN
+      !>            WRITE (*,F2) '        The solar incidence angle '
+      !>     .      //           'should be 0.'
+      !>            WRITE (*,F2) '        The emission and phase '
+      !>     .      //           'angles should be equal.'
+      !>            WRITE (*,F2) ' '
+      !>         END IF
       !>
-      !>                 WRITE (*,F2) '      Illumination angles at the '
-      !>             .   //          'sub-s/c point:'
-      !>                 WRITE (*,F2) ' '
-      !>                 WRITE (*,F1) '      Phase angle           (deg.): ',
-      !>             .               SSCPHS
-      !>                 WRITE (*,F1) '      Solar incidence angle (deg.): ',
-      !>             .               SSCSOL
-      !>                 WRITE (*,F1) '      Emission angle        (deg.): ',
-      !>             .               SSCEMI
-      !>                 WRITE (*,F2) ' '
+      !>         WRITE (*,F2) '      Illumination angles at the '
+      !>     .   //          'sub-s/c point:'
+      !>         WRITE (*,F2) ' '
+      !>         WRITE (*,F1) '      Phase angle           (deg.): ',
+      !>     .               SSCPHS
+      !>         WRITE (*,F1) '      Solar incidence angle (deg.): ',
+      !>     .               SSCSOL
+      !>         WRITE (*,F1) '      Emission angle        (deg.): ',
+      !>     .               SSCEMI
+      !>         WRITE (*,F2) ' '
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
-      !>                    WRITE (*,F2) '        The emission angle '
-      !>             .      //           'should be 0.'
-      !>                    WRITE (*,F2) '        The solar incidence '
-      !>             .      //           'and phase angles should be equal.'
-      !>                 END IF
+      !>         IF ( I .EQ. 1 ) THEN
+      !>            WRITE (*,F2) '        The emission angle '
+      !>     .      //           'should be 0.'
+      !>            WRITE (*,F2) '        The solar incidence '
+      !>     .      //           'and phase angles should be equal.'
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -84840,167 +84968,169 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LATSRF_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      RPD
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(1X,A,F11.6)' )
+      !>```fortran
+      !>      PROGRAM LATSRF_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      RPD
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(1X,A,F11.6)' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 79 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 79 )
       !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN   = 100 )
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN   = 100 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 80 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    METHOD
-      !>              CHARACTER*(LNSIZE)    OUTLIN
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 80 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    METHOD
+      !>      CHARACTER*(LNSIZE)    OUTLIN
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      DLAT
-      !>              DOUBLE PRECISION      DLON
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      GRID   ( 2, MAXN )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LAT0
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LON0
-      !>              DOUBLE PRECISION      SRFPTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      XLAT
-      !>              DOUBLE PRECISION      XLON
-      !>              DOUBLE PRECISION      XR
+      !>      DOUBLE PRECISION      DLAT
+      !>      DOUBLE PRECISION      DLON
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      GRID   ( 2, MAXN )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LAT0
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LON0
+      !>      DOUBLE PRECISION      SRFPTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      XLAT
+      !>      DOUBLE PRECISION      XLON
+      !>      DOUBLE PRECISION      XR
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
-      !>              INTEGER               NLAT
-      !>              INTEGER               NLON
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
+      !>      INTEGER               NLAT
+      !>      INTEGER               NLON
       !>
-      !>        C
-      !>        C     Set target, reference frame, and epoch.
-      !>        C
-      !>              TARGET = 'PHOBOS'
-      !>              FIXREF = 'IAU_PHOBOS'
-      !>              ET     = 0.D0
-      !>        C
-      !>        C     Use DSK data to represent the surface.
-      !>        C
-      !>              METHOD = 'DSK/UNPRIORITIZED'
-      !>        C
-      !>        C     Set the grid dimensions.
-      !>        C
-      !>              NLON   = 3
-      !>              NLAT   = 2
-      !>        C
-      !>        C     Derive evenly spaced grid separations and starting
-      !>        C     values in the longitude and latitude dimensions.
-      !>        C     Units are degrees.
-      !>        C
-      !>              LAT0 = 90.D0
-      !>              LON0 =  0.D0
+      !>C
+      !>C     Set target, reference frame, and epoch.
+      !>C
+      !>      TARGET = 'PHOBOS'
+      !>      FIXREF = 'IAU_PHOBOS'
+      !>      ET     = 0.D0
+      !>C
+      !>C     Use DSK data to represent the surface.
+      !>C
+      !>      METHOD = 'DSK/UNPRIORITIZED'
+      !>C
+      !>C     Set the grid dimensions.
+      !>C
+      !>      NLON   = 3
+      !>      NLAT   = 2
+      !>C
+      !>C     Derive evenly spaced grid separations and starting
+      !>C     values in the longitude and latitude dimensions.
+      !>C     Units are degrees.
+      !>C
+      !>      LAT0 = 90.D0
+      !>      LON0 =  0.D0
       !>
-      !>              DLAT = 180.D0 / (NLAT + 1)
-      !>              DLON = 360.D0 /  NLON
-      !>        C
-      !>        C     Prompt for the name of the DSK to read.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name    > ', DSK )
-      !>        C
-      !>        C     Load the DSK file.
-      !>        C
-      !>              CALL FURNSH ( DSK )
-      !>        C
-      !>        C     Now generate the grid points.  We generate
-      !>        C     points along latitude bands, working from
-      !>        C     north to south.  The latitude range is selected
-      !>        C     to range from +30 to -30 degrees.  Longitude
-      !>        C     ranges from 0 to 240 degrees.  The increment
-      !>        C     is 90 degrees for latitude and 120 degrees for
-      !>        C     longitude.
-      !>        C
-      !>              N = 0
+      !>      DLAT = 180.D0 / (NLAT + 1)
+      !>      DLON = 360.D0 /  NLON
+      !>C
+      !>C     Prompt for the name of the DSK to read.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name    > ', DSK )
+      !>C
+      !>C     Load the DSK file.
+      !>C
+      !>      CALL FURNSH ( DSK )
+      !>C
+      !>C     Now generate the grid points.  We generate
+      !>C     points along latitude bands, working from
+      !>C     north to south.  The latitude range is selected
+      !>C     to range from +30 to -30 degrees.  Longitude
+      !>C     ranges from 0 to 240 degrees.  The increment
+      !>C     is 90 degrees for latitude and 120 degrees for
+      !>C     longitude.
+      !>C
+      !>      N = 0
       !>
-      !>              DO I = 1, NLAT
+      !>      DO I = 1, NLAT
       !>
-      !>                 LAT = RPD() * ( LAT0 - I*DLAT )
+      !>         LAT = RPD() * ( LAT0 - I*DLAT )
       !>
-      !>                 DO J = 1, NLON
+      !>         DO J = 1, NLON
       !>
-      !>                    N   = N + 1
-      !>                    LON = RPD() * ( LON0 + (J-1)*DLON )
+      !>            N   = N + 1
+      !>            LON = RPD() * ( LON0 + (J-1)*DLON )
       !>
-      !>                    GRID(1,N) = LON
-      !>                    GRID(2,N) = LAT
+      !>            GRID(1,N) = LON
+      !>            GRID(2,N) = LAT
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
-      !>        C
-      !>        C     Find the surface points corresponding to the grid points.
-      !>        C
-      !>              CALL LATSRF ( METHOD, TARGET, ET,
-      !>             .              FIXREF, N,      GRID, SRFPTS )
-      !>        C
-      !>        C     Print out the surface points in latitudinal
-      !>        C     coordinates and compare the derived lon/lat values
-      !>        C     to those of the input grid.
-      !>        C
-      !>              DO I = 1, N
-      !>        C
-      !>        C        Use RECRAD rather than RECLAT to produce
-      !>        C        non-negative longitudes.
-      !>        C
-      !>                 CALL RECRAD ( SRFPTS(1,I), XR, XLON, XLAT )
+      !>      END DO
+      !>C
+      !>C     Find the surface points corresponding to the grid points.
+      !>C
+      !>      CALL LATSRF ( METHOD, TARGET, ET,
+      !>     .              FIXREF, N,      GRID, SRFPTS )
+      !>C
+      !>C     Print out the surface points in latitudinal
+      !>C     coordinates and compare the derived lon/lat values
+      !>C     to those of the input grid.
+      !>C
+      !>      DO I = 1, N
+      !>C
+      !>C        Use RECRAD rather than RECLAT to produce
+      !>C        non-negative longitudes.
+      !>C
+      !>         CALL RECRAD ( SRFPTS(1,I), XR, XLON, XLAT )
       !>
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
       !>
-      !>                 OUTLIN = 'Intercept for grid point #:'
-      !>                 CALL REPMI ( OUTLIN, '#', I, OUTLIN )
+      !>         OUTLIN = 'Intercept for grid point #:'
+      !>         CALL REPMI ( OUTLIN, '#', I, OUTLIN )
       !>
-      !>                 WRITE(*,*)  OUTLIN
-      !>                 OUTLIN = '  Cartesian coordinates: (#, #, #)'
+      !>         WRITE(*,*)  OUTLIN
+      !>         OUTLIN = '  Cartesian coordinates: (#, #, #)'
       !>
-      !>                 DO J = 1, 3
-      !>                    CALL REPMF( OUTLIN, '#', SRFPTS(J,I),
-      !>             .                  8,      'F', OUTLIN      )
-      !>                 END DO
+      !>         DO J = 1, 3
+      !>            CALL REPMF( OUTLIN, '#', SRFPTS(J,I),
+      !>     .                  8,      'F', OUTLIN      )
+      !>         END DO
       !>
-      !>                 WRITE (*,*) OUTLIN
+      !>         WRITE (*,*) OUTLIN
       !>
-      !>                 WRITE (*,*)    '  Latitudinal Coordinates:'
-      !>                 WRITE (*,FMT1) '   Longitude (deg): ', XLON*DPR()
-      !>                 WRITE (*,FMT1) '   Latitude  (deg): ', XLAT*DPR()
-      !>                 WRITE (*,FMT1) '   Radius     (km): ', XR
-      !>                 WRITE (*,*)    ' '
-      !>                 WRITE (*,*)    '  Original Grid Coordinates:'
-      !>                 WRITE (*,FMT1) '   Longitude (deg): ', GRID(1,I)*DPR()
-      !>                 WRITE (*,FMT1) '   Latitude  (deg): ', GRID(2,I)*DPR()
+      !>         WRITE (*,*)    '  Latitudinal Coordinates:'
+      !>         WRITE (*,FMT1) '   Longitude (deg): ', XLON*DPR()
+      !>         WRITE (*,FMT1) '   Latitude  (deg): ', XLAT*DPR()
+      !>         WRITE (*,FMT1) '   Radius     (km): ', XR
+      !>         WRITE (*,*)    ' '
+      !>         WRITE (*,*)    '  Original Grid Coordinates:'
+      !>         WRITE (*,FMT1) '   Longitude (deg): ', GRID(1,I)*DPR()
+      !>         WRITE (*,FMT1) '   Latitude  (deg): ', GRID(2,I)*DPR()
       !>
-      !>              END DO
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      END DO
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -86301,232 +86431,234 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SINCPT_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      VNORM
+      !>```fortran
+      !>      PROGRAM SINCPT_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'sincpt_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'sincpt_ex1.tm' )
       !>
-      !>              INTEGER               ABCLEN
-      !>              PARAMETER           ( ABCLEN = 20 )
+      !>      INTEGER               ABCLEN
+      !>      PARAMETER           ( ABCLEN = 20 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 78 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 78 )
       !>
-      !>              INTEGER               METLEN
-      !>              PARAMETER           ( METLEN = 40 )
+      !>      INTEGER               METLEN
+      !>      PARAMETER           ( METLEN = 40 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 32 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 80 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 80 )
       !>
-      !>              INTEGER               NCORNR
-      !>              PARAMETER           ( NCORNR = 4 )
+      !>      INTEGER               NCORNR
+      !>      PARAMETER           ( NCORNR = 4 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ABCLEN)    ABCORR
-      !>              CHARACTER*(NAMLEN)    CAMERA
-      !>              CHARACTER*(NAMLEN)    DREF
-      !>              CHARACTER*(NAMLEN)    FIXREF
-      !>              CHARACTER*(METLEN)    METHDS ( NMETH )
-      !>              CHARACTER*(METLEN)    METHOD
-      !>              CHARACTER*(NAMLEN)    OBSRVR
-      !>              CHARACTER*(SHPLEN)    SHAPE
-      !>              CHARACTER*(NAMLEN)    SRFTYP ( NMETH )
-      !>              CHARACTER*(NAMLEN)    TARGET
-      !>              CHARACTER*(LNSIZE)    TITLE
-      !>              CHARACTER*(TIMLEN)    UTC
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ABCLEN)    ABCORR
+      !>      CHARACTER*(NAMLEN)    CAMERA
+      !>      CHARACTER*(NAMLEN)    DREF
+      !>      CHARACTER*(NAMLEN)    FIXREF
+      !>      CHARACTER*(METLEN)    METHDS ( NMETH )
+      !>      CHARACTER*(METLEN)    METHOD
+      !>      CHARACTER*(NAMLEN)    OBSRVR
+      !>      CHARACTER*(SHPLEN)    SHAPE
+      !>      CHARACTER*(NAMLEN)    SRFTYP ( NMETH )
+      !>      CHARACTER*(NAMLEN)    TARGET
+      !>      CHARACTER*(LNSIZE)    TITLE
+      !>      CHARACTER*(TIMLEN)    UTC
       !>
-      !>              DOUBLE PRECISION      BOUNDS ( 3, NCORNR )
-      !>              DOUBLE PRECISION      BSIGHT ( 3 )
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      DVEC   ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RADIUS
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      BOUNDS ( 3, NCORNR )
+      !>      DOUBLE PRECISION      BSIGHT ( 3 )
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      DVEC   ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RADIUS
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               CAMID
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               N
+      !>      INTEGER               CAMID
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              DATA                  ABCORR / 'CN+S'              /
-      !>              DATA                  CAMERA / 'MGS_MOC_NA'        /
-      !>              DATA                  FIXREF / 'IAU_MARS'          /
-      !>              DATA                  METHDS / 'ELLIPSOID',
-      !>             .                               'DSK/UNPRIORITIZED' /
-      !>              DATA                  OBSRVR / 'MGS'               /
-      !>              DATA                  SRFTYP / 'Ellipsoid',
-      !>             .               'MGS/MOLA topography, 4 pixel/deg'  /
-      !>              DATA                  TARGET / 'Mars'              /
-      !>              DATA                  UTC    /
-      !>             .                        '2003 OCT 13 06:00:00 UTC' /
+      !>      DATA                  ABCORR / 'CN+S'              /
+      !>      DATA                  CAMERA / 'MGS_MOC_NA'        /
+      !>      DATA                  FIXREF / 'IAU_MARS'          /
+      !>      DATA                  METHDS / 'ELLIPSOID',
+      !>     .                               'DSK/UNPRIORITIZED' /
+      !>      DATA                  OBSRVR / 'MGS'               /
+      !>      DATA                  SRFTYP / 'Ellipsoid',
+      !>     .               'MGS/MOLA topography, 4 pixel/deg'  /
+      !>      DATA                  TARGET / 'Mars'              /
+      !>      DATA                  UTC    /
+      !>     .                        '2003 OCT 13 06:00:00 UTC' /
       !>
-      !>        C
-      !>        C     Load kernel files:
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernel files:
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the UTC request time to ET (seconds past
-      !>        C     J2000, TDB).
-      !>        C
-      !>              CALL STR2ET ( UTC, ET )
+      !>C
+      !>C     Convert the UTC request time to ET (seconds past
+      !>C     J2000, TDB).
+      !>C
+      !>      CALL STR2ET ( UTC, ET )
       !>
-      !>        C
-      !>        C     Get the MGS MOC Narrow angle camera (MGS_MOC_NA)
-      !>        C     ID code. Then look up the field of view (FOV)
-      !>        C     parameters by calling GETFOV.
-      !>        C
-      !>              CALL BODN2C ( CAMERA, CAMID, FOUND )
+      !>C
+      !>C     Get the MGS MOC Narrow angle camera (MGS_MOC_NA)
+      !>C     ID code. Then look up the field of view (FOV)
+      !>C     parameters by calling GETFOV.
+      !>C
+      !>      CALL BODN2C ( CAMERA, CAMID, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>                 CALL SETMSG ( 'Could not find ID code for ' //
-      !>             .                 'instrument #.'               )
-      !>                 CALL ERRCH  ( '#', CAMERA                   )
-      !>                 CALL SIGERR ( 'SPICE(NOTRANSLATION)'        )
-      !>              END IF
+      !>      IF ( .NOT. FOUND ) THEN
+      !>         CALL SETMSG ( 'Could not find ID code for ' //
+      !>     .                 'instrument #.'               )
+      !>         CALL ERRCH  ( '#', CAMERA                   )
+      !>         CALL SIGERR ( 'SPICE(NOTRANSLATION)'        )
+      !>      END IF
       !>
-      !>        C
-      !>        C     GETFOV will return the name of the camera-fixed frame
-      !>        C     in the string DREF, the camera boresight vector in
-      !>        C     the array BSIGHT, and the FOV corner vectors in the
-      !>        C     array BOUNDS.
-      !>        C
-      !>              CALL GETFOV ( CAMID,  NCORNR, SHAPE,  DREF,
-      !>             .              BSIGHT, N,      BOUNDS       )
+      !>C
+      !>C     GETFOV will return the name of the camera-fixed frame
+      !>C     in the string DREF, the camera boresight vector in
+      !>C     the array BSIGHT, and the FOV corner vectors in the
+      !>C     array BOUNDS.
+      !>C
+      !>      CALL GETFOV ( CAMID,  NCORNR, SHAPE,  DREF,
+      !>     .              BSIGHT, N,      BOUNDS       )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Surface Intercept Locations for Camera'
-      !>              WRITE (*,*) 'FOV Boundary and Boresight Vectors'
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) '   Instrument:            ', CAMERA
-      !>              WRITE (*,*) '   Epoch:                 ', UTC
-      !>              WRITE (*,*) '   Aberration correction: ', ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Surface Intercept Locations for Camera'
+      !>      WRITE (*,*) 'FOV Boundary and Boresight Vectors'
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) '   Instrument:            ', CAMERA
+      !>      WRITE (*,*) '   Epoch:                 ', UTC
+      !>      WRITE (*,*) '   Aberration correction: ', ABCORR
       !>
-      !>        C
-      !>        C     Now compute and display the surface intercepts for the
-      !>        C     boresight and all of the FOV boundary vectors.
-      !>        C
-      !>              DO I = 1, NCORNR+1
+      !>C
+      !>C     Now compute and display the surface intercepts for the
+      !>C     boresight and all of the FOV boundary vectors.
+      !>C
+      !>      DO I = 1, NCORNR+1
       !>
-      !>                 IF ( I .LE. NCORNR ) THEN
+      !>         IF ( I .LE. NCORNR ) THEN
       !>
-      !>                    TITLE = 'Corner vector #'
-      !>                    CALL REPMI ( TITLE, '#', I, TITLE )
+      !>            TITLE = 'Corner vector #'
+      !>            CALL REPMI ( TITLE, '#', I, TITLE )
       !>
-      !>                    CALL VEQU ( BOUNDS(1,I), DVEC )
+      !>            CALL VEQU ( BOUNDS(1,I), DVEC )
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    TITLE = 'Boresight vector'
-      !>                    CALL VEQU ( BSIGHT, DVEC )
+      !>            TITLE = 'Boresight vector'
+      !>            CALL VEQU ( BSIGHT, DVEC )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) TITLE
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) TITLE
       !>
-      !>                 TITLE = '  Vector in # frame = '
-      !>                 CALL REPMC ( TITLE, '#', DREF, TITLE )
+      !>         TITLE = '  Vector in # frame = '
+      !>         CALL REPMC ( TITLE, '#', DREF, TITLE )
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) TITLE
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) TITLE
       !>
-      !>                 IF ( I .LE. NCORNR ) THEN
-      !>                    WRITE (*, '(1X,3F20.14)') ( BOUNDS(J,I), J=1,3 )
-      !>                 ELSE
-      !>                    WRITE (*, '(1X,3F20.14)') BSIGHT
-      !>                 END IF
+      !>         IF ( I .LE. NCORNR ) THEN
+      !>            WRITE (*, '(1X,3F20.14)') ( BOUNDS(J,I), J=1,3 )
+      !>         ELSE
+      !>            WRITE (*, '(1X,3F20.14)') BSIGHT
+      !>         END IF
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) '  Intercept:'
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) '  Intercept:'
       !>
-      !>        C
-      !>        C        Compute the surface intercept point using
-      !>        C        the specified aberration corrections. Loop
-      !>        C        over the set of computation methods.
-      !>        C
-      !>                 DO K = 1, NMETH
+      !>C
+      !>C        Compute the surface intercept point using
+      !>C        the specified aberration corrections. Loop
+      !>C        over the set of computation methods.
+      !>C
+      !>         DO K = 1, NMETH
       !>
-      !>                    METHOD = METHDS(K)
+      !>            METHOD = METHDS(K)
       !>
-      !>                    CALL SINCPT ( METHOD, TARGET, ET,
-      !>             .                    FIXREF, ABCORR, OBSRVR,
-      !>             .                    DREF,   DVEC,   SPOINT,
-      !>             .                    TRGEPC, SRFVEC, FOUND   )
+      !>            CALL SINCPT ( METHOD, TARGET, ET,
+      !>     .                    FIXREF, ABCORR, OBSRVR,
+      !>     .                    DREF,   DVEC,   SPOINT,
+      !>     .                    TRGEPC, SRFVEC, FOUND   )
       !>
-      !>                    IF ( FOUND ) THEN
-      !>        C
-      !>        C              Compute range from observer to apparent
-      !>        C              intercept.
-      !>        C
-      !>                       DIST = VNORM ( SRFVEC )
-      !>        C
-      !>        C              Convert rectangular coordinates to
-      !>        C              planetocentric latitude and longitude.
-      !>        C              Convert radians to degrees.
-      !>        C
-      !>                       CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
+      !>            IF ( FOUND ) THEN
+      !>C
+      !>C              Compute range from observer to apparent
+      !>C              intercept.
+      !>C
+      !>               DIST = VNORM ( SRFVEC )
+      !>C
+      !>C              Convert rectangular coordinates to
+      !>C              planetocentric latitude and longitude.
+      !>C              Convert radians to degrees.
+      !>C
+      !>               CALL RECLAT ( SPOINT, RADIUS, LON, LAT )
       !>
-      !>                       LON = LON * DPR ()
-      !>                       LAT = LAT * DPR ()
-      !>        C
-      !>        C              Display the results.
-      !>        C
+      !>               LON = LON * DPR ()
+      !>               LAT = LAT * DPR ()
+      !>C
+      !>C              Display the results.
+      !>C
       !>
-      !>                       WRITE (*,*) ' '
-      !>                       CALL TOSTDO ( '     Surface representation: '
-      !>             .         //            SRFTYP(K)                      )
-      !>                       WRITE (*,*) ' '
-      !>                       WRITE (*,*)
-      !>             .         '     Radius                   (km)  = ', RADIUS
-      !>                       WRITE (*,*)
-      !>             .         '     Planetocentric Latitude  (deg) = ', LAT
-      !>                       WRITE (*,*)
-      !>             .         '     Planetocentric Longitude (deg) = ', LON
-      !>                       WRITE (*,*)
-      !>             .         '     Range                    (km)  = ', DIST
+      !>               WRITE (*,*) ' '
+      !>               CALL TOSTDO ( '     Surface representation: '
+      !>     .         //            SRFTYP(K)                      )
+      !>               WRITE (*,*) ' '
+      !>               WRITE (*,*)
+      !>     .         '     Radius                   (km)  = ', RADIUS
+      !>               WRITE (*,*)
+      !>     .         '     Planetocentric Latitude  (deg) = ', LAT
+      !>               WRITE (*,*)
+      !>     .         '     Planetocentric Longitude (deg) = ', LON
+      !>               WRITE (*,*)
+      !>     .         '     Range                    (km)  = ', DIST
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       CALL TOSTDO ( '   Surface representation: '
-      !>             .         //            SRFTYP(K)                     )
-      !>                       WRITE (*,*) '     Intercept not found.'
-      !>                       WRITE (*,*) ' '
+      !>               CALL TOSTDO ( '   Surface representation: '
+      !>     .         //            SRFTYP(K)                     )
+      !>               WRITE (*,*) '     Intercept not found.'
+      !>               WRITE (*,*) ' '
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -86729,193 +86861,195 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SINCPT_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VDIST
-      !>              DOUBLE PRECISION      VNORM
+      !>```fortran
+      !>      PROGRAM SINCPT_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VDIST
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'sincpt_ex2.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'sincpt_ex2.tm' )
       !>
-      !>              CHARACTER*(*)         F1
-      !>              PARAMETER           ( F1     = '(A,F21.9)' )
+      !>      CHARACTER*(*)         F1
+      !>      PARAMETER           ( F1     = '(A,F21.9)' )
       !>
-      !>              CHARACTER*(*)         F2
-      !>              PARAMETER           ( F2     = '(A)' )
+      !>      CHARACTER*(*)         F2
+      !>      PARAMETER           ( F2     = '(A)' )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 5 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 5 )
       !>
-      !>              INTEGER               NCORR
-      !>              PARAMETER           ( NCORR  = 2 )
+      !>      INTEGER               NCORR
+      !>      PARAMETER           ( NCORR  = 2 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR ( NCORR )
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(FRNMLN)    HIREF
-      !>              CHARACTER*(MTHLEN)    SINMTH ( NMETH )
-      !>              CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR ( NCORR )
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(FRNMLN)    HIREF
+      !>      CHARACTER*(MTHLEN)    SINMTH ( NMETH )
+      !>      CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
       !>
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      MROVEC ( 3 )
-      !>              DOUBLE PRECISION      RADIUS
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      XFORM  ( 3, 3 )
-      !>              DOUBLE PRECISION      XEPOCH
-      !>              DOUBLE PRECISION      XPOINT ( 3 )
-      !>              DOUBLE PRECISION      XVEC   ( 3 )
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      MROVEC ( 3 )
+      !>      DOUBLE PRECISION      RADIUS
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      !>      DOUBLE PRECISION      XEPOCH
+      !>      DOUBLE PRECISION      XPOINT ( 3 )
+      !>      DOUBLE PRECISION      XVEC   ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  ABCORR / 'LT+S', 'CN+S'         /
-      !>              DATA                  FIXREF / 'IAU_MARS'             /
-      !>              DATA                  SINMTH / 'Ellipsoid',
-      !>             .                               'DSK/Unprioritized'    /
-      !>              DATA                  SUBMTH / 'Ellipsoid/Near point',
-      !>             .                            'DSK/Unprioritized/Nadir' /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  ABCORR / 'LT+S', 'CN+S'         /
+      !>      DATA                  FIXREF / 'IAU_MARS'             /
+      !>      DATA                  SINMTH / 'Ellipsoid',
+      !>     .                               'DSK/Unprioritized'    /
+      !>      DATA                  SUBMTH / 'Ellipsoid/Near point',
+      !>     .                            'DSK/Unprioritized/Nadir' /
       !>
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the TDB request time string to seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
+      !>C
+      !>C     Convert the TDB request time string to seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
       !>
-      !>        C
-      !>        C     Compute the sub-spacecraft point using the
-      !>        C     "NEAR POINT: ELLIPSOID" definition.
-      !>        C     Compute the results using both LT+S and CN+S
-      !>        C     aberration corrections.
-      !>        C
-      !>        C     Repeat the computation for each method.
-      !>        C
-      !>        C
-      !>              DO I = 1, NMETH
+      !>C
+      !>C     Compute the sub-spacecraft point using the
+      !>C     "NEAR POINT: ELLIPSOID" definition.
+      !>C     Compute the results using both LT+S and CN+S
+      !>C     aberration corrections.
+      !>C
+      !>C     Repeat the computation for each method.
+      !>C
+      !>C
+      !>      DO I = 1, NMETH
       !>
-      !>                 WRITE(*,F2) ' '
-      !>                 WRITE(*,F2) 'Sub-observer point computation method = '
-      !>             .               // SUBMTH(I)
+      !>         WRITE(*,F2) ' '
+      !>         WRITE(*,F2) 'Sub-observer point computation method = '
+      !>     .               // SUBMTH(I)
       !>
-      !>                 DO J = 1, NCORR
+      !>         DO J = 1, NCORR
       !>
-      !>                    CALL SUBPNT ( SUBMTH(I),
-      !>             .                    'Mars', ET,     FIXREF, ABCORR(J),
-      !>             .                    'MRO',  SPOINT, TRGEPC, SRFVEC    )
-      !>        C
-      !>        C           Compute the observer's altitude above SPOINT.
-      !>        C
-      !>                    ALT = VNORM ( SRFVEC )
-      !>        C
-      !>        C           Express SRFVEC in the MRO_HIRISE_LOOK_DIRECTION
-      !>        C           reference frame at epoch ET. Since SRFVEC is
-      !>        C           expressed relative to the IAU_MARS frame at
-      !>        C           TRGEPC, we must call PXFRM2 to compute the position
-      !>        C           transformation matrix from IAU_MARS at TRGEPC to
-      !>        C           the MRO_HIRISE_LOOK_DIRECTION frame at time ET.
-      !>        C
-      !>        C           To make code formatting a little easier, we'll
-      !>        C           store the long MRO reference frame name in a
-      !>        C           variable:
-      !>        C
-      !>                    HIREF = 'MRO_HIRISE_LOOK_DIRECTION'
+      !>            CALL SUBPNT ( SUBMTH(I),
+      !>     .                    'Mars', ET,     FIXREF, ABCORR(J),
+      !>     .                    'MRO',  SPOINT, TRGEPC, SRFVEC    )
+      !>C
+      !>C           Compute the observer's altitude above SPOINT.
+      !>C
+      !>            ALT = VNORM ( SRFVEC )
+      !>C
+      !>C           Express SRFVEC in the MRO_HIRISE_LOOK_DIRECTION
+      !>C           reference frame at epoch ET. Since SRFVEC is
+      !>C           expressed relative to the IAU_MARS frame at
+      !>C           TRGEPC, we must call PXFRM2 to compute the position
+      !>C           transformation matrix from IAU_MARS at TRGEPC to
+      !>C           the MRO_HIRISE_LOOK_DIRECTION frame at time ET.
+      !>C
+      !>C           To make code formatting a little easier, we'll
+      !>C           store the long MRO reference frame name in a
+      !>C           variable:
+      !>C
+      !>            HIREF = 'MRO_HIRISE_LOOK_DIRECTION'
       !>
-      !>                    CALL PXFRM2 ( FIXREF, HIREF,  TRGEPC, ET, XFORM )
-      !>                    CALL MXV    ( XFORM,  SRFVEC, MROVEC )
+      !>            CALL PXFRM2 ( FIXREF, HIREF,  TRGEPC, ET, XFORM )
+      !>            CALL MXV    ( XFORM,  SRFVEC, MROVEC )
       !>
-      !>        C
-      !>        C           Convert rectangular coordinates to planetocentric
-      !>        C           latitude and longitude. Convert radians to degrees.
-      !>        C
-      !>                    CALL RECLAT ( SPOINT, RADIUS, LON, LAT  )
+      !>C
+      !>C           Convert rectangular coordinates to planetocentric
+      !>C           latitude and longitude. Convert radians to degrees.
+      !>C
+      !>            CALL RECLAT ( SPOINT, RADIUS, LON, LAT  )
       !>
-      !>                    LON = LON * DPR ()
-      !>                    LAT = LAT * DPR ()
-      !>        C
-      !>        C           Write the results.
-      !>        C
-      !>                    WRITE(*,F2) ' '
-      !>                    WRITE(*,F2) '   Aberration correction = '
-      !>             .                // ABCORR(J)
-      !>                    WRITE(*,F1) ' '
-      !>                    WRITE(*,F2) '      MRO-to-sub-observer vector in'
-      !>                    WRITE(*,F2) '      MRO HIRISE look direction frame'
-      !>                    WRITE(*,F1) '        X-component             '
-      !>             .               // '(km) = ', MROVEC(1)
-      !>                    WRITE(*,F1) '        Y-component             '
-      !>             .               // '(km) = ', MROVEC(2)
-      !>                    WRITE(*,F1) '        Z-component             '
-      !>             .               // '(km) = ', MROVEC(3)
-      !>                    WRITE(*,F1) '      Sub-observer point radius '
-      !>             .               // '(km) = ', RADIUS
-      !>                    WRITE(*,F1) '      Planetocentric latitude  '
-      !>             .               // '(deg) = ', LAT
-      !>                    WRITE(*,F1) '      Planetocentric longitude '
-      !>             .               // '(deg) = ', LON
-      !>                    WRITE(*,F1) '      Observer altitude         '
-      !>             .               // '(km) = ',  ALT
+      !>            LON = LON * DPR ()
+      !>            LAT = LAT * DPR ()
+      !>C
+      !>C           Write the results.
+      !>C
+      !>            WRITE(*,F2) ' '
+      !>            WRITE(*,F2) '   Aberration correction = '
+      !>     .                // ABCORR(J)
+      !>            WRITE(*,F1) ' '
+      !>            WRITE(*,F2) '      MRO-to-sub-observer vector in'
+      !>            WRITE(*,F2) '      MRO HIRISE look direction frame'
+      !>            WRITE(*,F1) '        X-component             '
+      !>     .               // '(km) = ', MROVEC(1)
+      !>            WRITE(*,F1) '        Y-component             '
+      !>     .               // '(km) = ', MROVEC(2)
+      !>            WRITE(*,F1) '        Z-component             '
+      !>     .               // '(km) = ', MROVEC(3)
+      !>            WRITE(*,F1) '      Sub-observer point radius '
+      !>     .               // '(km) = ', RADIUS
+      !>            WRITE(*,F1) '      Planetocentric latitude  '
+      !>     .               // '(deg) = ', LAT
+      !>            WRITE(*,F1) '      Planetocentric longitude '
+      !>     .               // '(deg) = ', LON
+      !>            WRITE(*,F1) '      Observer altitude         '
+      !>     .               // '(km) = ',  ALT
       !>
-      !>        C
-      !>        C           Consistency check: find the surface intercept on
-      !>        C           Mars of the ray emanating from the spacecraft and
-      !>        C           having direction vector MROVEC in the MRO HIRISE
-      !>        C           reference frame at ET. Call the intercept point
-      !>        C           XPOINT. XPOINT should coincide with SPOINT, up to
-      !>        C           a small round-off error.
-      !>        C
-      !>                    CALL SINCPT ( SINMTH(I), 'Mars', ET,    FIXREF,
-      !>             .                    ABCORR(J), 'MRO',  HIREF, MROVEC,
-      !>             .                    XPOINT,    XEPOCH, XVEC,  FOUND  )
+      !>C
+      !>C           Consistency check: find the surface intercept on
+      !>C           Mars of the ray emanating from the spacecraft and
+      !>C           having direction vector MROVEC in the MRO HIRISE
+      !>C           reference frame at ET. Call the intercept point
+      !>C           XPOINT. XPOINT should coincide with SPOINT, up to
+      !>C           a small round-off error.
+      !>C
+      !>            CALL SINCPT ( SINMTH(I), 'Mars', ET,    FIXREF,
+      !>     .                    ABCORR(J), 'MRO',  HIREF, MROVEC,
+      !>     .                    XPOINT,    XEPOCH, XVEC,  FOUND  )
       !>
-      !>                    IF ( .NOT. FOUND ) THEN
-      !>                       WRITE (*,F1) 'Bug: no intercept'
-      !>                    ELSE
-      !>        C
-      !>        C              Report the distance between XPOINT and SPOINT.
-      !>        C
-      !>                       WRITE (*,* ) ' '
-      !>                       WRITE (*,F1) '   Intercept comparison '
-      !>             .         //           'error (km) = ',
-      !>             .                      VDIST( XPOINT, SPOINT )
-      !>                    END IF
+      !>            IF ( .NOT. FOUND ) THEN
+      !>               WRITE (*,F1) 'Bug: no intercept'
+      !>            ELSE
+      !>C
+      !>C              Report the distance between XPOINT and SPOINT.
+      !>C
+      !>               WRITE (*,* ) ' '
+      !>               WRITE (*,F1) '   Intercept comparison '
+      !>     .         //           'error (km) = ',
+      !>     .                      VDIST( XPOINT, SPOINT )
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -88283,194 +88417,196 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SUBPNT_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VNORM
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'subpnt_ex1.tm' )
+      !>```fortran
+      !>      PROGRAM SUBPNT_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VNORM
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'subpnt_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         FM
-      !>              PARAMETER           ( FM     =  '(A,F21.9)' )
+      !>      CHARACTER*(*)         FM
+      !>      PARAMETER           ( FM     =  '(A,F21.9)' )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 4 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 4 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(MTHLEN)    METHOD ( NMETH )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(MTHLEN)    METHOD ( NMETH )
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      OBSPOS ( 3 )
-      !>              DOUBLE PRECISION      ODIST
-      !>              DOUBLE PRECISION      OPCLAT
-      !>              DOUBLE PRECISION      OPCLON
-      !>              DOUBLE PRECISION      OPCRAD
-      !>              DOUBLE PRECISION      OPGALT
-      !>              DOUBLE PRECISION      OPGLAT
-      !>              DOUBLE PRECISION      OPGLON
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      SPCLAT
-      !>              DOUBLE PRECISION      SPCLON
-      !>              DOUBLE PRECISION      SPCRAD
-      !>              DOUBLE PRECISION      SPGALT
-      !>              DOUBLE PRECISION      SPGLAT
-      !>              DOUBLE PRECISION      SPGLON
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      OBSPOS ( 3 )
+      !>      DOUBLE PRECISION      ODIST
+      !>      DOUBLE PRECISION      OPCLAT
+      !>      DOUBLE PRECISION      OPCLON
+      !>      DOUBLE PRECISION      OPCRAD
+      !>      DOUBLE PRECISION      OPGALT
+      !>      DOUBLE PRECISION      OPGLAT
+      !>      DOUBLE PRECISION      OPGLON
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      SPCLAT
+      !>      DOUBLE PRECISION      SPCLON
+      !>      DOUBLE PRECISION      SPCRAD
+      !>      DOUBLE PRECISION      SPGALT
+      !>      DOUBLE PRECISION      SPGLAT
+      !>      DOUBLE PRECISION      SPGLON
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>              SAVE                  METHOD
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  METHOD / 'Intercept/ellipsoid',
-      !>             .                               'Near point/ellipsoid',
-      !>             .                      'Intercept/DSK/Unprioritized',
-      !>             .                      'Nadir/DSK/Unprioritized'      /
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>C
+      !>C     Saved variables
+      !>C
+      !>      SAVE                  METHOD
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  METHOD / 'Intercept/ellipsoid',
+      !>     .                               'Near point/ellipsoid',
+      !>     .                      'Intercept/DSK/Unprioritized',
+      !>     .                      'Nadir/DSK/Unprioritized'      /
       !>
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the UTC request time string seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
+      !>C
+      !>C     Convert the UTC request time string seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
       !>
-      !>        C
-      !>        C     Look up the target body's radii. We'll use these to
-      !>        C     convert Cartesian to planetographic coordinates. Use
-      !>        C     the radii to compute the flattening coefficient of
-      !>        C     the reference ellipsoid.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the target body's radii. We'll use these to
+      !>C     convert Cartesian to planetographic coordinates. Use
+      !>C     the radii to compute the flattening coefficient of
+      !>C     the reference ellipsoid.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Let RE and RP be, respectively, the equatorial and
-      !>        C     polar radii of the target.
-      !>        C
-      !>              RE = RADII( 1 )
-      !>              RP = RADII( 3 )
+      !>C
+      !>C     Let RE and RP be, respectively, the equatorial and
+      !>C     polar radii of the target.
+      !>C
+      !>      RE = RADII( 1 )
+      !>      RP = RADII( 3 )
       !>
-      !>              F  = ( RE - RP ) / RE
+      !>      F  = ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Compute sub-observer point using light time and
-      !>        C     stellar aberration corrections. Use both ellipsoid
-      !>        C     and DSK shape models, and use all of the
-      !>        C     "near point," "intercept," and "nadir" sub-observer
-      !>        C     point definitions.
-      !>        C
-      !>              DO I = 1, NMETH
+      !>C
+      !>C     Compute sub-observer point using light time and
+      !>C     stellar aberration corrections. Use both ellipsoid
+      !>C     and DSK shape models, and use all of the
+      !>C     "near point," "intercept," and "nadir" sub-observer
+      !>C     point definitions.
+      !>C
+      !>      DO I = 1, NMETH
       !>
-      !>                 CALL SUBPNT ( METHOD(I),
-      !>             .                'MARS',  ET,     'IAU_MARS', 'CN+S',
-      !>             .                'EARTH', SPOINT, TRGEPC,     SRFVEC )
-      !>        C
-      !>        C        Compute the observer's distance from SPOINT.
-      !>        C
-      !>                 ODIST  = VNORM ( SRFVEC )
+      !>         CALL SUBPNT ( METHOD(I),
+      !>     .                'MARS',  ET,     'IAU_MARS', 'CN+S',
+      !>     .                'EARTH', SPOINT, TRGEPC,     SRFVEC )
+      !>C
+      !>C        Compute the observer's distance from SPOINT.
+      !>C
+      !>         ODIST  = VNORM ( SRFVEC )
       !>
-      !>        C
-      !>        C        Convert the sub-observer point's rectangular
-      !>        C        coordinates to planetographic longitude, latitude
-      !>        C        and altitude. Convert radians to degrees.
-      !>        C
-      !>                 CALL RECPGR ( 'MARS', SPOINT, RE,    F,
-      !>             .                 SPGLON, SPGLAT, SPGALT   )
+      !>C
+      !>C        Convert the sub-observer point's rectangular
+      !>C        coordinates to planetographic longitude, latitude
+      !>C        and altitude. Convert radians to degrees.
+      !>C
+      !>         CALL RECPGR ( 'MARS', SPOINT, RE,    F,
+      !>     .                 SPGLON, SPGLAT, SPGALT   )
       !>
-      !>                 SPGLON = SPGLON * DPR ()
-      !>                 SPGLAT = SPGLAT * DPR ()
+      !>         SPGLON = SPGLON * DPR ()
+      !>         SPGLAT = SPGLAT * DPR ()
       !>
-      !>        C
-      !>        C        Convert sub-observer point's rectangular coordinates
-      !>        C        to planetocentric radius, longitude, and latitude.
-      !>        C        Convert radians to degrees.
-      !>        C
-      !>                 CALL RECLAT ( SPOINT, SPCRAD, SPCLON, SPCLAT )
+      !>C
+      !>C        Convert sub-observer point's rectangular coordinates
+      !>C        to planetocentric radius, longitude, and latitude.
+      !>C        Convert radians to degrees.
+      !>C
+      !>         CALL RECLAT ( SPOINT, SPCRAD, SPCLON, SPCLAT )
       !>
-      !>                 SPCLON = SPCLON * DPR ()
-      !>                 SPCLAT = SPCLAT * DPR ()
+      !>         SPCLON = SPCLON * DPR ()
+      !>         SPCLAT = SPCLAT * DPR ()
       !>
-      !>        C
-      !>        C        Compute the observer's position relative to the center
-      !>        C        of the target, where the center's location has been
-      !>        C        adjusted using the aberration corrections applicable
-      !>        C        to the sub-point. Express the observer's location in
-      !>        C        planetographic coordinates.
-      !>        C
-      !>                 CALL VSUB ( SPOINT, SRFVEC, OBSPOS )
+      !>C
+      !>C        Compute the observer's position relative to the center
+      !>C        of the target, where the center's location has been
+      !>C        adjusted using the aberration corrections applicable
+      !>C        to the sub-point. Express the observer's location in
+      !>C        planetographic coordinates.
+      !>C
+      !>         CALL VSUB ( SPOINT, SRFVEC, OBSPOS )
       !>
-      !>                 CALL RECPGR ( 'MARS', OBSPOS, RE,    F,
-      !>             .                 OPGLON, OPGLAT, OPGALT   )
+      !>         CALL RECPGR ( 'MARS', OBSPOS, RE,    F,
+      !>     .                 OPGLON, OPGLAT, OPGALT   )
       !>
-      !>                 OPGLON = OPGLON * DPR ()
-      !>                 OPGLAT = OPGLAT * DPR ()
+      !>         OPGLON = OPGLON * DPR ()
+      !>         OPGLAT = OPGLAT * DPR ()
       !>
-      !>        C
-      !>        C        Convert the observer's rectangular coordinates to
-      !>        C        planetocentric radius, longitude, and latitude.
-      !>        C        Convert radians to degrees.
-      !>        C
-      !>                 CALL RECLAT ( OBSPOS, OPCRAD, OPCLON, OPCLAT )
+      !>C
+      !>C        Convert the observer's rectangular coordinates to
+      !>C        planetocentric radius, longitude, and latitude.
+      !>C        Convert radians to degrees.
+      !>C
+      !>         CALL RECLAT ( OBSPOS, OPCRAD, OPCLON, OPCLAT )
       !>
-      !>                 OPCLON = OPCLON * DPR ()
-      !>                 OPCLAT = OPCLAT * DPR ()
+      !>         OPCLON = OPCLON * DPR ()
+      !>         OPCLAT = OPCLAT * DPR ()
       !>
-      !>        C
-      !>        C        Write the results.
-      !>        C
-      !>                 WRITE(*,FM) ' '
-      !>                 WRITE(*,* ) 'Computation method = ', METHOD(I)
-      !>                 WRITE(*,FM) ' '
-      !>                 WRITE(*,FM)
-      !>             .   '  Observer ALT relative to spheroid (km) =', OPGALT
-      !>                 WRITE(*,FM)
-      !>             .   '  Length of SRFVEC                  (km) =', ODIST
-      !>                 WRITE(*,FM)
-      !>             .   '  Sub-observer point ALT            (km) =', SPGALT
-      !>                 WRITE(*,FM)
-      !>             .   '  Sub-observer planetographic LON  (deg) =', SPGLON
-      !>                 WRITE(*,FM)
-      !>             .   '  Observer planetographic LON      (deg) =', OPGLON
-      !>                 WRITE(*,FM)
-      !>             .   '  Sub-observer planetographic LAT  (deg) =', SPGLAT
-      !>                 WRITE(*,FM)
-      !>             .   '  Observer planetographic LAT      (deg) =', OPGLAT
-      !>                 WRITE(*,FM)
-      !>             .   '  Sub-observer planetocentric LON  (deg) =', SPCLON
-      !>                 WRITE(*,FM)
-      !>             .   '  Observer planetocentric LON      (deg) =', OPCLON
-      !>                 WRITE(*,FM)
-      !>             .   '  Sub-observer planetocentric LAT  (deg) =', SPCLAT
-      !>                 WRITE(*,FM)
-      !>             .   '  Observer planetocentric LAT      (deg) =', OPCLAT
-      !>                 WRITE(*,FM) ' '
+      !>C
+      !>C        Write the results.
+      !>C
+      !>         WRITE(*,FM) ' '
+      !>         WRITE(*,* ) 'Computation method = ', METHOD(I)
+      !>         WRITE(*,FM) ' '
+      !>         WRITE(*,FM)
+      !>     .   '  Observer ALT relative to spheroid (km) =', OPGALT
+      !>         WRITE(*,FM)
+      !>     .   '  Length of SRFVEC                  (km) =', ODIST
+      !>         WRITE(*,FM)
+      !>     .   '  Sub-observer point ALT            (km) =', SPGALT
+      !>         WRITE(*,FM)
+      !>     .   '  Sub-observer planetographic LON  (deg) =', SPGLON
+      !>         WRITE(*,FM)
+      !>     .   '  Observer planetographic LON      (deg) =', OPGLON
+      !>         WRITE(*,FM)
+      !>     .   '  Sub-observer planetographic LAT  (deg) =', SPGLAT
+      !>         WRITE(*,FM)
+      !>     .   '  Observer planetographic LAT      (deg) =', OPGLAT
+      !>         WRITE(*,FM)
+      !>     .   '  Sub-observer planetocentric LON  (deg) =', SPCLON
+      !>         WRITE(*,FM)
+      !>     .   '  Observer planetocentric LON      (deg) =', OPCLON
+      !>         WRITE(*,FM)
+      !>     .   '  Sub-observer planetocentric LAT  (deg) =', SPCLAT
+      !>         WRITE(*,FM)
+      !>     .   '  Observer planetocentric LAT      (deg) =', OPCLAT
+      !>         WRITE(*,FM) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -88627,193 +88763,195 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SUBPNT_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      VDIST
-      !>              DOUBLE PRECISION      VNORM
+      !>```fortran
+      !>      PROGRAM SUBPNT_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      VDIST
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'subpnt_ex2.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'subpnt_ex2.tm' )
       !>
-      !>              CHARACTER*(*)         F1
-      !>              PARAMETER           ( F1     = '(A,F21.9)' )
+      !>      CHARACTER*(*)         F1
+      !>      PARAMETER           ( F1     = '(A,F21.9)' )
       !>
-      !>              CHARACTER*(*)         F2
-      !>              PARAMETER           ( F2     = '(A)' )
+      !>      CHARACTER*(*)         F2
+      !>      PARAMETER           ( F2     = '(A)' )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 5 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 5 )
       !>
-      !>              INTEGER               NCORR
-      !>              PARAMETER           ( NCORR  = 2 )
+      !>      INTEGER               NCORR
+      !>      PARAMETER           ( NCORR  = 2 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR ( NCORR )
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(FRNMLN)    HIREF
-      !>              CHARACTER*(MTHLEN)    SINMTH ( NMETH )
-      !>              CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR ( NCORR )
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(FRNMLN)    HIREF
+      !>      CHARACTER*(MTHLEN)    SINMTH ( NMETH )
+      !>      CHARACTER*(MTHLEN)    SUBMTH ( NMETH )
       !>
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      MROVEC ( 3 )
-      !>              DOUBLE PRECISION      RADIUS
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      XFORM  ( 3, 3 )
-      !>              DOUBLE PRECISION      XEPOCH
-      !>              DOUBLE PRECISION      XPOINT ( 3 )
-      !>              DOUBLE PRECISION      XVEC   ( 3 )
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      MROVEC ( 3 )
+      !>      DOUBLE PRECISION      RADIUS
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      XFORM  ( 3, 3 )
+      !>      DOUBLE PRECISION      XEPOCH
+      !>      DOUBLE PRECISION      XPOINT ( 3 )
+      !>      DOUBLE PRECISION      XVEC   ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  ABCORR / 'LT+S', 'CN+S'         /
-      !>              DATA                  FIXREF / 'IAU_MARS'             /
-      !>              DATA                  SINMTH / 'Ellipsoid',
-      !>             .                               'DSK/Unprioritized'    /
-      !>              DATA                  SUBMTH / 'Ellipsoid/Near point',
-      !>             .                            'DSK/Unprioritized/Nadir' /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  ABCORR / 'LT+S', 'CN+S'         /
+      !>      DATA                  FIXREF / 'IAU_MARS'             /
+      !>      DATA                  SINMTH / 'Ellipsoid',
+      !>     .                               'DSK/Unprioritized'    /
+      !>      DATA                  SUBMTH / 'Ellipsoid/Near point',
+      !>     .                            'DSK/Unprioritized/Nadir' /
       !>
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the TDB request time string to seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
+      !>C
+      !>C     Convert the TDB request time string to seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
       !>
-      !>        C
-      !>        C     Compute the sub-spacecraft point using the
-      !>        C     "NEAR POINT: ELLIPSOID" definition.
-      !>        C     Compute the results using both LT+S and CN+S
-      !>        C     aberration corrections.
-      !>        C
-      !>        C     Repeat the computation for each method.
-      !>        C
-      !>        C
-      !>              DO I = 1, NMETH
+      !>C
+      !>C     Compute the sub-spacecraft point using the
+      !>C     "NEAR POINT: ELLIPSOID" definition.
+      !>C     Compute the results using both LT+S and CN+S
+      !>C     aberration corrections.
+      !>C
+      !>C     Repeat the computation for each method.
+      !>C
+      !>C
+      !>      DO I = 1, NMETH
       !>
-      !>                 WRITE(*,F2) ' '
-      !>                 WRITE(*,F2) 'Sub-observer point computation method = '
-      !>             .               // SUBMTH(I)
+      !>         WRITE(*,F2) ' '
+      !>         WRITE(*,F2) 'Sub-observer point computation method = '
+      !>     .               // SUBMTH(I)
       !>
-      !>                 DO J = 1, NCORR
+      !>         DO J = 1, NCORR
       !>
-      !>                    CALL SUBPNT ( SUBMTH(I),
-      !>             .                    'Mars', ET,     FIXREF, ABCORR(J),
-      !>             .                    'MRO',  SPOINT, TRGEPC, SRFVEC    )
-      !>        C
-      !>        C           Compute the observer's altitude above SPOINT.
-      !>        C
-      !>                    ALT = VNORM ( SRFVEC )
-      !>        C
-      !>        C           Express SRFVEC in the MRO_HIRISE_LOOK_DIRECTION
-      !>        C           reference frame at epoch ET. Since SRFVEC is
-      !>        c           expressed relative to the IAU_MARS frame at
-      !>        C           TRGEPC, we must call PXFRM2 to compute the position
-      !>        C           transformation matrix from IAU_MARS at TRGEPC to
-      !>        C           the MRO_HIRISE_LOOK_DIRECTION frame at time ET.
-      !>        C
-      !>        C           To make code formatting a little easier, we'll
-      !>        C           store the long MRO reference frame name in a
-      !>        C           variable:
-      !>        C
-      !>                    HIREF = 'MRO_HIRISE_LOOK_DIRECTION'
+      !>            CALL SUBPNT ( SUBMTH(I),
+      !>     .                    'Mars', ET,     FIXREF, ABCORR(J),
+      !>     .                    'MRO',  SPOINT, TRGEPC, SRFVEC    )
+      !>C
+      !>C           Compute the observer's altitude above SPOINT.
+      !>C
+      !>            ALT = VNORM ( SRFVEC )
+      !>C
+      !>C           Express SRFVEC in the MRO_HIRISE_LOOK_DIRECTION
+      !>C           reference frame at epoch ET. Since SRFVEC is
+      !>c           expressed relative to the IAU_MARS frame at
+      !>C           TRGEPC, we must call PXFRM2 to compute the position
+      !>C           transformation matrix from IAU_MARS at TRGEPC to
+      !>C           the MRO_HIRISE_LOOK_DIRECTION frame at time ET.
+      !>C
+      !>C           To make code formatting a little easier, we'll
+      !>C           store the long MRO reference frame name in a
+      !>C           variable:
+      !>C
+      !>            HIREF = 'MRO_HIRISE_LOOK_DIRECTION'
       !>
-      !>                    CALL PXFRM2 ( FIXREF, HIREF,  TRGEPC, ET, XFORM )
-      !>                    CALL MXV    ( XFORM,  SRFVEC, MROVEC )
+      !>            CALL PXFRM2 ( FIXREF, HIREF,  TRGEPC, ET, XFORM )
+      !>            CALL MXV    ( XFORM,  SRFVEC, MROVEC )
       !>
-      !>        C
-      !>        C           Convert rectangular coordinates to planetocentric
-      !>        C           latitude and longitude. Convert radians to degrees.
-      !>        C
-      !>                    CALL RECLAT ( SPOINT, RADIUS, LON, LAT  )
+      !>C
+      !>C           Convert rectangular coordinates to planetocentric
+      !>C           latitude and longitude. Convert radians to degrees.
+      !>C
+      !>            CALL RECLAT ( SPOINT, RADIUS, LON, LAT  )
       !>
-      !>                    LON = LON * DPR ()
-      !>                    LAT = LAT * DPR ()
-      !>        C
-      !>        C           Write the results.
-      !>        C
-      !>                    WRITE(*,F2) ' '
-      !>                    WRITE(*,F2) '   Aberration correction = '
-      !>             .      // ABCORR(J)
-      !>                    WRITE(*,F1) ' '
-      !>                    WRITE(*,F2) '      MRO-to-sub-observer vector in'
-      !>                    WRITE(*,F2) '      MRO HIRISE look direction frame'
-      !>                    WRITE(*,F1) '        X-component             '
-      !>             .      // '(km) = ', MROVEC(1)
-      !>                    WRITE(*,F1) '        Y-component             '
-      !>             .      // '(km) = ', MROVEC(2)
-      !>                    WRITE(*,F1) '        Z-component             '
-      !>             .      // '(km) = ', MROVEC(3)
-      !>                    WRITE(*,F1) '      Sub-observer point radius '
-      !>             .      // '(km) = ', RADIUS
-      !>                    WRITE(*,F1) '      Planetocentric latitude  '
-      !>             .      // '(deg) = ', LAT
-      !>                    WRITE(*,F1) '      Planetocentric longitude '
-      !>             .      // '(deg) = ', LON
-      !>                    WRITE(*,F1) '      Observer altitude         '
-      !>             .      // '(km) = ', ALT
+      !>            LON = LON * DPR ()
+      !>            LAT = LAT * DPR ()
+      !>C
+      !>C           Write the results.
+      !>C
+      !>            WRITE(*,F2) ' '
+      !>            WRITE(*,F2) '   Aberration correction = '
+      !>     .      // ABCORR(J)
+      !>            WRITE(*,F1) ' '
+      !>            WRITE(*,F2) '      MRO-to-sub-observer vector in'
+      !>            WRITE(*,F2) '      MRO HIRISE look direction frame'
+      !>            WRITE(*,F1) '        X-component             '
+      !>     .      // '(km) = ', MROVEC(1)
+      !>            WRITE(*,F1) '        Y-component             '
+      !>     .      // '(km) = ', MROVEC(2)
+      !>            WRITE(*,F1) '        Z-component             '
+      !>     .      // '(km) = ', MROVEC(3)
+      !>            WRITE(*,F1) '      Sub-observer point radius '
+      !>     .      // '(km) = ', RADIUS
+      !>            WRITE(*,F1) '      Planetocentric latitude  '
+      !>     .      // '(deg) = ', LAT
+      !>            WRITE(*,F1) '      Planetocentric longitude '
+      !>     .      // '(deg) = ', LON
+      !>            WRITE(*,F1) '      Observer altitude         '
+      !>     .      // '(km) = ', ALT
       !>
-      !>        C
-      !>        C           Consistency check: find the surface intercept on
-      !>        C           Mars of the ray emanating from the spacecraft and
-      !>        C           having direction vector MROVEC in the MRO HIRISE
-      !>        C           reference frame at ET. Call the intercept point
-      !>        C           XPOINT. XPOINT should coincide with SPOINT, up to
-      !>        C           a small round-off error.
-      !>        C
-      !>                    CALL SINCPT ( SINMTH(I), 'Mars', ET,    FIXREF,
-      !>             .                    ABCORR(J), 'MRO',  HIREF, MROVEC,
-      !>             .                    XPOINT,    XEPOCH, XVEC,  FOUND  )
+      !>C
+      !>C           Consistency check: find the surface intercept on
+      !>C           Mars of the ray emanating from the spacecraft and
+      !>C           having direction vector MROVEC in the MRO HIRISE
+      !>C           reference frame at ET. Call the intercept point
+      !>C           XPOINT. XPOINT should coincide with SPOINT, up to
+      !>C           a small round-off error.
+      !>C
+      !>            CALL SINCPT ( SINMTH(I), 'Mars', ET,    FIXREF,
+      !>     .                    ABCORR(J), 'MRO',  HIREF, MROVEC,
+      !>     .                    XPOINT,    XEPOCH, XVEC,  FOUND  )
       !>
-      !>                    IF ( .NOT. FOUND ) THEN
-      !>                       WRITE (*,F1) 'Bug: no intercept'
-      !>                    ELSE
-      !>        C
-      !>        C              Report the distance between XPOINT and SPOINT.
-      !>        C
-      !>                       WRITE (*,* ) ' '
-      !>                       WRITE (*,F1) '   Intercept comparison '
-      !>             .         //           'error (km) = ',
-      !>             .                      VDIST( XPOINT, SPOINT )
-      !>                    END IF
+      !>            IF ( .NOT. FOUND ) THEN
+      !>               WRITE (*,F1) 'Bug: no intercept'
+      !>            ELSE
+      !>C
+      !>C              Report the distance between XPOINT and SPOINT.
+      !>C
+      !>               WRITE (*,* ) ' '
+      !>               WRITE (*,F1) '   Intercept comparison '
+      !>     .         //           'error (km) = ',
+      !>     .                      VDIST( XPOINT, SPOINT )
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -90570,189 +90708,191 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SUBSLR_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'subslr_ex1.tm' )
+      !>```fortran
+      !>      PROGRAM SUBSLR_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'subslr_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         FM
-      !>              PARAMETER           ( FM     =  '(A,F18.9)' )
+      !>      CHARACTER*(*)         FM
+      !>      PARAMETER           ( FM     =  '(A,F18.9)' )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 4 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 4 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(MTHLEN)    METHOD ( NMETH )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(MTHLEN)    METHOD ( NMETH )
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      SPCLAT
-      !>              DOUBLE PRECISION      SPCLON
-      !>              DOUBLE PRECISION      SPCRAD
-      !>              DOUBLE PRECISION      SPGALT
-      !>              DOUBLE PRECISION      SPGLAT
-      !>              DOUBLE PRECISION      SPGLON
-      !>              DOUBLE PRECISION      SPOINT ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      SUNLT
-      !>              DOUBLE PRECISION      SUNPOS ( 3 )
-      !>              DOUBLE PRECISION      SUNST  ( 6 )
-      !>              DOUBLE PRECISION      SUPCLN
-      !>              DOUBLE PRECISION      SUPCLT
-      !>              DOUBLE PRECISION      SUPCRD
-      !>              DOUBLE PRECISION      SUPGAL
-      !>              DOUBLE PRECISION      SUPGLN
-      !>              DOUBLE PRECISION      SUPGLT
-      !>              DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      SPCLAT
+      !>      DOUBLE PRECISION      SPCLON
+      !>      DOUBLE PRECISION      SPCRAD
+      !>      DOUBLE PRECISION      SPGALT
+      !>      DOUBLE PRECISION      SPGLAT
+      !>      DOUBLE PRECISION      SPGLON
+      !>      DOUBLE PRECISION      SPOINT ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      SUNLT
+      !>      DOUBLE PRECISION      SUNPOS ( 3 )
+      !>      DOUBLE PRECISION      SUNST  ( 6 )
+      !>      DOUBLE PRECISION      SUPCLN
+      !>      DOUBLE PRECISION      SUPCLT
+      !>      DOUBLE PRECISION      SUPCRD
+      !>      DOUBLE PRECISION      SUPGAL
+      !>      DOUBLE PRECISION      SUPGLN
+      !>      DOUBLE PRECISION      SUPGLT
+      !>      DOUBLE PRECISION      TRGEPC
       !>
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>              SAVE                  METHOD
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  METHOD / 'Intercept/ellipsoid',
-      !>             .                               'Near point/ellipsoid',
-      !>             .                      'Intercept/DSK/Unprioritized',
-      !>             .                      'Nadir/DSK/Unprioritized'      /
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>C
+      !>C     Saved variables
+      !>C
+      !>      SAVE                  METHOD
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  METHOD / 'Intercept/ellipsoid',
+      !>     .                               'Near point/ellipsoid',
+      !>     .                      'Intercept/DSK/Unprioritized',
+      !>     .                      'Nadir/DSK/Unprioritized'      /
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the UTC request time to ET (seconds past
-      !>        C     J2000, TDB).
-      !>        C
-      !>              CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
+      !>C
+      !>C     Convert the UTC request time to ET (seconds past
+      !>C     J2000, TDB).
+      !>C
+      !>      CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
       !>
-      !>        C
-      !>        C     Look up the target body's radii. We'll use these to
-      !>        C     convert Cartesian to planetographic coordinates. Use
-      !>        C     the radii to compute the flattening coefficient of
-      !>        C     the reference ellipsoid.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the target body's radii. We'll use these to
+      !>C     convert Cartesian to planetographic coordinates. Use
+      !>C     the radii to compute the flattening coefficient of
+      !>C     the reference ellipsoid.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Let RE and RP be, respectively, the equatorial and
-      !>        C     polar radii of the target.
-      !>        C
-      !>              RE = RADII( 1 )
-      !>              RP = RADII( 3 )
+      !>C
+      !>C     Let RE and RP be, respectively, the equatorial and
+      !>C     polar radii of the target.
+      !>C
+      !>      RE = RADII( 1 )
+      !>      RP = RADII( 3 )
       !>
-      !>              F  = ( RE - RP ) / RE
+      !>      F  = ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Compute the sub-solar point using light time and stellar
-      !>        C     aberration corrections. Use the "target surface
-      !>        C     intercept" definition of sub-solar point on the first
-      !>        C     loop iteration, and use the "near point" definition on
-      !>        C     the second.
-      !>        C
-      !>              DO I = 1, NMETH
+      !>C
+      !>C     Compute the sub-solar point using light time and stellar
+      !>C     aberration corrections. Use the "target surface
+      !>C     intercept" definition of sub-solar point on the first
+      !>C     loop iteration, and use the "near point" definition on
+      !>C     the second.
+      !>C
+      !>      DO I = 1, NMETH
       !>
-      !>                 CALL SUBSLR ( METHOD(I),
-      !>             .                'MARS',  ET,     'IAU_MARS', 'CN+S',
-      !>             .                'EARTH', SPOINT, TRGEPC,     SRFVEC )
-      !>        C
-      !>        C        Convert the sub-solar point's rectangular coordinates
-      !>        C        to planetographic longitude, latitude and altitude.
-      !>        C        Convert radians to degrees.
-      !>        C
-      !>                 CALL RECPGR ( 'MARS', SPOINT, RE,    F,
-      !>             .                 SPGLON, SPGLAT, SPGALT   )
+      !>         CALL SUBSLR ( METHOD(I),
+      !>     .                'MARS',  ET,     'IAU_MARS', 'CN+S',
+      !>     .                'EARTH', SPOINT, TRGEPC,     SRFVEC )
+      !>C
+      !>C        Convert the sub-solar point's rectangular coordinates
+      !>C        to planetographic longitude, latitude and altitude.
+      !>C        Convert radians to degrees.
+      !>C
+      !>         CALL RECPGR ( 'MARS', SPOINT, RE,    F,
+      !>     .                 SPGLON, SPGLAT, SPGALT   )
       !>
-      !>                 SPGLON = SPGLON * DPR ()
-      !>                 SPGLAT = SPGLAT * DPR ()
+      !>         SPGLON = SPGLON * DPR ()
+      !>         SPGLAT = SPGLAT * DPR ()
       !>
-      !>        C
-      !>        C        Convert sub-solar point's rectangular coordinates to
-      !>        C        planetocentric radius, longitude, and latitude.
-      !>        C        Convert radians to degrees.
-      !>        C
-      !>                 CALL RECLAT ( SPOINT, SPCRAD, SPCLON, SPCLAT )
+      !>C
+      !>C        Convert sub-solar point's rectangular coordinates to
+      !>C        planetocentric radius, longitude, and latitude.
+      !>C        Convert radians to degrees.
+      !>C
+      !>         CALL RECLAT ( SPOINT, SPCRAD, SPCLON, SPCLAT )
       !>
-      !>                 SPCLON = SPCLON * DPR ()
-      !>                 SPCLAT = SPCLAT * DPR ()
+      !>         SPCLON = SPCLON * DPR ()
+      !>         SPCLAT = SPCLAT * DPR ()
       !>
-      !>        C
-      !>        C        Compute the Sun's apparent position relative to the
-      !>        C        sub-solar point at TRGEPC. Add the position of
-      !>        C        the sub-solar point relative to the target's center
-      !>        C        to obtain the position of the sun relative to the
-      !>        C        target's center. Express the latter position in
-      !>        C        planetographic coordinates.
-      !>        C
-      !>                 CALL SPKCPO ( 'SUN',  TRGEPC, 'IAU_MARS', 'OBSERVER',
-      !>             .                 'CN+S', SPOINT, 'MARS',     'IAU_MARS',
-      !>             .                 SUNST,  SUNLT                          )
+      !>C
+      !>C        Compute the Sun's apparent position relative to the
+      !>C        sub-solar point at TRGEPC. Add the position of
+      !>C        the sub-solar point relative to the target's center
+      !>C        to obtain the position of the sun relative to the
+      !>C        target's center. Express the latter position in
+      !>C        planetographic coordinates.
+      !>C
+      !>         CALL SPKCPO ( 'SUN',  TRGEPC, 'IAU_MARS', 'OBSERVER',
+      !>     .                 'CN+S', SPOINT, 'MARS',     'IAU_MARS',
+      !>     .                 SUNST,  SUNLT                          )
       !>
-      !>                 CALL VADD ( SUNST, SPOINT, SUNPOS )
+      !>         CALL VADD ( SUNST, SPOINT, SUNPOS )
       !>
-      !>                 CALL RECPGR ( 'MARS', SUNPOS, RE,    F,
-      !>             .                 SUPGLN, SUPGLT, SUPGAL   )
+      !>         CALL RECPGR ( 'MARS', SUNPOS, RE,    F,
+      !>     .                 SUPGLN, SUPGLT, SUPGAL   )
       !>
-      !>                 SUPGLN = SUPGLN * DPR ()
-      !>                 SUPGLT = SUPGLT * DPR ()
+      !>         SUPGLN = SUPGLN * DPR ()
+      !>         SUPGLT = SUPGLT * DPR ()
       !>
-      !>        C
-      !>        C        Convert the Sun's rectangular coordinates to
-      !>        C        planetocentric radius, longitude, and latitude.
-      !>        C        Convert radians to degrees.
-      !>        C
-      !>                 CALL RECLAT ( SUNPOS, SUPCRD, SUPCLN, SUPCLT )
+      !>C
+      !>C        Convert the Sun's rectangular coordinates to
+      !>C        planetocentric radius, longitude, and latitude.
+      !>C        Convert radians to degrees.
+      !>C
+      !>         CALL RECLAT ( SUNPOS, SUPCRD, SUPCLN, SUPCLT )
       !>
-      !>                 SUPCLN = SUPCLN * DPR ()
-      !>                 SUPCLT = SUPCLT * DPR ()
+      !>         SUPCLN = SUPCLN * DPR ()
+      !>         SUPCLT = SUPCLT * DPR ()
       !>
-      !>        C
-      !>        C        Write the results.
-      !>        C
-      !>                 WRITE(*,FM) ' '
-      !>                 WRITE(*,* ) 'Computation method = ', METHOD(I)
-      !>                 WRITE(*,FM) ' '
-      !>                 WRITE(*,FM) '  Sub-solar point altitude            '
-      !>             .   // '(km) = ', SPGALT
-      !>                 WRITE(*,FM) '  Sub-solar planetographic longitude '
-      !>             .   // '(deg) = ', SPGLON
-      !>                 WRITE(*,FM) '  Sun''s planetographic longitude     '
-      !>             .   // '(deg) = ', SUPGLN
-      !>                 WRITE(*,FM) '  Sub-solar planetographic latitude  '
-      !>             .   // '(deg) = ', SPGLAT
-      !>                 WRITE(*,FM) '  Sun''s planetographic latitude      '
-      !>             .   // '(deg) = ', SUPGLT
-      !>                 WRITE(*,FM) '  Sub-solar planetocentric longitude '
-      !>             .   // '(deg) = ', SPCLON
-      !>                 WRITE(*,FM) '  Sun''s planetocentric longitude     '
-      !>             .   // '(deg) = ', SUPCLN
-      !>                 WRITE(*,FM) '  Sub-solar planetocentric latitude  '
-      !>             .   // '(deg) = ', SPCLAT
-      !>                 WRITE(*,FM) '  Sun''s planetocentric latitude      '
-      !>             .   // '(deg) = ', SUPCLT
-      !>                 WRITE(*,FM) ' '
+      !>C
+      !>C        Write the results.
+      !>C
+      !>         WRITE(*,FM) ' '
+      !>         WRITE(*,* ) 'Computation method = ', METHOD(I)
+      !>         WRITE(*,FM) ' '
+      !>         WRITE(*,FM) '  Sub-solar point altitude            '
+      !>     .   // '(km) = ', SPGALT
+      !>         WRITE(*,FM) '  Sub-solar planetographic longitude '
+      !>     .   // '(deg) = ', SPGLON
+      !>         WRITE(*,FM) '  Sun''s planetographic longitude     '
+      !>     .   // '(deg) = ', SUPGLN
+      !>         WRITE(*,FM) '  Sub-solar planetographic latitude  '
+      !>     .   // '(deg) = ', SPGLAT
+      !>         WRITE(*,FM) '  Sun''s planetographic latitude      '
+      !>     .   // '(deg) = ', SUPGLT
+      !>         WRITE(*,FM) '  Sub-solar planetocentric longitude '
+      !>     .   // '(deg) = ', SPCLON
+      !>         WRITE(*,FM) '  Sun''s planetocentric longitude     '
+      !>     .   // '(deg) = ', SUPCLN
+      !>         WRITE(*,FM) '  Sub-solar planetocentric latitude  '
+      !>     .   // '(deg) = ', SPCLAT
+      !>         WRITE(*,FM) '  Sun''s planetocentric latitude      '
+      !>     .   // '(deg) = ', SUPCLT
+      !>         WRITE(*,FM) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -93749,175 +93889,177 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     LIMBPT example 1
-      !>        C
-      !>        C        Find limb points on Phobos as seen from Mars.
-      !>        C
-      !>        C        Compute limb points using the tangent definition.
-      !>        C        Perform aberration corrections for the target center.
-      !>        C        Use both ellipsoid and DSK shape models.
-      !>        C
-      !>              PROGRAM LIMBPT_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      PI
+      !>```fortran
+      !>C
+      !>C     LIMBPT example 1
+      !>C
+      !>C        Find limb points on Phobos as seen from Mars.
+      !>C
+      !>C        Compute limb points using the tangent definition.
+      !>C        Perform aberration corrections for the target center.
+      !>C        Use both ellipsoid and DSK shape models.
+      !>C
+      !>      PROGRAM LIMBPT_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      PI
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'limbpt_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'limbpt_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         FM1
-      !>              PARAMETER           ( FM1     =  '(A,F20.9)' )
+      !>      CHARACTER*(*)         FM1
+      !>      PARAMETER           ( FM1     =  '(A,F20.9)' )
       !>
-      !>              CHARACTER*(*)         FM2
-      !>              PARAMETER           ( FM2     =  '(1X,3F20.9)' )
+      !>      CHARACTER*(*)         FM2
+      !>      PARAMETER           ( FM2     =  '(1X,3F20.9)' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 20 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 20 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
       !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN = 10000 )
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN = 10000 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(CORLEN)    CORLOC
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    METHOD ( NMETH )
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(CORLEN)    CORLOC
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    METHOD ( NMETH )
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      DELROL
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      POINTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      ROLL
-      !>              DOUBLE PRECISION      SCHSTP
-      !>              DOUBLE PRECISION      SOLTOL
-      !>              DOUBLE PRECISION      TANGTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      TRGEPS ( MAXN )
-      !>              DOUBLE PRECISION      Z      ( 3 )
+      !>      DOUBLE PRECISION      DELROL
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      POINTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      ROLL
+      !>      DOUBLE PRECISION      SCHSTP
+      !>      DOUBLE PRECISION      SOLTOL
+      !>      DOUBLE PRECISION      TANGTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      TRGEPS ( MAXN )
+      !>      DOUBLE PRECISION      Z      ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               M
-      !>              INTEGER               NCUTS
-      !>              INTEGER               NPTS   ( MAXN )
-      !>              INTEGER               START
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               M
+      !>      INTEGER               NCUTS
+      !>      INTEGER               NPTS   ( MAXN )
+      !>      INTEGER               START
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  METHOD /
-      !>             .                        'TANGENT/ELLIPSOID',
-      !>             .                        'TANGENT/DSK/UNPRIORITIZED'
-      !>             .                             /
-      !>              DATA                  Z      / 0.D0, 0.D0, 1.D0 /
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Set target, observer, and target body-fixed,
-      !>        C     body-centered reference frame.
-      !>        C
-      !>              OBSRVR = 'MARS'
-      !>              TARGET = 'PHOBOS'
-      !>              FIXREF = 'IAU_PHOBOS'
-      !>        C
-      !>        C     Set aberration correction and correction locus.
-      !>        C
-      !>              ABCORR = 'CN+S'
-      !>              CORLOC = 'CENTER'
-      !>        C
-      !>        C     Convert the UTC request time string seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
-      !>        C
-      !>        C     Compute a set of limb points using light time and
-      !>        C     stellar aberration corrections. Use both ellipsoid
-      !>        C     and DSK shape models. Use a step size of 100
-      !>        C     microradians to ensure we don't miss the limb.
-      !>        C     Set the convergence tolerance to 100 nanoradians,
-      !>        C     which will limit the height error to about 1 meter.
-      !>        C     Compute 3 limb points for each computation method.
-      !>        C
-      !>              SCHSTP = 1.D-4
-      !>              SOLTOL = 1.D-7
-      !>              NCUTS  = 3
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  METHOD /
+      !>     .                        'TANGENT/ELLIPSOID',
+      !>     .                        'TANGENT/DSK/UNPRIORITIZED'
+      !>     .                             /
+      !>      DATA                  Z      / 0.D0, 0.D0, 1.D0 /
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Set target, observer, and target body-fixed,
+      !>C     body-centered reference frame.
+      !>C
+      !>      OBSRVR = 'MARS'
+      !>      TARGET = 'PHOBOS'
+      !>      FIXREF = 'IAU_PHOBOS'
+      !>C
+      !>C     Set aberration correction and correction locus.
+      !>C
+      !>      ABCORR = 'CN+S'
+      !>      CORLOC = 'CENTER'
+      !>C
+      !>C     Convert the UTC request time string seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
+      !>C
+      !>C     Compute a set of limb points using light time and
+      !>C     stellar aberration corrections. Use both ellipsoid
+      !>C     and DSK shape models. Use a step size of 100
+      !>C     microradians to ensure we don't miss the limb.
+      !>C     Set the convergence tolerance to 100 nanoradians,
+      !>C     which will limit the height error to about 1 meter.
+      !>C     Compute 3 limb points for each computation method.
+      !>C
+      !>      SCHSTP = 1.D-4
+      !>      SOLTOL = 1.D-7
+      !>      NCUTS  = 3
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:       '//OBSRVR
-      !>              WRITE (*,*) 'Target:         '//TARGET
-      !>              WRITE (*,*) 'Frame:          '//FIXREF
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of cuts: ', NCUTS
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:       '//OBSRVR
+      !>      WRITE (*,*) 'Target:         '//TARGET
+      !>      WRITE (*,*) 'Frame:          '//FIXREF
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of cuts: ', NCUTS
+      !>      WRITE (*,*) ' '
       !>
-      !>              DELROL = 2*PI() / NCUTS
+      !>      DELROL = 2*PI() / NCUTS
       !>
-      !>              DO I = 1, NMETH
+      !>      DO I = 1, NMETH
       !>
-      !>                 CALL LIMBPT ( METHOD(I), TARGET, ET,     FIXREF,
-      !>             .                 ABCORR,    CORLOC, OBSRVR, Z,
-      !>             .                 DELROL,    NCUTS,  SCHSTP, SOLTOL,
-      !>             .                 MAXN,      NPTS,   POINTS, TRGEPS,
-      !>             .                 TANGTS                            )
-      !>        C
-      !>        C        Write the results.
-      !>        C
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Computation method = ', METHOD(I)
-      !>                 WRITE(*,*) 'Locus              = ', CORLOC
-      !>                 WRITE(*,*) ' '
+      !>         CALL LIMBPT ( METHOD(I), TARGET, ET,     FIXREF,
+      !>     .                 ABCORR,    CORLOC, OBSRVR, Z,
+      !>     .                 DELROL,    NCUTS,  SCHSTP, SOLTOL,
+      !>     .                 MAXN,      NPTS,   POINTS, TRGEPS,
+      !>     .                 TANGTS                            )
+      !>C
+      !>C        Write the results.
+      !>C
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Computation method = ', METHOD(I)
+      !>         WRITE(*,*) 'Locus              = ', CORLOC
+      !>         WRITE(*,*) ' '
       !>
-      !>                 START  = 0
+      !>         START  = 0
       !>
-      !>                 DO J = 1, NCUTS
+      !>         DO J = 1, NCUTS
       !>
-      !>                    ROLL = (J-1) * DELROL
+      !>            ROLL = (J-1) * DELROL
       !>
-      !>                    WRITE(*,*)   ' '
-      !>                    WRITE(*,FM1) '  Roll angle (deg) = ', ROLL * DPR()
-      !>                    WRITE(*,FM1) '     Target epoch  = ', TRGEPS(J)
-      !>                    WRITE(*,*)   '    Number of limb points at this '
-      !>             .      //           'roll angle: ',
-      !>             .                   NPTS(J)
+      !>            WRITE(*,*)   ' '
+      !>            WRITE(*,FM1) '  Roll angle (deg) = ', ROLL * DPR()
+      !>            WRITE(*,FM1) '     Target epoch  = ', TRGEPS(J)
+      !>            WRITE(*,*)   '    Number of limb points at this '
+      !>     .      //           'roll angle: ',
+      !>     .                   NPTS(J)
       !>
-      !>                    WRITE (*,*) '      Limb points'
+      !>            WRITE (*,*) '      Limb points'
       !>
-      !>                    DO K = 1, NPTS(J)
-      !>                       WRITE (*,FM2) ( POINTS(M,K+START), M = 1, 3 )
-      !>                    END DO
+      !>            DO K = 1, NPTS(J)
+      !>               WRITE (*,FM2) ( POINTS(M,K+START), M = 1, 3 )
+      !>            END DO
       !>
-      !>                    START = START + NPTS(J)
+      !>            START = START + NPTS(J)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
-      !>              END
+      !>      END DO
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -94045,275 +94187,277 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     LIMBPT example 2
-      !>        C
-      !>        C        Find limb points on Mars as seen from the earth.
-      !>        C
-      !>        C        Compute limb points using both the tangent and
-      !>        C        "guided" definitions.
-      !>        C
-      !>        C        For the tangent limb points, perform aberration
-      !>        C        corrections for the reference ellipsoid limb.
-      !>        C
-      !>        C        Check limb points by computing emission angles at
-      !>        C        each point.
-      !>        C
-      !>        C        Use both ellipsoid and DSK shape models.
-      !>        C
-      !>              PROGRAM LIMBPT_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      PI
-      !>              DOUBLE PRECISION      VDIST
-      !>              DOUBLE PRECISION      VNORM
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META    = 'limbpt_ex2.tm' )
+      !>```fortran
+      !>C
+      !>C     LIMBPT example 2
+      !>C
+      !>C        Find limb points on Mars as seen from the earth.
+      !>C
+      !>C        Compute limb points using both the tangent and
+      !>C        "guided" definitions.
+      !>C
+      !>C        For the tangent limb points, perform aberration
+      !>C        corrections for the reference ellipsoid limb.
+      !>C
+      !>C        Check limb points by computing emission angles at
+      !>C        each point.
+      !>C
+      !>C        Use both ellipsoid and DSK shape models.
+      !>C
+      !>      PROGRAM LIMBPT_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      PI
+      !>      DOUBLE PRECISION      VDIST
+      !>      DOUBLE PRECISION      VNORM
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META    = 'limbpt_ex2.tm' )
       !>
-      !>              CHARACTER*(*)         FM1
-      !>              PARAMETER           ( FM1     =  '(A,F20.9)' )
+      !>      CHARACTER*(*)         FM1
+      !>      PARAMETER           ( FM1     =  '(A,F20.9)' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 20 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 20 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 3 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 3 )
       !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN   = 100 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(CORLEN)    CORLOC ( NMETH )
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(MTHLEN)    METHOD ( NMETH )
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN   = 100 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(CORLEN)    CORLOC ( NMETH )
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(MTHLEN)    METHOD ( NMETH )
       !>
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      DELROL
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      EMISSN
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PHASE
-      !>              DOUBLE PRECISION      POINTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      SVPNTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      ROLL
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      SCHSTP
-      !>              DOUBLE PRECISION      SOLAR
-      !>              DOUBLE PRECISION      SOLTOL
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TANGTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      TRGEPS ( MAXN )
-      !>              DOUBLE PRECISION      Z      ( 3 )
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      DELROL
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      EMISSN
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PHASE
+      !>      DOUBLE PRECISION      POINTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      SVPNTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      ROLL
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      SCHSTP
+      !>      DOUBLE PRECISION      SOLAR
+      !>      DOUBLE PRECISION      SOLTOL
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TANGTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      TRGEPS ( MAXN )
+      !>      DOUBLE PRECISION      Z      ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               M
-      !>              INTEGER               N
-      !>              INTEGER               NCUTS
-      !>              INTEGER               NPTS   ( MAXN )
-      !>              INTEGER               START
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               M
+      !>      INTEGER               N
+      !>      INTEGER               NCUTS
+      !>      INTEGER               NPTS   ( MAXN )
+      !>      INTEGER               START
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CORLOC /
-      !>             .                        'ELLIPSOID LIMB',
-      !>             .                        'ELLIPSOID LIMB',
-      !>             .                        'CENTER'
-      !>             .                             /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CORLOC /
+      !>     .                        'ELLIPSOID LIMB',
+      !>     .                        'ELLIPSOID LIMB',
+      !>     .                        'CENTER'
+      !>     .                             /
       !>
-      !>              DATA                  ILUMTH /
-      !>             .                        'ELLIPSOID',
-      !>             .                        'DSK/UNPRIORITIZED',
-      !>             .                        'DSK/UNPRIORITIZED'
-      !>             .                             /
+      !>      DATA                  ILUMTH /
+      !>     .                        'ELLIPSOID',
+      !>     .                        'DSK/UNPRIORITIZED',
+      !>     .                        'DSK/UNPRIORITIZED'
+      !>     .                             /
       !>
-      !>              DATA                  METHOD /
-      !>             .                        'TANGENT/ELLIPSOID',
-      !>             .                        'TANGENT/DSK/UNPRIORITIZED',
-      !>             .                        'GUIDED/DSK/UNPRIORITIZED'
-      !>             .                             /
+      !>      DATA                  METHOD /
+      !>     .                        'TANGENT/ELLIPSOID',
+      !>     .                        'TANGENT/DSK/UNPRIORITIZED',
+      !>     .                        'GUIDED/DSK/UNPRIORITIZED'
+      !>     .                             /
       !>
-      !>              DATA                  Z      / 0.D0, 0.D0, 1.D0 /
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Set target, observer, and target body-fixed,
-      !>        C     body-centered reference frame.
-      !>        C
-      !>              OBSRVR = 'EARTH'
-      !>              TARGET = 'MARS'
-      !>              FIXREF = 'IAU_MARS'
-      !>        C
-      !>        C     Set the aberration correction. We'll set the
-      !>        C     correction locus below.
-      !>        C
-      !>              ABCORR = 'CN+S'
-      !>        C
-      !>        C     Convert the UTC request time string seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
-      !>        C
-      !>        C     Look up the target body's radii. We'll use these to
-      !>        C     convert Cartesian to planetographic coordinates. Use
-      !>        C     the radii to compute the flattening coefficient of
-      !>        C     the reference ellipsoid.
-      !>        C
-      !>              CALL BODVRD ( TARGET, 'RADII', 3, N, RADII )
-      !>        C
-      !>        C     Compute the flattening coefficient for planetodetic
-      !>        C     coordinates
-      !>        C
-      !>              RE = RADII(1)
-      !>              RP = RADII(3)
-      !>              F  = ( RE - RP ) / RE
-      !>        C
-      !>        C     Compute a set of limb points using light time and
-      !>        C     stellar aberration corrections. Use both ellipsoid
-      !>        C     and DSK shape models.
-      !>        C
-      !>        C     Obtain the observer-target distance at ET.
-      !>        C
-      !>              CALL SPKPOS ( TARGET, ET,  'J2000', ABCORR,
-      !>             .              OBSRVR, POS, LT              )
-      !>              DIST = VNORM( POS )
-      !>        C
-      !>        C     Set the angular step size so that a single step will
-      !>        C     be taken in the root bracketing process; that's all
-      !>        C     that is needed since we don't expect to have multiple
-      !>        C     limb points in any cutting half-plane.
-      !>        C
-      !>              SCHSTP = 4.D0
-      !>        C
-      !>        C     Set the convergence tolerance to minimize the height
-      !>        C     error. We can't achieve the 1 millimeter precision
-      !>        C     suggested by the formula because the earth-Mars
-      !>        C     distance is about 3.5e8 km. Compute 3 limb points
-      !>        C     for each computation method.
-      !>        C
-      !>              SOLTOL = 1.D-6/DIST
-      !>        C
-      !>        C     Set the number of cutting half-planes and roll step.
-      !>        C
-      !>              NCUTS  = 3
-      !>              DELROL = 2*PI() / NCUTS
+      !>      DATA                  Z      / 0.D0, 0.D0, 1.D0 /
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Set target, observer, and target body-fixed,
+      !>C     body-centered reference frame.
+      !>C
+      !>      OBSRVR = 'EARTH'
+      !>      TARGET = 'MARS'
+      !>      FIXREF = 'IAU_MARS'
+      !>C
+      !>C     Set the aberration correction. We'll set the
+      !>C     correction locus below.
+      !>C
+      !>      ABCORR = 'CN+S'
+      !>C
+      !>C     Convert the UTC request time string seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
+      !>C
+      !>C     Look up the target body's radii. We'll use these to
+      !>C     convert Cartesian to planetographic coordinates. Use
+      !>C     the radii to compute the flattening coefficient of
+      !>C     the reference ellipsoid.
+      !>C
+      !>      CALL BODVRD ( TARGET, 'RADII', 3, N, RADII )
+      !>C
+      !>C     Compute the flattening coefficient for planetodetic
+      !>C     coordinates
+      !>C
+      !>      RE = RADII(1)
+      !>      RP = RADII(3)
+      !>      F  = ( RE - RP ) / RE
+      !>C
+      !>C     Compute a set of limb points using light time and
+      !>C     stellar aberration corrections. Use both ellipsoid
+      !>C     and DSK shape models.
+      !>C
+      !>C     Obtain the observer-target distance at ET.
+      !>C
+      !>      CALL SPKPOS ( TARGET, ET,  'J2000', ABCORR,
+      !>     .              OBSRVR, POS, LT              )
+      !>      DIST = VNORM( POS )
+      !>C
+      !>C     Set the angular step size so that a single step will
+      !>C     be taken in the root bracketing process; that's all
+      !>C     that is needed since we don't expect to have multiple
+      !>C     limb points in any cutting half-plane.
+      !>C
+      !>      SCHSTP = 4.D0
+      !>C
+      !>C     Set the convergence tolerance to minimize the height
+      !>C     error. We can't achieve the 1 millimeter precision
+      !>C     suggested by the formula because the earth-Mars
+      !>C     distance is about 3.5e8 km. Compute 3 limb points
+      !>C     for each computation method.
+      !>C
+      !>      SOLTOL = 1.D-6/DIST
+      !>C
+      !>C     Set the number of cutting half-planes and roll step.
+      !>C
+      !>      NCUTS  = 3
+      !>      DELROL = 2*PI() / NCUTS
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:       '//OBSRVR
-      !>              WRITE (*,*) 'Target:         '//TARGET
-      !>              WRITE (*,*) 'Frame:          '//FIXREF
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of cuts: ', NCUTS
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:       '//OBSRVR
+      !>      WRITE (*,*) 'Target:         '//TARGET
+      !>      WRITE (*,*) 'Frame:          '//FIXREF
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of cuts: ', NCUTS
       !>
-      !>              DO I = 1, NMETH
+      !>      DO I = 1, NMETH
       !>
-      !>                 CALL LIMBPT ( METHOD(I), TARGET,    ET,     FIXREF,
-      !>             .                 ABCORR,    CORLOC(I), OBSRVR, Z,
-      !>             .                 DELROL,    NCUTS,     SCHSTP, SOLTOL,
-      !>             .                 MAXN,      NPTS,      POINTS, TRGEPS,
-      !>             .                 TANGTS                                )
-      !>        C
-      !>        C        Write the results.
-      !>        C
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Computation method = ', METHOD(I)
-      !>                 WRITE(*,*) 'Locus              = ', CORLOC(I)
+      !>         CALL LIMBPT ( METHOD(I), TARGET,    ET,     FIXREF,
+      !>     .                 ABCORR,    CORLOC(I), OBSRVR, Z,
+      !>     .                 DELROL,    NCUTS,     SCHSTP, SOLTOL,
+      !>     .                 MAXN,      NPTS,      POINTS, TRGEPS,
+      !>     .                 TANGTS                                )
+      !>C
+      !>C        Write the results.
+      !>C
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Computation method = ', METHOD(I)
+      !>         WRITE(*,*) 'Locus              = ', CORLOC(I)
       !>
-      !>                 START  = 0
+      !>         START  = 0
       !>
-      !>                 DO J = 1, NCUTS
+      !>         DO J = 1, NCUTS
       !>
-      !>                    ROLL = (J-1) * DELROL
+      !>            ROLL = (J-1) * DELROL
       !>
-      !>                    WRITE(*,*)   ' '
-      !>                    WRITE(*,FM1) '   Roll angle (deg) = ', ROLL * DPR()
-      !>                    WRITE(*,FM1) '     Target epoch   = ', TRGEPS(J)
-      !>                    WRITE(*,*)   '    Number of limb points at this '
-      !>             .      //           'roll angle: ',
-      !>             .                   NPTS(J)
+      !>            WRITE(*,*)   ' '
+      !>            WRITE(*,FM1) '   Roll angle (deg) = ', ROLL * DPR()
+      !>            WRITE(*,FM1) '     Target epoch   = ', TRGEPS(J)
+      !>            WRITE(*,*)   '    Number of limb points at this '
+      !>     .      //           'roll angle: ',
+      !>     .                   NPTS(J)
       !>
-      !>                    DO K = 1, NPTS(J)
+      !>            DO K = 1, NPTS(J)
       !>
-      !>                       WRITE (*,*) '    Limb point planetodetic '
-      !>             .         //          'coordinates:'
+      !>               WRITE (*,*) '    Limb point planetodetic '
+      !>     .         //          'coordinates:'
       !>
-      !>                       CALL RECGEO ( POINTS(1,K+START), RE,  F,
-      !>             .                       LON,               LAT, ALT )
+      !>               CALL RECGEO ( POINTS(1,K+START), RE,  F,
+      !>     .                       LON,               LAT, ALT )
       !>
-      !>                       WRITE (*,FM1) '      Longitude      (deg): ',
-      !>             .                       LON*DPR()
-      !>                       WRITE (*,FM1) '      Latitude       (deg): ',
-      !>             .                       LAT*DPR()
-      !>                       WRITE (*,FM1) '      Altitude        (km): ',
-      !>             .                       ALT
+      !>               WRITE (*,FM1) '      Longitude      (deg): ',
+      !>     .                       LON*DPR()
+      !>               WRITE (*,FM1) '      Latitude       (deg): ',
+      !>     .                       LAT*DPR()
+      !>               WRITE (*,FM1) '      Altitude        (km): ',
+      !>     .                       ALT
       !>
-      !>        C
-      !>        C              Get illumination angles for this limb point.
-      !>        C
-      !>                       M = K+START
+      !>C
+      !>C              Get illumination angles for this limb point.
+      !>C
+      !>               M = K+START
       !>
-      !>                       CALL ILUMIN ( ILUMTH,      TARGET, ET,
-      !>             .                       FIXREF,      ABCORR, OBSRVR,
-      !>             .                       POINTS(1,M), TRGEPC, SRFVEC,
-      !>             .                       PHASE,       SOLAR,  EMISSN  )
+      !>               CALL ILUMIN ( ILUMTH,      TARGET, ET,
+      !>     .                       FIXREF,      ABCORR, OBSRVR,
+      !>     .                       POINTS(1,M), TRGEPC, SRFVEC,
+      !>     .                       PHASE,       SOLAR,  EMISSN  )
       !>
-      !>                       WRITE (*,FM1) '      Emission angle (deg): ',
-      !>             .                     EMISSN * DPR()
+      !>               WRITE (*,FM1) '      Emission angle (deg): ',
+      !>     .                     EMISSN * DPR()
       !>
-      !>                       IF ( I .EQ. 2 ) THEN
+      !>               IF ( I .EQ. 2 ) THEN
       !>
-      !>                          CALL VEQU ( POINTS(1,M), SVPNTS(1,M) )
+      !>                  CALL VEQU ( POINTS(1,M), SVPNTS(1,M) )
       !>
-      !>                       ELSE IF ( I .EQ. 3  ) THEN
+      !>               ELSE IF ( I .EQ. 3  ) THEN
       !>
-      !>                          DIST = VDIST( POINTS(1,M), SVPNTS(1,M) )
+      !>                  DIST = VDIST( POINTS(1,M), SVPNTS(1,M) )
       !>
-      !>                          WRITE (*,FM1)
-      !>             .            '      Distance error  (km): ', DIST
-      !>                       END IF
+      !>                  WRITE (*,FM1)
+      !>     .            '      Distance error  (km): ', DIST
+      !>               END IF
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    START = START + NPTS(J)
+      !>            START = START + NPTS(J)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
-      !>              END
+      !>      END DO
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -94481,194 +94625,196 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     LIMBPT example 3
-      !>        C
-      !>        C        Find limb points on comet Churyumov-Gerasimenko
-      !>        C        as seen from the Rosetta orbiter.
-      !>        C
-      !>        C        Compute limb points using the tangent definition.
-      !>        C        Perform aberration corrections for the target center.
-      !>        C        Use both ellipsoid and DSK shape models.
-      !>        C
-      !>        C        Display only limb points lying in half-planes that
-      !>        C        contain multiple limb points.
-      !>        C
-      !>              PROGRAM LIMBPT_EX3
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      PI
-      !>              DOUBLE PRECISION      RPD
-      !>              DOUBLE PRECISION      VNORM
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'limbpt_ex3.tm' )
+      !>```fortran
+      !>C
+      !>C     LIMBPT example 3
+      !>C
+      !>C        Find limb points on comet Churyumov-Gerasimenko
+      !>C        as seen from the Rosetta orbiter.
+      !>C
+      !>C        Compute limb points using the tangent definition.
+      !>C        Perform aberration corrections for the target center.
+      !>C        Use both ellipsoid and DSK shape models.
+      !>C
+      !>C        Display only limb points lying in half-planes that
+      !>C        contain multiple limb points.
+      !>C
+      !>      PROGRAM LIMBPT_EX3
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      PI
+      !>      DOUBLE PRECISION      RPD
+      !>      DOUBLE PRECISION      VNORM
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'limbpt_ex3.tm' )
       !>
-      !>              CHARACTER*(*)         FM1
-      !>              PARAMETER           ( FM1     =  '(A,F20.9)' )
+      !>      CHARACTER*(*)         FM1
+      !>      PARAMETER           ( FM1     =  '(A,F20.9)' )
       !>
-      !>              CHARACTER*(*)         FM2
-      !>              PARAMETER           ( FM2     =  '(1X,3F20.9)' )
+      !>      CHARACTER*(*)         FM2
+      !>      PARAMETER           ( FM2     =  '(1X,3F20.9)' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 20 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 20 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN = 1000 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(CORLEN)    CORLOC
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    METHOD
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN = 1000 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(CORLEN)    CORLOC
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    METHOD
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      ANGLE
-      !>              DOUBLE PRECISION      AXIS   ( 3 )
-      !>              DOUBLE PRECISION      DELROL
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POINTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      REFVEC ( 3 )
-      !>              DOUBLE PRECISION      ROLL
-      !>              DOUBLE PRECISION      SCHSTP
-      !>              DOUBLE PRECISION      SOLTOL
-      !>              DOUBLE PRECISION      TANGTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      TRGEPS ( MAXN )
-      !>              DOUBLE PRECISION      TRGPOS ( 3 )
-      !>              DOUBLE PRECISION      XVEC   ( 3 )
+      !>      DOUBLE PRECISION      ANGLE
+      !>      DOUBLE PRECISION      AXIS   ( 3 )
+      !>      DOUBLE PRECISION      DELROL
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POINTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      REFVEC ( 3 )
+      !>      DOUBLE PRECISION      ROLL
+      !>      DOUBLE PRECISION      SCHSTP
+      !>      DOUBLE PRECISION      SOLTOL
+      !>      DOUBLE PRECISION      TANGTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      TRGEPS ( MAXN )
+      !>      DOUBLE PRECISION      TRGPOS ( 3 )
+      !>      DOUBLE PRECISION      XVEC   ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               NCUTS
-      !>              INTEGER               NPTS   ( MAXN )
-      !>              INTEGER               START
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  METHOD /
-      !>             .                        'TANGENT/DSK/UNPRIORITIZED'
-      !>             .                             /
-      !>              DATA                  XVEC   / 1.D0, 0.D0, 0.D0 /
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Set target, observer, and target body-fixed,
-      !>        C     body-centered reference frame.
-      !>        C
-      !>              OBSRVR = 'ROSETTA'
-      !>              TARGET = 'CHURYUMOV-GERASIMENKO'
-      !>              FIXREF = '67P/C-G_CK'
-      !>        C
-      !>        C     Set aberration correction and correction locus.
-      !>        C
-      !>              ABCORR = 'CN+S'
-      !>              CORLOC = 'CENTER'
-      !>        C
-      !>        C     Convert the UTC request time string seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2015 MAY 10 00:00:00', ET )
-      !>        C
-      !>        C     Compute a set of limb points using light time and
-      !>        C     stellar aberration corrections. Use a step size
-      !>        C     corresponding to a 10 meter height error to ensure
-      !>        C     we don't miss the limb. Set the convergence tolerance
-      !>        C     to 1/100 of this amount, which will limit the height
-      !>        C     convergence error to about 10 cm.
-      !>        C
-      !>              CALL SPKPOS ( TARGET, ET,     FIXREF, ABCORR,
-      !>             .              OBSRVR, TRGPOS, LT             )
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               NCUTS
+      !>      INTEGER               NPTS   ( MAXN )
+      !>      INTEGER               START
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  METHOD /
+      !>     .                        'TANGENT/DSK/UNPRIORITIZED'
+      !>     .                             /
+      !>      DATA                  XVEC   / 1.D0, 0.D0, 0.D0 /
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Set target, observer, and target body-fixed,
+      !>C     body-centered reference frame.
+      !>C
+      !>      OBSRVR = 'ROSETTA'
+      !>      TARGET = 'CHURYUMOV-GERASIMENKO'
+      !>      FIXREF = '67P/C-G_CK'
+      !>C
+      !>C     Set aberration correction and correction locus.
+      !>C
+      !>      ABCORR = 'CN+S'
+      !>      CORLOC = 'CENTER'
+      !>C
+      !>C     Convert the UTC request time string seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2015 MAY 10 00:00:00', ET )
+      !>C
+      !>C     Compute a set of limb points using light time and
+      !>C     stellar aberration corrections. Use a step size
+      !>C     corresponding to a 10 meter height error to ensure
+      !>C     we don't miss the limb. Set the convergence tolerance
+      !>C     to 1/100 of this amount, which will limit the height
+      !>C     convergence error to about 10 cm.
+      !>C
+      !>      CALL SPKPOS ( TARGET, ET,     FIXREF, ABCORR,
+      !>     .              OBSRVR, TRGPOS, LT             )
       !>
-      !>              SCHSTP = 1.D-2  / VNORM(TRGPOS)
-      !>              SOLTOL = SCHSTP / 100.D0
+      !>      SCHSTP = 1.D-2  / VNORM(TRGPOS)
+      !>      SOLTOL = SCHSTP / 100.D0
       !>
-      !>        C
-      !>        C     Set the reference vector to the start of a
-      !>        C     region of the roll domain on which we know
-      !>        C     (from an external computation) that we'll
-      !>        C     find multiple limb points in some half planes.
-      !>        C     Compute 6 limb points, starting with the
-      !>        C     half-plane containing the reference vector.
-      !>        C
-      !>              CALL VMINUS ( TRGPOS, AXIS )
+      !>C
+      !>C     Set the reference vector to the start of a
+      !>C     region of the roll domain on which we know
+      !>C     (from an external computation) that we'll
+      !>C     find multiple limb points in some half planes.
+      !>C     Compute 6 limb points, starting with the
+      !>C     half-plane containing the reference vector.
+      !>C
+      !>      CALL VMINUS ( TRGPOS, AXIS )
       !>
-      !>              ANGLE = 310.0D0 * RPD()
+      !>      ANGLE = 310.0D0 * RPD()
       !>
-      !>              CALL VROTV  ( XVEC, AXIS, ANGLE, REFVEC )
+      !>      CALL VROTV  ( XVEC, AXIS, ANGLE, REFVEC )
       !>
-      !>              NCUTS  = 6
-      !>              DELROL = 2*PI() / 1000
+      !>      NCUTS  = 6
+      !>      DELROL = 2*PI() / 1000
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Observer:       '//OBSRVR
-      !>              WRITE (*,*) 'Target:         '//TARGET
-      !>              WRITE (*,*) 'Frame:          '//FIXREF
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of cuts: ', NCUTS
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Observer:       '//OBSRVR
+      !>      WRITE (*,*) 'Target:         '//TARGET
+      !>      WRITE (*,*) 'Frame:          '//FIXREF
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of cuts: ', NCUTS
+      !>      WRITE (*,*) ' '
       !>
-      !>              CALL LIMBPT ( METHOD, TARGET, ET,     FIXREF,
-      !>             .              ABCORR, CORLOC, OBSRVR, REFVEC,
-      !>             .              DELROL, NCUTS,  SCHSTP, SOLTOL,
-      !>             .              MAXN,   NPTS,   POINTS, TRGEPS,
-      !>             .              TANGTS                          )
-      !>        C
-      !>        C     Write the results.
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Computation method = ', METHOD
-      !>              WRITE(*,*) 'Locus              = ', CORLOC
-      !>              WRITE(*,*) ' '
+      !>      CALL LIMBPT ( METHOD, TARGET, ET,     FIXREF,
+      !>     .              ABCORR, CORLOC, OBSRVR, REFVEC,
+      !>     .              DELROL, NCUTS,  SCHSTP, SOLTOL,
+      !>     .              MAXN,   NPTS,   POINTS, TRGEPS,
+      !>     .              TANGTS                          )
+      !>C
+      !>C     Write the results.
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Computation method = ', METHOD
+      !>      WRITE(*,*) 'Locus              = ', CORLOC
+      !>      WRITE(*,*) ' '
       !>
-      !>              START  = 0
+      !>      START  = 0
       !>
-      !>              DO I = 1, NCUTS
+      !>      DO I = 1, NCUTS
       !>
-      !>                 ROLL = (I-1) * DELROL
+      !>         ROLL = (I-1) * DELROL
       !>
-      !>                 IF ( NPTS(I) .GT. 1 ) THEN
+      !>         IF ( NPTS(I) .GT. 1 ) THEN
       !>
-      !>                    WRITE(*,*)   ' '
-      !>                    WRITE(*,FM1) '  Roll angle (deg) = ', ROLL * DPR()
-      !>                    WRITE(*,FM1) '     Target epoch  = ', TRGEPS(I)
-      !>                    WRITE(*,*)   '    Number of limb points at this '
-      !>             .      //           'roll angle: ',
-      !>             .                   NPTS(I)
+      !>            WRITE(*,*)   ' '
+      !>            WRITE(*,FM1) '  Roll angle (deg) = ', ROLL * DPR()
+      !>            WRITE(*,FM1) '     Target epoch  = ', TRGEPS(I)
+      !>            WRITE(*,*)   '    Number of limb points at this '
+      !>     .      //           'roll angle: ',
+      !>     .                   NPTS(I)
       !>
-      !>                    WRITE (*,*) '      Limb points'
+      !>            WRITE (*,*) '      Limb points'
       !>
-      !>                    DO J = 1, NPTS(I)
-      !>                       WRITE (*,FM2) ( POINTS(K,J+START), K = 1, 3 )
-      !>                    END DO
+      !>            DO J = 1, NPTS(I)
+      !>               WRITE (*,FM2) ( POINTS(K,J+START), K = 1, 3 )
+      !>            END DO
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 START = START + NPTS(I)
+      !>         START = START + NPTS(I)
       !>
-      !>              END DO
-      !>              WRITE (*,*) ' '
+      !>      END DO
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -97220,193 +97366,195 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Find terminator points on Phobos as seen from Mars.
-      !>        C
-      !>        C     Compute terminator points using the tangent
-      !>        C     definition, using the "umbral" shadow type.
-      !>        C     The sun is the illumination source. Perform
-      !>        C     aberration corrections for the target center.
-      !>        C     Use both ellipsoid and DSK shape models.
-      !>        C
-      !>              PROGRAM TERMPT_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      PI
-      !>              DOUBLE PRECISION      VNORM
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'termpt_ex1.tm' )
+      !>```fortran
+      !>C
+      !>C     Find terminator points on Phobos as seen from Mars.
+      !>C
+      !>C     Compute terminator points using the tangent
+      !>C     definition, using the "umbral" shadow type.
+      !>C     The sun is the illumination source. Perform
+      !>C     aberration corrections for the target center.
+      !>C     Use both ellipsoid and DSK shape models.
+      !>C
+      !>      PROGRAM TERMPT_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      PI
+      !>      DOUBLE PRECISION      VNORM
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'termpt_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         FM1
-      !>              PARAMETER           ( FM1    =  '(A,F21.9)' )
+      !>      CHARACTER*(*)         FM1
+      !>      PARAMETER           ( FM1    =  '(A,F21.9)' )
       !>
-      !>              CHARACTER*(*)         FM2
-      !>              PARAMETER           ( FM2    =  '(1X,3F20.9)' )
+      !>      CHARACTER*(*)         FM2
+      !>      PARAMETER           ( FM2    =  '(1X,3F20.9)' )
       !>
-      !>              CHARACTER*(*)         FM3
-      !>              PARAMETER           ( FM3    =  '(A,I2)' )
+      !>      CHARACTER*(*)         FM3
+      !>      PARAMETER           ( FM3    =  '(A,I2)' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 20 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 20 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
       !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN = 10000 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(CORLEN)    CORLOC
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(BDNMLN)    ILUSRC
-      !>              CHARACTER*(MTHLEN)    METHOD ( NMETH )
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN = 10000 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(CORLEN)    CORLOC
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(BDNMLN)    ILUSRC
+      !>      CHARACTER*(MTHLEN)    METHOD ( NMETH )
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      DELROL
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POINTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      ROLL
-      !>              DOUBLE PRECISION      SCHSTP
-      !>              DOUBLE PRECISION      SOLTOL
-      !>              DOUBLE PRECISION      TRMVCS ( 3, MAXN )
-      !>              DOUBLE PRECISION      TRGEPS ( MAXN )
-      !>              DOUBLE PRECISION      Z      ( 3 )
+      !>      DOUBLE PRECISION      DELROL
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POINTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      ROLL
+      !>      DOUBLE PRECISION      SCHSTP
+      !>      DOUBLE PRECISION      SOLTOL
+      !>      DOUBLE PRECISION      TRMVCS ( 3, MAXN )
+      !>      DOUBLE PRECISION      TRGEPS ( MAXN )
+      !>      DOUBLE PRECISION      Z      ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               M
-      !>              INTEGER               NCUTS
-      !>              INTEGER               NPTS   ( MAXN )
-      !>              INTEGER               START
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  METHOD /
-      !>             .               'UMBRAL/TANGENT/ELLIPSOID',
-      !>             .               'UMBRAL/TANGENT/DSK/UNPRIORITIZED'
-      !>             .                             /
-      !>              DATA                  Z      / 0.D0, 0.D0, 1.D0 /
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Set target, observer, and target body-fixed,
-      !>        C     body-centered reference frame.
-      !>        C
-      !>              ILUSRC = 'SUN'
-      !>              OBSRVR = 'MARS'
-      !>              TARGET = 'PHOBOS'
-      !>              FIXREF = 'IAU_PHOBOS'
-      !>        C
-      !>        C     Set aberration correction and correction locus.
-      !>        C
-      !>              ABCORR = 'CN+S'
-      !>              CORLOC = 'CENTER'
-      !>        C
-      !>        C     Convert the UTC request time string seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
-      !>        C
-      !>        C     Compute a set of terminator points using light
-      !>        C     time and stellar aberration corrections. Use
-      !>        C     both ellipsoid and DSK shape models. Use an
-      !>        C     angular step size corresponding to a height of
-      !>        C     about 100 meters to ensure we don't miss the
-      !>        C     terminator. Set the convergence tolerance to limit
-      !>        C     the height convergence error to about 1 meter.
-      !>        C     Compute 3 terminator points for each computation
-      !>        C     method.
-      !>        C
-      !>        C     Get the approximate light source-target distance
-      !>        C     at ET. We'll ignore the observer-target light
-      !>        C     time for this approximation.
-      !>        C
-      !>              CALL SPKPOS ( ILUSRC, ET,  'J2000', ABCORR,
-      !>             .              TARGET, POS, LT              )
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               M
+      !>      INTEGER               NCUTS
+      !>      INTEGER               NPTS   ( MAXN )
+      !>      INTEGER               START
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  METHOD /
+      !>     .               'UMBRAL/TANGENT/ELLIPSOID',
+      !>     .               'UMBRAL/TANGENT/DSK/UNPRIORITIZED'
+      !>     .                             /
+      !>      DATA                  Z      / 0.D0, 0.D0, 1.D0 /
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Set target, observer, and target body-fixed,
+      !>C     body-centered reference frame.
+      !>C
+      !>      ILUSRC = 'SUN'
+      !>      OBSRVR = 'MARS'
+      !>      TARGET = 'PHOBOS'
+      !>      FIXREF = 'IAU_PHOBOS'
+      !>C
+      !>C     Set aberration correction and correction locus.
+      !>C
+      !>      ABCORR = 'CN+S'
+      !>      CORLOC = 'CENTER'
+      !>C
+      !>C     Convert the UTC request time string seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
+      !>C
+      !>C     Compute a set of terminator points using light
+      !>C     time and stellar aberration corrections. Use
+      !>C     both ellipsoid and DSK shape models. Use an
+      !>C     angular step size corresponding to a height of
+      !>C     about 100 meters to ensure we don't miss the
+      !>C     terminator. Set the convergence tolerance to limit
+      !>C     the height convergence error to about 1 meter.
+      !>C     Compute 3 terminator points for each computation
+      !>C     method.
+      !>C
+      !>C     Get the approximate light source-target distance
+      !>C     at ET. We'll ignore the observer-target light
+      !>C     time for this approximation.
+      !>C
+      !>      CALL SPKPOS ( ILUSRC, ET,  'J2000', ABCORR,
+      !>     .              TARGET, POS, LT              )
       !>
-      !>              DIST   = VNORM(POS)
+      !>      DIST   = VNORM(POS)
       !>
-      !>              SCHSTP = 1.D-1 / DIST
-      !>              SOLTOL = 1.D-3 / DIST
-      !>              NCUTS  = 3
+      !>      SCHSTP = 1.D-1 / DIST
+      !>      SOLTOL = 1.D-3 / DIST
+      !>      NCUTS  = 3
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Light source:   '//ILUSRC
-      !>              WRITE (*,*) 'Observer:       '//OBSRVR
-      !>              WRITE (*,*) 'Target:         '//TARGET
-      !>              WRITE (*,*) 'Frame:          '//FIXREF
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of cuts: ', NCUTS
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Light source:   '//ILUSRC
+      !>      WRITE (*,*) 'Observer:       '//OBSRVR
+      !>      WRITE (*,*) 'Target:         '//TARGET
+      !>      WRITE (*,*) 'Frame:          '//FIXREF
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of cuts: ', NCUTS
+      !>      WRITE (*,*) ' '
       !>
-      !>              DELROL = 2*PI() / NCUTS
+      !>      DELROL = 2*PI() / NCUTS
       !>
-      !>              DO I = 1, NMETH
+      !>      DO I = 1, NMETH
       !>
-      !>                 CALL TERMPT ( METHOD(I), ILUSRC, TARGET, ET,
-      !>             .                 FIXREF,    ABCORR, CORLOC, OBSRVR,
-      !>             .                 Z,         DELROL, NCUTS,  SCHSTP,
-      !>             .                 SOLTOL,    MAXN,   NPTS,   POINTS,
-      !>             .                 TRGEPS,    TRMVCS                 )
-      !>        C
-      !>        C        Write the results.
-      !>        C
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Computation method = ', METHOD(I)
-      !>                 WRITE(*,*) 'Locus              = ', CORLOC
-      !>                 WRITE(*,*) ' '
+      !>         CALL TERMPT ( METHOD(I), ILUSRC, TARGET, ET,
+      !>     .                 FIXREF,    ABCORR, CORLOC, OBSRVR,
+      !>     .                 Z,         DELROL, NCUTS,  SCHSTP,
+      !>     .                 SOLTOL,    MAXN,   NPTS,   POINTS,
+      !>     .                 TRGEPS,    TRMVCS                 )
+      !>C
+      !>C        Write the results.
+      !>C
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Computation method = ', METHOD(I)
+      !>         WRITE(*,*) 'Locus              = ', CORLOC
+      !>         WRITE(*,*) ' '
       !>
-      !>                 START  = 0
+      !>         START  = 0
       !>
-      !>                 DO J = 1, NCUTS
+      !>         DO J = 1, NCUTS
       !>
-      !>                    ROLL = (J-1) * DELROL
+      !>            ROLL = (J-1) * DELROL
       !>
-      !>                    WRITE(*,*)   ' '
-      !>                    WRITE(*,FM1) '  Roll angle (deg) = ', ROLL * DPR()
-      !>                    WRITE(*,FM1) '     Target epoch  = ', TRGEPS(J)
-      !>                    WRITE(*,FM3) '    Number of terminator points  '
-      !>             .      //           'at this roll angle: ',
-      !>             .                   NPTS(J)
+      !>            WRITE(*,*)   ' '
+      !>            WRITE(*,FM1) '  Roll angle (deg) = ', ROLL * DPR()
+      !>            WRITE(*,FM1) '     Target epoch  = ', TRGEPS(J)
+      !>            WRITE(*,FM3) '    Number of terminator points  '
+      !>     .      //           'at this roll angle: ',
+      !>     .                   NPTS(J)
       !>
-      !>                    WRITE (*,*) '      Terminator points:'
+      !>            WRITE (*,*) '      Terminator points:'
       !>
-      !>                    DO K = 1, NPTS(J)
-      !>                       WRITE (*,FM2) ( POINTS(M,K+START), M = 1, 3 )
-      !>                    END DO
+      !>            DO K = 1, NPTS(J)
+      !>               WRITE (*,FM2) ( POINTS(M,K+START), M = 1, 3 )
+      !>            END DO
       !>
-      !>                    START = START + NPTS(J)
+      !>            START = START + NPTS(J)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
-      !>              END
+      !>      END DO
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -97520,343 +97668,345 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Find terminator points on Mars as seen from the
-      !>        C     earth.
-      !>        C
-      !>        C     Use only ellipsoid shape models. Use the
-      !>        C     ELLIPSOID TERMINATOR aberration correction
-      !>        C     locus.
-      !>        C
-      !>        C     Use both UMBRAL and PENUMBRAL shadow definitions.
-      !>        C     Compute the distances between corresponding
-      !>        C     umbral and penumbral terminator points.
-      !>        C
-      !>        C     Check terminator points by computing solar
-      !>        C     incidence angles at each point.
-      !>        C
-      !>        C
-      !>              PROGRAM TERMPT_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      PI
-      !>              DOUBLE PRECISION      VDIST
-      !>              DOUBLE PRECISION      VNORM
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META    = 'termpt_ex2.tm' )
+      !>```fortran
+      !>C
+      !>C     Find terminator points on Mars as seen from the
+      !>C     earth.
+      !>C
+      !>C     Use only ellipsoid shape models. Use the
+      !>C     ELLIPSOID TERMINATOR aberration correction
+      !>C     locus.
+      !>C
+      !>C     Use both UMBRAL and PENUMBRAL shadow definitions.
+      !>C     Compute the distances between corresponding
+      !>C     umbral and penumbral terminator points.
+      !>C
+      !>C     Check terminator points by computing solar
+      !>C     incidence angles at each point.
+      !>C
+      !>C
+      !>      PROGRAM TERMPT_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      PI
+      !>      DOUBLE PRECISION      VDIST
+      !>      DOUBLE PRECISION      VNORM
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META    = 'termpt_ex2.tm' )
       !>
-      !>              CHARACTER*(*)         FM1
-      !>              PARAMETER           ( FM1     =  '(A,F21.9)' )
+      !>      CHARACTER*(*)         FM1
+      !>      PARAMETER           ( FM1     =  '(A,F21.9)' )
       !>
-      !>              CHARACTER*(*)         FM2
-      !>              PARAMETER           ( FM2     =  '(A,I2)' )
+      !>      CHARACTER*(*)         FM2
+      !>      PARAMETER           ( FM2     =  '(A,I2)' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 20 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 20 )
       !>
-      !>              INTEGER               MTHLEN
-      !>              PARAMETER           ( MTHLEN = 50 )
+      !>      INTEGER               MTHLEN
+      !>      PARAMETER           ( MTHLEN = 50 )
       !>
-      !>              INTEGER               NMETH
-      !>              PARAMETER           ( NMETH  = 2 )
+      !>      INTEGER               NMETH
+      !>      PARAMETER           ( NMETH  = 2 )
       !>
-      !>              INTEGER               MAXN
-      !>              PARAMETER           ( MAXN   = 100 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(CORLEN)    CORLOC ( NMETH )
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
-      !>              CHARACTER*(BDNMLN)    ILUSRC
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(MTHLEN)    METHOD ( NMETH )
+      !>      INTEGER               MAXN
+      !>      PARAMETER           ( MAXN   = 100 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(CORLEN)    CORLOC ( NMETH )
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(MTHLEN)    ILUMTH ( NMETH )
+      !>      CHARACTER*(BDNMLN)    ILUSRC
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(MTHLEN)    METHOD ( NMETH )
       !>
-      !>              DOUBLE PRECISION      ADJANG
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      ANGSRC
-      !>              DOUBLE PRECISION      DELROL
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      EMISSN
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      ILUPOS ( 3 )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PHASE
-      !>              DOUBLE PRECISION      POINTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      SVPNTS ( 3, MAXN )
-      !>              DOUBLE PRECISION      TPTILU ( 3 )
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      ROLL
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      SCHSTP
-      !>              DOUBLE PRECISION      SOLAR
-      !>              DOUBLE PRECISION      SOLTOL
-      !>              DOUBLE PRECISION      SRCRAD ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      TRMVCS ( 3, MAXN )
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      TRGEPS ( MAXN )
-      !>              DOUBLE PRECISION      Z      ( 3 )
+      !>      DOUBLE PRECISION      ADJANG
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      ANGSRC
+      !>      DOUBLE PRECISION      DELROL
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      EMISSN
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      ILUPOS ( 3 )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PHASE
+      !>      DOUBLE PRECISION      POINTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      SVPNTS ( 3, MAXN )
+      !>      DOUBLE PRECISION      TPTILU ( 3 )
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      ROLL
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      SCHSTP
+      !>      DOUBLE PRECISION      SOLAR
+      !>      DOUBLE PRECISION      SOLTOL
+      !>      DOUBLE PRECISION      SRCRAD ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      TRMVCS ( 3, MAXN )
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      TRGEPS ( MAXN )
+      !>      DOUBLE PRECISION      Z      ( 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               M
-      !>              INTEGER               N
-      !>              INTEGER               NCUTS
-      !>              INTEGER               NPTS   ( MAXN )
-      !>              INTEGER               START
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               M
+      !>      INTEGER               N
+      !>      INTEGER               NCUTS
+      !>      INTEGER               NPTS   ( MAXN )
+      !>      INTEGER               START
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CORLOC /
-      !>             .                        'ELLIPSOID TERMINATOR',
-      !>             .                        'ELLIPSOID TERMINATOR'
-      !>             .                             /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CORLOC /
+      !>     .                        'ELLIPSOID TERMINATOR',
+      !>     .                        'ELLIPSOID TERMINATOR'
+      !>     .                             /
       !>
-      !>              DATA                  ILUMTH /
-      !>             .                        'ELLIPSOID',
-      !>             .                        'ELLIPSOID'
-      !>             .                             /
+      !>      DATA                  ILUMTH /
+      !>     .                        'ELLIPSOID',
+      !>     .                        'ELLIPSOID'
+      !>     .                             /
       !>
-      !>              DATA                  METHOD /
-      !>             .                      'UMBRAL/ELLIPSOID/TANGENT',
-      !>             .                      'PENUMBRAL/ELLIPSOID/TANGENT'
-      !>             .                             /
+      !>      DATA                  METHOD /
+      !>     .                      'UMBRAL/ELLIPSOID/TANGENT',
+      !>     .                      'PENUMBRAL/ELLIPSOID/TANGENT'
+      !>     .                             /
       !>
-      !>              DATA                  Z      / 0.D0, 0.D0, 1.D0 /
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Set target, observer, and target body-fixed,
-      !>        C     body-centered reference frame.
-      !>        C
-      !>              ILUSRC = 'SUN'
-      !>              OBSRVR = 'EARTH'
-      !>              TARGET = 'MARS'
-      !>              FIXREF = 'IAU_MARS'
-      !>        C
-      !>        C     Set the aberration correction. We'll set the
-      !>        C     correction locus below.
-      !>        C
-      !>              ABCORR = 'CN+S'
-      !>        C
-      !>        C     Convert the UTC request time string seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
-      !>        C
-      !>        C     Look up the target body's radii. We'll use these to
-      !>        C     convert Cartesian to planetographic coordinates. Use
-      !>        C     the radii to compute the flattening coefficient of
-      !>        C     the reference ellipsoid.
-      !>        C
-      !>              CALL BODVRD ( TARGET, 'RADII', 3, N, RADII )
-      !>        C
-      !>        C     Compute the flattening coefficient for planetodetic
-      !>        C     coordinates
-      !>        C
-      !>              RE = RADII(1)
-      !>              RP = RADII(3)
-      !>              F  = ( RE - RP ) / RE
+      !>      DATA                  Z      / 0.D0, 0.D0, 1.D0 /
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Set target, observer, and target body-fixed,
+      !>C     body-centered reference frame.
+      !>C
+      !>      ILUSRC = 'SUN'
+      !>      OBSRVR = 'EARTH'
+      !>      TARGET = 'MARS'
+      !>      FIXREF = 'IAU_MARS'
+      !>C
+      !>C     Set the aberration correction. We'll set the
+      !>C     correction locus below.
+      !>C
+      !>      ABCORR = 'CN+S'
+      !>C
+      !>C     Convert the UTC request time string seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2008 AUG 11 00:00:00', ET )
+      !>C
+      !>C     Look up the target body's radii. We'll use these to
+      !>C     convert Cartesian to planetographic coordinates. Use
+      !>C     the radii to compute the flattening coefficient of
+      !>C     the reference ellipsoid.
+      !>C
+      !>      CALL BODVRD ( TARGET, 'RADII', 3, N, RADII )
+      !>C
+      !>C     Compute the flattening coefficient for planetodetic
+      !>C     coordinates
+      !>C
+      !>      RE = RADII(1)
+      !>      RP = RADII(3)
+      !>      F  = ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Get the radii of the illumination source as well.
-      !>        C     We'll use these radii to compute the angular radius
-      !>        C     of the source as seen from the terminator points.
-      !>        C
-      !>              CALL BODVRD ( ILUSRC, 'RADII', 3, N, SRCRAD )
-      !>        C
-      !>        C     Compute a set of terminator points using light time and
-      !>        C     stellar aberration corrections. Use both ellipsoid
-      !>        C     and DSK shape models.
-      !>        C
-      !>        C     Get the approximate light source-target distance
-      !>        C     at ET. We'll ignore the observer-target light
-      !>        C     time for this approximation.
-      !>        C
-      !>              CALL SPKPOS ( ILUSRC, ET,     FIXREF, ABCORR,
-      !>             .              TARGET, ILUPOS, LT             )
+      !>C
+      !>C     Get the radii of the illumination source as well.
+      !>C     We'll use these radii to compute the angular radius
+      !>C     of the source as seen from the terminator points.
+      !>C
+      !>      CALL BODVRD ( ILUSRC, 'RADII', 3, N, SRCRAD )
+      !>C
+      !>C     Compute a set of terminator points using light time and
+      !>C     stellar aberration corrections. Use both ellipsoid
+      !>C     and DSK shape models.
+      !>C
+      !>C     Get the approximate light source-target distance
+      !>C     at ET. We'll ignore the observer-target light
+      !>C     time for this approximation.
+      !>C
+      !>      CALL SPKPOS ( ILUSRC, ET,     FIXREF, ABCORR,
+      !>     .              TARGET, ILUPOS, LT             )
       !>
-      !>              DIST = VNORM( ILUPOS )
-      !>        C
-      !>        C     Set the angular step size so that a single step will
-      !>        C     be taken in the root bracketing process; that's all
-      !>        C     that is needed since we don't expect to have multiple
-      !>        C     terminator points in any cutting half-plane.
-      !>        C
-      !>              SCHSTP = 4.D0
-      !>        C
-      !>        C     Set the convergence tolerance to minimize the
-      !>        C     height error. We can't achieve the precision
-      !>        C     suggested by the formula because the sun-Mars
-      !>        C     distance is about 2.4e8 km. Compute 3 terminator
-      !>        C     points for each computation method.
-      !>        C
-      !>              SOLTOL = 1.D-7/DIST
-      !>        C
-      !>        C     Set the number of cutting half-planes and roll step.
-      !>        C
-      !>              NCUTS  = 3
-      !>              DELROL = 2*PI() / NCUTS
+      !>      DIST = VNORM( ILUPOS )
+      !>C
+      !>C     Set the angular step size so that a single step will
+      !>C     be taken in the root bracketing process; that's all
+      !>C     that is needed since we don't expect to have multiple
+      !>C     terminator points in any cutting half-plane.
+      !>C
+      !>      SCHSTP = 4.D0
+      !>C
+      !>C     Set the convergence tolerance to minimize the
+      !>C     height error. We can't achieve the precision
+      !>C     suggested by the formula because the sun-Mars
+      !>C     distance is about 2.4e8 km. Compute 3 terminator
+      !>C     points for each computation method.
+      !>C
+      !>      SOLTOL = 1.D-7/DIST
+      !>C
+      !>C     Set the number of cutting half-planes and roll step.
+      !>C
+      !>      NCUTS  = 3
+      !>      DELROL = 2*PI() / NCUTS
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Light source:          '//ILUSRC
-      !>              WRITE (*,*) 'Observer:              '//OBSRVR
-      !>              WRITE (*,*) 'Target:                '//TARGET
-      !>              WRITE (*,*) 'Frame:                 '//FIXREF
-      !>              WRITE (*,*) 'Aberration Correction: '//ABCORR
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of cuts: ', NCUTS
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Light source:          '//ILUSRC
+      !>      WRITE (*,*) 'Observer:              '//OBSRVR
+      !>      WRITE (*,*) 'Target:                '//TARGET
+      !>      WRITE (*,*) 'Frame:                 '//FIXREF
+      !>      WRITE (*,*) 'Aberration Correction: '//ABCORR
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of cuts: ', NCUTS
       !>
-      !>              DO I = 1, NMETH
+      !>      DO I = 1, NMETH
       !>
-      !>                 CALL TERMPT ( METHOD(I), ILUSRC, TARGET,    ET,
-      !>             .                 FIXREF,    ABCORR, CORLOC(I), OBSRVR,
-      !>             .                 Z,         DELROL, NCUTS,     SCHSTP,
-      !>             .                 SOLTOL,    MAXN,   NPTS,      POINTS,
-      !>             .                 TRGEPS,    TRMVCS                    )
-      !>        C
-      !>        C        Write the results.
-      !>        C
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Computation method = ', METHOD(I)
-      !>                 WRITE(*,*) 'Locus              = ', CORLOC(I)
+      !>         CALL TERMPT ( METHOD(I), ILUSRC, TARGET,    ET,
+      !>     .                 FIXREF,    ABCORR, CORLOC(I), OBSRVR,
+      !>     .                 Z,         DELROL, NCUTS,     SCHSTP,
+      !>     .                 SOLTOL,    MAXN,   NPTS,      POINTS,
+      !>     .                 TRGEPS,    TRMVCS                    )
+      !>C
+      !>C        Write the results.
+      !>C
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Computation method = ', METHOD(I)
+      !>         WRITE(*,*) 'Locus              = ', CORLOC(I)
       !>
-      !>                 START  = 0
+      !>         START  = 0
       !>
-      !>                 DO J = 1, NCUTS
+      !>         DO J = 1, NCUTS
       !>
-      !>                    ROLL = (J-1) * DELROL
+      !>            ROLL = (J-1) * DELROL
       !>
-      !>                    WRITE(*,*)   ' '
-      !>                    WRITE(*,FM1) '   Roll angle (deg) = ', ROLL * DPR()
-      !>                    WRITE(*,FM1) '    Target epoch    = ', TRGEPS(J)
-      !>                    WRITE(*,FM2) '    Number of terminator points at '
-      !>             .      //           'this roll angle: ',
-      !>             .                   NPTS(J)
+      !>            WRITE(*,*)   ' '
+      !>            WRITE(*,FM1) '   Roll angle (deg) = ', ROLL * DPR()
+      !>            WRITE(*,FM1) '    Target epoch    = ', TRGEPS(J)
+      !>            WRITE(*,FM2) '    Number of terminator points at '
+      !>     .      //           'this roll angle: ',
+      !>     .                   NPTS(J)
       !>
-      !>                    DO K = 1, NPTS(J)
+      !>            DO K = 1, NPTS(J)
       !>
-      !>                       WRITE (*,*) '    Terminator point planetodetic '
-      !>             .         //          'coordinates:'
+      !>               WRITE (*,*) '    Terminator point planetodetic '
+      !>     .         //          'coordinates:'
       !>
-      !>                       CALL RECGEO ( POINTS(1,K+START), RE,  F,
-      !>             .                       LON,               LAT, ALT )
+      !>               CALL RECGEO ( POINTS(1,K+START), RE,  F,
+      !>     .                       LON,               LAT, ALT )
       !>
-      !>                       WRITE (*,FM1) '      Longitude       (deg): ',
-      !>             .                       LON*DPR()
-      !>                       WRITE (*,FM1) '      Latitude        (deg): ',
-      !>             .                       LAT*DPR()
-      !>                       WRITE (*,FM1) '      Altitude         (km): ',
-      !>             .                       ALT
+      !>               WRITE (*,FM1) '      Longitude       (deg): ',
+      !>     .                       LON*DPR()
+      !>               WRITE (*,FM1) '      Latitude        (deg): ',
+      !>     .                       LAT*DPR()
+      !>               WRITE (*,FM1) '      Altitude         (km): ',
+      !>     .                       ALT
       !>
-      !>        C
-      !>        C              Get illumination angles for this terminator
-      !>        C              point.
-      !>        C
-      !>                       M = K+START
+      !>C
+      !>C              Get illumination angles for this terminator
+      !>C              point.
+      !>C
+      !>               M = K+START
       !>
-      !>                       CALL ILLUMG ( ILUMTH,      TARGET, ILUSRC, ET,
-      !>             .                       FIXREF,      ABCORR, OBSRVR,
-      !>             .                       POINTS(1,M), TRGEPC, SRFVEC,
-      !>             .                       PHASE,       SOLAR,  EMISSN )
+      !>               CALL ILLUMG ( ILUMTH,      TARGET, ILUSRC, ET,
+      !>     .                       FIXREF,      ABCORR, OBSRVR,
+      !>     .                       POINTS(1,M), TRGEPC, SRFVEC,
+      !>     .                       PHASE,       SOLAR,  EMISSN )
       !>
-      !>                       WRITE (*,FM1) '      Incidence angle '
-      !>             .         //            '(deg): ', SOLAR * DPR()
+      !>               WRITE (*,FM1) '      Incidence angle '
+      !>     .         //            '(deg): ', SOLAR * DPR()
       !>
-      !>        C
-      !>        C              Adjust the incidence angle for the angular
-      !>        C              radius of the illumination source. Use the
-      !>        C              epoch associated with the terminator point
-      !>        C              for this lookup.
-      !>        C
-      !>                       CALL SPKPOS ( ILUSRC, TRGEPS(M), FIXREF,
-      !>             .                       ABCORR, TARGET,    TPTILU, LT )
+      !>C
+      !>C              Adjust the incidence angle for the angular
+      !>C              radius of the illumination source. Use the
+      !>C              epoch associated with the terminator point
+      !>C              for this lookup.
+      !>C
+      !>               CALL SPKPOS ( ILUSRC, TRGEPS(M), FIXREF,
+      !>     .                       ABCORR, TARGET,    TPTILU, LT )
       !>
-      !>                       DIST   = VNORM( TPTILU )
+      !>               DIST   = VNORM( TPTILU )
       !>
-      !>                       ANGSRC = ASIN (  MAX( SRCRAD(1),
-      !>             .                               SRCRAD(2),
-      !>             .                               SRCRAD(3) )  / DIST  )
+      !>               ANGSRC = ASIN (  MAX( SRCRAD(1),
+      !>     .                               SRCRAD(2),
+      !>     .                               SRCRAD(3) )  / DIST  )
       !>
-      !>                       IF ( I .EQ. 1 ) THEN
-      !>        C
-      !>        C                 For points on the umbral terminator,
-      !>        C                 the ellipsoid outward normal is tilted
-      !>        C                 away from the terminator-source center
-      !>        C                 direction by the angular radius of the
-      !>        C                 source. Subtract this radius from the
-      !>        C                 illumination incidence angle to get the
-      !>        C                 angle between the local normal and the
-      !>        C                 direction to the corresponding tangent
-      !>        C                 point on the source.
-      !>        C
-      !>                          ADJANG = SOLAR - ANGSRC
+      !>               IF ( I .EQ. 1 ) THEN
+      !>C
+      !>C                 For points on the umbral terminator,
+      !>C                 the ellipsoid outward normal is tilted
+      !>C                 away from the terminator-source center
+      !>C                 direction by the angular radius of the
+      !>C                 source. Subtract this radius from the
+      !>C                 illumination incidence angle to get the
+      !>C                 angle between the local normal and the
+      !>C                 direction to the corresponding tangent
+      !>C                 point on the source.
+      !>C
+      !>                  ADJANG = SOLAR - ANGSRC
       !>
-      !>                       ELSE
-      !>        C
-      !>        C                 For the penumbral case, the outward
-      !>        C                 normal is tilted toward the illumination
-      !>        C                 source by the angular radius of the
-      !>        C                 source. Adjust the illumination
-      !>        C                 incidence angle for this.
-      !>        C
-      !>                          ADJANG = SOLAR + ANGSRC
+      !>               ELSE
+      !>C
+      !>C                 For the penumbral case, the outward
+      !>C                 normal is tilted toward the illumination
+      !>C                 source by the angular radius of the
+      !>C                 source. Adjust the illumination
+      !>C                 incidence angle for this.
+      !>C
+      !>                  ADJANG = SOLAR + ANGSRC
       !>
-      !>                       END IF
+      !>               END IF
       !>
-      !>                       WRITE (*,FM1)  '      Adjusted angle  '
-      !>             .         //             '(deg): ', ADJANG * DPR()
+      !>               WRITE (*,FM1)  '      Adjusted angle  '
+      !>     .         //             '(deg): ', ADJANG * DPR()
       !>
-      !>                       IF ( I .EQ. 1 ) THEN
-      !>        C
-      !>        C                 Save terminator points for comparison.
-      !>        C
-      !>                          CALL VEQU ( POINTS(1,M), SVPNTS(1,M) )
+      !>               IF ( I .EQ. 1 ) THEN
+      !>C
+      !>C                 Save terminator points for comparison.
+      !>C
+      !>                  CALL VEQU ( POINTS(1,M), SVPNTS(1,M) )
       !>
-      !>                       ELSE
-      !>        C
-      !>        C                 Compare terminator points with last
-      !>        C                 saved values.
-      !>        C
-      !>                          DIST = VDIST( POINTS(1,M), SVPNTS(1,M) )
+      !>               ELSE
+      !>C
+      !>C                 Compare terminator points with last
+      !>C                 saved values.
+      !>C
+      !>                  DIST = VDIST( POINTS(1,M), SVPNTS(1,M) )
       !>
-      !>                          WRITE (*,FM1)
-      !>             .            '      Distance offset  (km): ', DIST
-      !>                       END IF
+      !>                  WRITE (*,FM1)
+      !>     .            '      Distance offset  (km): ', DIST
+      !>               END IF
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    START = START + NPTS(J)
+      !>            START = START + NPTS(J)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
-      !>              END
+      !>      END DO
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

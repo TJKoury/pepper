@@ -968,54 +968,56 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM M2EUL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM M2EUL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      HALFPI
-      !>              DOUBLE PRECISION      TWOPI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      HALFPI
+      !>      DOUBLE PRECISION      TWOPI
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALPHA
-      !>              DOUBLE PRECISION      ANG1
-      !>              DOUBLE PRECISION      ANG2
-      !>              DOUBLE PRECISION      DELTA
-      !>              DOUBLE PRECISION      KAPPA
-      !>              DOUBLE PRECISION      TICAM  ( 3, 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALPHA
+      !>      DOUBLE PRECISION      ANG1
+      !>      DOUBLE PRECISION      ANG2
+      !>      DOUBLE PRECISION      DELTA
+      !>      DOUBLE PRECISION      KAPPA
+      !>      DOUBLE PRECISION      TICAM  ( 3, 3 )
       !>
-      !>              DATA TICAM /  0.491273796781358D0,
-      !>             .             -0.508726203218642D0,
-      !>             .              0.706999085398824D0,
-      !>             .              0.508726203218642D0,
-      !>             .             -0.491273796781358D0,
-      !>             .             -0.706999085398824D0,
-      !>             .              0.706999085398824D0,
-      !>             .              0.706999085398824D0,
-      !>             .              0.017452406437284D0  /
+      !>      DATA TICAM /  0.491273796781358D0,
+      !>     .             -0.508726203218642D0,
+      !>     .              0.706999085398824D0,
+      !>     .              0.508726203218642D0,
+      !>     .             -0.491273796781358D0,
+      !>     .             -0.706999085398824D0,
+      !>     .              0.706999085398824D0,
+      !>     .              0.706999085398824D0,
+      !>     .              0.017452406437284D0  /
       !>
-      !>              CALL M2EUL ( TICAM, 3, 1, 3, KAPPA, ANG2, ANG1 )
+      !>      CALL M2EUL ( TICAM, 3, 1, 3, KAPPA, ANG2, ANG1 )
       !>
-      !>              DELTA = HALFPI() - ANG2
-      !>              ALPHA = ANG1     - HALFPI()
+      !>      DELTA = HALFPI() - ANG2
+      !>      ALPHA = ANG1     - HALFPI()
       !>
-      !>              IF ( KAPPA .LT. 0.D0 ) THEN
-      !>                 KAPPA = KAPPA + TWOPI()
-      !>              END IF
+      !>      IF ( KAPPA .LT. 0.D0 ) THEN
+      !>         KAPPA = KAPPA + TWOPI()
+      !>      END IF
       !>
-      !>              IF ( ALPHA .LT. 0.D0 ) THEN
-      !>                 ALPHA = ALPHA + TWOPI()
-      !>              END IF
+      !>      IF ( ALPHA .LT. 0.D0 ) THEN
+      !>         ALPHA = ALPHA + TWOPI()
+      !>      END IF
       !>
-      !>              WRITE (*,'(A,F24.14)') 'Alpha (deg): ', DPR() * ALPHA
-      !>              WRITE (*,'(A,F24.14)') 'Delta (deg): ', DPR() * DELTA
-      !>              WRITE (*,'(A,F24.14)') 'Kappa (deg): ', DPR() * KAPPA
+      !>      WRITE (*,'(A,F24.14)') 'Alpha (deg): ', DPR() * ALPHA
+      !>      WRITE (*,'(A,F24.14)') 'Delta (deg): ', DPR() * DELTA
+      !>      WRITE (*,'(A,F24.14)') 'Kappa (deg): ', DPR() * KAPPA
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1081,102 +1083,104 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM M2EUL_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM M2EUL_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      HALFPI
-      !>              DOUBLE PRECISION      RPD
-      !>              DOUBLE PRECISION      TWOPI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      HALFPI
+      !>      DOUBLE PRECISION      RPD
+      !>      DOUBLE PRECISION      TWOPI
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   =  'm2eul_ex2.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   =  'm2eul_ex2.tm' )
       !>
-      !>              DOUBLE PRECISION      ALPHA
-      !>              PARAMETER           ( ALPHA =  89.9148D0   )
+      !>      DOUBLE PRECISION      ALPHA
+      !>      PARAMETER           ( ALPHA =  89.9148D0   )
       !>
-      !>              DOUBLE PRECISION      BETA
-      !>              PARAMETER           ( BETA  = -0.03300D0   )
+      !>      DOUBLE PRECISION      BETA
+      !>      PARAMETER           ( BETA  = -0.03300D0   )
       !>
-      !>              DOUBLE PRECISION      GAMMA
-      !>              PARAMETER           ( GAMMA = -90.009796D0 )
+      !>      DOUBLE PRECISION      GAMMA
+      !>      PARAMETER           ( GAMMA = -90.009796D0 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      RA
-      !>              DOUBLE PRECISION      ANG1
-      !>              DOUBLE PRECISION      ANG2
-      !>              DOUBLE PRECISION      DEC
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      INST2J ( 3, 3 )
-      !>              DOUBLE PRECISION      INST2S ( 3, 3 )
-      !>              DOUBLE PRECISION      S2J    ( 3, 3 )
-      !>              DOUBLE PRECISION      TWIST
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      RA
+      !>      DOUBLE PRECISION      ANG1
+      !>      DOUBLE PRECISION      ANG2
+      !>      DOUBLE PRECISION      DEC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      INST2J ( 3, 3 )
+      !>      DOUBLE PRECISION      INST2S ( 3, 3 )
+      !>      DOUBLE PRECISION      S2J    ( 3, 3 )
+      !>      DOUBLE PRECISION      TWIST
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     First, we use subroutine EUL2M to form the
-      !>        C     transformation from instrument coordinates to
-      !>        C     CASSINI spacecraft frame.
-      !>        C
-      !>              CALL EUL2M ( GAMMA * RPD(), BETA * RPD(), ALPHA * RPD(),
-      !>             .             1,             2,            3,    INST2S )
+      !>C
+      !>C     First, we use subroutine EUL2M to form the
+      !>C     transformation from instrument coordinates to
+      !>C     CASSINI spacecraft frame.
+      !>C
+      !>      CALL EUL2M ( GAMMA * RPD(), BETA * RPD(), ALPHA * RPD(),
+      !>     .             1,             2,            3,    INST2S )
       !>
-      !>        C
-      !>        C     Now we compute the transformation from CASSINI
-      !>        C     spacecraft frame to J2000, at a given time.
-      !>        C
-      !>              CALL STR2ET ( '2008 Feb 25', ET )
-      !>              CALL PXFORM ( 'CASSINI_SC_COORD', 'J2000', ET, S2J )
+      !>C
+      !>C     Now we compute the transformation from CASSINI
+      !>C     spacecraft frame to J2000, at a given time.
+      !>C
+      !>      CALL STR2ET ( '2008 Feb 25', ET )
+      !>      CALL PXFORM ( 'CASSINI_SC_COORD', 'J2000', ET, S2J )
       !>
-      !>        C
-      !>        C     Next, we form the transformation from instrument
-      !>        C     coordinates to J2000 frame.
-      !>        C
-      !>              CALL MXM ( S2J, INST2S, INST2J )
+      !>C
+      !>C     Next, we form the transformation from instrument
+      !>C     coordinates to J2000 frame.
+      !>C
+      !>      CALL MXM ( S2J, INST2S, INST2J )
       !>
-      !>        C
-      !>        C     Finally, we express INST2J using the desired Euler
-      !>        C     angles.
-      !>        C
-      !>              CALL M2EUL ( INST2J, 3, 1, 3, TWIST, ANG1, ANG2 )
+      !>C
+      !>C     Finally, we express INST2J using the desired Euler
+      !>C     angles.
+      !>C
+      !>      CALL M2EUL ( INST2J, 3, 1, 3, TWIST, ANG1, ANG2 )
       !>
-      !>              RA   =  ANG2 - HALFPI()
-      !>              DEC  =  HALFPI() - ANG1
+      !>      RA   =  ANG2 - HALFPI()
+      !>      DEC  =  HALFPI() - ANG1
       !>
-      !>        C
-      !>        C     If we wish to make sure that RA, DEC, and TWIST are in
-      !>        C     the ranges [0, 2pi), [-pi/2, pi/2], and [0, 2pi)
-      !>        C     respectively, we may add the code
-      !>        C
-      !>              IF ( RA .LT. 0.D0 ) THEN
-      !>                 RA = RA + TWOPI()
-      !>              END IF
+      !>C
+      !>C     If we wish to make sure that RA, DEC, and TWIST are in
+      !>C     the ranges [0, 2pi), [-pi/2, pi/2], and [0, 2pi)
+      !>C     respectively, we may add the code
+      !>C
+      !>      IF ( RA .LT. 0.D0 ) THEN
+      !>         RA = RA + TWOPI()
+      !>      END IF
       !>
-      !>              IF ( TWIST .LT. 0.D0 ) THEN
-      !>                 TWIST = TWIST + TWOPI()
-      !>              END IF
+      !>      IF ( TWIST .LT. 0.D0 ) THEN
+      !>         TWIST = TWIST + TWOPI()
+      !>      END IF
       !>
-      !>        C
-      !>        C     Now RA, DEC, and TWIST express the instrument pointing
-      !>        C     as RA, Dec, and Twist, relative to the J2000 system.
-      !>        C
-      !>              WRITE (*,'(A,F24.14)') 'RA    (deg): ', DPR() * RA
-      !>              WRITE (*,'(A,F24.14)') 'Dec   (deg): ', DPR() * DEC
-      !>              WRITE (*,'(A,F24.14)') 'Twist (deg): ', DPR() * TWIST
+      !>C
+      !>C     Now RA, DEC, and TWIST express the instrument pointing
+      !>C     as RA, Dec, and Twist, relative to the J2000 system.
+      !>C
+      !>      WRITE (*,'(A,F24.14)') 'RA    (deg): ', DPR() * RA
+      !>      WRITE (*,'(A,F24.14)') 'Dec   (deg): ', DPR() * DEC
+      !>      WRITE (*,'(A,F24.14)') 'Twist (deg): ', DPR() * TWIST
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2395,80 +2399,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM XF2EUL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM XF2EUL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              DOUBLE PRECISION      HALFPI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      DOUBLE PRECISION      HALFPI
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'xf2eul_ex1.tm' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'xf2eul_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         UTCSTR
-      !>              PARAMETER           ( UTCSTR = 'May 15, 2007' )
+      !>      CHARACTER*(*)         UTCSTR
+      !>      PARAMETER           ( UTCSTR = 'May 15, 2007' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      EULANG ( 6    )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      FTMTRX ( 6, 6 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      EULANG ( 6    )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      FTMTRX ( 6, 6 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>              LOGICAL               UNIQUE
+      !>      LOGICAL               UNIQUE
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the input time to seconds past J2000 TDB.
-      !>        C
-      !>              CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C     Convert the input time to seconds past J2000 TDB.
+      !>C
+      !>      CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C     Get the transformation matrix from J2000 frame to
-      !>        C     IAU_MOON.
-      !>        C
-      !>              CALL SXFORM ( 'J2000', 'IAU_MOON', ET, FTMTRX )
+      !>C
+      !>C     Get the transformation matrix from J2000 frame to
+      !>C     IAU_MOON.
+      !>C
+      !>      CALL SXFORM ( 'J2000', 'IAU_MOON', ET, FTMTRX )
       !>
-      !>        C
-      !>        C     Convert the transformation matrix to
-      !>        C     Euler angles (3-1-3).
-      !>        C
-      !>              CALL XF2EUL ( FTMTRX, 3, 1, 3, EULANG, UNIQUE )
+      !>C
+      !>C     Convert the transformation matrix to
+      !>C     Euler angles (3-1-3).
+      !>C
+      !>      CALL XF2EUL ( FTMTRX, 3, 1, 3, EULANG, UNIQUE )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              IF ( UNIQUE ) THEN
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      IF ( UNIQUE ) THEN
       !>
-      !>                 WRITE(*,'(2A)') 'UTC: ', UTCSTR
-      !>                 WRITE(*,'(A,F20.16)') 'W       = ', EULANG(1)
-      !>                 WRITE(*,'(A,F20.16)') 'DEC     = ',
-      !>             .                  HALFPI() - EULANG(2)
-      !>                 WRITE(*,'(A,F20.16)') 'RA      = ',
-      !>             .                  EULANG(3) - HALFPI()
-      !>                 WRITE(*,'(A,F20.16)') 'dW/dt   = ', EULANG(4)
-      !>                 WRITE(*,'(A,F20.16)') 'dDEC/dt = ', EULANG(5)
-      !>                 WRITE(*,'(A,F20.16)') 'dRA/dt  = ', EULANG(6)
+      !>         WRITE(*,'(2A)') 'UTC: ', UTCSTR
+      !>         WRITE(*,'(A,F20.16)') 'W       = ', EULANG(1)
+      !>         WRITE(*,'(A,F20.16)') 'DEC     = ',
+      !>     .                  HALFPI() - EULANG(2)
+      !>         WRITE(*,'(A,F20.16)') 'RA      = ',
+      !>     .                  EULANG(3) - HALFPI()
+      !>         WRITE(*,'(A,F20.16)') 'dW/dt   = ', EULANG(4)
+      !>         WRITE(*,'(A,F20.16)') 'dDEC/dt = ', EULANG(5)
+      !>         WRITE(*,'(A,F20.16)') 'dRA/dt  = ', EULANG(6)
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'The values in EULANG are not uniquely '
-      !>             .          //  'determined.'
+      !>         WRITE(*,*) 'The values in EULANG are not uniquely '
+      !>     .          //  'determined.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2929,54 +2935,56 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EUL2XF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EUL2XF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ABGANG ( 6    )
-      !>              DOUBLE PRECISION      RPYANG ( 6    )
-      !>              DOUBLE PRECISION      XFORM  ( 6, 6 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ABGANG ( 6    )
+      !>      DOUBLE PRECISION      RPYANG ( 6    )
+      !>      DOUBLE PRECISION      XFORM  ( 6, 6 )
       !>
-      !>              LOGICAL               UNIQUE
+      !>      LOGICAL               UNIQUE
       !>
-      !>        C
-      !>        C     Define the initial set of Euler angles.
-      !>        C
-      !>              ABGANG(1) =  0.01D0
-      !>              ABGANG(2) =  0.03D0
-      !>              ABGANG(3) =  0.09D0
-      !>              ABGANG(4) = -0.001D0
-      !>              ABGANG(5) = -0.003D0
-      !>              ABGANG(6) = -0.009D0
+      !>C
+      !>C     Define the initial set of Euler angles.
+      !>C
+      !>      ABGANG(1) =  0.01D0
+      !>      ABGANG(2) =  0.03D0
+      !>      ABGANG(3) =  0.09D0
+      !>      ABGANG(4) = -0.001D0
+      !>      ABGANG(5) = -0.003D0
+      !>      ABGANG(6) = -0.009D0
       !>
-      !>        C
-      !>        C     Compute the equivalent angles and derivatives for a
-      !>        C     1-2-3 rotation.
-      !>        C
-      !>              CALL EUL2XF ( ABGANG, 3, 1, 3, XFORM  )
-      !>              CALL XF2EUL ( XFORM,  1, 2, 3, RPYANG, UNIQUE )
+      !>C
+      !>C     Compute the equivalent angles and derivatives for a
+      !>C     1-2-3 rotation.
+      !>C
+      !>      CALL EUL2XF ( ABGANG, 3, 1, 3, XFORM  )
+      !>      CALL XF2EUL ( XFORM,  1, 2, 3, RPYANG, UNIQUE )
       !>
-      !>              IF ( UNIQUE )  THEN
+      !>      IF ( UNIQUE )  THEN
       !>
-      !>                 WRITE(*,'(A)') '1-2-3 equivalent rotation to input '
-      !>             .               // '(radians):'
-      !>                 WRITE(*,'(2(A,F13.9))') 'Roll  ', RPYANG(1),
-      !>             .                           ', dRoll/dt  ', RPYANG(4)
-      !>                 WRITE(*,'(2(A,F13.9))') 'Pitch ', RPYANG(2),
-      !>             .                           ', dPitch/dt ', RPYANG(5)
-      !>                 WRITE(*,'(2(A,F13.9))') 'Yaw   ', RPYANG(3),
-      !>             .                           ', dYaw/dt   ', RPYANG(6)
+      !>         WRITE(*,'(A)') '1-2-3 equivalent rotation to input '
+      !>     .               // '(radians):'
+      !>         WRITE(*,'(2(A,F13.9))') 'Roll  ', RPYANG(1),
+      !>     .                           ', dRoll/dt  ', RPYANG(4)
+      !>         WRITE(*,'(2(A,F13.9))') 'Pitch ', RPYANG(2),
+      !>     .                           ', dPitch/dt ', RPYANG(5)
+      !>         WRITE(*,'(2(A,F13.9))') 'Yaw   ', RPYANG(3),
+      !>     .                           ', dYaw/dt   ', RPYANG(6)
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'The values in RPYANG are not uniquely '
-      !>             .          //  'determined.'
+      !>         WRITE(*,*) 'The values in RPYANG are not uniquely '
+      !>     .          //  'determined.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6465,86 +6473,88 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DNEARP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DNEARP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      VNORM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         BODYNM
-      !>              PARAMETER           ( BODYNM = 'MARS' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         BODYNM
+      !>      PARAMETER           ( BODYNM = 'MARS' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'dnearp_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'dnearp_ex1.tm' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      A
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      C
-      !>              DOUBLE PRECISION      DALT   ( 2 )
-      !>              DOUBLE PRECISION      DNEAR  ( 6 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      GTVEL  ( 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      A
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      C
+      !>      DOUBLE PRECISION      DALT   ( 2 )
+      !>      DOUBLE PRECISION      DNEAR  ( 6 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      GTVEL  ( 3 )
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the TDB input time string to seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
+      !>C
+      !>C     Convert the TDB input time string to seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
       !>
-      !>        C
-      !>        C     First get the axes of the body.
-      !>        C
-      !>              CALL BODVRD ( BODYNM, 'RADII', 3, DIM, RADII )
-      !>              CALL VUPACK ( RADII, A, B, C )
+      !>C
+      !>C     First get the axes of the body.
+      !>C
+      !>      CALL BODVRD ( BODYNM, 'RADII', 3, DIM, RADII )
+      !>      CALL VUPACK ( RADII, A, B, C )
       !>
-      !>        C
-      !>        C     Get the geometric state of the spacecraft with
-      !>        C     respect to BODYNM in the body-fixed reference frame
-      !>        C     at ET and compute the state of the sub-spacecraft point.
-      !>        C
-      !>              CALL SPKEZR ( 'MRO',  ET,    'IAU_MARS', 'NONE',
-      !>             .              BODYNM, STATE, LT                  )
-      !>              CALL DNEARP ( STATE, A, B, C, DNEAR, DALT, FOUND )
+      !>C
+      !>C     Get the geometric state of the spacecraft with
+      !>C     respect to BODYNM in the body-fixed reference frame
+      !>C     at ET and compute the state of the sub-spacecraft point.
+      !>C
+      !>      CALL SPKEZR ( 'MRO',  ET,    'IAU_MARS', 'NONE',
+      !>     .              BODYNM, STATE, LT                  )
+      !>      CALL DNEARP ( STATE, A, B, C, DNEAR, DALT, FOUND )
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>        C
-      !>        C        DNEAR contains the state of the subspacecraft point.
-      !>        C
-      !>                 CALL VEQU ( DNEAR(4), GTVEL )
+      !>C
+      !>C        DNEAR contains the state of the subspacecraft point.
+      !>C
+      !>         CALL VEQU ( DNEAR(4), GTVEL )
       !>
-      !>                 WRITE(*,'(A,3F10.6)')
-      !>             .        'Ground-track velocity (km/s):', GTVEL
-      !>                 WRITE(*,'(A,F10.6)')
-      !>             .        'Ground-track speed    (km/s):', VNORM( GTVEL )
+      !>         WRITE(*,'(A,3F10.6)')
+      !>     .        'Ground-track velocity (km/s):', GTVEL
+      !>         WRITE(*,'(A,F10.6)')
+      !>     .        'Ground-track speed    (km/s):', VNORM( GTVEL )
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'DNEAR is degenerate.'
+      !>         WRITE(*,*) 'DNEAR is degenerate.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6562,93 +6572,95 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DNEARP_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DNEARP_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      CLIGHT
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      CLIGHT
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         BODYNM
-      !>              PARAMETER           ( BODYNM = 'MARS' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         BODYNM
+      !>      PARAMETER           ( BODYNM = 'MARS' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'dnearp_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'dnearp_ex1.tm' )
       !>
-      !>        C
-      !>        C     Define the central frequency of the radar,
-      !>        C     in megahertz.
-      !>        C
-      !>              DOUBLE PRECISION      RCFRQ
-      !>              PARAMETER           ( RCFRQ  = 20.D0 )
+      !>C
+      !>C     Define the central frequency of the radar,
+      !>C     in megahertz.
+      !>C
+      !>      DOUBLE PRECISION      RCFRQ
+      !>      PARAMETER           ( RCFRQ  = 20.D0 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      A
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      C
-      !>              DOUBLE PRECISION      DALT   ( 2 )
-      !>              DOUBLE PRECISION      DNEAR  ( 6 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      SHIFT
-      !>              DOUBLE PRECISION      STATE  ( 6 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      A
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      C
+      !>      DOUBLE PRECISION      DALT   ( 2 )
+      !>      DOUBLE PRECISION      DNEAR  ( 6 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      SHIFT
+      !>      DOUBLE PRECISION      STATE  ( 6 )
       !>
-      !>              INTEGER               DIM
+      !>      INTEGER               DIM
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the TDB input time string to seconds past
-      !>        C     J2000, TDB.
-      !>        C
-      !>              CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
+      !>C
+      !>C     Convert the TDB input time string to seconds past
+      !>C     J2000, TDB.
+      !>C
+      !>      CALL STR2ET ( '2007 SEP 30 00:00:00 TDB', ET )
       !>
-      !>        C
-      !>        C     First get the axes of the body.
-      !>        C
-      !>              CALL BODVRD ( BODYNM, 'RADII', 3, DIM, RADII )
-      !>              CALL VUPACK ( RADII, A, B, C )
+      !>C
+      !>C     First get the axes of the body.
+      !>C
+      !>      CALL BODVRD ( BODYNM, 'RADII', 3, DIM, RADII )
+      !>      CALL VUPACK ( RADII, A, B, C )
       !>
-      !>        C
-      !>        C     Get the geometric state of the spacecraft with
-      !>        C     respect to BODYNM in the body-fixed reference frame
-      !>        C     at ET and compute the state of the sub-spacecraft point.
-      !>        C
-      !>              CALL SPKEZR ( 'MRO',  ET,    'IAU_MARS', 'NONE',
-      !>             .              BODYNM, STATE, LT                  )
-      !>              CALL DNEARP ( STATE, A, B, C, DNEAR, DALT, FOUND )
+      !>C
+      !>C     Get the geometric state of the spacecraft with
+      !>C     respect to BODYNM in the body-fixed reference frame
+      !>C     at ET and compute the state of the sub-spacecraft point.
+      !>C
+      !>      CALL SPKEZR ( 'MRO',  ET,    'IAU_MARS', 'NONE',
+      !>     .              BODYNM, STATE, LT                  )
+      !>      CALL DNEARP ( STATE, A, B, C, DNEAR, DALT, FOUND )
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>        C
-      !>        C        The change in frequency is given by multiplying SHIFT
-      !>        C        times the carrier frequency
-      !>        C
-      !>                 SHIFT = ( DALT(2) / CLIGHT() )
-      !>                 WRITE(*,'(A,F20.16)') 'Central frequency (MHz):',
-      !>             .                          RCFRQ
-      !>                 WRITE(*,'(A,F20.16)') 'Doppler shift     (MHz):',
-      !>             .                          RCFRQ * SHIFT
+      !>C
+      !>C        The change in frequency is given by multiplying SHIFT
+      !>C        times the carrier frequency
+      !>C
+      !>         SHIFT = ( DALT(2) / CLIGHT() )
+      !>         WRITE(*,'(A,F20.16)') 'Central frequency (MHz):',
+      !>     .                          RCFRQ
+      !>         WRITE(*,'(A,F20.16)') 'Doppler shift     (MHz):',
+      !>     .                          RCFRQ * SHIFT
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'DNEAR is degenerate.'
+      !>         WRITE(*,*) 'DNEAR is degenerate.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

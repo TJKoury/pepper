@@ -2544,69 +2544,71 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TPICTR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TPICTR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN  = 400 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN  = 400 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN  = 64  )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN  = 64  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERR
-      !>              CHARACTER*(TIMLEN)    PICTUR
-      !>              CHARACTER*(TIMLEN)    SAMPLE
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERR
+      !>      CHARACTER*(TIMLEN)    PICTUR
+      !>      CHARACTER*(TIMLEN)    SAMPLE
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>              LOGICAL               OK
+      !>      LOGICAL               OK
       !>
-      !>        C
-      !>        C     Load LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Create the required time picture.
-      !>        C
-      !>              SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
+      !>C
+      !>C     Create the required time picture.
+      !>C
+      !>      SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
       !>
-      !>              CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
+      !>      CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
       !>
-      !>              IF ( .NOT. OK ) THEN
+      !>      IF ( .NOT. OK ) THEN
       !>
-      !>                 WRITE(*,*) 'Invalid time picture.'
-      !>                 WRITE(*,*) ERR
+      !>         WRITE(*,*) 'Invalid time picture.'
+      !>         WRITE(*,*) ERR
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Convert the input UTC time to ephemeris time.
-      !>        C
-      !>                 UTCSTR = '24 Mar 2018  16:23:00 UTC'
-      !>                 CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C        Convert the input UTC time to ephemeris time.
+      !>C
+      !>         UTCSTR = '24 Mar 2018  16:23:00 UTC'
+      !>         CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C         Now convert ET to the desired output format.
-      !>        C
-      !>                  CALL TIMOUT ( ET, PICTUR, TIMSTR )
-      !>                  WRITE (*,*) 'Sample format: ', SAMPLE
-      !>                  WRITE (*,*) 'Time picture : ', PICTUR
-      !>                  WRITE (*,*)
-      !>                  WRITE (*,*) 'Input UTC    : ', UTCSTR
-      !>                  WRITE (*,*) 'Output       : ', TIMSTR
+      !>C
+      !>C         Now convert ET to the desired output format.
+      !>C
+      !>          CALL TIMOUT ( ET, PICTUR, TIMSTR )
+      !>          WRITE (*,*) 'Sample format: ', SAMPLE
+      !>          WRITE (*,*) 'Time picture : ', PICTUR
+      !>          WRITE (*,*)
+      !>          WRITE (*,*) 'Input UTC    : ', UTCSTR
+      !>          WRITE (*,*) 'Output       : ', TIMSTR
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2866,46 +2868,48 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM UTC2ET_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM UTC2ET_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      UNITIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      UNITIM
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         UTCSTR
-      !>              PARAMETER           ( UTCSTR = 'Dec 19 2003  16:48:00' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         UTCSTR
+      !>      PARAMETER           ( UTCSTR = 'Dec 19 2003  16:48:00' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JED
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JED
       !>
-      !>        C
-      !>        C     Load the LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load the LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Convert input UTC string to Ephemeris Time.
-      !>        C
-      !>              CALL UTC2ET ( UTCSTR, ET )
-      !>              WRITE(*,'(2A)') 'UTC time             : ', UTCSTR
-      !>              WRITE(*,'(A,F22.9)') 'Ephemeris time       :', ET
+      !>C
+      !>C     Convert input UTC string to Ephemeris Time.
+      !>C
+      !>      CALL UTC2ET ( UTCSTR, ET )
+      !>      WRITE(*,'(2A)') 'UTC time             : ', UTCSTR
+      !>      WRITE(*,'(A,F22.9)') 'Ephemeris time       :', ET
       !>
-      !>        C
-      !>        C     Convert the Ephemeris Time to Julian ephemeris date,
-      !>        C     i.e. Julian date relative to TDB time scale.
-      !>        C
-      !>              JED = UNITIM( ET, 'ET', 'JED' )
-      !>              WRITE(*,'(A,F22.9)') 'Julian Ephemeris Date:', JED
+      !>C
+      !>C     Convert the Ephemeris Time to Julian ephemeris date,
+      !>C     i.e. Julian date relative to TDB time scale.
+      !>C
+      !>      JED = UNITIM( ET, 'ET', 'JED' )
+      !>      WRITE(*,'(A,F22.9)') 'Julian Ephemeris Date:', JED
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3555,69 +3559,71 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TIMOUT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TIMOUT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN  = 400 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN  = 400 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN  = 64  )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN  = 64  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERR
-      !>              CHARACTER*(TIMLEN)    PICTUR
-      !>              CHARACTER*(TIMLEN)    SAMPLE
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERR
+      !>      CHARACTER*(TIMLEN)    PICTUR
+      !>      CHARACTER*(TIMLEN)    SAMPLE
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>              LOGICAL               OK
+      !>      LOGICAL               OK
       !>
-      !>        C
-      !>        C     Load LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Create the required time picture.
-      !>        C
-      !>              SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
+      !>C
+      !>C     Create the required time picture.
+      !>C
+      !>      SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
       !>
-      !>              CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
+      !>      CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
       !>
-      !>              IF ( .NOT. OK ) THEN
+      !>      IF ( .NOT. OK ) THEN
       !>
-      !>                 WRITE(*,*) 'Invalid time picture.'
-      !>                 WRITE(*,*) ERR
+      !>         WRITE(*,*) 'Invalid time picture.'
+      !>         WRITE(*,*) ERR
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Convert the input UTC time to ephemeris time.
-      !>        C
-      !>                 UTCSTR = '26 Nov 2018  23:23:00 UTC'
-      !>                 CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C        Convert the input UTC time to ephemeris time.
+      !>C
+      !>         UTCSTR = '26 Nov 2018  23:23:00 UTC'
+      !>         CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C         Now convert ET to the desired output format.
-      !>        C
-      !>                  CALL TIMOUT ( ET, PICTUR, TIMSTR )
-      !>                  WRITE (*,*) 'Sample format: ', SAMPLE
-      !>                  WRITE (*,*) 'Time picture : ', PICTUR
-      !>                  WRITE (*,*)
-      !>                  WRITE (*,*) 'Input UTC    : ', UTCSTR
-      !>                  WRITE (*,*) 'Output       : ', TIMSTR
+      !>C
+      !>C         Now convert ET to the desired output format.
+      !>C
+      !>          CALL TIMOUT ( ET, PICTUR, TIMSTR )
+      !>          WRITE (*,*) 'Sample format: ', SAMPLE
+      !>          WRITE (*,*) 'Time picture : ', PICTUR
+      !>          WRITE (*,*)
+      !>          WRITE (*,*) 'Input UTC    : ', UTCSTR
+      !>          WRITE (*,*) 'Output       : ', TIMSTR
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3641,50 +3647,52 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TIMOUT_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TIMOUT_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN  = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN  = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    PICTUR
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    PICTUR
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>        C
-      !>        C     Load LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Convert the input UTC time to ephemeris time.
-      !>        C
-      !>              UTCSTR = '26 Nov 2018  16:23:00 UTC'
-      !>              CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C     Convert the input UTC time to ephemeris time.
+      !>C
+      !>      UTCSTR = '26 Nov 2018  16:23:00 UTC'
+      !>      CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C     Create the required time picture. This could be done
-      !>        C     using TPICTR.
-      !>        C
-      !>              PICTUR = 'Wkd Mon DD HR:MN ::UTC-7 YYYY '
-      !>             .      // '(JULIAND.#### JDUTC)'
+      !>C
+      !>C     Create the required time picture. This could be done
+      !>C     using TPICTR.
+      !>C
+      !>      PICTUR = 'Wkd Mon DD HR:MN ::UTC-7 YYYY '
+      !>     .      // '(JULIAND.#### JDUTC)'
       !>
-      !>        C
-      !>        C      Now convert ET to the desired output format.
-      !>        C
-      !>               CALL TIMOUT ( ET, PICTUR, TIMSTR )
-      !>               WRITE (*,*) 'Input UTC: ', UTCSTR
-      !>               WRITE (*,*) 'Output   : ', TIMSTR
+      !>C
+      !>C      Now convert ET to the desired output format.
+      !>C
+      !>       CALL TIMOUT ( ET, PICTUR, TIMSTR )
+      !>       WRITE (*,*) 'Input UTC: ', UTCSTR
+      !>       WRITE (*,*) 'Output   : ', TIMSTR
       !>
-      !>               END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

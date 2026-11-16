@@ -508,65 +508,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TISBOD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TISBOD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6    )
-      !>              DOUBLE PRECISION      SATVEC ( 6    )
-      !>              DOUBLE PRECISION      TSIPM  ( 6, 6 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6    )
+      !>      DOUBLE PRECISION      SATVEC ( 6    )
+      !>      DOUBLE PRECISION      TSIPM  ( 6, 6 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               SATID
+      !>      INTEGER               I
+      !>      INTEGER               SATID
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( 'tisbod_ex1.tm' )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( 'tisbod_ex1.tm' )
       !>
-      !>        C
-      !>        C     The body ID for Saturn.
-      !>        C
-      !>              SATID = 699
+      !>C
+      !>C     The body ID for Saturn.
+      !>C
+      !>      SATID = 699
       !>
-      !>        C
-      !>        C     Retrieve the transformation matrix at some time.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2005',   ET        )
-      !>              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
+      !>C
+      !>C     Retrieve the transformation matrix at some time.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2005',   ET        )
+      !>      CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
       !>
-      !>        C
-      !>        C     Retrieve the state of Titan as seen from Saturn
-      !>        C     in the J2000 frame at ET.
-      !>        C
-      !>              CALL SPKEZR ( 'TITAN',  ET,    'J2000', 'NONE',
-      !>             .              'SATURN', STATE, LT              )
+      !>C
+      !>C     Retrieve the state of Titan as seen from Saturn
+      !>C     in the J2000 frame at ET.
+      !>C
+      !>      CALL SPKEZR ( 'TITAN',  ET,    'J2000', 'NONE',
+      !>     .              'SATURN', STATE, LT              )
       !>
-      !>              WRITE(*,'(A)') 'Titan as seen from Saturn '
-      !>             .            // '(J2000 frame):'
-      !>              WRITE(*,'(A,3F13.3)') '   position   (km):',
-      !>             .               ( STATE(I), I=1,3 )
-      !>              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
-      !>             .               ( STATE(I), I=4,6 )
+      !>      WRITE(*,'(A)') 'Titan as seen from Saturn '
+      !>     .            // '(J2000 frame):'
+      !>      WRITE(*,'(A,3F13.3)') '   position   (km):',
+      !>     .               ( STATE(I), I=1,3 )
+      !>      WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
+      !>     .               ( STATE(I), I=4,6 )
       !>
-      !>        C
-      !>        C     Rotate the 6-vector STATE into the
-      !>        C     Saturn body-fixed reference frame.
-      !>        C
-      !>              CALL MXVG ( TSIPM, STATE, 6, 6, SATVEC )
+      !>C
+      !>C     Rotate the 6-vector STATE into the
+      !>C     Saturn body-fixed reference frame.
+      !>C
+      !>      CALL MXVG ( TSIPM, STATE, 6, 6, SATVEC )
       !>
-      !>              WRITE(*,'(A)') 'Titan as seen from Saturn '
-      !>             .            // '(IAU_SATURN frame):'
-      !>              WRITE(*,'(A,3F13.3)') '   position   (km):',
-      !>             .               ( SATVEC(I), I=1,3 )
-      !>              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
-      !>             .               ( SATVEC(I), I=4,6 )
+      !>      WRITE(*,'(A)') 'Titan as seen from Saturn '
+      !>     .            // '(IAU_SATURN frame):'
+      !>      WRITE(*,'(A,3F13.3)') '   position   (km):',
+      !>     .               ( SATVEC(I), I=1,3 )
+      !>      WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
+      !>     .               ( SATVEC(I), I=4,6 )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -592,119 +594,121 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TISBOD_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TISBOD_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      AV     ( 3    )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      DTIPM  ( 3, 3 )
-      !>              DOUBLE PRECISION      OMEGA  ( 3, 3 )
-      !>              DOUBLE PRECISION      ROT    ( 3, 3 )
-      !>              DOUBLE PRECISION      TIPM   ( 3, 3 )
-      !>              DOUBLE PRECISION      TSIPM  ( 6, 6 )
-      !>              DOUBLE PRECISION      V      ( 3    )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      AV     ( 3    )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      DTIPM  ( 3, 3 )
+      !>      DOUBLE PRECISION      OMEGA  ( 3, 3 )
+      !>      DOUBLE PRECISION      ROT    ( 3, 3 )
+      !>      DOUBLE PRECISION      TIPM   ( 3, 3 )
+      !>      DOUBLE PRECISION      TSIPM  ( 6, 6 )
+      !>      DOUBLE PRECISION      V      ( 3    )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               SATID
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               SATID
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( 'tisbod_ex1.tm' )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( 'tisbod_ex1.tm' )
       !>
-      !>        C
-      !>        C     The body ID for Saturn.
-      !>        C
-      !>              SATID = 699
+      !>C
+      !>C     The body ID for Saturn.
+      !>C
+      !>      SATID = 699
       !>
-      !>        C
-      !>        C     First get the state transformation matrix.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2005',   ET        )
-      !>              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
+      !>C
+      !>C     First get the state transformation matrix.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2005',   ET        )
+      !>      CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
       !>
-      !>        C
-      !>        C     This matrix has the form:
-      !>        C
-      !>        C          .-            -.
-      !>        C          |       :      |
-      !>        C          | TIPM  :  0   |
-      !>        C          | ......:......|
-      !>        C          |       :      |
-      !>        C          | DTIPM : TIPM |
-      !>        C          |       :      |
-      !>        C          `-            -'
-      !>        C
-      !>        C     We extract TIPM and DTIPM
-      !>        C
-      !>              DO  I = 1,3
-      !>                 DO  J = 1,3
+      !>C
+      !>C     This matrix has the form:
+      !>C
+      !>C          .-            -.
+      !>C          |       :      |
+      !>C          | TIPM  :  0   |
+      !>C          | ......:......|
+      !>C          |       :      |
+      !>C          | DTIPM : TIPM |
+      !>C          |       :      |
+      !>C          `-            -'
+      !>C
+      !>C     We extract TIPM and DTIPM
+      !>C
+      !>      DO  I = 1,3
+      !>         DO  J = 1,3
       !>
-      !>                    TIPM  ( I, J ) = TSIPM ( I,   J )
-      !>                    DTIPM ( I, J ) = TSIPM ( I+3, J )
+      !>            TIPM  ( I, J ) = TSIPM ( I,   J )
+      !>            DTIPM ( I, J ) = TSIPM ( I+3, J )
       !>
-      !>                 END DO
-      !>              END DO
+      !>         END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     The transpose of TIPM and DTIPM, (TPMI and DTPMI), gives
-      !>        C     the transformation from bodyfixed coordinates to inertial
-      !>        C     coordinates.
-      !>        C
-      !>        C     Here is a fact about the relationship between angular
-      !>        C     velocity associated with a time varying rotation matrix
-      !>        C     that gives the orientation of a body with respect to
-      !>        C     an inertial frame.
-      !>        C
-      !>        C        The angular velocity vector can be read from the off
-      !>        C        diagonal components of the matrix product:
-      !>        C
-      !>        C                                t
-      !>        C        OMEGA =     DTPMI * TPMI
-      !>        C
-      !>        C                         t
-      !>        C              =     DTIPM * TIPM
-      !>        C
-      !>        C        the components of the angular velocity V will appear
-      !>        C        in this matrix as:
-      !>        C
-      !>        C            .-                   -.
-      !>        C            |                     |
-      !>        C            |   0    -V(3)  V(2)  |
-      !>        C            |                     |
-      !>        C            |  V(3)    0   -V(1)  |
-      !>        C            |                     |
-      !>        C            | -V(2)   V(1)   0    |
-      !>        C            |                     |
-      !>        C            `-                   -'
-      !>        C
-      !>        C
-      !>              CALL MTXM ( DTIPM, TIPM, OMEGA )
+      !>C
+      !>C     The transpose of TIPM and DTIPM, (TPMI and DTPMI), gives
+      !>C     the transformation from bodyfixed coordinates to inertial
+      !>C     coordinates.
+      !>C
+      !>C     Here is a fact about the relationship between angular
+      !>C     velocity associated with a time varying rotation matrix
+      !>C     that gives the orientation of a body with respect to
+      !>C     an inertial frame.
+      !>C
+      !>C        The angular velocity vector can be read from the off
+      !>C        diagonal components of the matrix product:
+      !>C
+      !>C                                t
+      !>C        OMEGA =     DTPMI * TPMI
+      !>C
+      !>C                         t
+      !>C              =     DTIPM * TIPM
+      !>C
+      !>C        the components of the angular velocity V will appear
+      !>C        in this matrix as:
+      !>C
+      !>C            .-                   -.
+      !>C            |                     |
+      !>C            |   0    -V(3)  V(2)  |
+      !>C            |                     |
+      !>C            |  V(3)    0   -V(1)  |
+      !>C            |                     |
+      !>C            | -V(2)   V(1)   0    |
+      !>C            |                     |
+      !>C            `-                   -'
+      !>C
+      !>C
+      !>      CALL MTXM ( DTIPM, TIPM, OMEGA )
       !>
-      !>              V(1) = OMEGA (3,2)
-      !>              V(2) = OMEGA (1,3)
-      !>              V(3) = OMEGA (2,1)
+      !>      V(1) = OMEGA (3,2)
+      !>      V(2) = OMEGA (1,3)
+      !>      V(3) = OMEGA (2,1)
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              WRITE(*,'(A)') 'Angular velocity (km/s):'
-      !>              WRITE(*,'(3F16.9)') V
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      WRITE(*,'(A)') 'Angular velocity (km/s):'
+      !>      WRITE(*,'(3F16.9)') V
       !>
-      !>        C
-      !>        C     It is possible to compute the angular velocity using
-      !>        C     a single call to XF2RAV.
-      !>        C
-      !>              CALL XF2RAV ( TSIPM, ROT, AV )
+      !>C
+      !>C     It is possible to compute the angular velocity using
+      !>C     a single call to XF2RAV.
+      !>C
+      !>      CALL XF2RAV ( TSIPM, ROT, AV )
       !>
-      !>              WRITE(*,'(A)') 'Angular velocity using XF2RAV (km/s):'
-      !>              WRITE(*,'(3F16.9)') AV
+      !>      WRITE(*,'(A)') 'Angular velocity using XF2RAV (km/s):'
+      !>      WRITE(*,'(3F16.9)') AV
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1826,97 +1830,99 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TKFRAM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TKFRAM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         MYTOPO
-      !>              PARAMETER           ( MYTOPO = 'DSS-34_TOPO' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         MYTOPO
+      !>      PARAMETER           ( MYTOPO = 'DSS-34_TOPO' )
       !>
-      !>              INTEGER               MXFRLN
-      !>              PARAMETER           ( MXFRLN = 26 )
+      !>      INTEGER               MXFRLN
+      !>      PARAMETER           ( MXFRLN = 26 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(MXFRLN)    FRNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(MXFRLN)    FRNAME
       !>
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RAD
-      !>              DOUBLE PRECISION      ROT   ( 3, 3 )
-      !>              DOUBLE PRECISION      Z     ( 3    )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RAD
+      !>      DOUBLE PRECISION      ROT   ( 3, 3 )
+      !>      DOUBLE PRECISION      Z     ( 3    )
       !>
-      !>              INTEGER               FRAME
-      !>              INTEGER               FRCODE
+      !>      INTEGER               FRAME
+      !>      INTEGER               FRCODE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the FK that contains the topocentric reference
-      !>        C     frame definition for DSS-34.
-      !>        C
-      !>              CALL FURNSH ( 'earth_topo_050714.tf' )
+      !>C
+      !>C     Load the FK that contains the topocentric reference
+      !>C     frame definition for DSS-34.
+      !>C
+      !>      CALL FURNSH ( 'earth_topo_050714.tf' )
       !>
-      !>        C
-      !>        C     The name of the topocentric frame is MYTOPO.
-      !>        C     First we get the ID code of the topocentric frame.
-      !>        C
-      !>              CALL NAMFRM ( MYTOPO, FRCODE )
+      !>C
+      !>C     The name of the topocentric frame is MYTOPO.
+      !>C     First we get the ID code of the topocentric frame.
+      !>C
+      !>      CALL NAMFRM ( MYTOPO, FRCODE )
       !>
-      !>        C
-      !>        C     Next get the rotation from the topocentric frame to
-      !>        C     the body-fixed frame. We can use the TK frame ID in
-      !>        C     place of the TK frame class ID in this call because
-      !>        C     for TK frames these IDs are identical.
-      !>        C
-      !>              CALL TKFRAM ( FRCODE, ROT, FRAME, FOUND )
+      !>C
+      !>C     Next get the rotation from the topocentric frame to
+      !>C     the body-fixed frame. We can use the TK frame ID in
+      !>C     place of the TK frame class ID in this call because
+      !>C     for TK frames these IDs are identical.
+      !>C
+      !>      CALL TKFRAM ( FRCODE, ROT, FRAME, FOUND )
       !>
-      !>        C
-      !>        C     Make sure the topocentric frame is relative to one of
-      !>        C     the Earth fixed frames.
-      !>        C
-      !>              CALL FRMNAM( FRAME, FRNAME )
+      !>C
+      !>C     Make sure the topocentric frame is relative to one of
+      !>C     the Earth fixed frames.
+      !>C
+      !>      CALL FRMNAM( FRAME, FRNAME )
       !>
-      !>              IF (       FRNAME .NE. 'IAU_EARTH'
-      !>             .     .AND. FRNAME .NE. 'EARTH_FIXED'
-      !>             .     .AND. FRNAME .NE. 'ITRF93'  ) THEN
+      !>      IF (       FRNAME .NE. 'IAU_EARTH'
+      !>     .     .AND. FRNAME .NE. 'EARTH_FIXED'
+      !>     .     .AND. FRNAME .NE. 'ITRF93'  ) THEN
       !>
-      !>                 WRITE (*,*) 'The frame ', MYTOPO,
-      !>             .               ' does not appear to be '
-      !>                 WRITE (*,*) 'defined relative to an '
-      !>             .            // 'Earth fixed frame.'
-      !>                 STOP
+      !>         WRITE (*,*) 'The frame ', MYTOPO,
+      !>     .               ' does not appear to be '
+      !>         WRITE (*,*) 'defined relative to an '
+      !>     .            // 'Earth fixed frame.'
+      !>         STOP
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Things look ok. Get the location of the Z-axis in the
-      !>        C     topocentric frame.
-      !>        C
-      !>              Z(1) = ROT(1,3)
-      !>              Z(2) = ROT(2,3)
-      !>              Z(3) = ROT(3,3)
+      !>C
+      !>C     Things look ok. Get the location of the Z-axis in the
+      !>C     topocentric frame.
+      !>C
+      !>      Z(1) = ROT(1,3)
+      !>      Z(2) = ROT(2,3)
+      !>      Z(3) = ROT(3,3)
       !>
-      !>        C
-      !>        C     Convert the Z vector to latitude, longitude and radius.
-      !>        C
-      !>              CALL RECLAT ( Z, RAD, LAT, LON )
+      !>C
+      !>C     Convert the Z vector to latitude, longitude and radius.
+      !>C
+      !>      CALL RECLAT ( Z, RAD, LAT, LON )
       !>
-      !>              WRITE (*,'(A)') 'The geodetic coordinates of the center'
-      !>              WRITE (*,'(A)') 'of the topographic frame are:'
-      !>              WRITE (*,*)
-      !>              WRITE (*,'(A,F20.13)') '   Latitude  (deg): ', LAT*DPR()
-      !>              WRITE (*,'(A,F20.13)') '   Longitude (deg): ', LON*DPR()
+      !>      WRITE (*,'(A)') 'The geodetic coordinates of the center'
+      !>      WRITE (*,'(A)') 'of the topographic frame are:'
+      !>      WRITE (*,*)
+      !>      WRITE (*,'(A,F20.13)') '   Latitude  (deg): ', LAT*DPR()
+      !>      WRITE (*,'(A,F20.13)') '   Longitude (deg): ', LON*DPR()
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5773,55 +5779,57 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TIPBOD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TIPBOD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POS    ( 3    )
-      !>              DOUBLE PRECISION      SATVEC ( 3    )
-      !>              DOUBLE PRECISION      TIPM   ( 3, 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS    ( 3    )
+      !>      DOUBLE PRECISION      SATVEC ( 3    )
+      !>      DOUBLE PRECISION      TIPM   ( 3, 3 )
       !>
-      !>              INTEGER               SATID
+      !>      INTEGER               SATID
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( 'tipbod_ex1.tm' )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( 'tipbod_ex1.tm' )
       !>
-      !>        C
-      !>        C     The body ID for Saturn.
-      !>        C
-      !>              SATID = 699
+      !>C
+      !>C     The body ID for Saturn.
+      !>C
+      !>      SATID = 699
       !>
-      !>        C
-      !>        C     Retrieve the transformation matrix at some time.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2005',   ET       )
-      !>              CALL TIPBOD ( 'J2000', SATID, ET, TIPM )
+      !>C
+      !>C     Retrieve the transformation matrix at some time.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2005',   ET       )
+      !>      CALL TIPBOD ( 'J2000', SATID, ET, TIPM )
       !>
-      !>        C
-      !>        C     Retrieve the position of Titan as seen from Saturn
-      !>        C     in the J2000 frame at ET.
-      !>        C
-      !>              CALL SPKPOS ( 'TITAN',  ET, 'J2000', 'NONE',
-      !>             .              'SATURN', POS, LT            )
+      !>C
+      !>C     Retrieve the position of Titan as seen from Saturn
+      !>C     in the J2000 frame at ET.
+      !>C
+      !>      CALL SPKPOS ( 'TITAN',  ET, 'J2000', 'NONE',
+      !>     .              'SATURN', POS, LT            )
       !>
-      !>              WRITE(*,'(A)')        'Titan as seen from Saturn:'
-      !>              WRITE(*,'(A,3F13.3)') '   in J2000 frame     :', POS
+      !>      WRITE(*,'(A)')        'Titan as seen from Saturn:'
+      !>      WRITE(*,'(A,3F13.3)') '   in J2000 frame     :', POS
       !>
-      !>        C
-      !>        C     Rotate the position 3-vector POS into the
-      !>        C     Saturn body-fixed reference frame.
-      !>        C
-      !>              CALL MXV ( TIPM, POS, SATVEC )
+      !>C
+      !>C     Rotate the position 3-vector POS into the
+      !>C     Saturn body-fixed reference frame.
+      !>C
+      !>      CALL MXV ( TIPM, POS, SATVEC )
       !>
-      !>              WRITE(*,'(A,3F13.3)') '   in IAU_SATURN frame:', SATVEC
+      !>      WRITE(*,'(A,3F13.3)') '   in IAU_SATURN frame:', SATVEC
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6099,96 +6107,98 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKFROT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKFROT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         EPOCH
-      !>              PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         EPOCH
+      !>      PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -94000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -94000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ANGLE
-      !>              DOUBLE PRECISION      ANGVEL ( 3    )
-      !>              DOUBLE PRECISION      AXIS   ( 3    )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      INFROT ( 3, 3 )
-      !>              DOUBLE PRECISION      H
-      !>              DOUBLE PRECISION      RET    ( 3, 3 )
-      !>              DOUBLE PRECISION      RETH   ( 3, 3 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ANGLE
+      !>      DOUBLE PRECISION      ANGVEL ( 3    )
+      !>      DOUBLE PRECISION      AXIS   ( 3    )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      INFROT ( 3, 3 )
+      !>      DOUBLE PRECISION      H
+      !>      DOUBLE PRECISION      RET    ( 3, 3 )
+      !>      DOUBLE PRECISION      RETH   ( 3, 3 )
       !>
-      !>              INTEGER               REF
-      !>              INTEGER               REFH
+      !>      INTEGER               REF
+      !>      INTEGER               REFH
       !>
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               FOUNDH
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               FOUNDH
       !>
-      !>        C
-      !>        C     Load the required LSK, SCLK and CK. Use a
-      !>        C     meta-kernel for convenience.
-      !>        C
-      !>              CALL FURNSH ( 'ckfrot_ex1.tm' )
+      !>C
+      !>C     Load the required LSK, SCLK and CK. Use a
+      !>C     meta-kernel for convenience.
+      !>C
+      !>      CALL FURNSH ( 'ckfrot_ex1.tm' )
       !>
-      !>        C
-      !>        C     First convert the time to seconds past J2000. Set the
-      !>        C     delta time (1 ms).
-      !>        C
-      !>              CALL STR2ET ( EPOCH, ET )
-      !>              H = 1.D-3
+      !>C
+      !>C     First convert the time to seconds past J2000. Set the
+      !>C     delta time (1 ms).
+      !>C
+      !>      CALL STR2ET ( EPOCH, ET )
+      !>      H = 1.D-3
       !>
-      !>        C
-      !>        C     Now, look up the rotation from the MGS spacecraft
-      !>        C     frame specified by its frame class ID (CK ID) to a
-      !>        C     base reference frame (returned by CKFROT), at ET
-      !>        C     and ET+H.
-      !>        C
-      !>              CALL CKFROT ( INST, ET,   RET,  REF,  FOUND  )
-      !>              CALL CKFROT ( INST, ET+H, RETH, REFH, FOUNDH )
+      !>C
+      !>C     Now, look up the rotation from the MGS spacecraft
+      !>C     frame specified by its frame class ID (CK ID) to a
+      !>C     base reference frame (returned by CKFROT), at ET
+      !>C     and ET+H.
+      !>C
+      !>      CALL CKFROT ( INST, ET,   RET,  REF,  FOUND  )
+      !>      CALL CKFROT ( INST, ET+H, RETH, REFH, FOUNDH )
       !>
-      !>        C
-      !>        C     If both rotations were computed and if the base
-      !>        C     reference frames are the same, compute the
-      !>        C     instantaneous angular velocity vector.
-      !>        C
-      !>              IF ( FOUND .AND. FOUNDH .AND. REF .EQ. REFH ) THEN
+      !>C
+      !>C     If both rotations were computed and if the base
+      !>C     reference frames are the same, compute the
+      !>C     instantaneous angular velocity vector.
+      !>C
+      !>      IF ( FOUND .AND. FOUNDH .AND. REF .EQ. REFH ) THEN
       !>
-      !>        C
-      !>        C        Compute the infinitesimal rotation R(t+h)R(t)**T.
-      !>        C
-      !>                 CALL MXMT ( RETH, RET, INFROT )
+      !>C
+      !>C        Compute the infinitesimal rotation R(t+h)R(t)**T.
+      !>C
+      !>         CALL MXMT ( RETH, RET, INFROT )
       !>
-      !>        C
-      !>        C        Compute the AXIS and ANGLE of the infinitesimal
-      !>        C        rotation.
-      !>        C
-      !>                 CALL RAXISA ( INFROT, AXIS, ANGLE )
+      !>C
+      !>C        Compute the AXIS and ANGLE of the infinitesimal
+      !>C        rotation.
+      !>C
+      !>         CALL RAXISA ( INFROT, AXIS, ANGLE )
       !>
-      !>        C
-      !>        C        Scale AXIS to get the angular velocity vector.
-      !>        C
-      !>                 CALL VSCL ( ANGLE/H, AXIS, ANGVEL )
+      !>C
+      !>C        Scale AXIS to get the angular velocity vector.
+      !>C
+      !>         CALL VSCL ( ANGLE/H, AXIS, ANGVEL )
       !>
-      !>        C
-      !>        C        Output the results.
-      !>        C
-      !>                 WRITE(*,'(A)')
-      !>             .           'Instantaneous angular velocity vector:'
-      !>                 WRITE(*,'(3F15.10)') ANGVEL
-      !>                 WRITE(*,'(A,I5)') 'Reference frame ID:', REF
+      !>C
+      !>C        Output the results.
+      !>C
+      !>         WRITE(*,'(A)')
+      !>     .           'Instantaneous angular velocity vector:'
+      !>         WRITE(*,'(3F15.10)') ANGVEL
+      !>         WRITE(*,'(A,I5)') 'Reference frame ID:', REF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'ERROR: data not found or frame mismatch.'
+      !>         WRITE(*,*) 'ERROR: data not found or frame mismatch.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6501,68 +6511,70 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKFXFM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKFXFM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              DOUBLE PRECISION      VNORM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         EPOCH
-      !>              PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         EPOCH
+      !>      PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -94000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -94000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      AV     ( 3    )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ROT    ( 3, 3 )
-      !>              DOUBLE PRECISION      XFORM  ( 6, 6 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      AV     ( 3    )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ROT    ( 3, 3 )
+      !>      DOUBLE PRECISION      XFORM  ( 6, 6 )
       !>
-      !>              INTEGER               REF
+      !>      INTEGER               REF
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the required LSK, SCLK and CK. Use a
-      !>        C     meta-kernel for convenience.
-      !>        C
-      !>              CALL FURNSH ( 'ckfxfm_ex1.tm' )
+      !>C
+      !>C     Load the required LSK, SCLK and CK. Use a
+      !>C     meta-kernel for convenience.
+      !>C
+      !>      CALL FURNSH ( 'ckfxfm_ex1.tm' )
       !>
-      !>        C
-      !>        C     First convert the time to seconds past J2000.
-      !>        C
-      !>              CALL STR2ET ( EPOCH, ET )
+      !>C
+      !>C     First convert the time to seconds past J2000.
+      !>C
+      !>      CALL STR2ET ( EPOCH, ET )
       !>
-      !>        C
-      !>        C     Now, look up the state transformation from the MGS
-      !>        C     spacecraft frame specified by its frame class ID
-      !>        C     (CK ID) to a base reference frame (returned by
-      !>        C     CKFXFM), at ET.
-      !>        C
-      !>              CALL CKFXFM ( INST, ET, XFORM, REF, FOUND )
+      !>C
+      !>C     Now, look up the state transformation from the MGS
+      !>C     spacecraft frame specified by its frame class ID
+      !>C     (CK ID) to a base reference frame (returned by
+      !>C     CKFXFM), at ET.
+      !>C
+      !>      CALL CKFXFM ( INST, ET, XFORM, REF, FOUND )
       !>
-      !>        C
-      !>        C     Next determine the angular velocity of the
-      !>        C     transformation.
-      !>        C
-      !>              CALL XF2RAV ( XFORM, ROT, AV )
+      !>C
+      !>C     Next determine the angular velocity of the
+      !>C     transformation.
+      !>C
+      !>      CALL XF2RAV ( XFORM, ROT, AV )
       !>
-      !>        C
-      !>        C     The angular rate of change (in radians/second) is just
-      !>        C     the magnitude of AV.
-      !>        C
-      !>              WRITE(*,'(A,F20.16)') 'Angular rate of change (rad/s):',
-      !>             .                       VNORM ( AV )
+      !>C
+      !>C     The angular rate of change (in radians/second) is just
+      !>C     the magnitude of AV.
+      !>C
+      !>      WRITE(*,'(A,F20.16)') 'Angular rate of change (rad/s):',
+      !>     .                       VNORM ( AV )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

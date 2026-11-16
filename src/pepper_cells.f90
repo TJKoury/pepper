@@ -3438,80 +3438,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM APPNDD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM APPNDD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ = 9  )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ = 9  )
       !>
-      !>              INTEGER                 SIZE
-      !>              PARAMETER             ( SIZE   = 15 )
+      !>      INTEGER                 SIZE
+      !>      PARAMETER             ( SIZE   = 15 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SIZE )
-      !>              DOUBLE PRECISION        ITEMS  ( LISTSZ      )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SIZE )
+      !>      DOUBLE PRECISION        ITEMS  ( LISTSZ      )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Set the list of double precision numbers to be appended
-      !>        C     to the cell.
-      !>        C
-      !>              DATA                    ITEMS /  3.D0,  1.D0,  1.D0,
-      !>             .                                 2.D0,  5.D0,  8.D0,
-      !>             .                                21.D0, 13.D0, 34.D0  /
+      !>C
+      !>C     Set the list of double precision numbers to be appended
+      !>C     to the cell.
+      !>C
+      !>      DATA                    ITEMS /  3.D0,  1.D0,  1.D0,
+      !>     .                                 2.D0,  5.D0,  8.D0,
+      !>     .                                21.D0, 13.D0, 34.D0  /
       !>
-      !>        C
-      !>        C     Initialize the cell.
-      !>        C
-      !>              CALL SSIZED ( SIZE, A )
+      !>C
+      !>C     Initialize the cell.
+      !>C
+      !>      CALL SSIZED ( SIZE, A )
       !>
-      !>        C
-      !>        C     Add a single item to the new cell.
-      !>        C
-      !>              CALL APPNDD ( 0.D0, A )
+      !>C
+      !>C     Add a single item to the new cell.
+      !>C
+      !>      CALL APPNDD ( 0.D0, A )
       !>
-      !>        C
-      !>        C     Now insert a list of items.
-      !>        C
-      !>              DO I= 1, LISTSZ
+      !>C
+      !>C     Now insert a list of items.
+      !>C
+      !>      DO I= 1, LISTSZ
       !>
-      !>                 CALL APPNDD ( ITEMS(I), A )
+      !>         CALL APPNDD ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of cell A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original cell A:'
-      !>              WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>C
+      !>C     Output the original contents of cell A.
+      !>C
+      !>      WRITE(*,*) 'Items in original cell A:'
+      !>      WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
       !>
-      !>        C
-      !>        C     Validate the set: remove duplicates and sort the
-      !>        C     elements.
-      !>        C
-      !>              CALL VALIDD ( SIZE, CARDD( A ), A )
+      !>C
+      !>C     Validate the set: remove duplicates and sort the
+      !>C     elements.
+      !>C
+      !>      CALL VALIDD ( SIZE, CARDD( A ), A )
       !>
-      !>        C
-      !>        C     Output the contents of the set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in cell A after VALIDD (now a set):'
-      !>              WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>C
+      !>C     Output the contents of the set A.
+      !>C
+      !>      WRITE(*,*) 'Items in cell A after VALIDD (now a set):'
+      !>      WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3655,78 +3657,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM APPNDI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM APPNDI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ = 9  )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ = 9  )
       !>
-      !>              INTEGER                 SIZE
-      !>              PARAMETER             ( SIZE   = 15 )
+      !>      INTEGER                 SIZE
+      !>      PARAMETER             ( SIZE   = 15 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SIZE )
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( LISTSZ      )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( LISTSZ      )
       !>
-      !>        C
-      !>        C     Set the list of integers to be appended to the cell.
-      !>        C
-      !>              DATA                    ITEMS /  3,  1,  1 , 2, 5,
-      !>             .                                 8, 21, 13, 34    /
+      !>C
+      !>C     Set the list of integers to be appended to the cell.
+      !>C
+      !>      DATA                    ITEMS /  3,  1,  1 , 2, 5,
+      !>     .                                 8, 21, 13, 34    /
       !>
-      !>        C
-      !>        C     Initialize the cell.
-      !>        C
-      !>              CALL SSIZEI ( SIZE, A )
+      !>C
+      !>C     Initialize the cell.
+      !>C
+      !>      CALL SSIZEI ( SIZE, A )
       !>
-      !>        C
-      !>        C     Add a single item to the new cell.
-      !>        C
-      !>              CALL APPNDI ( 0, A )
+      !>C
+      !>C     Add a single item to the new cell.
+      !>C
+      !>      CALL APPNDI ( 0, A )
       !>
-      !>        C
-      !>        C     Now insert a list of items.
-      !>        C
-      !>              DO I= 1, LISTSZ
+      !>C
+      !>C     Now insert a list of items.
+      !>C
+      !>      DO I= 1, LISTSZ
       !>
-      !>                 CALL APPNDI ( ITEMS(I), A )
+      !>         CALL APPNDI ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of cell A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original cell A:'
-      !>              WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>C
+      !>C     Output the original contents of cell A.
+      !>C
+      !>      WRITE(*,*) 'Items in original cell A:'
+      !>      WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
       !>
-      !>        C
-      !>        C     Validate the set: remove duplicates and sort the
-      !>        C     elements.
-      !>        C
-      !>              CALL VALIDI ( SIZE, CARDI( A ), A )
+      !>C
+      !>C     Validate the set: remove duplicates and sort the
+      !>C     elements.
+      !>C
+      !>      CALL VALIDI ( SIZE, CARDI( A ), A )
       !>
-      !>        C
-      !>        C     Output the contents of the set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in cell A after VALIDI (now a set):'
-      !>              WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>C
+      !>C     Output the contents of the set A.
+      !>C
+      !>      WRITE(*,*) 'Items in cell A after VALIDI (now a set):'
+      !>      WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4350,75 +4354,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INSRTC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INSRTC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDC
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDC
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5  )
       !>
-      !>              INTEGER                 PNAMSZ
-      !>              PARAMETER             ( PNAMSZ   = 7 )
+      !>      INTEGER                 PNAMSZ
+      !>      PARAMETER             ( PNAMSZ   = 7 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 9 )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 9 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
-      !>              CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
+      !>      CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create the original planets list.
-      !>        C
-      !>              DATA                    LIST  /
-      !>             .                'MERCURY', 'VENUS',   'EARTH',
-      !>             .                'MARS',    'JUPITER', 'SATURN',
-      !>             .                'URANUS',  'NEPTUNE', 'PLUTO'   /
+      !>C
+      !>C     Create the original planets list.
+      !>C
+      !>      DATA                    LIST  /
+      !>     .                'MERCURY', 'VENUS',   'EARTH',
+      !>     .                'MARS',    'JUPITER', 'SATURN',
+      !>     .                'URANUS',  'NEPTUNE', 'PLUTO'   /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDC ( SETDIM, 0, PLNETS )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDC ( SETDIM, 0, PLNETS )
       !>
-      !>        C
-      !>        C     Insert the list of planets into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of planets into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTC ( LIST(I), PLNETS )
+      !>         CALL INSRTC ( LIST(I), PLNETS )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Remove the Pluto from the set. If the Pluto is not an
-      !>        C     element of the set, the set is not changed.
-      !>        C
-      !>              CALL REMOVC ( 'PLUTO', PLNETS )
+      !>C
+      !>C     Remove the Pluto from the set. If the Pluto is not an
+      !>C     element of the set, the set is not changed.
+      !>C
+      !>      CALL REMOVC ( 'PLUTO', PLNETS )
       !>
-      !>        C
-      !>        C     Output the contents of PLNETS.
-      !>        C
-      !>              WRITE(*,*) 'Planets of the Solar System:'
+      !>C
+      !>C     Output the contents of PLNETS.
+      !>C
+      !>      WRITE(*,*) 'Planets of the Solar System:'
       !>
-      !>              DO I = 1, CARDC ( PLNETS )
+      !>      DO I = 1, CARDC ( PLNETS )
       !>
-      !>                 WRITE(*,*) '   ', PLNETS(I)
+      !>         WRITE(*,*) '   ', PLNETS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4620,84 +4626,86 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INSRTD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INSRTD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SETDIM )
-      !>              DOUBLE PRECISION        EVEN   ( SETDIM        )
-      !>              DOUBLE PRECISION        ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SETDIM )
+      !>      DOUBLE PRECISION        EVEN   ( SETDIM        )
+      !>      DOUBLE PRECISION        ITEMS  ( SETDIM        )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /
-      !>             .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
-      !>             .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /
+      !>     .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
+      !>     .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
       !>
-      !>              DATA                    ITEMS /
-      !>             .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
-      !>             .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
+      !>      DATA                    ITEMS /
+      !>     .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
+      !>     .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDD ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDD ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of double precision numbers into the
-      !>        C     set. If the item is an element of the set, the set is
-      !>        C     not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of double precision numbers into the
+      !>C     set. If the item is an element of the set, the set is
+      !>C     not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTD ( ITEMS(I), A )
+      !>         CALL INSRTD ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVD ( EVEN(I), A )
+      !>         CALL REMOVD ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4874,80 +4882,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INSRTI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INSRTI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SETDIM )
-      !>              INTEGER                 EVEN   ( SETDIM        )
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SETDIM )
+      !>      INTEGER                 EVEN   ( SETDIM        )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( SETDIM        )
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /  0,  2,  4,  6,  8,
-      !>             .                                10, 12, 14, 16, 18  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /  0,  2,  4,  6,  8,
+      !>     .                                10, 12, 14, 16, 18  /
       !>
-      !>              DATA                    ITEMS /  0,  1,  1,  2,  3,
-      !>             .                                 5,  8, 10, 13, 21  /
+      !>      DATA                    ITEMS /  0,  1,  1,  2,  3,
+      !>     .                                 5,  8, 10, 13, 21  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDI ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDI ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of integers into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of integers into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTI ( ITEMS(I), A )
+      !>         CALL INSRTI ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVI ( EVEN(I), A )
+      !>         CALL REMOVI ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5132,75 +5142,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REMOVC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REMOVC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDC
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDC
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5  )
       !>
-      !>              INTEGER                 PNAMSZ
-      !>              PARAMETER             ( PNAMSZ   = 7 )
+      !>      INTEGER                 PNAMSZ
+      !>      PARAMETER             ( PNAMSZ   = 7 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 9 )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 9 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
-      !>              CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
+      !>      CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create the original planets list.
-      !>        C
-      !>              DATA                    LIST  /
-      !>             .                'MERCURY', 'VENUS',   'EARTH',
-      !>             .                'MARS',    'JUPITER', 'SATURN',
-      !>             .                'URANUS',  'NEPTUNE', 'PLUTO'   /
+      !>C
+      !>C     Create the original planets list.
+      !>C
+      !>      DATA                    LIST  /
+      !>     .                'MERCURY', 'VENUS',   'EARTH',
+      !>     .                'MARS',    'JUPITER', 'SATURN',
+      !>     .                'URANUS',  'NEPTUNE', 'PLUTO'   /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDC ( SETDIM, 0, PLNETS )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDC ( SETDIM, 0, PLNETS )
       !>
-      !>        C
-      !>        C     Insert the list of planets into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of planets into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTC ( LIST(I), PLNETS )
+      !>         CALL INSRTC ( LIST(I), PLNETS )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Remove the Pluto from the set. If the Pluto is not an
-      !>        C     element of the set, the set is not changed.
-      !>        C
-      !>              CALL REMOVC ( 'PLUTO', PLNETS )
+      !>C
+      !>C     Remove the Pluto from the set. If the Pluto is not an
+      !>C     element of the set, the set is not changed.
+      !>C
+      !>      CALL REMOVC ( 'PLUTO', PLNETS )
       !>
-      !>        C
-      !>        C     Output the contents of PLNETS.
-      !>        C
-      !>              WRITE(*,*) 'Planets of the Solar System:'
+      !>C
+      !>C     Output the contents of PLNETS.
+      !>C
+      !>      WRITE(*,*) 'Planets of the Solar System:'
       !>
-      !>              DO I = 1, CARDC ( PLNETS )
+      !>      DO I = 1, CARDC ( PLNETS )
       !>
-      !>                 WRITE(*,*) '   ', PLNETS(I)
+      !>         WRITE(*,*) '   ', PLNETS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5358,84 +5370,86 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REMOVD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REMOVD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SETDIM )
-      !>              DOUBLE PRECISION        EVEN   ( SETDIM        )
-      !>              DOUBLE PRECISION        ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SETDIM )
+      !>      DOUBLE PRECISION        EVEN   ( SETDIM        )
+      !>      DOUBLE PRECISION        ITEMS  ( SETDIM        )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /
-      !>             .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
-      !>             .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /
+      !>     .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
+      !>     .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
       !>
-      !>              DATA                    ITEMS /
-      !>             .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
-      !>             .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
+      !>      DATA                    ITEMS /
+      !>     .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
+      !>     .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDD ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDD ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of double precision numbers into the
-      !>        C     set. If the item is an element of the set, the set is
-      !>        C     not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of double precision numbers into the
+      !>C     set. If the item is an element of the set, the set is
+      !>C     not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTD ( ITEMS(I), A )
+      !>         CALL INSRTD ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVD ( EVEN(I), A )
+      !>         CALL REMOVD ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*)
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5587,80 +5601,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REMOVI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REMOVI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SETDIM )
-      !>              INTEGER                 EVEN   ( SETDIM        )
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SETDIM )
+      !>      INTEGER                 EVEN   ( SETDIM        )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( SETDIM        )
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /  0,  2,  4,  6,  8,
-      !>             .                                10, 12, 14, 16, 18  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /  0,  2,  4,  6,  8,
+      !>     .                                10, 12, 14, 16, 18  /
       !>
-      !>              DATA                    ITEMS /  0,  1,  1,  2,  3,
-      !>             .                                 5,  8, 10, 13, 21  /
+      !>      DATA                    ITEMS /  0,  1,  1,  2,  3,
+      !>     .                                 5,  8, 10, 13, 21  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDI ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDI ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of integers into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of integers into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTI ( ITEMS(I), A )
+      !>         CALL INSRTI ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVI ( EVEN(I), A )
+      !>         CALL REMOVI ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5805,75 +5821,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ELEMC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ELEMC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 ELEMC
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 ELEMC
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ   = 6   )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ   = 6   )
       !>
-      !>              INTEGER                 PNAMSZ
-      !>              PARAMETER             ( PNAMSZ   = 7 )
+      !>      INTEGER                 PNAMSZ
+      !>      PARAMETER             ( PNAMSZ   = 7 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 9   )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 9   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMSZ)      ITEMS  ( LISTSZ        )
-      !>              CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMSZ)      ITEMS  ( LISTSZ        )
+      !>      CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create the original planets set and a list of body
-      !>        C     names.
-      !>        C
-      !>              DATA                  ( PLNETS(I), I=1,SETDIM)  /
-      !>             .                       'MERCURY', 'VENUS',   'EARTH',
-      !>             .                       'MARS',    'JUPITER', 'SATURN',
-      !>             .                       'URANUS',  'NEPTUNE', 'PLUTO'  /
+      !>C
+      !>C     Create the original planets set and a list of body
+      !>C     names.
+      !>C
+      !>      DATA                  ( PLNETS(I), I=1,SETDIM)  /
+      !>     .                       'MERCURY', 'VENUS',   'EARTH',
+      !>     .                       'MARS',    'JUPITER', 'SATURN',
+      !>     .                       'URANUS',  'NEPTUNE', 'PLUTO'  /
       !>
-      !>              DATA                    ITEMS /
-      !>             .                            'EARTH', 'APOLLO', 'MARS',
-      !>             .                            'PLUTO', 'VENUS', 'CERES' /
+      !>      DATA                    ITEMS /
+      !>     .                            'EARTH', 'APOLLO', 'MARS',
+      !>     .                            'PLUTO', 'VENUS', 'CERES' /
       !>
-      !>        C
-      !>        C     Validate the set: Initialize the non-empty set, remove
-      !>        C     duplicates and sort the elements.
-      !>        C
-      !>              CALL VALIDC ( SETDIM, SETDIM, PLNETS )
+      !>C
+      !>C     Validate the set: Initialize the non-empty set, remove
+      !>C     duplicates and sort the elements.
+      !>C
+      !>      CALL VALIDC ( SETDIM, SETDIM, PLNETS )
       !>
-      !>        C
-      !>        C     Check if the items in the list belong to the set.
-      !>        C
-      !>              DO I = 1, LISTSZ
+      !>C
+      !>C     Check if the items in the list belong to the set.
+      !>C
+      !>      DO I = 1, LISTSZ
       !>
-      !>                 IF ( ELEMC ( ITEMS(I), PLNETS ) ) THEN
+      !>         IF ( ELEMC ( ITEMS(I), PLNETS ) ) THEN
       !>
-      !>                    WRITE(*,*) 'Item ', ITEMS(I), ' is in the set.'
+      !>            WRITE(*,*) 'Item ', ITEMS(I), ' is in the set.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Item ', ITEMS(I),
-      !>             .                 ' is NOT in the set.'
+      !>            WRITE(*,*) 'Item ', ITEMS(I),
+      !>     .                 ' is NOT in the set.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6004,71 +6022,73 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ELEMD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ELEMD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 ELEMD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 ELEMD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ   = 6   )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ   = 6   )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 8   )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 8   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SETDIM )
-      !>              DOUBLE PRECISION        ITEMS  ( LISTSZ        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SETDIM )
+      !>      DOUBLE PRECISION        ITEMS  ( LISTSZ        )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Set the values of the set and the list of double
-      !>        C     precision numbers.
-      !>        C
-      !>              DATA                  ( A(I), I=1,SETDIM)  /
-      !>             .                            -1.D0, 0.D0, 1.D0,  1.D0,
-      !>             .                             3.D0, 5.D0, 0.D0, -3.D0 /
+      !>C
+      !>C     Set the values of the set and the list of double
+      !>C     precision numbers.
+      !>C
+      !>      DATA                  ( A(I), I=1,SETDIM)  /
+      !>     .                            -1.D0, 0.D0, 1.D0,  1.D0,
+      !>     .                             3.D0, 5.D0, 0.D0, -3.D0 /
       !>
-      !>              DATA                    ITEMS /    6.D0, -1.D0, 0.D0,
-      !>             .                                   2.D0, 3.D0, -2.D0 /
+      !>      DATA                    ITEMS /    6.D0, -1.D0, 0.D0,
+      !>     .                                   2.D0, 3.D0, -2.D0 /
       !>
-      !>        C
-      !>        C     Validate the set: Initialize the non-empty set, remove
-      !>        C     duplicates and sort the elements.
-      !>        C
-      !>              CALL VALIDD ( SETDIM, SETDIM, A )
+      !>C
+      !>C     Validate the set: Initialize the non-empty set, remove
+      !>C     duplicates and sort the elements.
+      !>C
+      !>      CALL VALIDD ( SETDIM, SETDIM, A )
       !>
-      !>        C
-      !>        C     Check if the items in the list belong to the set.
-      !>        C
-      !>              DO I = 1, LISTSZ
+      !>C
+      !>C     Check if the items in the list belong to the set.
+      !>C
+      !>      DO I = 1, LISTSZ
       !>
-      !>                 IF ( ELEMD ( ITEMS(I), A ) ) THEN
+      !>         IF ( ELEMD ( ITEMS(I), A ) ) THEN
       !>
-      !>                    WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
-      !>             .                          ' is in the set.'
+      !>            WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
+      !>     .                          ' is in the set.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
-      !>             .                            ' is NOT in the set.'
+      !>            WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
+      !>     .                            ' is NOT in the set.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6195,68 +6215,70 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ELEMI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ELEMI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 ELEMI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 ELEMI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ   = 6   )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ   = 6   )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 8   )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 8   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( LISTSZ        )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( LISTSZ        )
       !>
-      !>        C
-      !>        C     Set the values of the set and the list of integers.
-      !>        C
-      !>              DATA                  ( A(I), I=1,SETDIM)  /
-      !>             .                           -1, 0, 1, 1, 3, 5, 0, -3 /
+      !>C
+      !>C     Set the values of the set and the list of integers.
+      !>C
+      !>      DATA                  ( A(I), I=1,SETDIM)  /
+      !>     .                           -1, 0, 1, 1, 3, 5, 0, -3 /
       !>
-      !>              DATA                    ITEMS /  6, -1, 0, 2, 3, -2 /
+      !>      DATA                    ITEMS /  6, -1, 0, 2, 3, -2 /
       !>
-      !>        C
-      !>        C     Validate the set: Initialize the non-empty set, remove
-      !>        C     duplicates and sort the elements.
-      !>        C
-      !>              CALL VALIDI ( SETDIM, SETDIM, A )
+      !>C
+      !>C     Validate the set: Initialize the non-empty set, remove
+      !>C     duplicates and sort the elements.
+      !>C
+      !>      CALL VALIDI ( SETDIM, SETDIM, A )
       !>
-      !>        C
-      !>        C     Check if the items in the list belong to the set.
-      !>        C
-      !>              DO I = 1, LISTSZ
+      !>C
+      !>C     Check if the items in the list belong to the set.
+      !>C
+      !>      DO I = 1, LISTSZ
       !>
-      !>                 IF ( ELEMI ( ITEMS(I), A ) ) THEN
+      !>         IF ( ELEMI ( ITEMS(I), A ) ) THEN
       !>
-      !>                    WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
-      !>             .                          ' is in the set.'
+      !>            WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
+      !>     .                          ' is in the set.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
-      !>             .                          ' is NOT in the set.'
+      !>            WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
+      !>     .                          ' is NOT in the set.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11833,62 +11855,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNCARD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNCARD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the window with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the window with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD(  1.D0,  3.D0, WINDOW )
-      !>              CALL WNINSD(  7.D0, 11.D0, WINDOW )
-      !>              CALL WNINSD( 23.D0, 27.D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD(  1.D0,  3.D0, WINDOW )
+      !>      CALL WNINSD(  7.D0, 11.D0, WINDOW )
+      !>      CALL WNINSD( 23.D0, 27.D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              DO I=1, WNCARD(WINDOW)
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      DO I=1, WNCARD(WINDOW)
       !>
-      !>                 CALL WNFETD( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
-      !>             .                  ' [', LEFT,',',  RIGHT, ']'
+      !>         WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
+      !>     .                  ' [', LEFT,',',  RIGHT, ']'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13286,62 +13310,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNFETD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNFETD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the window with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the window with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD(  1.D0,  3.D0, WINDOW )
-      !>              CALL WNINSD(  7.D0, 11.D0, WINDOW )
-      !>              CALL WNINSD( 23.D0, 27.D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD(  1.D0,  3.D0, WINDOW )
+      !>      CALL WNINSD(  7.D0, 11.D0, WINDOW )
+      !>      CALL WNINSD( 23.D0, 27.D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              DO I=1, WNCARD(WINDOW)
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      DO I=1, WNCARD(WINDOW)
       !>
-      !>                 CALL WNFETD( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
-      !>             .                  ' [', LEFT,',',  RIGHT, ']'
+      !>         WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
+      !>     .                  ' [', LEFT,',',  RIGHT, ']'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13489,88 +13515,90 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNFILD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNFILD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the WINDOW with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD ( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the WINDOW with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD ( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD ( 1.0D0,  3.0D0,  WINDOW )
-      !>              CALL WNINSD ( 7.0D0,  11.0D0, WINDOW )
-      !>              CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
-      !>              CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD ( 1.0D0,  3.0D0,  WINDOW )
+      !>      CALL WNINSD ( 7.0D0,  11.0D0, WINDOW )
+      !>      CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
+      !>      CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              WRITE(*,*) 'Initial WINDOW:'
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      WRITE(*,*) 'Initial WINDOW:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Fill the gaps smaller than or equal to 3.0
-      !>        C
-      !>              CALL WNFILD ( 3.0D0, WINDOW )
+      !>C
+      !>C     Fill the gaps smaller than or equal to 3.0
+      !>C
+      !>      CALL WNFILD ( 3.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Output the intervals.
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Window after filling gaps <= 3.0:'
+      !>C
+      !>C     Output the intervals.
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Window after filling gaps <= 3.0:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13769,88 +13797,90 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNFLTD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNFLTD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the WINDOW with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD ( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the WINDOW with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD ( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
-      !>              CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
-      !>              CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
-      !>              CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
+      !>      CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
+      !>      CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
+      !>      CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              WRITE(*,*) 'Initial WINDOW:'
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      WRITE(*,*) 'Initial WINDOW:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Filter the intervals smaller than or equal to 3.0
-      !>        C
-      !>              CALL WNFLTD ( 3.0D0, WINDOW )
+      !>C
+      !>C     Filter the intervals smaller than or equal to 3.0
+      !>C
+      !>      CALL WNFLTD ( 3.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Output the intervals.
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Window after filtering intervals <= 3.0:'
+      !>C
+      !>C     Output the intervals.
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Window after filtering intervals <= 3.0:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -14185,62 +14215,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNINSD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNINSD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the window with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the window with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD(  1.D0,  3.D0, WINDOW )
-      !>              CALL WNINSD(  7.D0, 11.D0, WINDOW )
-      !>              CALL WNINSD( 23.D0, 27.D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD(  1.D0,  3.D0, WINDOW )
+      !>      CALL WNINSD(  7.D0, 11.D0, WINDOW )
+      !>      CALL WNINSD( 23.D0, 27.D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              DO I=1, WNCARD(WINDOW)
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      DO I=1, WNCARD(WINDOW)
       !>
-      !>                 CALL WNFETD( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
-      !>             .                  ' [', LEFT,',',  RIGHT, ']'
+      !>         WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
+      !>     .                  ' [', LEFT,',',  RIGHT, ']'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -15168,99 +15200,101 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNSUMD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNSUMD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(A,F11.6)' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(A,F11.6)' )
       !>
-      !>              CHARACTER*(*)         FMT2
-      !>              PARAMETER           ( FMT2   = '(A,I4)' )
+      !>      CHARACTER*(*)         FMT2
+      !>      PARAMETER           ( FMT2   = '(A,I4)' )
       !>
-      !>              CHARACTER*(*)         FMT3
-      !>              PARAMETER           ( FMT3   = '(A,2(F6.3,A))' )
+      !>      CHARACTER*(*)         FMT3
+      !>      PARAMETER           ( FMT3   = '(A,2(F6.3,A))' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 12 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 12 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      AVG
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      MEAS
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      STDDEV
-      !>              DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      AVG
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      MEAS
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      STDDEV
+      !>      DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
       !>
-      !>              INTEGER               IDXLON
-      !>              INTEGER               IDXSML
-      !>              INTEGER               INTLON
-      !>              INTEGER               INTSML
+      !>      INTEGER               IDXLON
+      !>      INTEGER               IDXSML
+      !>      INTEGER               INTLON
+      !>      INTEGER               INTSML
       !>
-      !>        C
-      !>        C     Validate the WINDOW with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD ( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the WINDOW with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD ( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [  1,  3 ] [  7, 11 ] [ 18, 18 ]
-      !>        C        [ 23, 27 ] [ 30, 69 ] [ 72, 80 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
-      !>              CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
-      !>              CALL WNINSD ( 18.0D0, 18.0D0, WINDOW )
-      !>              CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
-      !>              CALL WNINSD ( 30.0D0, 69.0D0, WINDOW )
-      !>              CALL WNINSD ( 72.0D0, 80.0D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [  1,  3 ] [  7, 11 ] [ 18, 18 ]
+      !>C        [ 23, 27 ] [ 30, 69 ] [ 72, 80 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
+      !>      CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
+      !>      CALL WNINSD ( 18.0D0, 18.0D0, WINDOW )
+      !>      CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
+      !>      CALL WNINSD ( 30.0D0, 69.0D0, WINDOW )
+      !>      CALL WNINSD ( 72.0D0, 80.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Calculate the summary for WINDOW.
-      !>        C
-      !>              CALL WNSUMD ( WINDOW, MEAS,   AVG,
-      !>             .              STDDEV, IDXSML, IDXLON )
+      !>C
+      !>C     Calculate the summary for WINDOW.
+      !>C
+      !>      CALL WNSUMD ( WINDOW, MEAS,   AVG,
+      !>     .              STDDEV, IDXSML, IDXLON )
       !>
-      !>        C
-      !>        C     IDXSML and IDXLON refer to the indices of
-      !>        C     the SPICE Cell data array.
-      !>        C
-      !>              INTSML = (IDXSML+1)/2
-      !>              INTLON = (IDXLON+1)/2
+      !>C
+      !>C     IDXSML and IDXLON refer to the indices of
+      !>C     the SPICE Cell data array.
+      !>C
+      !>      INTSML = (IDXSML+1)/2
+      !>      INTLON = (IDXLON+1)/2
       !>
-      !>              WRITE(*,FMT1) 'Measure           : ', MEAS
-      !>              WRITE(*,FMT1) 'Average           : ', AVG
-      !>              WRITE(*,FMT1) 'Standard Dev      : ', STDDEV
-      !>              WRITE(*,FMT2) 'Index shortest    : ', IDXSML
-      !>              WRITE(*,FMT2) 'Index longest     : ', IDXLON
-      !>              WRITE(*,FMT2) 'Interval shortest : ', INTSML
-      !>              WRITE(*,FMT2) 'Interval longest  : ', INTLON
+      !>      WRITE(*,FMT1) 'Measure           : ', MEAS
+      !>      WRITE(*,FMT1) 'Average           : ', AVG
+      !>      WRITE(*,FMT1) 'Standard Dev      : ', STDDEV
+      !>      WRITE(*,FMT2) 'Index shortest    : ', IDXSML
+      !>      WRITE(*,FMT2) 'Index longest     : ', IDXLON
+      !>      WRITE(*,FMT2) 'Interval shortest : ', INTSML
+      !>      WRITE(*,FMT2) 'Interval longest  : ', INTLON
       !>
-      !>        C
-      !>        C     Output the shortest and longest intervals.
-      !>        C
-      !>              CALL WNFETD ( WINDOW, INTSML, LEFT, RIGHT )
-      !>              WRITE(*,FMT3) 'Shortest interval : [ ', LEFT, ', ',
-      !>             .                                        RIGHT, ' ]'
-      !>              CALL WNFETD ( WINDOW, INTLON, LEFT, RIGHT )
-      !>              WRITE(*,FMT3) 'Longest interval  : [ ', LEFT, ', ',
-      !>             .                                        RIGHT, ' ]'
+      !>C
+      !>C     Output the shortest and longest intervals.
+      !>C
+      !>      CALL WNFETD ( WINDOW, INTSML, LEFT, RIGHT )
+      !>      WRITE(*,FMT3) 'Shortest interval : [ ', LEFT, ', ',
+      !>     .                                        RIGHT, ' ]'
+      !>      CALL WNFETD ( WINDOW, INTLON, LEFT, RIGHT )
+      !>      WRITE(*,FMT3) 'Longest interval  : [ ', LEFT, ', ',
+      !>     .                                        RIGHT, ' ]'
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -15799,63 +15833,65 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNVALD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNVALD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               CARDD
-      !>              INTEGER               SIZED
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               CARDD
+      !>      INTEGER               SIZED
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 20 )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 20 )
       !>
-      !>              INTEGER               DATSIZ
-      !>              PARAMETER           ( DATSIZ = 16 )
+      !>      INTEGER               DATSIZ
+      !>      PARAMETER           ( DATSIZ = 16 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW  ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      WINDAT  ( DATSIZ )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      WINDOW  ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      WINDAT  ( DATSIZ )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              DATA                  WINDAT  /  0,  0,
-      !>             .                                10, 12,
-      !>             .                                 2,  7,
-      !>             .                                13, 15,
-      !>             .                                 1,  5,
-      !>             .                                23, 29,  4*0 /
+      !>      DATA                  WINDAT  /  0,  0,
+      !>     .                                10, 12,
+      !>     .                                 2,  7,
+      !>     .                                13, 15,
+      !>     .                                 1,  5,
+      !>     .                                23, 29,  4*0 /
       !>
-      !>        C
-      !>        C     Insert the data into the SPICE cell array.
-      !>        C
-      !>              CALL MOVED ( WINDAT, WINSIZ, WINDOW(1) )
+      !>C
+      !>C     Insert the data into the SPICE cell array.
+      !>C
+      !>      CALL MOVED ( WINDAT, WINSIZ, WINDOW(1) )
       !>
-      !>        C
-      !>        C     Validate the input WINDOW array as a SPICE window.
-      !>        C
-      !>              CALL WNVALD ( WINSIZ, DATSIZ, WINDOW )
+      !>C
+      !>C     Validate the input WINDOW array as a SPICE window.
+      !>C
+      !>      CALL WNVALD ( WINSIZ, DATSIZ, WINDOW )
       !>
-      !>              WRITE (*,*) 'Current intervals: ', CARDD ( WINDOW ) / 2
-      !>              WRITE (*,*) 'Maximum intervals: ', SIZED ( WINDOW ) / 2
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Intervals:'
-      !>              WRITE (*,*)
+      !>      WRITE (*,*) 'Current intervals: ', CARDD ( WINDOW ) / 2
+      !>      WRITE (*,*) 'Maximum intervals: ', SIZED ( WINDOW ) / 2
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Intervals:'
+      !>      WRITE (*,*)
       !>
-      !>              DO I = 1, CARDD ( WINDOW ), 2
-      !>                 WRITE (*,*) WINDOW(I), WINDOW(I+1)
-      !>              END DO
+      !>      DO I = 1, CARDD ( WINDOW ), 2
+      !>         WRITE (*,*) WINDOW(I), WINDOW(I+1)
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

@@ -349,97 +349,99 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BADKPV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BADKPV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL               BADKPV
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL               BADKPV
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         CALLER
-      !>              PARAMETER           ( CALLER  = 'BADKPV_EX1' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         CALLER
+      !>      PARAMETER           ( CALLER  = 'BADKPV_EX1' )
       !>
-      !>              INTEGER               KWDLEN
-      !>              PARAMETER           ( KWDLEN = 32 )
+      !>      INTEGER               KWDLEN
+      !>      PARAMETER           ( KWDLEN = 32 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*2           COMP
-      !>              CHARACTER*(KWDLEN)    NAME
-      !>              CHARACTER*1           TYPE
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*2           COMP
+      !>      CHARACTER*(KWDLEN)    NAME
+      !>      CHARACTER*1           TYPE
       !>
-      !>              INTEGER               DIVBY
-      !>              INTEGER               SIZE
+      !>      INTEGER               DIVBY
+      !>      INTEGER               SIZE
       !>
-      !>        C
-      !>        C     Load the test kernel.
-      !>        C
-      !>              CALL FURNSH ( 'badkpv_ex1.tpc' )
+      !>C
+      !>C     Load the test kernel.
+      !>C
+      !>      CALL FURNSH ( 'badkpv_ex1.tpc' )
       !>
-      !>        C
-      !>        C     Change the default behavior of the SPICE error handling
-      !>        C     system to print out all messages and continue the
-      !>        C     execution of the program. We do this for demonstration
-      !>        C     purposes. Please, refrain from changing the default
-      !>        C     behavior on real applications.
-      !>        C
-      !>              CALL ERRACT ( 'SET', 'REPORT' )
+      !>C
+      !>C     Change the default behavior of the SPICE error handling
+      !>C     system to print out all messages and continue the
+      !>C     execution of the program. We do this for demonstration
+      !>C     purposes. Please, refrain from changing the default
+      !>C     behavior on real applications.
+      !>C
+      !>      CALL ERRACT ( 'SET', 'REPORT' )
       !>
-      !>        C
-      !>        C     Assume that we need some data for body 399 and we expect
-      !>        C     there to be an even number of items available and at
-      !>        C     least 4 such items. Moreover we expect these items to be
-      !>        C     numeric. Note that the variable assignments below are
-      !>        C     present only to assist in understanding the calls to
-      !>        C     BADKPV.
-      !>        C
-      !>              NAME   = 'BODY_399_DATA'
-      !>              COMP   = '=>'
-      !>              SIZE   =  4
-      !>              DIVBY  =  2
-      !>              TYPE = 'N'
+      !>C
+      !>C     Assume that we need some data for body 399 and we expect
+      !>C     there to be an even number of items available and at
+      !>C     least 4 such items. Moreover we expect these items to be
+      !>C     numeric. Note that the variable assignments below are
+      !>C     present only to assist in understanding the calls to
+      !>C     BADKPV.
+      !>C
+      !>      NAME   = 'BODY_399_DATA'
+      !>      COMP   = '=>'
+      !>      SIZE   =  4
+      !>      DIVBY  =  2
+      !>      TYPE = 'N'
       !>
-      !>              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
-      !>             .                   SIZE,   DIVBY, TYPE ) ) THEN
+      !>      IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
+      !>     .                   SIZE,   DIVBY, TYPE ) ) THEN
       !>
-      !>                 WRITE(*,'(3A)') 'Expected form of variable ',
-      !>             .                   NAME(:RTRIM(NAME)),
-      !>             .                   ' found in kernel pool.'
+      !>         WRITE(*,'(3A)') 'Expected form of variable ',
+      !>     .                   NAME(:RTRIM(NAME)),
+      !>     .                   ' found in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     In addition we need the names given to these items.
-      !>        C     Improperly indicate the array has type numeric.
-      !>        C
-      !>              NAME   = 'BODY_399_NAMES'
-      !>              COMP   = '=>'
-      !>              SIZE   =  4
-      !>              DIVBY  =  1
-      !>              TYPE = 'N'
+      !>C
+      !>C     In addition we need the names given to these items.
+      !>C     Improperly indicate the array has type numeric.
+      !>C
+      !>      NAME   = 'BODY_399_NAMES'
+      !>      COMP   = '=>'
+      !>      SIZE   =  4
+      !>      DIVBY  =  1
+      !>      TYPE = 'N'
       !>
-      !>              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
-      !>             .                   SIZE,   DIVBY, TYPE ) ) THEN
+      !>      IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
+      !>     .                   SIZE,   DIVBY, TYPE ) ) THEN
       !>
-      !>                 WRITE(*,'(3A)') 'Expected form of variable ',
-      !>             .                   NAME(:RTRIM(NAME)),
-      !>             .                   ' found in kernel pool.'
+      !>         WRITE(*,'(3A)') 'Expected form of variable ',
+      !>     .                   NAME(:RTRIM(NAME)),
+      !>     .                   ' found in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Change the behavior of the SPICE error handling to
-      !>        C     its default.
-      !>        C
-      !>              CALL ERRACT ( 'SET', 'DEFAULT' )
+      !>C
+      !>C     Change the behavior of the SPICE error handling to
+      !>C     its default.
+      !>C
+      !>      CALL ERRACT ( 'SET', 'DEFAULT' )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -774,54 +776,56 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PRSINT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PRSINT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               SETSIZ
-      !>              PARAMETER           ( SETSIZ = 10 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               SETSIZ
+      !>      PARAMETER           ( SETSIZ = 10 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 11 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 11 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               INTVAL
+      !>      INTEGER               I
+      !>      INTEGER               INTVAL
       !>
-      !>        C
-      !>        C     Initialize the array of strings.
-      !>        C
-      !>              DATA                  STRVAL / '100,000,000',
-      !>             .                               ' -2 690 192',
-      !>             .                               '  +12.2 e-1',
-      !>             .                               '-3. 141 592',
-      !>             .                               '      1.2e8',
-      !>             .                               '         E6',
-      !>             .                               '         Pi',
-      !>             .                               '        -PI',
-      !>             .                               '-2147483648',
-      !>             .                               ' 2147483647' /
+      !>C
+      !>C     Initialize the array of strings.
+      !>C
+      !>      DATA                  STRVAL / '100,000,000',
+      !>     .                               ' -2 690 192',
+      !>     .                               '  +12.2 e-1',
+      !>     .                               '-3. 141 592',
+      !>     .                               '      1.2e8',
+      !>     .                               '         E6',
+      !>     .                               '         Pi',
+      !>     .                               '        -PI',
+      !>     .                               '-2147483648',
+      !>     .                               ' 2147483647' /
       !>
-      !>        C
-      !>        C     Parse each string into an INTEGER variable.
-      !>        C
-      !>              WRITE(*,'(A)') '   STRVAL       INTVAL'
-      !>              WRITE(*,'(A)') '-----------  ------------'
-      !>              DO I = 1, SETSIZ
+      !>C
+      !>C     Parse each string into an INTEGER variable.
+      !>C
+      !>      WRITE(*,'(A)') '   STRVAL       INTVAL'
+      !>      WRITE(*,'(A)') '-----------  ------------'
+      !>      DO I = 1, SETSIZ
       !>
-      !>                 CALL PRSINT ( STRVAL(I), INTVAL )
+      !>         CALL PRSINT ( STRVAL(I), INTVAL )
       !>
-      !>                 WRITE(*,'(A11,2X,I12)') STRVAL(I), INTVAL
+      !>         WRITE(*,'(A11,2X,I12)') STRVAL(I), INTVAL
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3095,91 +3099,93 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Single marker, two significant digits, scientific.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     1. Single marker, two significant digits, scientific.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'E', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'E', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Single marker, two significant '
-      !>             .        // 'digits, scientific.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 1: Single marker, two significant '
+      !>     .        // 'digits, scientific.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     2. Multiple markers, three significant digits,
-      !>        C        scientific.
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
+      !>C
+      !>C     2. Multiple markers, three significant digits,
+      !>C        scientific.
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, -5.2D-9, 3, 'e', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, -5.2D-9, 3, 'e', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Multiple markers, 3 significant '
-      !>             .        // 'digits, scientific.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 2: Multiple markers, 3 significant '
+      !>     .        // 'digits, scientific.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     3. Fixed-point notation.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     3. Fixed-point notation.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 3, 'F', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 3, 'F', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 3: Fixed-point notation.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 3: Fixed-point notation.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     4. Fixed-point notation, no decimals.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     4. Fixed-point notation, no decimals.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'f', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'f', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 4: Fixed-point notation, no decimals.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 4: Fixed-point notation, no decimals.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     5. Excessive significant digits.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     5. Excessive significant digits.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 100, 'F', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 100, 'F', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 5: Excessive significant digits.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 5: Excessive significant digits.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7615,47 +7621,49 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM STR2ET_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM STR2ET_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(64)        TIMSTR
-      !>              CHARACTER*(64)        CALDR
-      !>              CHARACTER*(64)        DAYOFY
-      !>              CHARACTER*(127)       FILNAM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(64)        TIMSTR
+      !>      CHARACTER*(64)        CALDR
+      !>      CHARACTER*(64)        DAYOFY
+      !>      CHARACTER*(127)       FILNAM
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>        C
-      !>        C     First get the name of a leapseconds kernel, and load it.
-      !>        C
-      !>              CALL PROMPT ( 'Leapseconds kernel: ', FILNAM )
-      !>              CALL FURNSH ( FILNAM )
+      !>C
+      !>C     First get the name of a leapseconds kernel, and load it.
+      !>C
+      !>      CALL PROMPT ( 'Leapseconds kernel: ', FILNAM )
+      !>      CALL FURNSH ( FILNAM )
       !>
-      !>        C
-      !>        C     Get the time string.
-      !>        C
-      !>              CALL PROMPT ( 'Time string: ', TIMSTR )
+      !>C
+      !>C     Get the time string.
+      !>C
+      !>      CALL PROMPT ( 'Time string: ', TIMSTR )
       !>
-      !>        C
-      !>        C     Convert the string to ET and then back to UTC calendar
-      !>        C     and day-of-year formats.
-      !>        C
-      !>              CALL STR2ET ( TIMSTR, ET )
-      !>              CALL ET2UTC ( ET, 'C', 0, CALDR  )
-      !>              CALL ET2UTC ( ET, 'D', 0, DAYOFY )
+      !>C
+      !>C     Convert the string to ET and then back to UTC calendar
+      !>C     and day-of-year formats.
+      !>C
+      !>      CALL STR2ET ( TIMSTR, ET )
+      !>      CALL ET2UTC ( ET, 'C', 0, CALDR  )
+      !>      CALL ET2UTC ( ET, 'D', 0, DAYOFY )
       !>
-      !>        C
-      !>        C     Print the results.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'TBD seconds from J2000 epoch: ', ET
-      !>              WRITE (*,*) 'Calendar    Format:           ', CALDR
-      !>              WRITE (*,*) 'Day of year Format:           ', DAYOFY
+      !>C
+      !>C     Print the results.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'TBD seconds from J2000 epoch: ', ET
+      !>      WRITE (*,*) 'Calendar    Format:           ', CALDR
+      !>      WRITE (*,*) 'Day of year Format:           ', DAYOFY
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, using the LCK file named naif0012.tls and the time

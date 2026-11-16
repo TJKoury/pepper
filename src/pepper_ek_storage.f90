@@ -562,199 +562,201 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKCLS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKCLS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'ekcls_ex1.bdb' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'ekcls_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         IFNAME
-      !>              PARAMETER           ( IFNAME = 'Test EK'  )
+      !>      CHARACTER*(*)         IFNAME
+      !>      PARAMETER           ( IFNAME = 'Test EK'  )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'CHR_DATA' )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'CHR_DATA' )
       !>
-      !>              INTEGER               CVLEN
-      !>              PARAMETER           ( CVLEN  = 9  )
+      !>      INTEGER               CVLEN
+      !>      PARAMETER           ( CVLEN  = 9  )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 4  )
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 4  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 2  )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 2  )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 6  )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 6  )
       !>
-      !>              INTEGER               NRESVC
-      !>              PARAMETER           ( NRESVC = 0  )
+      !>      INTEGER               NRESVC
+      !>      PARAMETER           ( NRESVC = 0  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NVALS
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NVALS
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we won't
-      !>        C     reserve space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The constant IFNAME is the internal file name.
-      !>        C
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>C
+      !>C     Open a new EK file.  For simplicity, we won't
+      !>C     reserve space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The constant IFNAME is the internal file name.
+      !>C
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the CHR_DATA segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) =  'CHR_COL_1'
-      !>              CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
-      !>             .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the CHR_DATA segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) =  'CHR_COL_1'
+      !>      CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
+      !>     .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
       !>
-      !>              CNAMES(2) =  'CHR_COL_2'
-      !>              CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
-      !>             .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>      CNAMES(2) =  'CHR_COL_2'
+      !>      CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
+      !>     .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>              DO I = 0, NROWS-1
+      !>      DO I = 0, NROWS-1
       !>
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( I, CVALS(1) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( I, CVALS(1) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( 10*I,     CVALS(1) )
-      !>                 CALL INTSTR ( 10*I + 1, CVALS(2) )
-      !>                 CALL INTSTR ( 10*I + 2, CVALS(3) )
-      !>                 CALL INTSTR ( 10*I + 3, CVALS(4) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( 10*I,     CVALS(1) )
+      !>         CALL INTSTR ( 10*I + 1, CVALS(2) )
+      !>         CALL INTSTR ( 10*I + 2, CVALS(3) )
+      !>         CALL INTSTR ( 10*I + 3, CVALS(4) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     End the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     End the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the EK for write access.
-      !>        C
-      !>              CALL EKOPW ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the EK for write access.
+      !>C
+      !>      CALL EKOPW ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Negate the values in the odd-numbered records
-      !>        C     using the update routines.
-      !>        C
-      !>              DO I = 1, NROWS, 2
+      !>C
+      !>C     Negate the values in the odd-numbered records
+      !>C     using the update routines.
+      !>C
+      !>      DO I = 1, NROWS, 2
       !>
-      !>                 RECNO  = I+1
+      !>         RECNO  = I+1
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( -I, CVALS(1) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( -I, CVALS(1) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( -10*I,       CVALS(1) )
-      !>                 CALL INTSTR ( -(10*I + 1), CVALS(2) )
-      !>                 CALL INTSTR ( -(10*I + 2), CVALS(3) )
-      !>                 CALL INTSTR ( -(10*I + 3), CVALS(4) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( -10*I,       CVALS(1) )
+      !>         CALL INTSTR ( -(10*I + 1), CVALS(2) )
+      !>         CALL INTSTR ( -(10*I + 2), CVALS(3) )
+      !>         CALL INTSTR ( -(10*I + 3), CVALS(4) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Show the values added.
-      !>        C
-      !>              CALL EKOPR ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the created file. Show the values added.
+      !>C
+      !>      CALL EKOPR ( EKNAME, HANDLE )
       !>
-      !>              DO I = 1, NROWS
+      !>      DO I = 1, NROWS
       !>
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(1)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(1)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Record ', I, 'flag is NULL.'
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Record ', I, 'flag is NULL.'
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(2)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(2)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6527,39 +6529,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               EKNSEG
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               EKNSEG
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NSEG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NSEG
       !>
-      !>        C
-      !>        C     Open the EK file, returning the file handle
-      !>        C     associated with the open file to the variable named
-      !>        C     HANDLE.
-      !>        C
-      !>              CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
+      !>C
+      !>C     Open the EK file, returning the file handle
+      !>C     associated with the open file to the variable named
+      !>C     HANDLE.
+      !>C
+      !>      CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
       !>
-      !>        C
-      !>        C     Return the number of segments in the EK.
-      !>        C
-      !>              NSEG = EKNSEG( HANDLE )
-      !>              WRITE(*,'(A,I3)') 'Number of segments =', NSEG
+      !>C
+      !>C     Return the number of segments in the EK.
+      !>C
+      !>      NSEG = EKNSEG( HANDLE )
+      !>      WRITE(*,'(A,I3)') 'Number of segments =', NSEG
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6731,199 +6735,201 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPW_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPW_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'ekopw_ex1.bdb' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'ekopw_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         IFNAME
-      !>              PARAMETER           ( IFNAME = 'Test EK'  )
+      !>      CHARACTER*(*)         IFNAME
+      !>      PARAMETER           ( IFNAME = 'Test EK'  )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'CHR_DATA' )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'CHR_DATA' )
       !>
-      !>              INTEGER               CVLEN
-      !>              PARAMETER           ( CVLEN  = 9  )
+      !>      INTEGER               CVLEN
+      !>      PARAMETER           ( CVLEN  = 9  )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 4  )
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 4  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 2  )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 2  )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 6  )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 6  )
       !>
-      !>              INTEGER               NRESVC
-      !>              PARAMETER           ( NRESVC = 0  )
+      !>      INTEGER               NRESVC
+      !>      PARAMETER           ( NRESVC = 0  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NVALS
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NVALS
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we won't
-      !>        C     reserve space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The constant IFNAME is the internal file name.
-      !>        C
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>C
+      !>C     Open a new EK file.  For simplicity, we won't
+      !>C     reserve space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The constant IFNAME is the internal file name.
+      !>C
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the CHR_DATA segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) =  'CHR_COL_1'
-      !>              CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
-      !>             .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the CHR_DATA segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) =  'CHR_COL_1'
+      !>      CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
+      !>     .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
       !>
-      !>              CNAMES(2) =  'CHR_COL_2'
-      !>              CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
-      !>             .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>      CNAMES(2) =  'CHR_COL_2'
+      !>      CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
+      !>     .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>              DO I = 0, NROWS-1
+      !>      DO I = 0, NROWS-1
       !>
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( I, CVALS(1) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( I, CVALS(1) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( 10*I,     CVALS(1) )
-      !>                 CALL INTSTR ( 10*I + 1, CVALS(2) )
-      !>                 CALL INTSTR ( 10*I + 2, CVALS(3) )
-      !>                 CALL INTSTR ( 10*I + 3, CVALS(4) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( 10*I,     CVALS(1) )
+      !>         CALL INTSTR ( 10*I + 1, CVALS(2) )
+      !>         CALL INTSTR ( 10*I + 2, CVALS(3) )
+      !>         CALL INTSTR ( 10*I + 3, CVALS(4) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     End the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     End the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the EK for write access.
-      !>        C
-      !>              CALL EKOPW ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the EK for write access.
+      !>C
+      !>      CALL EKOPW ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Negate the values in the even-numbered records
-      !>        C     using the update routines.
-      !>        C
-      !>              DO I = 1, NROWS, 2
+      !>C
+      !>C     Negate the values in the even-numbered records
+      !>C     using the update routines.
+      !>C
+      !>      DO I = 1, NROWS, 2
       !>
-      !>                 RECNO  = I+1
+      !>         RECNO  = I+1
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( -I, CVALS(1) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( -I, CVALS(1) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( -10*I,       CVALS(1) )
-      !>                 CALL INTSTR ( -(10*I + 1), CVALS(2) )
-      !>                 CALL INTSTR ( -(10*I + 2), CVALS(3) )
-      !>                 CALL INTSTR ( -(10*I + 3), CVALS(4) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( -10*I,       CVALS(1) )
+      !>         CALL INTSTR ( -(10*I + 1), CVALS(2) )
+      !>         CALL INTSTR ( -(10*I + 2), CVALS(3) )
+      !>         CALL INTSTR ( -(10*I + 3), CVALS(4) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Show the values added.
-      !>        C
-      !>              CALL EKOPR ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the created file. Show the values added.
+      !>C
+      !>      CALL EKOPR ( EKNAME, HANDLE )
       !>
-      !>              DO I = 1, NROWS
+      !>      DO I = 1, NROWS
       !>
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(1)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(1)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Record ', I, 'flag is NULL.'
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Record ', I, 'flag is NULL.'
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(2)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(2)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -17808,132 +17814,134 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekopn_ex1.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekopn_ex1.bdb' )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NRESVC
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NRESVC
+      !>      INTEGER               SEGNO
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 01-JUN-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 01-JUN-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the first segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, 'DATAORDERS', 6,
-      !>             .              CNAMES, CDECLS,       SEGNO )
+      !>C
+      !>C     Start the first segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, 'DATAORDERS', 6,
+      !>     .              CNAMES, CDECLS,       SEGNO )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the new segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
-      !>             .              CNAMES, CDECLS,      SEGNO )
+      !>C
+      !>C     Start the new segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
+      !>     .              CNAMES, CDECLS,      SEGNO )
       !>
-      !>        C
-      !>        C     Close the file by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -18116,271 +18124,273 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ); the maximum
-      !>        C     length of an input query (MAXQRY), the maximum number of
-      !>        C     columns per segment (MXCLSG); and the maximum length of
-      !>        C     a table name (TNAMSZ).
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekglimit.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>              INCLUDE 'ektnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ); the maximum
+      !>C     length of an input query (MAXQRY), the maximum number of
+      !>C     columns per segment (MXCLSG); and the maximum length of
+      !>C     a table name (TNAMSZ).
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekglimit.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>      INCLUDE 'ektnamsz.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               EKNSEG
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               EKNSEG
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'DATAITEMS'      )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'DATAITEMS'      )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               DESCLN
-      !>              PARAMETER           ( DESCLN = 80  )
+      !>      INTEGER               DESCLN
+      !>      PARAMETER           ( DESCLN = 80  )
       !>
-      !>        C
-      !>        C     One value per row/column element.
-      !>        C
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 1  )
+      !>C
+      !>C     One value per row/column element.
+      !>C
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 1  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               COLSLN
-      !>              PARAMETER           ( COLSLN = 5   )
+      !>      INTEGER               COLSLN
+      !>      PARAMETER           ( COLSLN = 5   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( MXCLSG )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( MXCLSG )
-      !>              CHARACTER*(NAMLEN)    CVALS  ( MAXVAL )
-      !>              CHARACTER*(DESCLN)    DESCRP
-      !>              CHARACTER*(4)         DTYPES ( MXCLSG )
-      !>              CHARACTER*(NAMLEN)    ITEMNM
-      !>              CHARACTER*(TNAMSZ)    TABNAM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( MXCLSG )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( MXCLSG )
+      !>      CHARACTER*(NAMLEN)    CVALS  ( MAXVAL )
+      !>      CHARACTER*(DESCLN)    DESCRP
+      !>      CHARACTER*(4)         DTYPES ( MXCLSG )
+      !>      CHARACTER*(NAMLEN)    ITEMNM
+      !>      CHARACTER*(TNAMSZ)    TABNAM
       !>
-      !>              DOUBLE PRECISION      DVALS  ( MAXVAL )
-      !>              DOUBLE PRECISION      PRICE
+      !>      DOUBLE PRECISION      DVALS  ( MAXVAL )
+      !>      DOUBLE PRECISION      PRICE
       !>
-      !>              INTEGER               ESIZE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               ITEMID
-      !>              INTEGER               IVALS  ( MAXVAL )
-      !>              INTEGER               NCOLS
-      !>              INTEGER               NROWS
-      !>              INTEGER               NSEG
-      !>              INTEGER               NVALS
-      !>              INTEGER               ORDID
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( MXCLSG )
-      !>              INTEGER               STRLNS ( MXCLSG )
+      !>      INTEGER               ESIZE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               ITEMID
+      !>      INTEGER               IVALS  ( MAXVAL )
+      !>      INTEGER               NCOLS
+      !>      INTEGER               NROWS
+      !>      INTEGER               NSEG
+      !>      INTEGER               NVALS
+      !>      INTEGER               ORDID
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( MXCLSG )
+      !>      INTEGER               STRLNS ( MXCLSG )
       !>
-      !>              LOGICAL               INDEXD ( MXCLSG )
-      !>              LOGICAL               ISNULL
-      !>              LOGICAL               NULLOK ( MXCLSG )
+      !>      LOGICAL               INDEXD ( MXCLSG )
+      !>      LOGICAL               ISNULL
+      !>      LOGICAL               NULLOK ( MXCLSG )
       !>
-      !>        C
-      !>        C     Open a scratch EK file to use for temporary
-      !>        C     storage.
-      !>        C
-      !>              CALL EKOPS ( HANDLE )
+      !>C
+      !>C     Open a scratch EK file to use for temporary
+      !>C     storage.
+      !>C
+      !>      CALL EKOPS ( HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment. We'll index all of
-      !>        C     the columns. All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment. We'll index all of
+      !>C     the columns. All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  COLSLN,
-      !>             .              CNAMES, CDECLS, SEGNO  )
+      !>C
+      !>C     Start the segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  COLSLN,
+      !>     .              CNAMES, CDECLS, SEGNO  )
       !>
-      !>        C
-      !>        C     Append a new, empty record to the DATAITEMS
-      !>        C     table. Recall that the DATAITEMS table
-      !>        C     is in the first segment.  The call will return
-      !>        C     the number of the new, empty record.
-      !>        C
-      !>              SEGNO = 1
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new, empty record to the DATAITEMS
+      !>C     table. Recall that the DATAITEMS table
+      !>C     is in the first segment.  The call will return
+      !>C     the number of the new, empty record.
+      !>C
+      !>      SEGNO = 1
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     At this point, the new record is empty. We fill in the
-      !>        C     data here. Data items are filled in one column at a
-      !>        C     time. The order in which the columns are filled in is
-      !>        C     not important.  We use the different add column entry
-      !>        C     routines to fill in column entries.  We'll assume
-      !>        C     that no entries are null. All entries are scalar,
-      !>        C     so the entry size is 1.
-      !>        C
-      !>              ISNULL   =  .FALSE.
-      !>              ESIZE    =  1
+      !>C
+      !>C     At this point, the new record is empty. We fill in the
+      !>C     data here. Data items are filled in one column at a
+      !>C     time. The order in which the columns are filled in is
+      !>C     not important.  We use the different add column entry
+      !>C     routines to fill in column entries.  We'll assume
+      !>C     that no entries are null. All entries are scalar,
+      !>C     so the entry size is 1.
+      !>C
+      !>      ISNULL   =  .FALSE.
+      !>      ESIZE    =  1
       !>
-      !>        C
-      !>        C     The following variables will contain the data for
-      !>        C     the new record.
-      !>        C
-      !>              ORDID    =   10011
-      !>              ITEMID   =   531
-      !>              ITEMNM   =  'Sample item'
-      !>              DESCRP   =  'This sample item is used only in tests.'
-      !>              PRICE    =   1345.67D0
+      !>C
+      !>C     The following variables will contain the data for
+      !>C     the new record.
+      !>C
+      !>      ORDID    =   10011
+      !>      ITEMID   =   531
+      !>      ITEMNM   =  'Sample item'
+      !>      DESCRP   =  'This sample item is used only in tests.'
+      !>      PRICE    =   1345.67D0
       !>
-      !>        C
-      !>        C     Note that the names of the routines called
-      !>        C     correspond to the data types of the columns.
-      !>        C
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-      !>             .              ESIZE,  ORDID,  ISNULL               )
+      !>C
+      !>C     Note that the names of the routines called
+      !>C     correspond to the data types of the columns.
+      !>C
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+      !>     .              ESIZE,  ORDID,  ISNULL               )
       !>
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-      !>             .              ESIZE,  ITEMID, ISNULL               )
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+      !>     .              ESIZE,  ITEMID, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-      !>             .              ESIZE,  ITEMNM, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+      !>     .              ESIZE,  ITEMNM, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-      !>             .              ESIZE,  DESCRP, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+      !>     .              ESIZE,  DESCRP, ISNULL               )
       !>
-      !>              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-      !>             .              ESIZE,  PRICE,  ISNULL               )
+      !>      CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+      !>     .              ESIZE,  PRICE,  ISNULL               )
       !>
-      !>        C
-      !>        C     At this point, we could perform read operations
-      !>        C     on the EK.
-      !>        C
-      !>        C     Return the number of segments in the EK. Dump the
-      !>        C     desired summary information for each one.
-      !>        C
-      !>              NSEG = EKNSEG( HANDLE )
-      !>              WRITE(*,'(A,I3)') 'Number of segments =', NSEG
-      !>              WRITE(*,*)
+      !>C
+      !>C     At this point, we could perform read operations
+      !>C     on the EK.
+      !>C
+      !>C     Return the number of segments in the EK. Dump the
+      !>C     desired summary information for each one.
+      !>C
+      !>      NSEG = EKNSEG( HANDLE )
+      !>      WRITE(*,'(A,I3)') 'Number of segments =', NSEG
+      !>      WRITE(*,*)
       !>
-      !>              DO SEGNO = 1, NSEG
+      !>      DO SEGNO = 1, NSEG
       !>
-      !>                 CALL EKSSUM (  HANDLE,  SEGNO,   TABNAM,  NROWS,
-      !>             .                  NCOLS,   CNAMES,  DTYPES,  SIZES,
-      !>             .                  STRLNS,  INDEXD,  NULLOK         )
+      !>         CALL EKSSUM (  HANDLE,  SEGNO,   TABNAM,  NROWS,
+      !>     .                  NCOLS,   CNAMES,  DTYPES,  SIZES,
+      !>     .                  STRLNS,  INDEXD,  NULLOK         )
       !>
-      !>                 WRITE(*,'(2A)')   'Table containing segment: ', TABNAM
-      !>                 WRITE(*,'(A,I2)') 'Number of rows          : ', NROWS
-      !>                 WRITE(*,'(A,I2)') 'Number of columns       : ', NCOLS
-      !>                 WRITE(*,'(A)')    'Table data              : '
+      !>         WRITE(*,'(2A)')   'Table containing segment: ', TABNAM
+      !>         WRITE(*,'(A,I2)') 'Number of rows          : ', NROWS
+      !>         WRITE(*,'(A,I2)') 'Number of columns       : ', NCOLS
+      !>         WRITE(*,'(A)')    'Table data              : '
       !>
-      !>                 DO I = 1, NCOLS
+      !>         DO I = 1, NCOLS
       !>
-      !>                    WRITE(*,'(2A)') '  Column: ', CNAMES(I)
-      !>                    WRITE(*,'(2A)') '  Type  : ', DTYPES(I)
+      !>            WRITE(*,'(2A)') '  Column: ', CNAMES(I)
+      !>            WRITE(*,'(2A)') '  Type  : ', DTYPES(I)
       !>
-      !>                    DO RECNO = 1, NROWS
+      !>            DO RECNO = 1, NROWS
       !>
-      !>                       IF ( DTYPES(I) .EQ. 'CHR' ) THEN
+      !>               IF ( DTYPES(I) .EQ. 'CHR' ) THEN
       !>
-      !>                          CALL EKRCEC ( HANDLE,    SEGNO, RECNO,
-      !>             .                          CNAMES(I), NVALS,
-      !>             .                          CVALS,     ISNULL       )
+      !>                  CALL EKRCEC ( HANDLE,    SEGNO, RECNO,
+      !>     .                          CNAMES(I), NVALS,
+      !>     .                          CVALS,     ISNULL       )
       !>
-      !>                          IF ( ISNULL ) THEN
+      !>                  IF ( ISNULL ) THEN
       !>
-      !>                             WRITE(*,'(A)') '  Data  : <null>'
+      !>                     WRITE(*,'(A)') '  Data  : <null>'
       !>
-      !>                          ELSE
+      !>                  ELSE
       !>
-      !>                             WRITE(*,'(2A)') '  Data  : ', CVALS
+      !>                     WRITE(*,'(2A)') '  Data  : ', CVALS
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>                       ELSE IF ( DTYPES(I) .EQ. 'DP' ) THEN
+      !>               ELSE IF ( DTYPES(I) .EQ. 'DP' ) THEN
       !>
-      !>                          CALL EKRCED ( HANDLE,    SEGNO, RECNO,
-      !>             .                          CNAMES(I), NVALS,
-      !>             .                          DVALS,     ISNULL       )
+      !>                  CALL EKRCED ( HANDLE,    SEGNO, RECNO,
+      !>     .                          CNAMES(I), NVALS,
+      !>     .                          DVALS,     ISNULL       )
       !>
-      !>                          IF ( ISNULL ) THEN
+      !>                  IF ( ISNULL ) THEN
       !>
-      !>                             WRITE(*,'(A)') '  Data  : <null>'
+      !>                     WRITE(*,'(A)') '  Data  : <null>'
       !>
-      !>                          ELSE
+      !>                  ELSE
       !>
-      !>                             WRITE(*,'(A,F9.2)') '  Data  : ', DVALS
+      !>                     WRITE(*,'(A,F9.2)') '  Data  : ', DVALS
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>                       ELSE IF ( DTYPES(I) .EQ. 'INT' ) THEN
+      !>               ELSE IF ( DTYPES(I) .EQ. 'INT' ) THEN
       !>
-      !>                          CALL EKRCEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                          CNAMES(I), NVALS,
-      !>             .                          IVALS,     ISNULL       )
+      !>                  CALL EKRCEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                          CNAMES(I), NVALS,
+      !>     .                          IVALS,     ISNULL       )
       !>
-      !>                          IF ( ISNULL ) THEN
+      !>                  IF ( ISNULL ) THEN
       !>
-      !>                             WRITE(*,'(A)') '  Data  : <null>'
+      !>                     WRITE(*,'(A)') '  Data  : <null>'
       !>
-      !>                          ELSE
+      !>                  ELSE
       !>
-      !>                             WRITE(*,'(A,I6)') '  Data  : ', IVALS
+      !>                     WRITE(*,'(A,I6)') '  Data  : ', IVALS
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>                       ENDIF
+      !>               ENDIF
       !>
-      !>        C
-      !>        C              There is no time data. Otherwise, we would need
-      !>        C              to use an LSK and EKRCED to read it
-      !>        C              (internally, it is stored as double precision).
-      !>        C
-      !>                       WRITE(*,*)
+      !>C
+      !>C              There is no time data. Otherwise, we would need
+      !>C              to use an LSK and EKRCED to read it
+      !>C              (internally, it is stored as double precision).
+      !>C
+      !>               WRITE(*,*)
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE(*,*) '----------------------------------------'
+      !>         WRITE(*,*) '----------------------------------------'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file. This will delete the scratch file
-      !>        C     and all the data will be lost.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file. This will delete the scratch file
+      !>C     and all the data will be lost.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -23050,39 +23060,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKNSEG_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKNSEG_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               EKNSEG
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               EKNSEG
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NSEG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NSEG
       !>
-      !>        C
-      !>        C     Open the EK file, returning the file handle
-      !>        C     associated with the open file to the variable named
-      !>        C     HANDLE.
-      !>        C
-      !>              CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
+      !>C
+      !>C     Open the EK file, returning the file handle
+      !>C     associated with the open file to the variable named
+      !>C     HANDLE.
+      !>C
+      !>      CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
       !>
-      !>        C
-      !>        C     Return the number of segments in the EK.
-      !>        C
-      !>              NSEG = EKNSEG( HANDLE )
-      !>              WRITE(*,*) 'Number of segments = ', NSEG
+      !>C
+      !>C     Return the number of segments in the EK.
+      !>C
+      !>      NSEG = EKNSEG( HANDLE )
+      !>      WRITE(*,*) 'Number of segments = ', NSEG
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -26776,208 +26788,210 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKFFLD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKFFLD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         LSK
-      !>              PARAMETER           ( LSK    = 'naif0012.tls' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         LSK
+      !>      PARAMETER           ( LSK    = 'naif0012.tls' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'DATAORDERS'   )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'DATAORDERS'   )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               FNMLEN
-      !>              PARAMETER           ( FNMLEN = 50  )
+      !>      INTEGER               FNMLEN
+      !>      PARAMETER           ( FNMLEN = 50  )
       !>
-      !>              INTEGER               LNMLEN
-      !>              PARAMETER           ( LNMLEN = 50  )
+      !>      INTEGER               LNMLEN
+      !>      PARAMETER           ( LNMLEN = 50  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 9   )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 9   )
       !>
-      !>              INTEGER               UTCLEN
-      !>              PARAMETER           ( UTCLEN = 30  )
+      !>      INTEGER               UTCLEN
+      !>      PARAMETER           ( UTCLEN = 30  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(32)        CNAMES ( NCOLS )
-      !>              CHARACTER*(FNMLEN)    FNAMES ( NROWS )
-      !>              CHARACTER*(LNMLEN)    LNAMES ( NROWS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(UTCLEN)    ODATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(32)        CNAMES ( NCOLS )
+      !>      CHARACTER*(FNMLEN)    FNAMES ( NROWS )
+      !>      CHARACTER*(LNMLEN)    LNAMES ( NROWS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(UTCLEN)    ODATE
       !>
-      !>              DOUBLE PRECISION      COSTS  ( NROWS )
-      !>              DOUBLE PRECISION      ETS    ( NROWS )
+      !>      DOUBLE PRECISION      COSTS  ( NROWS )
+      !>      DOUBLE PRECISION      ETS    ( NROWS )
       !>
-      !>              INTEGER               CSTIDS ( NROWS )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDIDS ( NROWS )
-      !>              INTEGER               RCPTRS ( NROWS )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( NROWS )
-      !>              INTEGER               WKINDX ( NROWS )
+      !>      INTEGER               CSTIDS ( NROWS )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDIDS ( NROWS )
+      !>      INTEGER               RCPTRS ( NROWS )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( NROWS )
+      !>      INTEGER               WKINDX ( NROWS )
       !>
-      !>              LOGICAL               NLFLGS ( NROWS )
+      !>      LOGICAL               NLFLGS ( NROWS )
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for UTC/ET conversion.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load a leapseconds kernel for UTC/ET conversion.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 20-SEP-1995'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 20-SEP-1995'
       !>
-      !>              CALL EKOPN ( 'ekffld_ex1.bes', IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( 'ekffld_ex1.bes', IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.  We presume the number of  rows
-      !>        C     of data is known in advance.
-      !>        C
-      !>              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
-      !>             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
+      !>C
+      !>C     Start the segment.  We presume the number of  rows
+      !>C     of data is known in advance.
+      !>C
+      !>      CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
+      !>     .              CNAMES,  CDECLS, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, arrays containing data for the
-      !>        C     segment's columns may be filled in.  The names
-      !>        C     of the data arrays are shown below.
-      !>        C
-      !>        C        Column           Data array
-      !>        C
-      !>        C        'ORDER_ID'       ORDIDS
-      !>        C        'CUSTOMER_ID'    CSTIDS
-      !>        C        'LAST_NAME'      LNAMES
-      !>        C        'FIRST_NAME'     FNAMES
-      !>        C        'ORDER_DATE'     ETS
-      !>        C        'COST'           COSTS
-      !>        C
-      !>              DO I = 1, NROWS
+      !>C
+      !>C     At this point, arrays containing data for the
+      !>C     segment's columns may be filled in.  The names
+      !>C     of the data arrays are shown below.
+      !>C
+      !>C        Column           Data array
+      !>C
+      !>C        'ORDER_ID'       ORDIDS
+      !>C        'CUSTOMER_ID'    CSTIDS
+      !>C        'LAST_NAME'      LNAMES
+      !>C        'FIRST_NAME'     FNAMES
+      !>C        'ORDER_DATE'     ETS
+      !>C        'COST'           COSTS
+      !>C
+      !>      DO I = 1, NROWS
       !>
-      !>                 ORDIDS(I) = I
-      !>                 CSTIDS(I) = I * 100
-      !>                 COSTS(I)  = I * 100.D0
+      !>         ORDIDS(I) = I
+      !>         CSTIDS(I) = I * 100
+      !>         COSTS(I)  = I * 100.D0
       !>
-      !>                 CALL REPMI ( 'Order # Customer first name',
-      !>             .                '#', I, FNAMES(I)             )
-      !>                 CALL REPMI ( 'Order # Customer last name',
-      !>             .                '#', I, LNAMES(I)             )
-      !>                 CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
+      !>         CALL REPMI ( 'Order # Customer first name',
+      !>     .                '#', I, FNAMES(I)             )
+      !>         CALL REPMI ( 'Order # Customer last name',
+      !>     .                '#', I, LNAMES(I)             )
+      !>         CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
       !>
-      !>                 CALL UTC2ET ( ODATE,  ETS(I) )
+      !>         CALL UTC2ET ( ODATE,  ETS(I) )
       !>
-      !>                 NLFLGS(I) = .FALSE.
+      !>         NLFLGS(I) = .FALSE.
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              NLFLGS(2) = .TRUE.
+      !>      NLFLGS(2) = .TRUE.
       !>
-      !>        C
-      !>        C     The SIZES array shown below is ignored for scalar
-      !>        C     and fixed-size array columns, so we need not
-      !>        C     initialize it.  For variable-size arrays, the
-      !>        C     Ith element of the SIZES array must contain the size
-      !>        C     of the Ith column entry in the column being written.
-      !>        C     Normally, the SIZES array would be reset for each
-      !>        C     variable-size column.
-      !>        C
-      !>        C     The NLFLGS array indicates which entries are null.
-      !>        C     It is ignored for columns that don't allow null
-      !>        C     values.  In this case, only the COST column allows
-      !>        C     nulls.
-      !>        C
-      !>        C     Add the columns of data to the segment.  All of the
-      !>        C     data for each column is written in one shot.
-      !>        C
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
-      !>             .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>C
+      !>C     The SIZES array shown below is ignored for scalar
+      !>C     and fixed-size array columns, so we need not
+      !>C     initialize it.  For variable-size arrays, the
+      !>C     Ith element of the SIZES array must contain the size
+      !>C     of the Ith column entry in the column being written.
+      !>C     Normally, the SIZES array would be reset for each
+      !>C     variable-size column.
+      !>C
+      !>C     The NLFLGS array indicates which entries are null.
+      !>C     It is ignored for columns that don't allow null
+      !>C     values.  In this case, only the COST column allows
+      !>C     nulls.
+      !>C
+      !>C     Add the columns of data to the segment.  All of the
+      !>C     data for each column is written in one shot.
+      !>C
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
+      !>     .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
-      !>             .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
+      !>     .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
-      !>             .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
+      !>     .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
-      !>             .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
+      !>     .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
-      !>             .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
+      !>     .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'COST',
-      !>             .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'COST',
+      !>     .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>        C
-      !>        C     Complete the segment.  The RCPTRS array is that
-      !>        C     returned by EKIFLD.
-      !>        C
-      !>              CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      !>C
+      !>C     Complete the segment.  The RCPTRS array is that
+      !>C     returned by EKIFLD.
+      !>C
+      !>      CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     The file must be closed by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     The file must be closed by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
