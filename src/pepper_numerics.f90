@@ -7181,6 +7181,7 @@ contains
       !>         We assume that all vectors are given in body-fixed
       !>         coordinates.
       !>
+      !>```fortran
       !>            C
       !>            C     Find the limb of the ellipsoid as seen from the
       !>            C     point OBSERV. Here A, B, and C are the lengths of
@@ -7236,6 +7237,7 @@ contains
       !>            C     the two separations we've computed.
       !>            C
       !>                  ANGLE = MIN ( SEP1, SEP2 )
+      !>```
       !>
       !>## Restrictions
       !>
