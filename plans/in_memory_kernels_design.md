@@ -22,13 +22,14 @@ What was built:
   `pepper_vs_spicelib.md`): random-epoch SPKGEO 9.6 → 0.22 µs, PXFORM to
   ITRF93 3.7 → 0.28 µs; the kernel set loads in 4.6 ms instead of 2.0.
 
-Found along the way (not caused by this change, not fixed): a file unloaded
-and loaded again while another context still has its old unit open (the
-contexts close such units lazily) is refused: GETFAT signals
-SPICE(EXTERNALOPEN), and gfortran will not connect a file to a second unit.
-Closing another context's unit from the instance is not safe (gfortran
-reuses NEWUNIT numbers). A file in memory is not affected after its first
-load in memory, since contexts never open units for it.
+Found along the way (not caused by this change): a file unloaded and loaded
+again while another context still had its old unit open (the contexts close
+such units lazily) was refused: GETFAT signaled SPICE(EXTERNALOPEN). Fixed
+since: the instance records the files it closed, and GETFAT and ZZDDHOPN
+accept such a file, and, for reading, a file on another context's or
+instance's NEWUNIT unit (`opened_by_pepper`; `test_shared_files` in
+`test/core/test_context.f90`). A file in memory is not affected after its
+first load in memory, since contexts never open units for it.
 
 ## The problem
 

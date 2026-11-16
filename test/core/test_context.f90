@@ -231,9 +231,10 @@ contains
 
    !> A file read by a context stays connected to the context's unit until
    !> the context next uses its unit table, and each instance opens its
-   !> files on units of its own: loading a file again after KCLEAR, and
-   !> loading into a second instance a file the first one has open, are not
-   !> external opens (SPICE(EXTERNALOPEN) before; found by PepperyPy).
+   !> files on units of its own: loading a file again after KCLEAR or
+   !> UNLOAD, and loading into a second instance a file the first one has
+   !> open, are not external opens (SPICE(EXTERNALOPEN) before; found by
+   !> PepperyPy).
    subroutine test_shared_files()
       use pepper_test_kernels, only: write_spk, circle_state, delete_file
       type(pepper_instance), target :: other
@@ -251,6 +252,12 @@ contains
       call check(.not. spice%failed(), 'the file loaded again after KCLEAR (the context not used since)')
       call c1%spkgeo(1001_ip, 200.0_wp, 'J2000', 0_ip, state, lt)
       call check(.not. c1%failed(), 'the context reads the file loaded again')
+      call spice%unload(spk)
+      call spice%furnsh(spk)
+      call check(.not. spice%failed(), 'the file loaded again after UNLOAD (the context not used since)')
+      call c1%spkgeo(1001_ip, 250.0_wp, 'J2000', 0_ip, state, lt)
+      call check(.not. c1%failed() .and. maxval(abs(state - circle_state(7000.0_wp, 0.0_wp, 250.0_wp))) < 1e-6_wp, &
+                 'the context reads the file loaded again after UNLOAD')
       call other%furnsh(spk)
       call check(.not. other%failed(), 'a second instance loads the file the first one has open')
       c2 = other%new_context()
