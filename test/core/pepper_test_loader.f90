@@ -49,7 +49,9 @@ module pepper_test_loader
 
    private
 
-   public :: simple_loader, write_simple, circle_orbit, spin_frame, spin_matrix
+   public :: simple_loader, write_simple, circle_orbit, spin_frame, spin_matrix, last_head_len
+
+   integer :: last_head_len = -1  !! the length of the head the last detect was given
 
    !> The model of the test format's SPIN_FRAME line: a frame turning about
    !> its base frame's Z axis, by `rate*et` (the evaluator a loader gives
@@ -457,6 +459,7 @@ contains
       class(simple_loader), intent(in) :: self  !! the loader
       character(*), intent(in) :: file  !! the file
       character(*), intent(in) :: head  !! its first bytes
+      last_head_len = len(head)
       accept = self%sniff .and. len(file) > 0 .and. head(1:min(16, len(head))) == 'SIMPLE_EPHEMERIS'
    end function simple_detect
 

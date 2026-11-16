@@ -1220,10 +1220,11 @@ contains
       pepper_builder_nsegments = int(kb%nsegments(), c_int)
    end function pepper_builder_nsegments
 
-   !> Load a builder as a kernel named `name`, with no file
-   !> (`spice%load_kernel`): used like an SPK file (queries, SPKCOV, KDATA,
-   !> UNLOAD). A kernel loaded under the same name is replaced. The builder
-   !> is emptied, unless `keep` is 1. Errors are signaled in the instance.
+   !> Write a kernel built in memory to SPICE files (`spice%write_kernel`):
+   !> an SPK (`file`; "" for none), and for its rotation tables a CK
+   !> (`ck_file`) with a text kernel (`text_file`) of their clocks, frame
+   !> definitions and the kernel's body names. Errors are signaled in the
+   !> instance.
    integer(c_int) function pepper_spice_write_kernel ( spice, name, file, ck_file, text_file ) &
          bind(c, name='pepper_spice_write_kernel')
       type(c_ptr), value :: spice  !! the instance
@@ -1260,11 +1261,11 @@ contains
       end subroutine optional_string
    end function pepper_spice_write_kernel
 
-   !> Write a kernel built in memory to SPICE files (`spice%write_kernel`):
-   !> an SPK (`file`; "" for none), and for its rotation tables a CK
-   !> (`ck_file`) with a text kernel (`text_file`) of their clocks, frame
-   !> definitions and the kernel's body names. Errors are signaled in the
-   !> instance.
+   !> Load a builder as a kernel named `name`, with no file
+   !> (`spice%load_kernel`): used like an SPK file (queries, SPKCOV, KDATA,
+   !> UNLOAD). A kernel loaded under the same name is replaced (kept if the
+   !> load fails). The builder is emptied, unless `keep` is 1. Errors are
+   !> signaled in the instance.
    integer(c_int) function pepper_spice_load_kernel ( spice, name, builder, keep ) &
          bind(c, name='pepper_spice_load_kernel')
       type(c_ptr), value :: spice  !! the instance

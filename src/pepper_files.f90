@@ -6067,8 +6067,8 @@ contains
 !     found by its name (the most recently loaded, if several); it can
 !     only be read.
 !
-      if ( ( accmet == read  ) .or. &
-           ( accmet == write )      ) then
+      if ( (( accmet == read  ) .or. &
+            ( accmet == write )) .and. .not. ft%files_only ) then
          do i = nft, 1, -1
             if ( .not. ft%files(i)%synthetic ) cycle
             if ( ft%files(i)%name /= locfnm ) cycle

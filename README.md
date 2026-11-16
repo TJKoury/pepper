@@ -428,9 +428,10 @@ call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
   dropped). It does not depend on an instance: threads can fill builders
   while others query. Frames are resolved when the builder is loaded.
 - **`load_kernel(name, kb, keep)`** loads a builder under a name. A name in
-  use is replaced (unloaded first; the new kernel has the highest
-  priority). The builder is emptied, unless `keep`. An error, such as an
-  unknown frame, loads nothing.
+  use is replaced (the old kernel is unloaded once the new one has loaded;
+  the new kernel has the highest priority). The builder is emptied, unless
+  `keep`. An error, such as an unknown frame, loads nothing and keeps the
+  old kernel.
 - **A loader** extends `kernel_loader` with `load(self, ctx, kb, file)`:
   read the file, fill the builder, signal errors in `ctx`. Optional:
   `detect(self, file, head)` (accept a file by its first 4 KB) and

@@ -2,6 +2,9 @@
 loader=), and the builder's providers and frames (add_ephemeris, add_frame,
 frame_rotations) from Python: the C interface's callbacks, end to end."""
 
+import gc
+import weakref
+
 import numpy as np
 import pytest
 
@@ -182,3 +185,95 @@ def test_frames_written_and_read_back(spice, tmp_path):
     t = 2222.2
     assert np.array_equal(other.context().pxform('J2000', 'PY_W', t), c.pxform('J2000', 'PY_W', t))
     other.close()
+
+
+class Orbit:
+    """A model ephemeris (a callable object, so a weakref can watch it)."""
+
+    def __init__(self, r):
+        self.r = r
+
+    def __call__(self, ctx, body, t):
+        a = 1e-3 * t
+        r = self.r
+        return [r * np.cos(a), r * np.sin(a), 0.0, -r * 1e-3 * np.sin(a), r * 1e-3 * np.cos(a), 0.0]
+
+
+class ModelLoader(KernelLoader):
+    """A file 'MODEL body radius': a model ephemeris; the models made are
+    watched by weakrefs."""
+
+    def __init__(self):
+        self.made = []
+        self.heads = []
+
+    def load(self, ctx, kb, file):
+        with open(file) as f:
+            tag, body, r = f.read().split()
+        orbit = Orbit(float(r))
+        self.made.append(weakref.ref(orbit))
+        kb.add_ephemeris(int(body), 399, 'J2000', 0.0, 1e4, orbit)
+
+    def detect(self, file, head):
+        self.heads.append(len(head))
+        return head.startswith(b'MODEL')
+
+
+def test_loader_refs_per_load(spice, tmp_path):
+    """The Python providers of each load of a file live while that load's
+    kernel is loaded, and are released when it is unloaded."""
+    ld = ModelLoader()
+    spice.add_loader('MODEL', ld, extensions=['.model'])
+    path = tmp_path / 'm.model'
+    path.write_text('MODEL -10030 7000.0\n')
+    c = spice.context()
+    spice.furnsh(str(path))
+    path.write_text('MODEL -10030 8000.0\n')
+    spice.furnsh(str(path))                              # a second kernel of the file
+    gc.collect()
+    assert all(r() is not None for r in ld.made)          # both loads' providers alive
+    assert np.isclose(np.linalg.norm(c.spkgeo(-10030, 10.0, 'J2000', 399)[0][:3]), 8000.0)
+    spice.unload(str(path))                               # the later one
+    gc.collect()
+    assert ld.made[0]() is not None and ld.made[1]() is None
+    assert np.isclose(np.linalg.norm(c.spkgeo(-10030, 10.0, 'J2000', 399)[0][:3]), 7000.0)
+    spice.unload(str(path))
+    gc.collect()
+    assert ld.made[0]() is None                           # released with the last kernel
+
+
+def test_load_kernel_refs_released(spice):
+    kb = KernelBuilder()
+    orbit = Orbit(7000.0)
+    ref = weakref.ref(orbit)
+    kb.add_ephemeris(-10031, 399, 'J2000', 0.0, 1e4, orbit)
+    spice.load_kernel('refs', kb)
+    del orbit
+    gc.collect()
+    assert ref() is not None                              # kept while loaded
+    spice.unload('refs')
+    gc.collect()
+    assert ref() is None                                  # released at unload
+
+
+def test_detect_short_file(spice, tmp_path):
+    ld = ModelLoader()
+    spice.add_loader('MODEL', ld)                         # by detect only
+    path = tmp_path / 'short.txt'
+    path.write_text('MODEL -10032 7000.0\n')
+    spice.furnsh(str(path))
+    assert ld.heads[-1] == path.stat().st_size            # the file's bytes, no padding
+    spice.unload(str(path))
+
+
+def test_module_furnsh_loader(tmp_path):
+    s = Spice()
+    with s.as_current():
+        s.add_loader('CSV', CsvLoader(), extensions=['.csveph'])
+        path, _, _ = write_csv(tmp_path / 'p.csveph')
+        pepperypy.furnsh(path, loader='PEPPER')           # PEPPER's own loading: a text kernel
+        assert s.context().kdata(0, 'ALL')[1] == 'TEXT'
+        pepperypy.unload(path)
+        pepperypy.furnsh(path, loader='csv')
+        assert s.context().kernel_format(path)[0] == 'CSV'
+    s.close()

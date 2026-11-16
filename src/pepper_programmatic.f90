@@ -399,7 +399,15 @@ contains
       end do
       this%provided_frames(this%nprovided_frames) = provided_frame()
       this%nprovided_frames = this%nprovided_frames - 1
-      if ( any ( this%provided_frames(1:this%nprovided_frames)%code == code ) ) return
+!     Another registration of the frame (another kernel's, or the
+!     program's) remains: its definition, the most recent's, is the
+!     frame's again (the center may differ).
+      do j = this%nprovided_frames, 1, -1
+         if ( this%provided_frames(j)%code == code ) then
+            call write_frame_definition ( ctx, this%provided_frames(j) )
+            return
+         end if
+      end do
       call intstr ( code, scode )
       call dvpool ( ctx, 'FRAME_' // fname )
       call dvpool ( ctx, 'FRAME_' // trim(scode) // '_NAME' )

@@ -100,6 +100,10 @@ contains
          call ctx%sigerr ( 'SPICE(BODYANDCENTERSAME)' )
          return
       end if
+      if ( present ( ident ) ) then
+         call check_ident ( ctx, ident )
+         if ( ctx%failed() ) return
+      end if
       if ( .not. allocated ( this%providers ) ) allocate ( this%providers(2) )
       if ( this%nprov == size ( this%providers ) ) then
          allocate ( tmp(2*size ( this%providers )) )
@@ -200,6 +204,10 @@ contains
 
       if ( ctx%failed() ) return
       n = size ( epochs, kind=ip )
+      if ( present ( ident ) ) then
+         call check_ident ( ctx, ident )
+         if ( ctx%failed() ) return
+      end if
       if ( name == ' ' ) then
          call ctx%setmsg ( 'The name of the frame # is blank.' )
          call ctx%errint ( '#', code )
@@ -399,39 +407,57 @@ contains
    !> The rotation tables of a kernel built in memory, for a frame (PEPPER).
    module procedure kernel_frame_tables
       implicit none
-      integer(ip) :: k, i, owner
-      allocate ( tbeg(0), tend(0) )
+      integer(ip) :: k, i, n, pass, owner
       call kernel_owner ( ctx, name, is_kernel, owner )
-      if ( .not. is_kernel ) return
-      do k = 1, ctx%spice%nprovided_frames
-         associate ( f => ctx%spice%provided_frames(k) )
-            if ( f%owner /= owner .or. f%code /= code ) cycle
-            select type ( p => f%provider )
-            type is ( rotation_table )
-               do i = 1, p%nseg
-                  tbeg = [ tbeg, p%tbeg(i) ]
-                  tend = [ tend, p%tend(i) ]
-               end do
-            end select
-         end associate
+      if ( .not. is_kernel ) then
+         allocate ( tbeg(0), tend(0) )
+         return
+      end if
+      ! the first pass counts the segments, the second fills them in
+      do pass = 1, 2
+         n = 0
+         do k = 1, ctx%spice%nprovided_frames
+            associate ( f => ctx%spice%provided_frames(k) )
+               if ( f%owner /= owner .or. f%code /= code ) cycle
+               select type ( p => f%provider )
+               type is ( rotation_table )
+                  do i = 1, p%nseg
+                     n = n + 1
+                     if ( pass == 2 ) then
+                        tbeg(n) = p%tbeg(i)
+                        tend(n) = p%tend(i)
+                     end if
+                  end do
+               end select
+            end associate
+         end do
+         if ( pass == 1 ) allocate ( tbeg(n), tend(n) )
       end do
    end procedure kernel_frame_tables
 
    !> The frames of the rotation tables of a kernel built in memory (PEPPER).
    module procedure kernel_frame_codes
       implicit none
-      integer(ip) :: k, owner
-      allocate ( codes(0) )
+      integer(ip) :: k, n, pass, owner
       call kernel_owner ( ctx, name, is_kernel, owner )
-      if ( .not. is_kernel ) return
-      do k = 1, ctx%spice%nprovided_frames
-         associate ( f => ctx%spice%provided_frames(k) )
-            if ( f%owner /= owner ) cycle
-            select type ( p => f%provider )
-            type is ( rotation_table )
-               codes = [ codes, f%code ]
-            end select
-         end associate
+      if ( .not. is_kernel ) then
+         allocate ( codes(0) )
+         return
+      end if
+      ! the first pass counts the frames, the second fills them in
+      do pass = 1, 2
+         n = 0
+         do k = 1, ctx%spice%nprovided_frames
+            associate ( f => ctx%spice%provided_frames(k) )
+               if ( f%owner /= owner ) cycle
+               select type ( p => f%provider )
+               type is ( rotation_table )
+                  n = n + 1
+                  if ( pass == 2 ) codes(n) = f%code
+               end select
+            end associate
+         end do
+         if ( pass == 1 ) allocate ( codes(n) )
       end do
    end procedure kernel_frame_codes
 
@@ -548,6 +574,30 @@ contains
       kb_nsegments = this%nseg + this%nprov + this%ntab + this%nframes
    end procedure kb_nsegments
 
+   !> Check a segment identifier as the SPK and CK writers do: at most 40
+   !> characters (SPICE(SEGIDTOOLONG)), all printable
+   !> (SPICE(NONPRINTABLECHARS)).
+   subroutine check_ident ( ctx, id )
+      class(pepper_context), intent(inout) :: ctx  !! the context, for the errors
+      character(*), intent(in) :: id  !! the segment identifier
+      integer(ip) :: i, chrcod
+      if ( len_trim ( id ) > sidlen ) then
+         call ctx%setmsg ( 'Segment identifier contains more than ' &
+         //            '40 characters.' )
+         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)' )
+         return
+      end if
+      do i = 1, len_trim ( id )
+         chrcod = ichar ( id(i:i) )
+         if ( chrcod < fprint .or. chrcod > lprint ) then
+            call ctx%setmsg ( 'The segment identifier contains ' &
+            //            'nonprintable characters' )
+            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)' )
+            return
+         end if
+      end do
+   end subroutine check_ident
+
    !> Check a segment as SPKW09 (TYPE 9) or SPKW13 (TYPE 13) does, adapt a
    !> short one if asked, pack it, and add it to the builder.
    subroutine add_segment ( this, ctx, type, body, center, frame, epochs, states, degree, &
@@ -568,7 +618,7 @@ contains
       type(builder_segment), allocatable :: tmp(:)
       character(:), allocatable :: id
       real(wp) :: first, last
-      integer(ip) :: n, i, deg, typ, chrcod
+      integer(ip) :: n, i, deg, typ
       logical :: adapting
 
       if ( ctx%failed() ) return
@@ -601,21 +651,8 @@ contains
          call ctx%sigerr ( 'SPICE(BARYCENTEREPHEM)' )
          return
       end if
-      if ( len ( id ) > sidlen ) then
-         call ctx%setmsg ( 'Segment identifier contains more than ' &
-         //            '40 characters.' )
-         call ctx%sigerr ( 'SPICE(SEGIDTOOLONG)' )
-         return
-      end if
-      do i = 1, len ( id )
-         chrcod = ichar ( id(i:i) )
-         if ( chrcod < fprint .or. chrcod > lprint ) then
-            call ctx%setmsg ( 'The segment identifier contains ' &
-            //            'nonprintable characters' )
-            call ctx%sigerr ( 'SPICE(NONPRINTABLECHARS)' )
-            return
-         end if
-      end do
+      call check_ident ( ctx, id )
+      if ( ctx%failed() ) return
       if ( deg < 1 .or. deg > max_degree ) then
          call ctx%setmsg ( 'The interpolating polynomials have degree #; ' &
          //            'the valid degree range is [1, #]' )
@@ -772,10 +809,6 @@ contains
       keeping = .false.
       if ( present ( keep ) ) keeping = keep
 
-!     A kernel (or file) already loaded under this name is replaced.
-      call unload_all ( ctx, kname )
-      if ( ctx%failed() ) return
-
       fmt = '(programmatic)'
       if ( allocated ( kb%format ) ) then
          if ( kb%format /= ' ' ) fmt = kb%format
@@ -786,6 +819,13 @@ contains
       else
          call load_builder ( ctx, kname, kb, handle )
       end if
+      if ( ctx%failed() ) return
+
+!     A kernel (or file) already loaded under this name is replaced: after
+!     the new one loaded, so that a failed load keeps the old one. (Until
+!     then the new kernel, the latest, is the one found by the name, and
+!     its segments come first.)
+      call unload_all ( ctx, kname )
       if ( ctx%failed() ) return
       call this%keeper%add ( keeper_kernel ( name = kname, type = 'SPK', handle = handle, source = 0, &
                                              loader = '', format = fmt ) )
@@ -862,10 +902,14 @@ contains
          return
       end if
 
-!     The body names the kernel defines, owned by it.
+!     The body names the kernel defines, owned by it. From here a failure
+!     undoes the load (ROLLBACK).
       do k = 1, kb%nbodies
          call owned_boddef ( ctx, kb%body_names(k)%s, kb%body_codes(k), handle )
-         if ( ctx%failed() ) return
+         if ( ctx%failed() ) then
+            call rollback ( )
+            return
+         end if
       end do
 
 !     Its programmatic ephemerides, owned by it: after its table segments
@@ -875,20 +919,52 @@ contains
             call register_owned_ephemeris ( ctx, p%body, p%center, p%frame, p%tbeg, p%tend, &
                                             p%provider, handle, p%ident )
          end associate
-         if ( ctx%failed() ) return
+         if ( ctx%failed() ) then
+            call rollback ( )
+            return
+         end if
       end do
 
 !     Its frames, owned by it: the rotation tables, then the programmatic
 !     frames.
       if ( kb%ntab > 0 ) call load_rotation_tables ( ctx, kb, handle, bases )
-      if ( ctx%failed() ) return
+      if ( ctx%failed() ) then
+         call rollback ( )
+         return
+      end if
       do k = 1, kb%nframes
          associate ( f => kb%frames(k) )
             call register_owned_frame ( ctx, f%name, f%code, f%center, f%provider, handle )
          end associate
-         if ( ctx%failed() ) return
+         if ( ctx%failed() ) then
+            call rollback ( )
+            return
+         end if
       end do
       call kb%clear()
+
+   contains
+
+      !> Undo a load that failed after SPKLEF: remove what the kernel
+      !> registered (names, ephemerides, frames, the DAF of its rotation
+      !> tables) and unload its SPK, then signal the error again.
+      subroutine rollback ( )
+         character(1840) :: short, long
+         integer(ip) :: j
+         call ctx%getmsg ( 'SHORT', short )
+         call ctx%getmsg ( 'LONG', long )
+         call ctx%reset ( )
+         call remove_owned_boddefs ( ctx, handle )
+         call remove_owned_ephemerides ( ctx, handle )
+         call remove_owned_frames ( ctx, handle )
+         j = synthetic_named ( ctx, rotations_name ( handle ) )
+         if ( j > 0 ) call dafcls ( ctx, ctx%spice%zzddhman%files(j)%handle )
+         call spkuef ( ctx, handle )
+         call ctx%reset ( )   ! the error is the load's
+         call ctx%setmsg ( trim ( long ) )
+         call ctx%sigerr ( trim ( short ) )
+         handle = 0
+      end subroutine rollback
    end subroutine load_builder
 
    !> The checks of a builder that need the instance, made before anything
@@ -1709,7 +1785,7 @@ contains
       character(:), allocatable :: ufile
       character(head_size) :: head
       integer(ip) :: i, j, best, n
-      logical :: have_head
+      integer(ip) :: nhead
 
       k = 0
       if ( ctx%failed() ) return
@@ -1733,35 +1809,36 @@ contains
       if ( k > 0 ) return
 
 !     The loaders' detect, the most recently registered first.
-      call read_head ( file, head, have_head )
-      if ( .not. have_head ) return
+      call read_head ( file, head, nhead )
+      if ( nhead == 0 ) return
       do i = ctx%spice%nloaders, 1, -1
-         if ( ctx%spice%loaders(i)%loader%detect ( trim ( file ), head ) ) then
+         if ( ctx%spice%loaders(i)%loader%detect ( trim ( file ), head(1:nhead) ) ) then
             k = i
             return
          end if
       end do
    end procedure match_kernel_loader
 
-   !> The first bytes of a file (up to HEAD_SIZE), blank-padded.
-   subroutine read_head ( file, head, ok )
+   !> The first bytes of a file (up to `len(head)`): `head(1:n)`, the rest
+   !> blank; `n` is 0 if the file is empty or cannot be read.
+   subroutine read_head ( file, head, n )
       character(*), intent(in) :: file  !! the file
-      character(*), intent(out) :: head  !! its first bytes
-      logical, intent(out) :: ok  !! the file could be read
+      character(*), intent(out) :: head  !! its first bytes, blank-padded
+      integer(ip), intent(out) :: n  !! the number of bytes read
       integer :: lun, ios
       integer(int64) :: nbytes
-      integer(ip) :: n
+      integer(ip) :: m
       head = ' '
-      ok = .false.
+      n = 0
       inquire ( file = file, size = nbytes )
       if ( nbytes <= 0 ) return
-      n = int ( min ( nbytes, int ( len ( head ), int64 ) ), ip )
+      m = int ( min ( nbytes, int ( len ( head ), int64 ) ), ip )
       open ( newunit = lun, file = file, access = 'STREAM', form = 'UNFORMATTED', &
              action = 'READ', status = 'OLD', iostat = ios )
       if ( ios /= 0 ) return
-      read ( lun, iostat = ios ) head(1:n)
+      read ( lun, iostat = ios ) head(1:m)
       close ( lun )
-      ok = ios == 0
+      if ( ios == 0 ) n = m
    end subroutine read_head
 
    !> The loader named NAME, for FURNSH (PEPPER).
@@ -1835,9 +1912,24 @@ contains
    !> removed, and its loader's unload callback is called (PEPPER).
    module procedure notify_kernel_unloaded
       implicit none
-      integer(ip) :: k
+      integer(ip) :: k, first
+      logical :: shared
       associate ( kk => ctx%spice%keeper%kernels(i) )
-         if ( kk%type == 'SPK' ) then
+         ! What the kernel defines goes with its handle's last KEEPER entry
+         ! (one DAF can be loaded under several entries). KCLEAR notifies
+         ! every entry in order before removing them: only the later ones
+         ! remain.
+         first = 1
+         if ( present ( clearing ) ) then
+            if ( clearing ) first = i + 1
+         end if
+         shared = .false.
+         do k = first, ctx%spice%keeper%loaded
+            if ( k == i ) cycle
+            if ( ctx%spice%keeper%kernels(k)%type /= 'SPK' ) cycle
+            if ( ctx%spice%keeper%kernels(k)%handle == kk%handle ) shared = .true.
+         end do
+         if ( kk%type == 'SPK' .and. .not. shared ) then
             call remove_owned_boddefs ( ctx, kk%handle )
             call remove_owned_ephemerides ( ctx, kk%handle )
             call remove_owned_frames ( ctx, kk%handle )

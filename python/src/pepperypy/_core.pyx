@@ -307,7 +307,7 @@ cdef class _SpiceBase:
     cdef dict _bodies
     cdef dict _frames
     cdef dict _loaders          # name: (loader, ...): kept alive while registered
-    cdef dict _kernel_refs      # kernel name: the providers of its builder
+    cdef dict _kernel_refs      # kernel name: per load, the providers of its builder (a stack)
     cdef object __weakref__
 
     cdef int _check(self) except -1:
@@ -649,7 +649,46 @@ cdef class Spice(_SpiceRoutines):
                 with nogil:
                     st = pepper_spice_furnsh_loader(self._ptr, p, mem, pl)
                 if st:
-                    self._raise()
+                    # a loader's load that succeeded, then failed in PEPPER
+                    # (no kernel, no unload callback): drop its references
+                    try:
+                        self._raise()
+                    finally:
+                        self._prune_refs()
+
+    def unload(self, filename):
+        """Unload a SPICE kernel (a file, or a kernel built in memory, by
+        its name); the Python providers of a kernel built in memory are
+        released with it.
+
+        https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/spicelib/unload.html
+
+        :param filename: The name of a kernel to unload."""
+        try:
+            return _SpiceRoutines.unload(self, filename)
+        finally:
+            self._prune_refs()
+
+    def _prune_refs(self):
+        """Keep, for each kernel name, one list of Python providers per
+        KEEPER entry still loaded under it (the latest ones)."""
+        if not self._kernel_refs or self._ptr == NULL:
+            return
+        c = Context(self)
+        counts = {}
+        try:
+            for i in range(c.ktotal('ALL')):
+                f = c.kdata(i, 'ALL')[0]
+                counts[f] = counts.get(f, 0) + 1
+        finally:
+            c.close()
+        for name in list(self._kernel_refs):
+            n = counts.get(name, 0)
+            stack = self._kernel_refs[name]
+            if n == 0:
+                del self._kernel_refs[name]
+            elif len(stack) > n:
+                del stack[n:]
 
     def add_loader(self, name, loader, extensions=None, replace=False):
         """Register a kernel loader: an object with `load(ctx, kb, file)`
@@ -666,11 +705,10 @@ cdef class Spice(_SpiceRoutines):
         reg = (loader, self)
         cdef bytes bn = _b(name)
         cdef pepper_detect_fn det = NULL
-        cdef pepper_unload_fn unl = NULL
+        # always: the unload callback releases the providers of the file's load
+        cdef pepper_unload_fn unl = _unload_cb
         if hasattr(loader, 'detect'):
             det = _detect_cb
-        if hasattr(loader, 'unload'):
-            unl = _unload_cb
         with self._lock:
             if pepper_spice_add_loader(self._ptr, bn, n, width, block, _load_cb, det, unl, <void*>reg,
                                        1 if replace else 0):
@@ -702,6 +740,7 @@ cdef class Spice(_SpiceRoutines):
                 st = pepper_spice_kclear(self._ptr)
             self._bodies.clear()
             self._frames.clear()
+            self._kernel_refs.clear()
             if st:
                 self._raise()
 
@@ -765,16 +804,18 @@ cdef class Spice(_SpiceRoutines):
         """Load a KernelBuilder as a kernel named `name`, with no file: an
         SPK in memory, used like an SPK file (queries, spkcov and spkobj by
         its name, kdata, unload). A kernel loaded under the same name is
-        replaced. The builder is emptied, unless `keep`. `write_kernel`
-        writes it to an SPK file."""
+        replaced (kept if the load fails). The builder is emptied, unless
+        `keep`; its Python providers are kept alive until the kernel is
+        unloaded. `write_kernel` writes it to an SPK file."""
         self._check()
         builder._valid()
         cdef bytes b = _b(name)
         with self._lock:
             if pepper_spice_load_kernel(self._ptr, b, builder._ptr, 1 if keep else 0):
                 self._raise()
-            # the builder's Python providers live while the kernel may be loaded
-            self._kernel_refs[str(name)] = list(builder._refs)
+            # the builder's Python providers live while the kernel is loaded
+            # (it replaced any kernel of the name)
+            self._kernel_refs[str(name).strip()] = [list(builder._refs)]
             if not keep:
                 builder._refs = []
 
@@ -1074,7 +1115,8 @@ cdef int _load_cb(void *ctx, void *user, void *builder, const char *file) noexce
         kb._spice = spice
         name = file.decode('latin-1')
         loader.load(spice.context(), kb, name)
-        (<_SpiceBase>spice)._kernel_refs[name] = list(kb._refs)
+        # one list per load of the file (popped by _unload_cb)
+        (<_SpiceBase>spice)._kernel_refs.setdefault(name, []).append(list(kb._refs))
         return 0
     except BaseException as e:
         _callback_failed(ctx, e)
@@ -1095,7 +1137,14 @@ cdef int _detect_cb(void *user, const char *file, const char *head, int nhead) n
 cdef void _unload_cb(void *user, const char *file) noexcept with gil:
     try:
         loader, spice = <object>user
-        loader.unload(file.decode('latin-1'))
+        name = file.decode('latin-1')
+        stack = (<_SpiceBase>spice)._kernel_refs.get(name)
+        if stack:
+            stack.pop()                       # the providers of this load
+            if not stack:
+                del (<_SpiceBase>spice)._kernel_refs[name]
+        if hasattr(loader, 'unload'):
+            loader.unload(name)
     except BaseException:
         pass
 
@@ -1308,9 +1357,10 @@ cdef inline Context _context():
     return <Context>_instance().context()
 
 
-def furnsh(path, in_memory=None):
-    """Load kernels into the current instance (see Spice.furnsh)."""
-    _instance().furnsh(path, in_memory)
+def furnsh(path, in_memory=None, loader=None):
+    """Load kernels into the current instance (see Spice.furnsh): `loader`,
+    a registered kernel loader's name, or 'PEPPER'."""
+    _instance().furnsh(path, in_memory, loader)
 
 
 def write_kernel(name, file, ck_file=None, text_file=None):

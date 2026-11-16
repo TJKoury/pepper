@@ -2550,7 +2550,7 @@ module pepper_instance_module
          implicit none
          class(kernel_loader), intent(in) :: self  !! the loader
          character(*), intent(in) :: file  !! the file
-         character(*), intent(in) :: head  !! the start of the file (up to 4096 bytes)
+         character(*), intent(in) :: head  !! the start of the file: its first `len(head)` bytes (at most 4096; fewer for a short file)
       end function kernel_loader_detect
 
       !> The default `unload` of a [[kernel_loader]]: nothing to free
@@ -2567,10 +2567,12 @@ module pepper_instance_module
       !> The kernel is an SPK held in memory, used exactly like an SPK
       !> file: queries, coverage (SPKCOV, SPKOBJ by its name), KDATA and
       !> KINFO (type SPK), UNLOAD and KCLEAR. Loaded under a name in use
-      !> (a kernel or a file), the old kernel is unloaded first, and the new
-      !> one has the highest priority. The builder's data is moved into the
-      !> instance (the builder is then empty) unless `keep` is true (it is
-      !> copied). An error, e.g. an unknown frame, loads nothing.
+      !> (a kernel or a file), it replaces the old kernel, which is
+      !> unloaded once the new one has loaded; the new one has the highest
+      !> priority. The builder's data is moved into the instance (the
+      !> builder is then empty) unless `keep` is true (it is copied). An
+      !> error, e.g. an unknown frame, loads nothing and keeps the old
+      !> kernel of the name.
       module subroutine spice_load_kernel ( this, name, kb, keep )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2738,12 +2740,15 @@ module pepper_instance_module
       end subroutine meta_kernel_loader
 
       !> Kernel `i` of the KEEPER table is removed (UNLOAD, KCLEAR): remove
-      !> the body names it defined, and call the unload callback of its
+      !> what a kernel built in memory defined (body names, ephemerides,
+      !> frames, the DAF of its rotation tables), unless another KEEPER
+      !> entry still has its handle, and call the unload callback of its
       !> loader, if it has one and it is still registered (PEPPER).
-      module subroutine notify_kernel_unloaded ( ctx, i )
+      module subroutine notify_kernel_unloaded ( ctx, i, clearing )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
          integer(ip), intent(in) :: i  !! the kernel's index in the KEEPER table
+         logical, intent(in), optional :: clearing  !! KCLEAR: every entry goes, so only the later entries share the handle
       end subroutine notify_kernel_unloaded
 
    end interface
@@ -21465,8 +21470,12 @@ contains
    !> 5. Else the file is a JSON kernel (`*.json`, any case) or a text
    !>    kernel or meta-kernel.
    !>
-   !> A file a loader read that is loaded again goes to steps 3 and 4
-   !> first (step 2 would see the kernel built from it).
+   !> FURNSH always reads the file on disk, even when a kernel built in
+   !> memory has its name (a file a loader read, loaded again; an SPK that
+   !> [[spice_write_kernel]] wrote under its kernel's name). Loaded again,
+   !> a file a loader read goes to steps 3 and 4 first; if no loader
+   !> matches it any more (or with `loader = 'PEPPER'`), it is read from
+   !> disk by steps 2 and 5 as any other file.
    !>
    !> A file a loader reads becomes an SPK held in memory (the loader fills
    !> a [[kernel_builder]]: segments from the file's rows, programmatic
@@ -22123,10 +22132,13 @@ contains
    end function daf_synthetic_slot
 
    !> The index in the instance's file table of the DAF built in memory
-   !> named `name` (the most recently loaded, if several), else 0.
+   !> named `name` (the most recently loaded, if several), else 0 (always
+   !> 0 while `zzddhman%files_only` is set: ZZLDKER loading from disk).
    integer(ip) function synthetic_named(ctx, name) result(k)
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: name  !! the kernel's name
+      k = 0
+      if (ctx%spice%zzddhman%files_only) return   ! ZZLDKER reads a file from disk
       associate (ft => ctx%spice%zzddhman)
          do k = ft%nft, 1, -1
             if (.not. ft%files(k)%synthetic) cycle

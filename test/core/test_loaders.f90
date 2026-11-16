@@ -86,6 +86,7 @@ program test_loaders
    call test_frames()
    call test_frame_files()
    call test_write_frames()
+   call test_review_fixes()
 
    call spice%kclear()
    call ref%kclear()
@@ -1376,6 +1377,141 @@ contains
       close (lun)
    end subroutine write_text_kernel
 
+   !> The review's fixes: a file is read from disk even when a kernel built
+   !> in memory has its name (loader='PEPPER', a loader removed,
+   !> write_kernel under the kernel's name); a failed load_kernel keeps the
+   !> kernel it would replace; a frame's definition after one of its
+   !> kernels goes; detect sees only the bytes of a short file; segment
+   !> identifiers of rotation tables and models are checked.
+   subroutine test_review_fixes()
+      use, intrinsic :: iso_fortran_env, only: int64
+      use pepper_test_loader, only: last_head_len
+      character(*), parameter :: same = 'test_loaders_same.bsp'
+      character(*), parameter :: tiny = 'test_loaders_tiny.txt'
+      type(simple_loader) :: ld
+      type(kernel_builder) :: kb
+      character(256) :: file, srcfil
+      character(32) :: filtyp
+      real(wp) :: s(6), q(4, n)
+      integer(ip) :: h1, h2, count, code, cent, frclss, clssid
+      integer(int64) :: nbytes
+      logical :: found, ok
+      integer :: k
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      call write_simple(sim_a, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                                 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+
+      ! 2: loader='PEPPER' on a file a loader read (still loaded): the file, a text kernel
+      call spice%furnsh(sim_a)
+      call spice%furnsh(sim_a, loader='PEPPER')
+      call check_ok(ctx, 'loader=PEPPER on a file a loader read, still loaded')
+      call ctx%kdata(2_ip, 'ALL', file, filtyp, srcfil, h2, found)
+      call check(found .and. filtyp == 'TEXT', 'loader=PEPPER: the file is read (TEXT), not the kernel in memory')
+      call spice%unload(sim_a)
+      call spice%unload(sim_a)
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'both entries unloaded')
+
+      ! 2: the loader removed, the file loaded again: read as a text kernel
+      call spice%furnsh(sim_a)
+      call spice%remove_loader('SIMPLE')
+      call spice%furnsh(sim_a)
+      call check_ok(ctx, 'a loader''s file loaded again after its loader was removed')
+      call ctx%kdata(2_ip, 'ALL', file, filtyp, srcfil, h2, found)
+      call check(found .and. filtyp == 'TEXT', 'no loader: the file is read (TEXT), not the kernel in memory')
+      call ctx%kdata(1_ip, 'ALL', file, filtyp, srcfil, h1, found)
+      call check(found .and. filtyp == 'SPK', 'the loader''s kernel stays an SPK')
+      ! 3: unloading the text entry keeps the kernel's ephemeris
+      call spice%unload(sim_a)
+      call state_of(ctx, sc, 399_ip, epochs(5), s, ok)
+      call check(ok, 'the SPK of the loader still answers after the later entry goes')
+      call spice%unload(sim_a)
+      call state_of(ctx, sc, 399_ip, epochs(5), s, ok)
+      call check(.not. ok, 'and goes with its own entry')
+
+      ! 2: write_kernel under the kernel's own name, then FURNSH: the file
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, states, 7_ip)
+      call spice%load_kernel(same, kb)
+      call spice%write_kernel(same, same)
+      call check_ok(ctx, 'write_kernel to a file of the kernel''s name')
+      call spice%furnsh(same)
+      call check_ok(ctx, 'FURNSH of that file')
+      call ctx%kdata(1_ip, 'ALL', file, filtyp, srcfil, h1, found)
+      call ctx%kdata(2_ip, 'ALL', file, filtyp, srcfil, h2, found)
+      call check(found .and. filtyp == 'SPK' .and. h2 /= h1, 'the file is a DAF of its own (another handle)')
+      call spice%unload(same)
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 101), 'the kernel in memory after the file goes')
+      call spice%unload(same)
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'the kernel and the file unloaded')
+
+      ! 4: a failed load_kernel keeps the kernel of the name
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, states, 7_ip)
+      call kb%define_body(ctx, 'KEPT_SC', sc)
+      call spice%load_kernel('kept4', kb)
+      call kb%add_ephemeris(ctx, sc - 7, 399_ip, 'NO_SUCH_FRAME', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp))
+      call spice%load_kernel('kept4', kb)
+      call check_error(ctx, 'SPICE(UNKNOWNFRAME)', 'a load_kernel that fails')
+      call kb%clear()
+      call ctx%ktotal('ALL', count)
+      call check(count == 1, 'the failed load: the kernel of the name stays loaded')
+      call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 101), 'and answers')
+      call ctx%bodn2c('KEPT_SC', code, found)
+      call check(found .and. code == sc, 'with its names')
+      call spice%unload('kept4')
+
+      ! 5: a frame of two kernels, with other centers: the remaining one's
+      do k = 1, n
+         call ctx%m2q(spin_matrix(1.0e-3_wp, epochs(k)), q(:, k))
+      end do
+      call kb%frame_rotations(ctx, 'TWO_KERNELS', 1400130_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('frame5a', kb)
+      call kb%frame_rotations(ctx, 'TWO_KERNELS', 1400130_ip, 301_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('frame5b', kb)
+      call ctx%frinfo(1400130_ip, cent, frclss, clssid, found)
+      call check(found .and. cent == 301, 'the later kernel''s center')
+      call spice%unload('frame5b')
+      call ctx%frinfo(1400130_ip, cent, frclss, clssid, found)
+      call check(found .and. cent == 399, 'the later kernel unloaded: the earlier''s center again')
+      call spice%unload('frame5a')
+      call ctx%namfrm('TWO_KERNELS', code)
+      call check(code == 0, 'both unloaded: the frame is gone')
+      call check_ok(ctx, 'frames of two kernels')
+
+      ! 6: detect gets the bytes of a short file, not padding
+      call spice%add_loader('SIMPLE', ld)
+      call write_simple(tiny, [character(40) :: 'OBJECT = -10001', 'CENTER = 399', 'FRAME = J2000', &
+                                                'INTERPOLATION = LAGRANGE 3'], epochs(1:10), states(:, 1:10), [1], [10])
+      inquire (file=tiny, size=nbytes)
+      last_head_len = -1
+      call spice%furnsh(tiny)
+      call check_ok(ctx, 'a short file found by detect')
+      call check(nbytes < 4096 .and. last_head_len == nbytes, 'detect: the head is the file''s bytes only')
+      call spice%unload(tiny)
+      call spice%remove_loader('SIMPLE')
+
+      ! 8: the segment identifiers of rotation tables and models
+      call kb%frame_rotations(ctx, 'ID_LONG', 1400131_ip, 399_ip, 'J2000', epochs, q, 7_ip, &
+                              ident=repeat('X', 41))
+      call check_error(ctx, 'SPICE(SEGIDTOOLONG)', 'a rotation table''s identifier of 41 characters')
+      call kb%frame_rotations(ctx, 'ID_BELL', 1400131_ip, 399_ip, 'J2000', epochs, q, 7_ip, &
+                              ident='BELL'//achar(7))
+      call check_error(ctx, 'SPICE(NONPRINTABLECHARS)', 'a rotation table''s nonprintable identifier')
+      call kb%add_ephemeris(ctx, sc - 7, 399_ip, 'J2000', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp), &
+                            ident=repeat('Y', 41))
+      call check_error(ctx, 'SPICE(SEGIDTOOLONG)', 'a model''s identifier of 41 characters')
+      call kb%add_ephemeris(ctx, sc - 7, 399_ip, 'J2000', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp), &
+                            ident='TAB'//achar(9))
+      call check_error(ctx, 'SPICE(NONPRINTABLECHARS)', 'a model''s nonprintable identifier')
+      call kb%frame_rotations(ctx, 'ID_OK', 1400131_ip, 399_ip, 'J2000', epochs, q, 7_ip, ident=repeat('Z', 40))
+      call check_ok(ctx, 'an identifier of 40 characters')
+      call check(kb%nsegments() == 1, 'only the valid table added')
+      call kb%clear()
+      call delete_file(same)
+      call delete_file(tiny)
+   end subroutine test_review_fixes
+
    !> Delete the test's files.
    subroutine delete_files()
       call delete_file(ref_bsp)
@@ -1403,6 +1539,8 @@ contains
       call delete_file('test_loaders_ma.sim')
       call delete_file('test_loaders_mb.sim')
       call delete_file('test_loaders_mix.sim')
+      call delete_file('test_loaders_same.bsp')
+      call delete_file('test_loaders_tiny.txt')
       call delete_file('test_loaders_mbad.sim')
       call delete_file('test_loaders_model.bsp')
       call delete_file('test_loaders_frames.bsp')

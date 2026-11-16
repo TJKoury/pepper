@@ -3314,6 +3314,14 @@ contains
          end if
       end if
 
+!
+!     PEPPER: from here the file is read from disk: a kernel built in
+!     memory with its name (a loader's file loaded again with
+!     loader='PEPPER' or no loader matching, an SPK written from a kernel
+!     under the kernel's name) is not what GETFAT and DAFOPR see. FURNSH
+!     clears the flag after ZZLDKER returns.
+!
+      ctx%spice%zzddhman%files_only = .true.
       call getfat ( ctx, file, arch, mytype )
 
 !
@@ -3480,6 +3488,9 @@ contains
       !> PEPPER: load the file with registered kernel loader K: an SPK
       !> built in memory, named FILE.
       subroutine load_with_loader ( )
+         ! the loader's kernel is registered under the file's name and
+         ! found by it (SPKLEF)
+         ctx%spice%zzddhman%files_only = .false.
          call run_kernel_loader ( ctx, k, file, handle, fmt )
          if ( ctx%failed() ) return
          filtyp = 'SPK'
@@ -4173,6 +4184,7 @@ contains
       ctx%spice%zzddhman%reuse_f2h = .true.
       call zzldker ( ctx, file, nofile, thstyp, myhand, loader, used, fmt )
       ctx%spice%zzddhman%reuse_f2h = .false.
+      ctx%spice%zzddhman%files_only = .false.
 
       if ( ctx%failed() ) return
 
@@ -4362,6 +4374,7 @@ contains
          call meta_kernel_loader ( kload, raw, trim ( fil2ld ), lname )
          call zzldker( ctx, fil2ld, nofile, thstyp, myhand, lname, used, fmt )
          ctx%spice%zzddhman%reuse_f2h = .false.
+         ctx%spice%zzddhman%files_only = .false.
 
          if ( ctx%failed() ) return
 
@@ -5876,7 +5889,7 @@ contains
             call zzdskusf ( ctx, kt%kernels(i)%handle )
 
          end if
-         call notify_kernel_unloaded ( ctx, i )  ! PEPPER: a kernel loader's callback
+         call notify_kernel_unloaded ( ctx, i, clearing=.true. )  ! PEPPER: a kernel loader's callback
 
       end do
 

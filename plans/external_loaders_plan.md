@@ -55,7 +55,10 @@ Differences from the plan below:
   then empties the builder; with `keep` it is not emptied.
 - A file a loader read, loaded again, is read again (a second kernel, with
   its own handle); UNLOAD removes the last one, as for any file loaded
-  twice.
+  twice. FURNSH reads the file on disk even when a kernel built in memory
+  has its name (`zzddhman%files_only`, set while ZZLDKER loads from
+  disk): with `loader='PEPPER'`, after the loader is removed, or for an
+  SPK written under the kernel's name.
 
 Let a program attach **loaders** to an instance: objects that read a file
 format SPICE does not know and turn it into ordinary kernel data at load

@@ -302,7 +302,8 @@ call spice%unload('my_trajectory')
 - **The name** is any non-blank string, never looked up on disk. It is
   what KDATA reports and what UNLOAD, SPKCOV and SPKOBJ take.
 - **Loading under a name in use** (another kernel, or a loaded file)
-  replaces it: the old one is unloaded first.
+  replaces it: the old one is unloaded once the new one has loaded, so a
+  load that fails keeps it.
 - **Kernels are not changed in place.** A growing trajectory (a simulation,
   a filter) keeps its builder (`keep=.true.`), adds segments, and loads it
   again under the same name.

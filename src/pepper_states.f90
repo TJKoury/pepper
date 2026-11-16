@@ -3433,6 +3433,12 @@ module pepper_states
       ! first record, until the table changes.
       integer(ip) :: changes = 0  !! changes of the table (add, remove)
       logical :: reuse_f2h = .false.  !! [[zzddhf2h]] may keep and reuse its result
+      !> PEPPER: names are files only: a DAF built in memory is not found
+      !> by its name (GETFAT, ZZDDHOPN). Set by ZZLDKER while it loads a
+      !> file from disk, so that a file is read even if a kernel built in
+      !> memory has its name (a loader's file loaded again, or an SPK
+      !> written from a kernel under the kernel's name).
+      logical :: files_only = .false.
       character(:), allocatable :: f2h_name  !! the file of the kept result
       integer(ip) :: f2h_changes = -1  !! the table's changes when it was kept
       real(wp) :: f2h_mnm = 0.0_wp  !! the file's unique number
